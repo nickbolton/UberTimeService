@@ -1,0 +1,827 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7155735B2001481DA0734471 /* libPods-BasePods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB51A264C2846AD9D3F2A50 /* libPods-BasePods.a */; };
+		79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A161D6FDF95340609138410D /* libPods-IntegrationTests.a */; };
+		FEBD024D1733D85A00DAB99D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
+		FEBD024E1733D85A00DAB99D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
+		FEBD024F1733D85A00DAB99D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
+		FEBD02551733D85A00DAB99D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEBD02531733D85A00DAB99D /* InfoPlist.strings */; };
+		FEBD02571733D85A00DAB99D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02561733D85A00DAB99D /* main.m */; };
+		FEBD025D1733D85A00DAB99D /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FEBD025C1733D85A00DAB99D /* Default.png */; };
+		FEBD025F1733D85A00DAB99D /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEBD025E1733D85A00DAB99D /* Default@2x.png */; };
+		FEBD02611733D85A00DAB99D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEBD02601733D85A00DAB99D /* Default-568h@2x.png */; };
+		FEBD02651733D98900DAB99D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */; };
+		FEBD02681733D9E700DAB99D /* TCLocalProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02671733D9E700DAB99D /* TCLocalProjectTests.m */; };
+		FEBD02691733DBDE00DAB99D /* TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */; };
+		FEBD026A1733DBDE00DAB99D /* TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */; };
+		FEBD026B1733DBDE00DAB99D /* TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */; };
+		FEBD026C1733DBDE00DAB99D /* TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */; };
+		FEBD026D1733DBDE00DAB99D /* _TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */; };
+		FEBD026E1733DBDE00DAB99D /* _TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */; };
+		FEBD026F1733DBDE00DAB99D /* _TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */; };
+		FEBD02701733DBDE00DAB99D /* _TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */; };
+		FEBD02711733DBDE00DAB99D /* TCSLocalService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */; };
+		FEBD027C1733E64E00DAB99D /* TCSLocalService.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D61733225C00C4DCF9 /* TCSLocalService.xcdatamodeld */; };
+		FEBD02801733EC3D00DAB99D /* TCBaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD027E1733EBED00DAB99D /* TCBaseTests.m */; };
+		FEBD02831733EE6B00DAB99D /* TCLocalTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02821733EE6A00DAB99D /* TCLocalTimerTests.m */; };
+		FEBD02891733EF4200DAB99D /* TCProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02881733EF4200DAB99D /* TCProjectTests.m */; };
+		FEBD028C1733EFE400DAB99D /* TCTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD028B1733EFE400DAB99D /* TCTimerTests.m */; };
+		FEBD02911734853E00DAB99D /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02901734853E00DAB99D /* NSDate+Utilities.m */; };
+		FEBD02A9173487AE00DAB99D /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */; };
+		FEBD02AA173487AE00DAB99D /* TCSDefaultProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */; };
+		FEBD02AB173487AE00DAB99D /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029D173487AD00DAB99D /* TCSGroup.m */; };
+		FEBD02AC173487AE00DAB99D /* TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029F173487AD00DAB99D /* TCSProject.m */; };
+		FEBD02AD173487AE00DAB99D /* TCSService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A1173487AD00DAB99D /* TCSService.m */; };
+		FEBD02AE173487AE00DAB99D /* TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */; };
+		FEBD02AF173487AE00DAB99D /* TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A5173487AD00DAB99D /* TCSTimer.m */; };
+		FEBD02B0173487AE00DAB99D /* TCSDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A8173487AE00DAB99D /* TCSDateRange.m */; };
+		FEBD02B3173487DF00DAB99D /* TCSCalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */; };
+		FEBD02BA173489C600DAB99D /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02901734853E00DAB99D /* NSDate+Utilities.m */; };
+		FEBD02BB173489C600DAB99D /* TCSCalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */; };
+		FEBD02BC173489C600DAB99D /* TCSDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A8173487AE00DAB99D /* TCSDateRange.m */; };
+		FEBD02BD17348A0C00DAB99D /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */; };
+		FEBD02BE17348A0C00DAB99D /* TCSDefaultProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */; };
+		FEBD02BF17348A0C00DAB99D /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029D173487AD00DAB99D /* TCSGroup.m */; };
+		FEBD02C017348A0C00DAB99D /* TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029F173487AD00DAB99D /* TCSProject.m */; };
+		FEBD02C117348A0C00DAB99D /* TCSService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A1173487AD00DAB99D /* TCSService.m */; };
+		FEBD02C217348A0C00DAB99D /* TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */; };
+		FEBD02C317348A0C00DAB99D /* TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A5173487AD00DAB99D /* TCSTimer.m */; };
+		FEDAD2EB1732E60D0087EB4F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
+		FEDAD2ED1732E60D0087EB4F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
+		FEDAD2EF1732E60D0087EB4F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
+		FEDAD2F51732E60D0087EB4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEDAD2F31732E60D0087EB4F /* InfoPlist.strings */; };
+		FEDAD2F71732E60D0087EB4F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDAD2F61732E60D0087EB4F /* main.m */; };
+		FEDAD2FB1732E60D0087EB4F /* TCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDAD2FA1732E60D0087EB4F /* TCAppDelegate.m */; };
+		FEDAD2FD1732E60D0087EB4F /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FEDAD2FC1732E60D0087EB4F /* Default.png */; };
+		FEDAD2FF1732E60D0087EB4F /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEDAD2FE1732E60D0087EB4F /* Default@2x.png */; };
+		FEDAD3011732E60D0087EB4F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEDAD3001732E60D0087EB4F /* Default-568h@2x.png */; };
+		FEDAD3041732E60D0087EB4F /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FEDAD3021732E60D0087EB4F /* MainStoryboard.storyboard */; };
+		FEDAD3071732E60D0087EB4F /* TCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDAD3061732E60D0087EB4F /* TCViewController.m */; };
+		FEF8A0DA1733225C00C4DCF9 /* TCSLocalService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */; };
+		FEF8A0DB1733225C00C4DCF9 /* TCSLocalService.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D61733225C00C4DCF9 /* TCSLocalService.xcdatamodeld */; };
+		FEF8A0E7173325E300C4DCF9 /* TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */; };
+		FEF8A0E8173325E300C4DCF9 /* TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */; };
+		FEF8A0E9173325E300C4DCF9 /* _TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */; };
+		FEF8A0EA173325E300C4DCF9 /* _TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */; };
+		FEF8A0ED1733261B00C4DCF9 /* TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */; };
+		FEF8A0F01733262300C4DCF9 /* _TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */; };
+		FEF8A0F31733265800C4DCF9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8A0F21733265800C4DCF9 /* CoreData.framework */; };
+		FEF8A0F617332B0400C4DCF9 /* _TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */; };
+		FEF8A0F917332B0B00C4DCF9 /* TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */; };
+		FEF8A0FB17332B4100C4DCF9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0711102F27B54C80A3606EBA /* libPods-OCTests-IntegrationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCTests-IntegrationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		112E1BECF66B45DAA673C505 /* Pods-OCTests-IntegrationTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCTests-IntegrationTests.xcconfig"; path = "Pods/Pods-OCTests-IntegrationTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		4CB51A264C2846AD9D3F2A50 /* libPods-BasePods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasePods.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		57D237F14E1B41D09D7D2585 /* Pods-IntegrationTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntegrationTests.xcconfig"; path = "Pods/Pods-IntegrationTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		80DB86CF102642B2A05441EC /* libPods-OCTests-IntegrationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCTests-IntegrationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A161D6FDF95340609138410D /* libPods-IntegrationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IntegrationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1CAE1762EAA41928F4E4B0A /* Pods-OCTests-IntegrationTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCTests-IntegrationTests.xcconfig"; path = "Pods/Pods-OCTests-IntegrationTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		E999345D174A464E853C247E /* Pods-BasePods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods.xcconfig"; path = "Pods/Pods-BasePods.xcconfig"; sourceTree = SOURCE_ROOT; };
+		FEBD024C1733D85A00DAB99D /* IntegrationTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEBD02521733D85A00DAB99D /* IntegrationTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IntegrationTests-Info.plist"; sourceTree = "<group>"; };
+		FEBD02541733D85A00DAB99D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FEBD02561733D85A00DAB99D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FEBD02581733D85A00DAB99D /* IntegrationTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IntegrationTests-Prefix.pch"; sourceTree = "<group>"; };
+		FEBD025C1733D85A00DAB99D /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		FEBD025E1733D85A00DAB99D /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		FEBD02601733D85A00DAB99D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		FEBD02671733D9E700DAB99D /* TCLocalProjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLocalProjectTests.m; sourceTree = "<group>"; };
+		FEBD027D1733EBED00DAB99D /* TCBaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCBaseTests.h; sourceTree = "<group>"; };
+		FEBD027E1733EBED00DAB99D /* TCBaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCBaseTests.m; sourceTree = "<group>"; };
+		FEBD02821733EE6A00DAB99D /* TCLocalTimerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLocalTimerTests.m; sourceTree = "<group>"; };
+		FEBD02871733EF4200DAB99D /* TCProjectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProjectTests.h; sourceTree = "<group>"; };
+		FEBD02881733EF4200DAB99D /* TCProjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProjectTests.m; sourceTree = "<group>"; };
+		FEBD028A1733EFE400DAB99D /* TCTimerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCTimerTests.h; sourceTree = "<group>"; };
+		FEBD028B1733EFE400DAB99D /* TCTimerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCTimerTests.m; sourceTree = "<group>"; };
+		FEBD028F1734853E00DAB99D /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
+		FEBD02901734853E00DAB99D /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
+		FEBD0298173487AD00DAB99D /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
+		FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
+		FEBD029A173487AD00DAB99D /* TCSDefaultProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSDefaultProvider.h; sourceTree = "<group>"; };
+		FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSDefaultProvider.m; sourceTree = "<group>"; };
+		FEBD029C173487AD00DAB99D /* TCSGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSGroup.h; sourceTree = "<group>"; };
+		FEBD029D173487AD00DAB99D /* TCSGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSGroup.m; sourceTree = "<group>"; };
+		FEBD029E173487AD00DAB99D /* TCSProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSProject.h; sourceTree = "<group>"; };
+		FEBD029F173487AD00DAB99D /* TCSProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSProject.m; sourceTree = "<group>"; };
+		FEBD02A0173487AD00DAB99D /* TCSService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSService.h; sourceTree = "<group>"; };
+		FEBD02A1173487AD00DAB99D /* TCSService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSService.m; sourceTree = "<group>"; };
+		FEBD02A2173487AD00DAB99D /* TCSTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimedEntity.h; sourceTree = "<group>"; };
+		FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimedEntity.m; sourceTree = "<group>"; };
+		FEBD02A4173487AD00DAB99D /* TCSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimer.h; sourceTree = "<group>"; };
+		FEBD02A5173487AD00DAB99D /* TCSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimer.m; sourceTree = "<group>"; };
+		FEBD02A7173487AE00DAB99D /* TCSDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSDateRange.h; sourceTree = "<group>"; };
+		FEBD02A8173487AE00DAB99D /* TCSDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSDateRange.m; sourceTree = "<group>"; };
+		FEBD02B1173487DF00DAB99D /* TCSCalendarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSCalendarManager.h; sourceTree = "<group>"; };
+		FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSCalendarManager.m; sourceTree = "<group>"; };
+		FEDAD2E71732E60D0087EB4F /* UberTimeService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UberTimeService.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEDAD2EA1732E60D0087EB4F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FEDAD2EC1732E60D0087EB4F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		FEDAD2F21732E60D0087EB4F /* UberTimeService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UberTimeService-Info.plist"; sourceTree = "<group>"; };
+		FEDAD2F41732E60D0087EB4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FEDAD2F61732E60D0087EB4F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FEDAD2F81732E60D0087EB4F /* UberTimeService-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UberTimeService-Prefix.pch"; sourceTree = "<group>"; };
+		FEDAD2F91732E60D0087EB4F /* TCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCAppDelegate.h; sourceTree = "<group>"; };
+		FEDAD2FA1732E60D0087EB4F /* TCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCAppDelegate.m; sourceTree = "<group>"; };
+		FEDAD2FC1732E60D0087EB4F /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		FEDAD2FE1732E60D0087EB4F /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		FEDAD3001732E60D0087EB4F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		FEDAD3031732E60D0087EB4F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		FEDAD3051732E60D0087EB4F /* TCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCViewController.h; sourceTree = "<group>"; };
+		FEDAD3061732E60D0087EB4F /* TCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCViewController.m; sourceTree = "<group>"; };
+		FEF8A0D41733225C00C4DCF9 /* TCSLocalService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalService.h; sourceTree = "<group>"; };
+		FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalService.m; sourceTree = "<group>"; };
+		FEF8A0D71733225C00C4DCF9 /* TCSLocalService.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TCSLocalService.xcdatamodel; sourceTree = "<group>"; };
+		FEF8A0DC1733257E00C4DCF9 /* TCSLocalService 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TCSLocalService 2.xcdatamodel"; sourceTree = "<group>"; };
+		FEF8A0DE173325E300C4DCF9 /* TCSLocalGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalGroup.h; sourceTree = "<group>"; };
+		FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalGroup.m; sourceTree = "<group>"; };
+		FEF8A0E0173325E300C4DCF9 /* TCSLocalProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalProject.h; sourceTree = "<group>"; };
+		FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalProject.m; sourceTree = "<group>"; };
+		FEF8A0E3173325E300C4DCF9 /* _TCSLocalGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalGroup.h; sourceTree = "<group>"; };
+		FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalGroup.m; sourceTree = "<group>"; };
+		FEF8A0E5173325E300C4DCF9 /* _TCSLocalProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalProject.h; sourceTree = "<group>"; };
+		FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalProject.m; sourceTree = "<group>"; };
+		FEF8A0EB1733261B00C4DCF9 /* TCSLocalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalTimer.h; sourceTree = "<group>"; };
+		FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalTimer.m; sourceTree = "<group>"; };
+		FEF8A0EE1733262200C4DCF9 /* _TCSLocalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalTimer.h; sourceTree = "<group>"; };
+		FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalTimer.m; sourceTree = "<group>"; };
+		FEF8A0F11733263100C4DCF9 /* TCSLocalServiceHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalServiceHeaders.h; sourceTree = "<group>"; };
+		FEF8A0F21733265800C4DCF9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FEF8A0F417332B0300C4DCF9 /* _TCSLocalTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalTimedEntity.h; sourceTree = "<group>"; };
+		FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalTimedEntity.m; sourceTree = "<group>"; };
+		FEF8A0F717332B0B00C4DCF9 /* TCSLocalTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalTimedEntity.h; sourceTree = "<group>"; };
+		FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalTimedEntity.m; sourceTree = "<group>"; };
+		FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FEF8A1041733D56C00C4DCF9 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		FEF8A1061733D56C00C4DCF9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		FEF8A1091733D56C00C4DCF9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		FEF8A10A1733D56C00C4DCF9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FEF8A10B1733D56C00C4DCF9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FEBD02491733D85A00DAB99D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEBD02651733D98900DAB99D /* QuartzCore.framework in Frameworks */,
+				FEBD024D1733D85A00DAB99D /* UIKit.framework in Frameworks */,
+				FEBD024E1733D85A00DAB99D /* Foundation.framework in Frameworks */,
+				FEBD024F1733D85A00DAB99D /* CoreGraphics.framework in Frameworks */,
+				79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEDAD2E41732E60D0087EB4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEF8A0FB17332B4100C4DCF9 /* QuartzCore.framework in Frameworks */,
+				FEF8A0F31733265800C4DCF9 /* CoreData.framework in Frameworks */,
+				FEDAD2EB1732E60D0087EB4F /* UIKit.framework in Frameworks */,
+				FEDAD2ED1732E60D0087EB4F /* Foundation.framework in Frameworks */,
+				FEDAD2EF1732E60D0087EB4F /* CoreGraphics.framework in Frameworks */,
+				7155735B2001481DA0734471 /* libPods-BasePods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FEBD02501733D85A00DAB99D /* IntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD02511733D85A00DAB99D /* Supporting Files */,
+				FEBD02671733D9E700DAB99D /* TCLocalProjectTests.m */,
+				FEBD02821733EE6A00DAB99D /* TCLocalTimerTests.m */,
+				FEBD02871733EF4200DAB99D /* TCProjectTests.h */,
+				FEBD02881733EF4200DAB99D /* TCProjectTests.m */,
+				FEBD028A1733EFE400DAB99D /* TCTimerTests.h */,
+				FEBD028B1733EFE400DAB99D /* TCTimerTests.m */,
+				FEBD027D1733EBED00DAB99D /* TCBaseTests.h */,
+				FEBD027E1733EBED00DAB99D /* TCBaseTests.m */,
+			);
+			name = IntegrationTests;
+			path = ../IntegrationTests;
+			sourceTree = "<group>";
+		};
+		FEBD02511733D85A00DAB99D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD02521733D85A00DAB99D /* IntegrationTests-Info.plist */,
+				FEBD02531733D85A00DAB99D /* InfoPlist.strings */,
+				FEBD02561733D85A00DAB99D /* main.m */,
+				FEBD02581733D85A00DAB99D /* IntegrationTests-Prefix.pch */,
+				FEBD025C1733D85A00DAB99D /* Default.png */,
+				FEBD025E1733D85A00DAB99D /* Default@2x.png */,
+				FEBD02601733D85A00DAB99D /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FEBD028E1734853D00DAB99D /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD028F1734853E00DAB99D /* NSDate+Utilities.h */,
+				FEBD02901734853E00DAB99D /* NSDate+Utilities.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		FEBD0297173487AC00DAB99D /* TCService */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD0298173487AD00DAB99D /* TCSBaseEntity.h */,
+				FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */,
+				FEBD029A173487AD00DAB99D /* TCSDefaultProvider.h */,
+				FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */,
+				FEBD029C173487AD00DAB99D /* TCSGroup.h */,
+				FEBD029D173487AD00DAB99D /* TCSGroup.m */,
+				FEBD029E173487AD00DAB99D /* TCSProject.h */,
+				FEBD029F173487AD00DAB99D /* TCSProject.m */,
+				FEBD02A0173487AD00DAB99D /* TCSService.h */,
+				FEBD02A1173487AD00DAB99D /* TCSService.m */,
+				FEBD02A2173487AD00DAB99D /* TCSTimedEntity.h */,
+				FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */,
+				FEBD02A4173487AD00DAB99D /* TCSTimer.h */,
+				FEBD02A5173487AD00DAB99D /* TCSTimer.m */,
+			);
+			path = TCService;
+			sourceTree = "<group>";
+		};
+		FEBD02A6173487AD00DAB99D /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD02B1173487DF00DAB99D /* TCSCalendarManager.h */,
+				FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */,
+				FEBD02A7173487AE00DAB99D /* TCSDateRange.h */,
+				FEBD02A8173487AE00DAB99D /* TCSDateRange.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FEDAD2DE1732E60D0087EB4F = {
+			isa = PBXGroup;
+			children = (
+				FEDAD2F01732E60D0087EB4F /* UberTimeService */,
+				FEF8A0FD1733D37C00C4DCF9 /* Tests */,
+				FEDAD2E91732E60D0087EB4F /* Frameworks */,
+				FEDAD2E81732E60D0087EB4F /* Products */,
+				E999345D174A464E853C247E /* Pods-BasePods.xcconfig */,
+				E1CAE1762EAA41928F4E4B0A /* Pods-OCTests-IntegrationTests.xcconfig */,
+				112E1BECF66B45DAA673C505 /* Pods-OCTests-IntegrationTests.xcconfig */,
+				57D237F14E1B41D09D7D2585 /* Pods-IntegrationTests.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		FEDAD2E81732E60D0087EB4F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FEDAD2E71732E60D0087EB4F /* UberTimeService.app */,
+				FEBD024C1733D85A00DAB99D /* IntegrationTests.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FEDAD2E91732E60D0087EB4F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */,
+				FEF8A0F21733265800C4DCF9 /* CoreData.framework */,
+				FEDAD2EA1732E60D0087EB4F /* UIKit.framework */,
+				FEDAD2EC1732E60D0087EB4F /* Foundation.framework */,
+				FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */,
+				4CB51A264C2846AD9D3F2A50 /* libPods-BasePods.a */,
+				FEF8A1041733D56C00C4DCF9 /* SenTestingKit.framework */,
+				FEF8A1061733D56C00C4DCF9 /* Cocoa.framework */,
+				FEF8A1081733D56C00C4DCF9 /* Other Frameworks */,
+				0711102F27B54C80A3606EBA /* libPods-OCTests-IntegrationTests.a */,
+				80DB86CF102642B2A05441EC /* libPods-OCTests-IntegrationTests.a */,
+				A161D6FDF95340609138410D /* libPods-IntegrationTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FEDAD2F01732E60D0087EB4F /* UberTimeService */ = {
+			isa = PBXGroup;
+			children = (
+				FEDAD30D1732E6170087EB4F /* TCS */,
+				FEDAD2F91732E60D0087EB4F /* TCAppDelegate.h */,
+				FEDAD2FA1732E60D0087EB4F /* TCAppDelegate.m */,
+				FEDAD3021732E60D0087EB4F /* MainStoryboard.storyboard */,
+				FEDAD3051732E60D0087EB4F /* TCViewController.h */,
+				FEDAD3061732E60D0087EB4F /* TCViewController.m */,
+				FEDAD2F11732E60D0087EB4F /* Supporting Files */,
+			);
+			path = UberTimeService;
+			sourceTree = "<group>";
+		};
+		FEDAD2F11732E60D0087EB4F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FEDAD2F21732E60D0087EB4F /* UberTimeService-Info.plist */,
+				FEDAD2F31732E60D0087EB4F /* InfoPlist.strings */,
+				FEDAD2F61732E60D0087EB4F /* main.m */,
+				FEDAD2F81732E60D0087EB4F /* UberTimeService-Prefix.pch */,
+				FEDAD2FC1732E60D0087EB4F /* Default.png */,
+				FEDAD2FE1732E60D0087EB4F /* Default@2x.png */,
+				FEDAD3001732E60D0087EB4F /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FEDAD30D1732E6170087EB4F /* TCS */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD0297173487AC00DAB99D /* TCService */,
+				FEF8A0D01733225C00C4DCF9 /* BasecampService */,
+				FEF8A0D11733225C00C4DCF9 /* HarvestService */,
+				FEF8A0D21733225C00C4DCF9 /* LocalService */,
+				FEF8A0D81733225C00C4DCF9 /* ParseService */,
+				FEBD028E1734853D00DAB99D /* Categories */,
+				FEBD02A6173487AD00DAB99D /* Utilities */,
+			);
+			name = TCS;
+			sourceTree = "<group>";
+		};
+		FEF8A0D01733225C00C4DCF9 /* BasecampService */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = BasecampService;
+			sourceTree = "<group>";
+		};
+		FEF8A0D11733225C00C4DCF9 /* HarvestService */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = HarvestService;
+			sourceTree = "<group>";
+		};
+		FEF8A0D21733225C00C4DCF9 /* LocalService */ = {
+			isa = PBXGroup;
+			children = (
+				FEF8A0DD173325E300C4DCF9 /* Human */,
+				FEF8A0E2173325E300C4DCF9 /* Machine */,
+				FEF8A0D61733225C00C4DCF9 /* TCSLocalService.xcdatamodeld */,
+				FEF8A0D41733225C00C4DCF9 /* TCSLocalService.h */,
+				FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */,
+				FEF8A0F11733263100C4DCF9 /* TCSLocalServiceHeaders.h */,
+			);
+			path = LocalService;
+			sourceTree = "<group>";
+		};
+		FEF8A0D81733225C00C4DCF9 /* ParseService */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ParseService;
+			sourceTree = "<group>";
+		};
+		FEF8A0DD173325E300C4DCF9 /* Human */ = {
+			isa = PBXGroup;
+			children = (
+				FEF8A0DE173325E300C4DCF9 /* TCSLocalGroup.h */,
+				FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */,
+				FEF8A0E0173325E300C4DCF9 /* TCSLocalProject.h */,
+				FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */,
+				FEF8A0EB1733261B00C4DCF9 /* TCSLocalTimer.h */,
+				FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */,
+				FEF8A0F717332B0B00C4DCF9 /* TCSLocalTimedEntity.h */,
+				FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */,
+			);
+			path = Human;
+			sourceTree = "<group>";
+		};
+		FEF8A0E2173325E300C4DCF9 /* Machine */ = {
+			isa = PBXGroup;
+			children = (
+				FEF8A0E3173325E300C4DCF9 /* _TCSLocalGroup.h */,
+				FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */,
+				FEF8A0E5173325E300C4DCF9 /* _TCSLocalProject.h */,
+				FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */,
+				FEF8A0EE1733262200C4DCF9 /* _TCSLocalTimer.h */,
+				FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */,
+				FEF8A0F417332B0300C4DCF9 /* _TCSLocalTimedEntity.h */,
+				FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */,
+			);
+			path = Machine;
+			sourceTree = "<group>";
+		};
+		FEF8A0FD1733D37C00C4DCF9 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				FEBD02501733D85A00DAB99D /* IntegrationTests */,
+			);
+			path = Tests;
+			sourceTree = SOURCE_ROOT;
+		};
+		FEF8A1081733D56C00C4DCF9 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FEF8A1091733D56C00C4DCF9 /* AppKit.framework */,
+				FEF8A10A1733D56C00C4DCF9 /* CoreData.framework */,
+				FEF8A10B1733D56C00C4DCF9 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FEBD024B1733D85A00DAB99D /* IntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEBD02621733D85A00DAB99D /* Build configuration list for PBXNativeTarget "IntegrationTests" */;
+			buildPhases = (
+				FEBD02481733D85A00DAB99D /* Sources */,
+				FEBD02491733D85A00DAB99D /* Frameworks */,
+				FEBD024A1733D85A00DAB99D /* Resources */,
+				EE9366FA137F4C149533782D /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IntegrationTests;
+			productName = IntegrationTests;
+			productReference = FEBD024C1733D85A00DAB99D /* IntegrationTests.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FEDAD2E61732E60D0087EB4F /* UberTimeService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEDAD30A1732E60D0087EB4F /* Build configuration list for PBXNativeTarget "UberTimeService" */;
+			buildPhases = (
+				FEDAD2E31732E60D0087EB4F /* Sources */,
+				FEDAD2E41732E60D0087EB4F /* Frameworks */,
+				FEDAD2E51732E60D0087EB4F /* Resources */,
+				E1BF7B7E00644C20ACF2F45C /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UberTimeService;
+			productName = UberTimeService;
+			productReference = FEDAD2E71732E60D0087EB4F /* UberTimeService.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FEDAD2DF1732E60D0087EB4F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = TC;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Pixelbleed;
+			};
+			buildConfigurationList = FEDAD2E21732E60D0087EB4F /* Build configuration list for PBXProject "UberTimeService" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FEDAD2DE1732E60D0087EB4F;
+			productRefGroup = FEDAD2E81732E60D0087EB4F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FEDAD2E61732E60D0087EB4F /* UberTimeService */,
+				FEBD024B1733D85A00DAB99D /* IntegrationTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FEBD024A1733D85A00DAB99D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEBD02551733D85A00DAB99D /* InfoPlist.strings in Resources */,
+				FEBD025D1733D85A00DAB99D /* Default.png in Resources */,
+				FEBD025F1733D85A00DAB99D /* Default@2x.png in Resources */,
+				FEBD02611733D85A00DAB99D /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEDAD2E51732E60D0087EB4F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEDAD2F51732E60D0087EB4F /* InfoPlist.strings in Resources */,
+				FEDAD2FD1732E60D0087EB4F /* Default.png in Resources */,
+				FEDAD2FF1732E60D0087EB4F /* Default@2x.png in Resources */,
+				FEDAD3011732E60D0087EB4F /* Default-568h@2x.png in Resources */,
+				FEDAD3041732E60D0087EB4F /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E1BF7B7E00644C20ACF2F45C /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-BasePods-resources.sh\"\n";
+		};
+		EE9366FA137F4C149533782D /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-IntegrationTests-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FEBD02481733D85A00DAB99D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEBD02571733D85A00DAB99D /* main.m in Sources */,
+				FEBD02681733D9E700DAB99D /* TCLocalProjectTests.m in Sources */,
+				FEBD02691733DBDE00DAB99D /* TCSLocalGroup.m in Sources */,
+				FEBD026A1733DBDE00DAB99D /* TCSLocalProject.m in Sources */,
+				FEBD026B1733DBDE00DAB99D /* TCSLocalTimer.m in Sources */,
+				FEBD026C1733DBDE00DAB99D /* TCSLocalTimedEntity.m in Sources */,
+				FEBD026D1733DBDE00DAB99D /* _TCSLocalGroup.m in Sources */,
+				FEBD026E1733DBDE00DAB99D /* _TCSLocalProject.m in Sources */,
+				FEBD026F1733DBDE00DAB99D /* _TCSLocalTimer.m in Sources */,
+				FEBD02701733DBDE00DAB99D /* _TCSLocalTimedEntity.m in Sources */,
+				FEBD02711733DBDE00DAB99D /* TCSLocalService.m in Sources */,
+				FEBD027C1733E64E00DAB99D /* TCSLocalService.xcdatamodeld in Sources */,
+				FEBD02801733EC3D00DAB99D /* TCBaseTests.m in Sources */,
+				FEBD02831733EE6B00DAB99D /* TCLocalTimerTests.m in Sources */,
+				FEBD02891733EF4200DAB99D /* TCProjectTests.m in Sources */,
+				FEBD028C1733EFE400DAB99D /* TCTimerTests.m in Sources */,
+				FEBD02BA173489C600DAB99D /* NSDate+Utilities.m in Sources */,
+				FEBD02BB173489C600DAB99D /* TCSCalendarManager.m in Sources */,
+				FEBD02BC173489C600DAB99D /* TCSDateRange.m in Sources */,
+				FEBD02BD17348A0C00DAB99D /* TCSBaseEntity.m in Sources */,
+				FEBD02BE17348A0C00DAB99D /* TCSDefaultProvider.m in Sources */,
+				FEBD02BF17348A0C00DAB99D /* TCSGroup.m in Sources */,
+				FEBD02C017348A0C00DAB99D /* TCSProject.m in Sources */,
+				FEBD02C117348A0C00DAB99D /* TCSService.m in Sources */,
+				FEBD02C217348A0C00DAB99D /* TCSTimedEntity.m in Sources */,
+				FEBD02C317348A0C00DAB99D /* TCSTimer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEDAD2E31732E60D0087EB4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEDAD2F71732E60D0087EB4F /* main.m in Sources */,
+				FEDAD2FB1732E60D0087EB4F /* TCAppDelegate.m in Sources */,
+				FEDAD3071732E60D0087EB4F /* TCViewController.m in Sources */,
+				FEF8A0DA1733225C00C4DCF9 /* TCSLocalService.m in Sources */,
+				FEF8A0DB1733225C00C4DCF9 /* TCSLocalService.xcdatamodeld in Sources */,
+				FEF8A0E7173325E300C4DCF9 /* TCSLocalGroup.m in Sources */,
+				FEF8A0E8173325E300C4DCF9 /* TCSLocalProject.m in Sources */,
+				FEF8A0E9173325E300C4DCF9 /* _TCSLocalGroup.m in Sources */,
+				FEF8A0EA173325E300C4DCF9 /* _TCSLocalProject.m in Sources */,
+				FEF8A0ED1733261B00C4DCF9 /* TCSLocalTimer.m in Sources */,
+				FEF8A0F01733262300C4DCF9 /* _TCSLocalTimer.m in Sources */,
+				FEF8A0F617332B0400C4DCF9 /* _TCSLocalTimedEntity.m in Sources */,
+				FEF8A0F917332B0B00C4DCF9 /* TCSLocalTimedEntity.m in Sources */,
+				FEBD02911734853E00DAB99D /* NSDate+Utilities.m in Sources */,
+				FEBD02A9173487AE00DAB99D /* TCSBaseEntity.m in Sources */,
+				FEBD02AA173487AE00DAB99D /* TCSDefaultProvider.m in Sources */,
+				FEBD02AB173487AE00DAB99D /* TCSGroup.m in Sources */,
+				FEBD02AC173487AE00DAB99D /* TCSProject.m in Sources */,
+				FEBD02AD173487AE00DAB99D /* TCSService.m in Sources */,
+				FEBD02AE173487AE00DAB99D /* TCSTimedEntity.m in Sources */,
+				FEBD02AF173487AE00DAB99D /* TCSTimer.m in Sources */,
+				FEBD02B0173487AE00DAB99D /* TCSDateRange.m in Sources */,
+				FEBD02B3173487DF00DAB99D /* TCSCalendarManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FEBD02531733D85A00DAB99D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FEBD02541733D85A00DAB99D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		FEDAD2F31732E60D0087EB4F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FEDAD2F41732E60D0087EB4F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		FEDAD3021732E60D0087EB4F /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FEDAD3031732E60D0087EB4F /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FEBD02631733D85A00DAB99D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 57D237F14E1B41D09D7D2585 /* Pods-IntegrationTests.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IntegrationTests/IntegrationTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"IntegrationTests=1",
+				);
+				INFOPLIST_FILE = "IntegrationTests/IntegrationTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					CoreData,
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FEBD02641733D85A00DAB99D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 57D237F14E1B41D09D7D2585 /* Pods-IntegrationTests.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IntegrationTests/IntegrationTests-Prefix.pch";
+				INFOPLIST_FILE = "IntegrationTests/IntegrationTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					CoreData,
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		FEDAD3081732E60D0087EB4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		FEDAD3091732E60D0087EB4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FEDAD30B1732E60D0087EB4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E999345D174A464E853C247E /* Pods-BasePods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UberTimeService/UberTimeService-Prefix.pch";
+				INFOPLIST_FILE = "UberTimeService/UberTimeService-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FEDAD30C1732E60D0087EB4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E999345D174A464E853C247E /* Pods-BasePods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UberTimeService/UberTimeService-Prefix.pch";
+				INFOPLIST_FILE = "UberTimeService/UberTimeService-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FEBD02621733D85A00DAB99D /* Build configuration list for PBXNativeTarget "IntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEBD02631733D85A00DAB99D /* Debug */,
+				FEBD02641733D85A00DAB99D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FEDAD2E21732E60D0087EB4F /* Build configuration list for PBXProject "UberTimeService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEDAD3081732E60D0087EB4F /* Debug */,
+				FEDAD3091732E60D0087EB4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FEDAD30A1732E60D0087EB4F /* Build configuration list for PBXNativeTarget "UberTimeService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEDAD30B1732E60D0087EB4F /* Debug */,
+				FEDAD30C1732E60D0087EB4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FEF8A0D61733225C00C4DCF9 /* TCSLocalService.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FEF8A0DC1733257E00C4DCF9 /* TCSLocalService 2.xcdatamodel */,
+				FEF8A0D71733225C00C4DCF9 /* TCSLocalService.xcdatamodel */,
+			);
+			currentVersion = FEF8A0DC1733257E00C4DCF9 /* TCSLocalService 2.xcdatamodel */;
+			path = TCSLocalService.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = FEDAD2DF1732E60D0087EB4F /* Project object */;
+}
