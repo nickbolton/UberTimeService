@@ -1,5 +1,5 @@
 //
-//  TCTimerTests.h
+//  TCSTimerTests.h
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TCBaseTests.h"
+#import "TCSBaseTests.h"
 
 @class TCSProject;
 @class TCSTimer;
 
-@interface TCTimerTests : TCBaseTests
+@interface TCSTimerTests : TCSBaseTests
 
 @property (nonatomic, strong) TCSProject *project;
 @property (nonatomic, strong) TCSProject *secondProject;

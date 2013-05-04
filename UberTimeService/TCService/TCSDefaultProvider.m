@@ -12,16 +12,68 @@
 
 @implementation TCSDefaultProvider
 
+- (id)entityIDForEntity:(id)entity {
+
+    if ([entity isKindOfClass:[TCSBaseEntity class]]) {
+        return ((TCSBaseEntity *)entity).providerEntityID;
+    }
+    return nil;
+}
+
+- (BOOL)entityBoolValue:(id)entity forKey:(NSString *)key {
+    return [entity valueForKey:key];
+}
+
+- (NSInteger)entityIntegerValue:(id)entity forKey:(NSString *)key {
+
+}
+
+- (CGFloat)entityFloatValue:(id)entity forKey:(NSString *)key {
+
+}
+
+- (NSString *)entityStringValue:(id)entity forKey:(NSString *)key {
+
+}
+
+- (NSDate *)entityDateValue:(id)entity forKey:(NSString *)key {
+
+}
+
+- (void)setEntity:(id)entity boolValue:(BOOL)value forKey:(NSString *)key {
+
+}
+
+- (void)setEntity:(id)entity integerValue:(NSInteger)value forKey:(NSString *)key {
+
+}
+
+- (void)setEntity:(id)entity floatValue:(CGFloat)value forKey:(NSString *)key {
+
+}
+
+- (void)setEntity:(id)entity stringValue:(NSString *)value forKey:(NSString *)key {
+
+}
+
+- (void)setEntity:(id)entity dateValue:(NSDate *)value forKey:(NSString *)key {
+    
+}
+
 - (TCSBaseEntity *)wrapProviderEntity:(id)entity
                                inType:(Class)type
                              provider:(id <TCSServiceProvider>)serviceProvider {
 
-    TCSBaseEntity *wrappedEntity = [[type alloc] init];
-    wrappedEntity.providerEntity = entity;
-    wrappedEntity.providerEntityID = [serviceProvider entityIDForEntity:entity];
-    wrappedEntity.serviceProvider = (id)self;
+    if (entity != nil) {
+        TCSBaseEntity *wrappedEntity = [[type alloc] init];
+        wrappedEntity.providerEntity = entity;
+        wrappedEntity.providerEntityID = [serviceProvider entityIDForEntity:entity];
+        wrappedEntity.serviceProvider = (id)self;
 
-    return wrappedEntity;
+        return wrappedEntity;
+    }
+
+    return nil;
 }
 
 - (NSArray *)wrapProviderEntities:(NSArray *)entities

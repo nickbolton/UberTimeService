@@ -1,27 +1,19 @@
 //
-//  TCProjectTests.m
+//  TCSProjectTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import "TCProjectTests.h"
+#import "TCSProjectTests.h"
 #import "TCSService.h"
 
-@interface TCProjectTests()
-
-@property (nonatomic) NSInteger filteredModifiers;
-@property (nonatomic) NSInteger keyCode;
-@property (nonatomic) NSInteger modifiers;
-@property (nonatomic) NSInteger order;
-@property (nonatomic, getter = isArchived) BOOL archived;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSInteger color;
+@interface TCSProjectTests()
 
 @end
 
-@implementation TCProjectTests
+@implementation TCSProjectTests
 
 - (void)setUpClass {
 
@@ -54,28 +46,28 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)editProject:(SEL)selector {
 
     [self prepare];
 
-    self.filteredModifiers = 10;
-    self.keyCode = 20;
-    self.modifiers = 30;
-    self.order = 40;
-    self.archived = YES;
-    self.name = @"bababooey";
-    self.color = 50;
+    NSInteger filteredModifiers = 10;
+    NSInteger keyCode = 20;
+    NSInteger modifiers = 30;
+    NSInteger order = 40;
+    BOOL archived = YES;
+    NSString *name = @"bababooey";
+    NSInteger color = 50;
 
-    self.foundProject.filteredModifiers = _filteredModifiers;
-    self.foundProject.keyCode = _keyCode;
-    self.foundProject.modifiers = _modifiers;
-    self.foundProject.order = _order;
-    self.foundProject.archived = _archived;
-    self.foundProject.name = _name;
-    self.foundProject.color = _color;
+    self.foundProject.filteredModifiers = filteredModifiers;
+    self.foundProject.keyCode = keyCode;
+    self.foundProject.modifiers = modifiers;
+    self.foundProject.order = order;
+    self.foundProject.archived = archived;
+    self.foundProject.name = name;
+    self.foundProject.color = color;
 
     [self.service
      updateProject:self.foundProject
@@ -86,33 +78,33 @@
           serviceProvider:self.serviceProvider
           success:^(TCSProject *project) {
 
-              GHAssertTrue(project.filteredModifiers == _filteredModifiers,
+              GHAssertTrue(project.filteredModifiers == filteredModifiers,
                            @"project.filteredModifiers (%d) != filteredModifiers (%d)",
-                           project.filteredModifiers, _filteredModifiers);
+                           project.filteredModifiers, filteredModifiers);
 
-              GHAssertTrue(project.keyCode == _keyCode,
+              GHAssertTrue(project.keyCode == keyCode,
                            @"project.keyCode (%d) != keyCode (%d)",
-                           project.keyCode, _keyCode);
+                           project.keyCode, keyCode);
 
-              GHAssertTrue(project.modifiers == _modifiers,
+              GHAssertTrue(project.modifiers == modifiers,
                            @"project.modifiers (%d) != modifiers (%d)",
-                           project.modifiers, _modifiers);
+                           project.modifiers, modifiers);
 
-              GHAssertTrue(project.order == _order,
+              GHAssertTrue(project.order == order,
                            @"project.order (%d) != order (%d)",
-                           project.order, _order);
+                           project.order, order);
 
-              GHAssertTrue(project.archived == _archived,
+              GHAssertTrue(project.archived == archived,
                            @"project.archived (%d) != archived (%d)",
-                           project.archived, _archived);
+                           project.archived, archived);
 
-              GHAssertTrue(project.color == _color,
+              GHAssertTrue(project.color == color,
                            @"project.color (%d) != color (%d)",
-                           project.color, _color);
+                           project.color, color);
 
-              GHAssertEquals(project.name, _name,
+              GHAssertEquals(project.name, name,
                            @"project.name (%@) != name (%@)",
-                           project.name, _name);
+                           project.name, name);
 
               [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
@@ -125,7 +117,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)deleteProject:(SEL)selector {
@@ -153,7 +145,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)findProjectWithName:(SEL)selector {
@@ -219,7 +211,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)deleteNextProject:(NSEnumerator *)enumerator selector:(SEL)selector {

@@ -70,6 +70,33 @@
 - (void)fetchProjects:(void(^)(NSArray *projects))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
+// Group
+
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)fetchGroupWithID:(id)entityID
+                 success:(void(^)(TCSGroup *group))successBlock
+                 failure:(void(^)(NSError *error))failureBlock;
+
+- (void)fetchGroups:(void(^)(NSArray *groups))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)moveProject:(TCSProject *)sourceProject
+          toProject:(TCSProject *)toProject
+            success:(void(^)(TCSGroup *group))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)moveProject:(TCSProject *)sourceProject
+            toGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
 // Timer
 
 - (void)startTimerForProject:(TCSProject *)project
@@ -144,6 +171,26 @@
                               ignoreOrder:(BOOL)ignoreOrder
                                   success:(void(^)(NSArray *projects))successBlock
                                   failure:(void(^)(NSError *error))failureBlock;
+
+#pragma mark - Groups
+
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)moveProject:(TCSProject *)sourceProject
+          toProject:(TCSProject *)toProject
+            success:(void(^)(TCSGroup *group))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)moveProject:(TCSProject *)sourceProject
+            toGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
 
 #pragma mark - Timers
 

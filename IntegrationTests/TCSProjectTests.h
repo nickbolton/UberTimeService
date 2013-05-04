@@ -1,5 +1,5 @@
 //
-//  TCProjectTests.h
+//  TCSProjectTests.h
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TCBaseTests.h"
+#import "TCSBaseTests.h"
 
-@interface TCProjectTests : TCBaseTests
+@interface TCSProjectTests : TCSBaseTests
 
 @property (nonatomic, strong) TCSProject *foundProject;
 @property (nonatomic, strong) NSString *projectName;

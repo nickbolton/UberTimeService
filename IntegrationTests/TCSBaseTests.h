@@ -1,5 +1,5 @@
 //
-//  TCBaseTests.h
+//  TCSBaseTests.h
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
@@ -10,9 +10,10 @@
 
 @protocol TCSServiceProvider;
 @class TCSProject;
+@class TCSGroup;
 @class TCSService;
 
-@interface TCBaseTests : GHAsyncTestCase
+@interface TCSBaseTests : GHAsyncTestCase
 
 @property (nonatomic, strong) TCSService *service;
 @property (nonatomic, strong) id <TCSServiceProvider> serviceProvider;
@@ -26,6 +27,11 @@
                 serviceProvider:(id <TCSServiceProvider>)serviceProvider
                         success:(void(^)(TCSProject *project))successBlock
                         failure:(void(^)(void))failureBlock;
+
+- (void)findGroupWithEntityID:(id)entityID
+              serviceProvider:(id <TCSServiceProvider>)serviceProvider
+                      success:(void(^)(TCSGroup *group))successBlock
+                      failure:(void(^)(void))failureBlock;
 
 - (void)findProjectWithEntityID:(id)entityID
                            name:(NSString *)name

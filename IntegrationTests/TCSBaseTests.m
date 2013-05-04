@@ -1,15 +1,15 @@
 //
-//  TCBaseTests.m
+//  TCSBaseTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import "TCBaseTests.h"
+#import "TCSBaseTests.h"
 #import "TCSService.h"
 
-@implementation TCBaseTests
+@implementation TCSBaseTests
 
 #pragma mark - Helpers
 
@@ -55,6 +55,29 @@
 
          if (successBlock != nil) {
              successBlock(project);
+         }
+
+     } failure:^(NSError *error) {
+         NSLog(@"ZZZ Error: %@", error);
+         if (failureBlock != nil) {
+             failureBlock();
+         }
+     }];
+}
+
+- (void)findGroupWithEntityID:(id)entityID
+              serviceProvider:(id <TCSServiceProvider>)serviceProvider
+                      success:(void(^)(TCSGroup *group))successBlock
+                      failure:(void(^)(void))failureBlock {
+
+    [serviceProvider
+     fetchGroupWithID:entityID
+     success:^(TCSGroup *group) {
+
+         NSLog(@"ZZZ group.name: %@", group.name);
+
+         if (successBlock != nil) {
+             successBlock(group);
          }
 
      } failure:^(NSError *error) {

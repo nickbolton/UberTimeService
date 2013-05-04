@@ -1,15 +1,15 @@
 //
-//  TCTimerTests.m
+//  TCSTimerTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import "TCTimerTests.h"
+#import "TCSTimerTests.h"
 #import "TCSService.h"
 
-@implementation TCTimerTests
+@implementation TCSTimerTests
 
 - (void)setUpClass {
 
@@ -54,7 +54,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)startTimer:(SEL)selector {
@@ -142,7 +142,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)stopTimer:(SEL)selector {
@@ -180,7 +180,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 
 }
 
@@ -233,7 +233,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)moveTimer:(SEL)selector {
@@ -327,7 +327,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
     
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)rollTimer:(SEL)selector {
@@ -375,7 +375,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
     
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)deleteTimer:(SEL)selector {
@@ -419,7 +419,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
     
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 @end

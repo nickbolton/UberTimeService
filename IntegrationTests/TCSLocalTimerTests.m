@@ -1,20 +1,20 @@
 //
-//  TCLocalTimerTests.m
+//  TCSLocalTimerTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import "TCTimerTests.h"
+#import "TCSTimerTests.h"
 #import "TCSService.h"
 #import "TCSLocalService.h"
 
-@interface TCLocalTimerTests : TCTimerTests { }
+@interface TCSLocalTimerTests : TCSTimerTests { }
 
 @end
 
-@implementation TCLocalTimerTests
+@implementation TCSLocalTimerTests
 
 - (void)setUpClass {
 

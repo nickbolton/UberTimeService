@@ -231,6 +231,96 @@
     }
 }
 
+#pragma mark - Group Methods
+
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    [group.serviceProvider
+     updateGroup:group
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)deleteGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    [group.serviceProvider
+     deleteGroup:group
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)moveProject:(TCSProject *)sourceProject
+          toProject:(TCSProject *)toProject
+            success:(void(^)(TCSGroup *))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    if (sourceProject.serviceProvider == toProject.serviceProvider) {
+
+        [sourceProject.serviceProvider
+         moveProject:sourceProject
+         toProject:toProject
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+
+#warning TODO : rollback??
+
+        [toProject.serviceProvider
+         moveProject:sourceProject
+         toProject:toProject
+         success:^(TCSGroup *group) {
+
+             [self
+              deleteProject:sourceProject
+              success:^{
+
+                  if (successBlock != nil) {
+                      successBlock(group);
+                  }
+
+              } failure:failureBlock];
+             
+         } failure:failureBlock];
+    }
+}
+
+- (void)moveProject:(TCSProject *)sourceProject
+            toGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    if ((sourceProject.serviceProvider == group.serviceProvider) ||
+        (group == nil)) {
+
+        [sourceProject.serviceProvider
+         moveProject:sourceProject
+         toGroup:group
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+
+#warning TODO : rollback??
+
+        [group.serviceProvider
+         moveProject:sourceProject
+         toGroup:group
+         success:^{
+
+             [self
+              deleteProject:sourceProject
+              success:successBlock
+              failure:failureBlock];
+
+         } failure:failureBlock];
+    }
+}
+
 #pragma mark - Timer Methods
 
 - (void)startTimerForProject:(TCSProject *)project
@@ -316,6 +406,8 @@
          failure:failureBlock];
 
     } else {
+
+#warning TODO : rollback??
 
         NSDate *startTime = timer.startTime;
         NSDate *endTime = timer.endTime;

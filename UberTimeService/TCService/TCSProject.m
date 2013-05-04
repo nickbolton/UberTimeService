@@ -8,6 +8,7 @@
 
 #import "TCSProject.h"
 #import "TCSTimer.h"
+#import "TCSGroup.h"
 
 @implementation TCSProject
 
@@ -49,6 +50,14 @@
 
 - (void)setTimers:(NSArray *)timers {
     [self setProviderToManyRelation:timers forKey:@"timers"];
+}
+
+- (TCSGroup *)parent {
+    return (id)[self providerRelationForKey:@"parent" andType:[TCSGroup class]];
+}
+
+- (void)setParent:(TCSGroup *)parent {
+    [self setProviderRelation:parent forKey:@"parent"];
 }
 
 @end

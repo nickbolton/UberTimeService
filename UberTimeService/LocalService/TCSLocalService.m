@@ -228,6 +228,37 @@
     [managedObject didChangeValueForKey:key];
 }
 
+- (id)localServiceEntityFromWrapper:(TCSBaseEntity *)entity
+                          inContext:(NSManagedObjectContext *)context {
+
+    if (entity != nil) {
+        NSManagedObject *providerEntity = entity.providerEntity;
+
+        if (context == nil) {
+            context = [NSManagedObjectContext MR_contextForCurrentThread];
+        }
+
+        return
+        [context
+         existingObjectWithID:providerEntity.objectID
+         error:NULL];
+    }
+    return nil;
+}
+
+- (void)updateWrappedEntityProviderInfo:(TCSBaseEntity *)wrappedEntity {
+
+    if (wrappedEntity != nil) {
+        NSManagedObject *managedObject = wrappedEntity.providerEntity;
+
+        managedObject = (id)
+        [[NSManagedObjectContext MR_contextForCurrentThread]
+         objectWithID:managedObject.objectID];
+
+        wrappedEntity.providerEntity = managedObject;
+    }
+}
+
 #pragma mark - Project Methods
 
 - (void)createProjectWithName:(NSString *)name
@@ -243,6 +274,23 @@
      failure:failureBlock];
 }
 
+- (TCSLocalProject *)doCreateProjectWithName:(NSString *)name
+                           filteredModifiers:(NSInteger)filteredModifiers
+                                     keyCode:(NSInteger)keyCode
+                                   modifiers:(NSInteger)modifiers
+                                   inContext:(NSManagedObjectContext *)context {
+
+    TCSLocalProject *localProject =
+    [TCSLocalProject MR_createInContext:context];
+
+    localProject.name = name;
+    localProject.filteredModifiersValue = filteredModifiers;
+    localProject.keyCodeValue = keyCode;
+    localProject.modifiersValue = modifiers;
+
+    return localProject;
+}
+
 - (void)createProjectWithName:(NSString *)name
             filteredModifiers:(NSInteger)filteredModifiers
                       keyCode:(NSInteger)keyCode
@@ -254,11 +302,13 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        localProject = [TCSLocalProject MR_createInContext:localContext];
-        localProject.name = name;
-        localProject.filteredModifiersValue = filteredModifiers;
-        localProject.keyCodeValue = keyCode;
-        localProject.modifiersValue = modifiers;
+        localProject =
+        [self
+         doCreateProjectWithName:name
+         filteredModifiers:filteredModifiers
+         keyCode:keyCode
+         modifiers:modifiers
+         inContext:localContext];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -298,12 +348,8 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        NSManagedObject *providerEntity = project.providerEntity;
-
         TCSLocalProject *localProject = (id)
-        [localContext
-         existingObjectWithID:providerEntity.objectID
-         error:&localError];
+        [self localServiceEntityFromWrapper:project inContext:localContext];
 
         if (localProject != nil) {
             localProject.name = project.name;
@@ -330,14 +376,8 @@
             }
         } else {
 
-            TCSLocalProject *updatedProject = project.providerEntity;
+            [self updateWrappedEntityProviderInfo:project];
 
-            updatedProject = (id)
-            [[NSManagedObjectContext MR_contextForCurrentThread]
-             objectWithID:updatedProject.objectID];
-
-            project.providerEntity = updatedProject;
-            
             if (successBlock != nil) {
                 successBlock();
             }
@@ -353,12 +393,8 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        NSManagedObject *providerEntity = project.providerEntity;
-
         TCSLocalProject *localProject = (id)
-        [localContext
-         existingObjectWithID:providerEntity.objectID
-         error:NULL];
+        [self localServiceEntityFromWrapper:project inContext:localContext];
 
         if (localProject != nil) {
             [localProject MR_deleteEntity];
@@ -442,6 +478,254 @@
 
 #pragma mark - Group Methods
 
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSAssert(group.serviceProvider == self, @"wrong service provider");
+
+    __block NSError *localError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSLocalGroup *localGroup = (id)
+        [self localServiceEntityFromWrapper:group inContext:localContext];
+
+        if (localGroup != nil) {
+            localGroup.name = group.name;
+            localGroup.colorValue = group.color;
+            localGroup.archivedValue = group.isArchived;
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+
+            [self updateWrappedEntityProviderInfo:group];
+            
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
+- (void)deleteGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSAssert(group.serviceProvider == self, @"wrong service provider");
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSLocalProject *localGroup = (id)
+        [self localServiceEntityFromWrapper:group inContext:localContext];
+
+        if (localGroup != nil) {
+            [localGroup MR_deleteEntity];
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
+- (void)fetchGroupWithID:(id)entityID
+                 success:(void(^)(TCSGroup *group))successBlock
+                 failure:(void(^)(NSError *error))failureBlock {
+
+    if (successBlock != nil) {
+
+        TCSLocalGroup *localGroup = (id)
+        [[NSManagedObjectContext MR_contextForCurrentThread]
+         existingObjectWithID:entityID
+         error:NULL];
+
+        TCSGroup *group = nil;
+
+        if (localGroup != nil) {
+            group = (id)
+            [self
+             wrapProviderEntity:localGroup
+             inType:[TCSGroup class]
+             provider:self];
+        }
+
+        successBlock(group);
+    }
+}
+
+- (void)fetchGroups:(void(^)(NSArray *groups))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    if (successBlock != nil) {
+
+        NSArray *localGroups = [TCSLocalGroup MR_findAll];
+
+        NSArray *result =
+        [self
+         wrapProviderEntities:localGroups
+         inType:[TCSGroup class]
+         provider:self];
+
+        successBlock(result);
+    }
+}
+
+- (void)moveProject:(TCSProject *)sourceProject
+          toProject:(TCSProject *)toProject
+            success:(void(^)(TCSGroup *group))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    __block TCSLocalGroup *localGroup = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSLocalProject *localSourceProject = (id)
+        [self localServiceEntityFromWrapper:sourceProject inContext:localContext];
+
+        TCSLocalProject *localToProject = (id)
+        [self localServiceEntityFromWrapper:toProject inContext:localContext];
+
+        TCSLocalGroup *localGroupTarget =
+        localToProject.parent.parent;
+
+        localGroup = [TCSLocalGroup MR_createInContext:localContext];
+
+        [localGroupTarget addChildrenObject:localGroup];
+
+        localGroup.name = toProject.name;
+
+        [self
+         doMoveProject:localSourceProject
+         toGroup:localGroup
+         inContext:localContext];
+
+        [localToProject MR_deleteEntity];
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+
+            toProject.providerEntity = nil;
+            toProject.providerEntityID = nil;
+
+            [self updateWrappedEntityProviderInfo:sourceProject];
+
+            if (successBlock != nil) {
+
+                localGroup = (id)
+                [[NSManagedObjectContext MR_contextForCurrentThread]
+                 objectWithID:localGroup.objectID];
+
+                TCSGroup *group = (id)
+                [self
+                 wrapProviderEntity:localGroup
+                 inType:[TCSGroup class]
+                 provider:self];
+
+                successBlock(group);
+            }
+        }
+    }];
+}
+
+- (void)moveProject:(TCSProject *)sourceProject
+            toGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSLocalProject *localSourceProject = (id)
+        [self localServiceEntityFromWrapper:sourceProject inContext:localContext];
+
+        TCSLocalGroup *localGroup = (id)
+        [self localServiceEntityFromWrapper:group inContext:localContext];
+
+        [self
+         doMoveProject:localSourceProject
+         toGroup:localGroup
+         inContext:localContext];
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+
+            [self updateWrappedEntityProviderInfo:sourceProject];
+            [self updateWrappedEntityProviderInfo:group];
+
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
+- (void)doMoveProject:(TCSLocalProject *)project
+              toGroup:(TCSLocalGroup *)group
+            inContext:(NSManagedObjectContext *)context {
+
+    TCSLocalGroup *parent = project.parent;
+
+    [parent removeChildrenObject:project];
+
+    if (group != nil) {
+        [group addChildrenObject:project];
+    } else {
+        project.parent = nil;
+    }
+
+    if (parent != nil && [parent.children count] == 0) {
+        // demote to a project
+
+        TCSLocalProject *demotedProject =
+        [self
+         doCreateProjectWithName:parent.name
+         filteredModifiers:0
+         keyCode:0
+         modifiers:0
+         inContext:context];
+        
+        demotedProject.archived = parent.archived;
+        [parent.parent addChildrenObject:demotedProject];
+        [parent.parent removeChildrenObject:parent];
+
+        [parent MR_deleteEntity];
+    }
+}
+
 #pragma mark - Timer Methods
 
 - (void)startTimerForProject:(TCSProject *)project
@@ -474,15 +758,11 @@
 
             if (successBlock != nil) {
 
+                [self updateWrappedEntityProviderInfo:project];
+
                 localTimer = (id)
                 [[NSManagedObjectContext MR_contextForCurrentThread]
                  objectWithID:localTimer.objectID];
-
-                localProject = (id)
-                [[NSManagedObjectContext MR_contextForCurrentThread]
-                 objectWithID:project.providerEntityID];
-
-                project.providerEntity = localProject;
 
                 TCSTimer *timer = (id)
                 [self
@@ -506,12 +786,8 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        NSManagedObject *providerEntity = timer.providerEntity;
-
         TCSLocalTimer *localTimer = (id)
-        [localContext
-         existingObjectWithID:providerEntity.objectID
-         error:&localError];
+        [self localServiceEntityFromWrapper:timer inContext:localContext];
 
         if (localTimer != nil) {
             localTimer.endTime = [NSDate date];
@@ -533,13 +809,7 @@
 
         } else {
 
-            TCSLocalTimer *updatedTimer = timer.providerEntity;
-
-            updatedTimer = (id)
-            [[NSManagedObjectContext MR_contextForCurrentThread]
-             objectWithID:updatedTimer.objectID];
-
-            timer.providerEntity = updatedTimer;
+            [self updateWrappedEntityProviderInfo:timer];
 
             if (successBlock != nil) {
                 successBlock();
@@ -558,12 +828,8 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        NSManagedObject *providerEntity = timer.providerEntity;
-
         TCSLocalTimer *localTimer = (id)
-        [localContext
-         existingObjectWithID:providerEntity.objectID
-         error:&localError];
+        [self localServiceEntityFromWrapper:timer inContext:localContext];
 
         if (localTimer != nil) {
             localTimer.message = timer.message;
@@ -588,13 +854,7 @@
             }
         } else {
 
-            TCSLocalTimer *updatedTimer = timer.providerEntity;
-
-            updatedTimer = (id)
-            [[NSManagedObjectContext MR_contextForCurrentThread]
-             objectWithID:updatedTimer.objectID];
-
-            timer.providerEntity = updatedTimer;
+            [self updateWrappedEntityProviderInfo:timer];
 
             if (successBlock != nil) {
                 successBlock();
@@ -660,29 +920,11 @@
             }
         } else {
 
-            TCSLocalTimer *updatedTimer = timer.providerEntity;
+            [self updateWrappedEntityProviderInfo:timer];
 
-            updatedTimer = (id)
-            [[NSManagedObjectContext MR_contextForCurrentThread]
-             objectWithID:updatedTimer.objectID];
+            [self updateWrappedEntityProviderInfo:sourceProject];
 
-            timer.providerEntity = updatedTimer;
-
-            TCSLocalProject *updatedSourceProject = sourceProject.providerEntity;
-
-            updatedSourceProject = (id)
-            [[NSManagedObjectContext MR_contextForCurrentThread]
-             objectWithID:updatedSourceProject.objectID];
-
-            sourceProject.providerEntity = updatedSourceProject;
-
-            TCSLocalProject *updatedTargetProject = project.providerEntity;
-
-            updatedTargetProject = (id)
-            [[NSManagedObjectContext MR_contextForCurrentThread]
-             objectWithID:updatedTargetProject.objectID];
-
-            project.providerEntity = updatedTargetProject;
+            [self updateWrappedEntityProviderInfo:project];
 
             if (successBlock != nil) {
                 successBlock();
@@ -821,12 +1063,8 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        NSManagedObject *providerEntity = timer.providerEntity;
-
         TCSLocalTimer *localTimer = (id)
-        [localContext
-         existingObjectWithID:providerEntity.objectID
-         error:NULL];
+        [self localServiceEntityFromWrapper:timer inContext:localContext];
 
         if (localTimer != nil) {
             [localTimer MR_deleteEntity];

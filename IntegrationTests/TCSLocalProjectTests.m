@@ -1,5 +1,5 @@
 //
-//  TCTests.m
+//  TCSLocalProjectTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
@@ -7,14 +7,14 @@
 //
 
 #import <GHUnitIOS/GHUnit.h>
-#import "TCProjectTests.h"
+#import "TCSProjectTests.h"
 #import "TCSService.h"
 
-@interface TCLocalProjectTests : TCProjectTests { }
+@interface TCSLocalProjectTests : TCSProjectTests { }
 
 @end
 
-@implementation TCLocalProjectTests
+@implementation TCSLocalProjectTests
 
 - (void)setUpClass {
 
