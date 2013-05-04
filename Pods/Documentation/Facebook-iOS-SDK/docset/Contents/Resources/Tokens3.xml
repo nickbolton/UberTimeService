@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBAppBridgeTypeToJSONConverter.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBAppBridgeTypeToJSONConverter</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridgeTypeToJSONConverter.h</DeclaredIn>
+			
+			<NodeRef refid="3"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppBridgeTypeToJSONConverter/setCreatedPasteboardNames:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Following a call to jsonDictionaryFromDictionaryWithAppBridgeTypes:, this property
+will contain the names of any items that were put on the pasteboard.</Abstract>
+			<DeclaredIn>FBAppBridgeTypeToJSONConverter.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, retain) NSMutableArray *createdPasteboardNames</Declaration>
+			
+			
+			<Anchor>//api/name/createdPasteboardNames</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppBridgeTypeToJSONConverter/createdPasteboardNames</TokenIdentifier>
+			<Abstract type="html">@abstract
+Following a call to jsonDictionaryFromDictionaryWithAppBridgeTypes:, this property
+will contain the names of any items that were put on the pasteboard.</Abstract>
+			<DeclaredIn>FBAppBridgeTypeToJSONConverter.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, retain) NSMutableArray *createdPasteboardNames</Declaration>
+			
+			
+			<Anchor>//api/name/createdPasteboardNames</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppBridgeTypeToJSONConverter/jsonDictionaryFromDictionaryWithAppBridgeTypes:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method to convert a dictionary containing types that are not supported by JSON, but are
+supported by FBAppBridge to a dictionary that can be safely serialized to JSON</Abstract>
+			<DeclaredIn>FBAppBridgeTypeToJSONConverter.h</DeclaredIn>			
+			
+			<Declaration>- (NSDictionary *)jsonDictionaryFromDictionaryWithAppBridgeTypes:(NSDictionary *)dictionaryWithAppBridgeTypes</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dictionaryWithAppBridgeTypes</Name>
+					<Abstract type="html">An NSDictionary that contains types supported by FBAppBridge, either
+as direct descendents or further nested in dictionaries and arrays.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">A dictionary that is ready for JSON serialization</Abstract></ReturnValue>
+			<Anchor>//api/name/jsonDictionaryFromDictionaryWithAppBridgeTypes:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppBridgeTypeToJSONConverter/dictionaryWithAppBridgeTypesFromJSONDictionary:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method to retrieve a copy of the original dictionary that was converted to be JSON
+serializable via a call to jsonDictionaryFromDictionaryWithAppBridgeTypes:</Abstract>
+			<DeclaredIn>FBAppBridgeTypeToJSONConverter.h</DeclaredIn>			
+			
+			<Declaration>- (NSDictionary *)dictionaryWithAppBridgeTypesFromJSONDictionary:(NSDictionary *)jsonDictionary</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>jsonDictionary</Name>
+					<Abstract type="html">An object that was previously processed via a call to
+jsonDictionaryFromDictionaryWithAppBridgeTypes:</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An object that is in the state prior to the call to wrap:</Abstract></ReturnValue>
+			<Anchor>//api/name/dictionaryWithAppBridgeTypesFromJSONDictionary:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

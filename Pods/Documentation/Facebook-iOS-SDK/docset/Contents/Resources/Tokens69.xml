@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/FBOpenGraphObject.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/FBOpenGraphObject</TokenIdentifier>
+			<Abstract type="html">@protocol</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>
+			
+			<NodeRef refid="69"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setId:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s id</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) NSString *id</Declaration>
+			
+			
+			<Anchor>//api/name/id</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/id</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s id</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) NSString *id</Declaration>
+			
+			
+			<Anchor>//api/name/id</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setType:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s type, which is a string in the form mynamespace:mytype</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) NSString *type</Declaration>
+			
+			
+			<Anchor>//api/name/type</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/type</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s type, which is a string in the form mynamespace:mytype</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) NSString *type</Declaration>
+			
+			
+			<Anchor>//api/name/type</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setTitle:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to object&apos;s title</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) NSString *title</Declaration>
+			
+			
+			<Anchor>//api/name/title</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/title</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to object&apos;s title</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) NSString *title</Declaration>
+			
+			
+			<Anchor>//api/name/title</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setImage:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s image property</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id image</Declaration>
+			
+			
+			<Anchor>//api/name/image</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/image</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s image property</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id image</Declaration>
+			
+			
+			<Anchor>//api/name/image</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setUrl:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s url property</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id url</Declaration>
+			
+			
+			<Anchor>//api/name/url</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/url</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s url property</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id url</Declaration>
+			
+			
+			<Anchor>//api/name/url</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setDescription:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s description property</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id description</Declaration>
+			
+			
+			<Anchor>//api/name/description</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/description</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to the object&apos;s description property</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id description</Declaration>
+			
+			
+			<Anchor>//api/name/description</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBOpenGraphObject/setData:</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to action&apos;s data, which is a dictionary of custom properties</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id&lt;FBGraphObject&gt; data</Declaration>
+			
+			
+			<Anchor>//api/name/data</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/FBOpenGraphObject/data</TokenIdentifier>
+			<Abstract type="html">@property
+@abstract Typed access to action&apos;s data, which is a dictionary of custom properties</Abstract>
+			<DeclaredIn>FBOpenGraphObject.h</DeclaredIn>			
+			
+			<Declaration>@property (retain, nonatomic) id&lt;FBGraphObject&gt; data</Declaration>
+			
+			
+			<Anchor>//api/name/data</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

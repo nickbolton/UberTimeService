@@ -1,0 +1,1752 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>FBDialogs Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<meta name="viewport" content="width=550" />
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.1 (build 840)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">Facebook-iOS-SDK 3.5.1 </a></h1>
+				<a id="developerHome" href="../index.html">Facebook</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">FBDialogs Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	<option value="class_methods">Class Methods</option>
+	
+	<option value="//api/name/canPresentLoginDialogWithParams:">&nbsp;&nbsp;&nbsp;&nbsp;+ canPresentLoginDialogWithParams:</option>
+	
+	<option value="//api/name/canPresentOSIntegratedShareDialogWithSession:">&nbsp;&nbsp;&nbsp;&nbsp;+ canPresentOSIntegratedShareDialogWithSession:</option>
+	
+	<option value="//api/name/canPresentShareDialogWithOpenGraphActionParams:">&nbsp;&nbsp;&nbsp;&nbsp;+ canPresentShareDialogWithOpenGraphActionParams:</option>
+	
+	<option value="//api/name/canPresentShareDialogWithParams:">&nbsp;&nbsp;&nbsp;&nbsp;+ canPresentShareDialogWithParams:</option>
+	
+	<option value="//api/name/presentLoginDialogWithParams:clientState:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentLoginDialogWithParams:clientState:handler:</option>
+	
+	<option value="//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:</option>
+	
+	<option value="//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:</option>
+	
+	<option value="//api/name/presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithLink:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithLink:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithLink:name:caption:description:picture:clientState:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithLink:name:caption:description:picture:clientState:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithLink:name:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithLink:name:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithOpenGraphActionParams:clientState:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithOpenGraphActionParams:clientState:handler:</option>
+	
+	<option value="//api/name/presentShareDialogWithParams:clientState:handler:">&nbsp;&nbsp;&nbsp;&nbsp;+ presentShareDialogWithParams:clientState:handler:</option>
+	
+	
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Internal Methods">Internal Methods</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/canPresentLoginDialogWithParams:">canPresentLoginDialogWithParams:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/canPresentOSIntegratedShareDialogWithSession:">canPresentOSIntegratedShareDialogWithSession:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/canPresentShareDialogWithOpenGraphActionParams:">canPresentShareDialogWithOpenGraphActionParams:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/canPresentShareDialogWithParams:">canPresentShareDialogWithParams:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentLoginDialogWithParams:clientState:handler:">presentLoginDialogWithParams:clientState:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:">presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:">presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:">presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithLink:handler:">presentShareDialogWithLink:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithLink:name:caption:description:picture:clientState:handler:">presentShareDialogWithLink:name:caption:description:picture:clientState:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithLink:name:handler:">presentShareDialogWithLink:name:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:">presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:">presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithOpenGraphActionParams:clientState:handler:">presentShareDialogWithOpenGraphActionParams:clientState:handler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/presentShareDialogWithParams:clientState:handler:">presentShareDialogWithParams:clientState:handler:</a></span></li>
+	
+</ul></li>
+
+
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="FBDialogs Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">FBDialogs Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">FBDialogs.h</td>
+</tr>
+						</tbody></table></div>
+					
+					
+					
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>@class FBDialogs</p>
+
+<p>@abstract
+Provides methods to display native (i.e., non-Web-based) dialogs to the user.
+Currently the iOS 6 sharing dialog is supported.</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						<h3 class="subsubtitle task-title">Other Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:">+&nbsp;presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. The
+current active session returned by <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a> will be used to determine
+whether the dialog will be displayed. If a session is active, it must be open and the
+login method used to authenticate the user must be native iOS 6.0 authentication.
+If no session active, then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:">+&nbsp;presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. The
+current active session returned by <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a> will be used to determine
+whether the dialog will be displayed. If a session is active, it must be open and the
+login method used to authenticate the user must be native iOS 6.0 authentication.
+If no session active, then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:">+&nbsp;presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. An
+<a href="../Classes/FBSession.html">FBSession</a> may be specified, or nil may be passed to indicate that the current
+active session should be used. If a session is specified (whether explicitly or by
+virtue of being the active session), it must be open and the login method used to
+authenticate the user must be native iOS 6.0 authentication. If no session is specified
+(and there is no active session), then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/canPresentOSIntegratedShareDialogWithSession:">+&nbsp;canPresentOSIntegratedShareDialogWithSession:</a></code>
+		<span class="tooltip"><p>@abstract
+Determines whether a call to presentShareDialogModallyFrom: will successfully present
+a dialog. This is useful for applications that need to modify the available UI controls
+depending on whether the dialog is available on the current platform and for the current
+user.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/canPresentShareDialogWithParams:">+&nbsp;canPresentShareDialogWithParams:</a></code>
+		<span class="tooltip"><p>@abstract
+Determines whether a call to presentFBShareDialogWithTarget: will successfully
+present a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application. This is useful for applications that
+need to modify the available UI controls depending on whether the dialog is
+available on the current platform.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithParams:clientState:handler:">+&nbsp;presentShareDialogWithParams:clientState:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share a status
+update that may include text, images, or URLs. No session is required, and the app
+does not need to be authorized to call this.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithLink:handler:">+&nbsp;presentShareDialogWithLink:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithLink:name:handler:">+&nbsp;presentShareDialogWithLink:name:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithLink:name:caption:description:picture:clientState:handler:">+&nbsp;presentShareDialogWithLink:name:caption:description:picture:clientState:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/canPresentShareDialogWithOpenGraphActionParams:">+&nbsp;canPresentShareDialogWithOpenGraphActionParams:</a></code>
+		<span class="tooltip"><p>@abstract
+Determines whether a call to presentFBShareDialogWithOpenGraphActionParams:clientState:handler:
+will successfully present a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application. This is useful for applications
+that need to modify the available UI controls depending on whether the dialog is
+available on the current platform.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithOpenGraphActionParams:clientState:handler:">+&nbsp;presentShareDialogWithOpenGraphActionParams:clientState:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to publish an Open
+Graph action. No session is required, and the app does not need to be authorized to call
+this.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:">+&nbsp;presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to publish the
+supplied Open Graph action. No session is required, and the app does not need to be
+authorized to call this.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:">+&nbsp;presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to publish the
+supplied Open Graph action. No session is required, and the app does not need to be
+authorized to call this.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Internal Methods" name="task_Internal Methods"></a>
+						<h3 class="subsubtitle task-title">Internal Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/canPresentLoginDialogWithParams:">+&nbsp;canPresentLoginDialogWithParams:</a></code>
+		<span class="tooltip"><p>@abstract
+Determines whether the corresponding presentFBLoginDialogWithParams:clientState:handler:
+is supported by the installed version of the <a href="../Classes/Facebook.html">Facebook</a> app for iOS.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/presentLoginDialogWithParams:clientState:handler:">+&nbsp;presentLoginDialogWithParams:clientState:handler:</a></code>
+		<span class="tooltip"><p>@abstract
+Switches to the native <a href="../Classes/Facebook.html">Facebook</a> App and shows the login dialog for the requested login params</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Class Methods" name="class_methods"></a>
+						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/canPresentLoginDialogWithParams:" title="canPresentLoginDialogWithParams:"></a>
+	<h3 class="subsubtitle method-title">canPresentLoginDialogWithParams:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Determines whether the corresponding presentFBLoginDialogWithParams:clientState:handler:
+is supported by the installed version of the <a href="../Classes/Facebook.html">Facebook</a> app for iOS.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)canPresentLoginDialogWithParams:(FBLoginDialogParams *)<em>params</em></code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Determines whether the corresponding presentFBLoginDialogWithParams:clientState:handler:
+is supported by the installed version of the <a href="../Classes/Facebook.html">Facebook</a> app for iOS.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs+Internal.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/canPresentOSIntegratedShareDialogWithSession:" title="canPresentOSIntegratedShareDialogWithSession:"></a>
+	<h3 class="subsubtitle method-title">canPresentOSIntegratedShareDialogWithSession:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Determines whether a call to presentShareDialogModallyFrom: will successfully present
+a dialog. This is useful for applications that need to modify the available UI controls
+depending on whether the dialog is available on the current platform and for the current
+user.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)canPresentOSIntegratedShareDialogWithSession:(FBSession *)<em>session</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>session</em></dt>
+			<dd><p>The <FBSession> to use to determine whether or not the user has been
+authenticated with iOS native authentication. If nil, then <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a>
+will be checked. See discussion above for the implications of nil or non-nil session.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the dialog would be presented for the session, and NO if not</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Determines whether a call to presentShareDialogModallyFrom: will successfully present
+a dialog. This is useful for applications that need to modify the available UI controls
+depending on whether the dialog is available on the current platform and for the current
+user.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/canPresentShareDialogWithOpenGraphActionParams:" title="canPresentShareDialogWithOpenGraphActionParams:"></a>
+	<h3 class="subsubtitle method-title">canPresentShareDialogWithOpenGraphActionParams:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Determines whether a call to presentFBShareDialogWithOpenGraphActionParams:clientState:handler:
+will successfully present a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application. This is useful for applications
+that need to modify the available UI controls depending on whether the dialog is
+available on the current platform.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)canPresentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)<em>params</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>params</em></dt>
+			<dd><p>The parameters for the FB share dialog.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the dialog would be presented, and NO if not</p>
+
+<p>@discussion A return value of YES here indicates that the corresponding
+presentFBShareDialogWithOpenGraphActionParams method will return a non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> for
+the same params. And vice versa.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Determines whether a call to presentFBShareDialogWithOpenGraphActionParams:clientState:handler:
+will successfully present a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application. This is useful for applications
+that need to modify the available UI controls depending on whether the dialog is
+available on the current platform.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/canPresentShareDialogWithParams:" title="canPresentShareDialogWithParams:"></a>
+	<h3 class="subsubtitle method-title">canPresentShareDialogWithParams:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Determines whether a call to presentFBShareDialogWithTarget: will successfully
+present a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application. This is useful for applications that
+need to modify the available UI controls depending on whether the dialog is
+available on the current platform.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)canPresentShareDialogWithParams:(FBShareDialogParams *)<em>params</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>params</em></dt>
+			<dd><p>The parameters for the FB share dialog.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the dialog would be presented, and NO if not</p>
+
+<p>@discussion A return value of YES here indicates that the corresponding
+presentFBShareDialogWithParams method will return a non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> for the same
+params. And vice versa.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Determines whether a call to presentFBShareDialogWithTarget: will successfully
+present a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application. This is useful for applications that
+need to modify the available UI controls depending on whether the dialog is
+available on the current platform.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentLoginDialogWithParams:clientState:handler:" title="presentLoginDialogWithParams:clientState:handler:"></a>
+	<h3 class="subsubtitle method-title">presentLoginDialogWithParams:clientState:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Switches to the native <a href="../Classes/Facebook.html">Facebook</a> App and shows the login dialog for the requested login params</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentLoginDialogWithParams:(FBLoginDialogParams *)<em>params</em> clientState:(NSDictionary *)<em>clientState</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>params</em></dt>
+			<dd><p>Params for the native Login dialog</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientState</em></dt>
+			<dd><p>An NSDictionary that&rsquo;s passed through when the completion handler
+is called. This is useful for the app to maintain state. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the login is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresentFBLoginDialogWithParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Switches to the native <a href="../Classes/Facebook.html">Facebook</a> App and shows the login dialog for the requested login params</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs+Internal.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:" title="presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:"></a>
+	<h3 class="subsubtitle method-title">presentOSIntegratedShareDialogModallyFrom:initialText:image:url:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. The
+current active session returned by <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a> will be used to determine
+whether the dialog will be displayed. If a session is active, it must be open and the
+login method used to authenticate the user must be native iOS 6.0 authentication.
+If no session active, then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController *)<em>viewController</em> initialText:(NSString *)<em>initialText</em> image:(UIImage *)<em>image</em> url:(NSURL *)<em>url</em> handler:(FBOSIntegratedShareDialogHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>viewController</em></dt>
+			<dd><p>The view controller which will present the dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>initialText</em></dt>
+			<dd><p>The text which will initially be populated in the dialog. The user
+will have the opportunity to edit this text before posting it. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>image</em></dt>
+			<dd><p>A UIImage that will be attached to the status update. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>url</em></dt>
+			<dd><p>An NSURL that will be attached to the status update. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A handler that will be called when the dialog is dismissed, or if an error
+occurs. May be nil.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the dialog was presented, NO if not (in the case of a NO result, the handler
+will still be called, with an error indicating the reason the dialog was not displayed)</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. The
+current active session returned by <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a> will be used to determine
+whether the dialog will be displayed. If a session is active, it must be open and the
+login method used to authenticate the user must be native iOS 6.0 authentication.
+If no session active, then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:" title="presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:"></a>
+	<h3 class="subsubtitle method-title">presentOSIntegratedShareDialogModallyFrom:initialText:images:urls:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. The
+current active session returned by <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a> will be used to determine
+whether the dialog will be displayed. If a session is active, it must be open and the
+login method used to authenticate the user must be native iOS 6.0 authentication.
+If no session active, then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController *)<em>viewController</em> initialText:(NSString *)<em>initialText</em> images:(NSArray *)<em>images</em> urls:(NSArray *)<em>urls</em> handler:(FBOSIntegratedShareDialogHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>viewController</em></dt>
+			<dd><p>The view controller which will present the dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>initialText</em></dt>
+			<dd><p>The text which will initially be populated in the dialog. The user
+will have the opportunity to edit this text before posting it. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>images</em></dt>
+			<dd><p>An array of UIImages that will be attached to the status update. May
+be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>urls</em></dt>
+			<dd><p>An array of NSURLs that will be attached to the status update. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A handler that will be called when the dialog is dismissed, or if an error
+occurs. May be nil.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the dialog was presented, NO if not (in the case of a NO result, the handler
+will still be called, with an error indicating the reason the dialog was not displayed)</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. The
+current active session returned by <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a> will be used to determine
+whether the dialog will be displayed. If a session is active, it must be open and the
+login method used to authenticate the user must be native iOS 6.0 authentication.
+If no session active, then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:" title="presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:"></a>
+	<h3 class="subsubtitle method-title">presentOSIntegratedShareDialogModallyFrom:session:initialText:images:urls:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. An
+<a href="../Classes/FBSession.html">FBSession</a> may be specified, or nil may be passed to indicate that the current
+active session should be used. If a session is specified (whether explicitly or by
+virtue of being the active session), it must be open and the login method used to
+authenticate the user must be native iOS 6.0 authentication. If no session is specified
+(and there is no active session), then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController *)<em>viewController</em> session:(FBSession *)<em>session</em> initialText:(NSString *)<em>initialText</em> images:(NSArray *)<em>images</em> urls:(NSArray *)<em>urls</em> handler:(FBOSIntegratedShareDialogHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>viewController</em></dt>
+			<dd><p>The view controller which will present the dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>session</em></dt>
+			<dd><p>The <FBSession> to use to determine whether or not the user has been
+authenticated with iOS native authentication. If nil, then <a href="../Classes/FBSession.html#//api/name/activeSession">[FBSession activeSession]</a>
+will be checked. See discussion above for the implications of nil or non-nil session.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>initialText</em></dt>
+			<dd><p>The text which will initially be populated in the dialog. The user
+will have the opportunity to edit this text before posting it. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>images</em></dt>
+			<dd><p>An array of UIImages that will be attached to the status update. May
+be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>urls</em></dt>
+			<dd><p>An array of NSURLs that will be attached to the status update. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A handler that will be called when the dialog is dismissed, or if an error
+occurs. May be nil.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the dialog was presented, NO if not (in the case of a NO result, the handler
+will still be called, with an error indicating the reason the dialog was not displayed)</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog that allows the user to share a status update that may include
+text, images, or URLs. This dialog is only available on iOS 6.0 and above. An
+<a href="../Classes/FBSession.html">FBSession</a> may be specified, or nil may be passed to indicate that the current
+active session should be used. If a session is specified (whether explicitly or by
+virtue of being the active session), it must be open and the login method used to
+authenticate the user must be native iOS 6.0 authentication. If no session is specified
+(and there is no active session), then whether the call succeeds or not will depend on
+whether <a href="../Classes/Facebook.html">Facebook</a> integration has been configured.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithLink:handler:" title="presentShareDialogWithLink:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithLink:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithLink:(NSURL *)<em>link</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>link</em></dt>
+			<dd><p>The URL link to be attached to the post.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresetFBShareDialogWithParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithLink:name:caption:description:picture:clientState:handler:" title="presentShareDialogWithLink:name:caption:description:picture:clientState:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithLink:name:caption:description:picture:clientState:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithLink:(NSURL *)<em>link</em> name:(NSString *)<em>name</em> caption:(NSString *)<em>caption</em> description:(NSString *)<em>description</em> picture:(NSURL *)<em>picture</em> clientState:(NSDictionary *)<em>clientState</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>link</em></dt>
+			<dd><p>The URL link to be attached to the post.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>The name, or title associated with the link. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>caption</em></dt>
+			<dd><p>The caption to be used with the link. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>description</em></dt>
+			<dd><p>The description associated with the link. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>picture</em></dt>
+			<dd><p>The link to a thumbnail to associate with the link. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientState</em></dt>
+			<dd><p>An NSDictionary that&rsquo;s passed through when the completion handler
+is called. This is useful for the app to maintain state about the share request that
+was made so as to have appropriate action when the handler is called. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresetFBShareDialogWithParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithLink:name:handler:" title="presentShareDialogWithLink:name:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithLink:name:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithLink:(NSURL *)<em>link</em> name:(NSString *)<em>name</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>link</em></dt>
+			<dd><p>The URL link to be attached to the post.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>The name, or title associated with the link. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresetFBShareDialogWithParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to share the
+supplied link. No session is required, and the app does not need to be authorized
+to call this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:" title="presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:clientState:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to publish the
+supplied Open Graph action. No session is required, and the app does not need to be
+authorized to call this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithOpenGraphAction:(id&lt;FBOpenGraphAction&gt;)<em>action</em> actionType:(NSString *)<em>actionType</em> previewPropertyName:(NSString *)<em>previewPropertyName</em> clientState:(NSDictionary *)<em>clientState</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>action</em></dt>
+			<dd><p>The Open Graph action to be published. May not be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>actionType</em></dt>
+			<dd><p>the fully-specified Open Graph action type of the action (e.g.,
+my_app_namespace:my_action).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>previewPropertyName</em></dt>
+			<dd><p>the name of the property on the action that represents the
+primary Open Graph object associated with the action; this object will be displayed in the
+preview portion of the share dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientState</em></dt>
+			<dd><p>An NSDictionary that&rsquo;s passed through when the completion handler
+is called. This is useful for the app to maintain state about the share request that
+was made so as to have appropriate action when the handler is called. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresentFBShareDialogWithOpenGraphActionParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to publish the
+supplied Open Graph action. No session is required, and the app does not need to be
+authorized to call this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:" title="presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithOpenGraphAction:actionType:previewPropertyName:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to publish the
+supplied Open Graph action. No session is required, and the app does not need to be
+authorized to call this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithOpenGraphAction:(id&lt;FBOpenGraphAction&gt;)<em>action</em> actionType:(NSString *)<em>actionType</em> previewPropertyName:(NSString *)<em>previewPropertyName</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>action</em></dt>
+			<dd><p>The Open Graph action to be published. May not be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>actionType</em></dt>
+			<dd><p>the fully-specified Open Graph action type of the action (e.g.,
+my_app_namespace:my_action).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>previewPropertyName</em></dt>
+			<dd><p>the name of the property on the action that represents the
+primary Open Graph object associated with the action; this object will be displayed in the
+preview portion of the share dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresentFBShareDialogWithOpenGraphActionParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to publish the
+supplied Open Graph action. No session is required, and the app does not need to be
+authorized to call this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithOpenGraphActionParams:clientState:handler:" title="presentShareDialogWithOpenGraphActionParams:clientState:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithOpenGraphActionParams:clientState:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to publish an Open
+Graph action. No session is required, and the app does not need to be authorized to call
+this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)<em>params</em> clientState:(NSDictionary *)<em>clientState</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>params</em></dt>
+			<dd><p>The parameters for the Open Graph action dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientState</em></dt>
+			<dd><p>An NSDictionary that&rsquo;s passed through when the completion handler
+is called. This is useful for the app to maintain state about the share request that
+was made so as to have appropriate action when the handler is called. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresentFBShareDialogWithOpenGraphActionParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to publish an Open
+Graph action. No session is required, and the app does not need to be authorized to call
+this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/presentShareDialogWithParams:clientState:handler:" title="presentShareDialogWithParams:clientState:handler:"></a>
+	<h3 class="subsubtitle method-title">presentShareDialogWithParams:clientState:handler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Presents a dialog in the <a href="../Classes/Facebook.html">Facebook</a> application that allows the user to share a status
+update that may include text, images, or URLs. No session is required, and the app
+does not need to be authorized to call this.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBAppCall *)presentShareDialogWithParams:(FBShareDialogParams *)<em>params</em> clientState:(NSDictionary *)<em>clientState</em> handler:(FBDialogAppCallCompletionHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>params</em></dt>
+			<dd><p>The parameters for the FB share dialog.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientState</em></dt>
+			<dd><p>An NSDictionary that&rsquo;s passed through when the completion handler
+is called. This is useful for the app to maintain state about the share request that
+was made so as to have appropriate action when the handler is called. May be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A completion handler that may be called when the status update is
+complete. May be nil. If non-nil, the handler will always be called asynchronously.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An <a href="../Classes/FBAppCall.html">FBAppCall</a> object that will also be passed into the provided
+FBAppCallCompletionHandler.</p>
+
+<p>@discussion A non-nil <a href="../Classes/FBAppCall.html">FBAppCall</a> object is only returned if the corresponding
+canPresetFBShareDialogWithParams method is also returning YES for the same params.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Presents a dialog in the Facebook application that allows the user to share a status
+update that may include text, images, or URLs. No session is required, and the app
+does not need to be authorized to call this.</p>
+
+<p>Note that this will perform an app switch to the Facebook app, and will cause the
+current app to be suspended. When the share is complete, the Facebook app will redirect
+to a url of the form &ldquo;fb{APP_ID}://&rdquo; that the application must handle. The app should
+then call <a href="../Classes/FBAppCall.html#//api/name/handleOpenURL:sourceApplication:fallbackHandler:">[FBAppCall handleOpenURL:sourceApplication:fallbackHandler:]</a> to trigger
+the appropriate handling. Note that <a href="../Classes/FBAppCall.html">FBAppCall</a> will first try to call the completion
+handler associated with this method, but since during an app switch, the calling app
+may be suspended or killed, the app must also give a fallbackHandler to the
+handleOpenURL: method in <a href="../Classes/FBAppCall.html">FBAppCall</a>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBDialogs.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2013 Facebook. All rights reserved. (Last updated: 2013-05-04)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.1 (build 840)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

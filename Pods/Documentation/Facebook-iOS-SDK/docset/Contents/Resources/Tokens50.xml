@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBWebDialogs.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBWebDialogs</TokenIdentifier>
+			<Abstract type="html">@class FBWebDialogs</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>
+			
+			<NodeRef refid="50"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBWebDialogs/presentDialogModallyWithSession:dialog:parameters:handler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Presents a Facebook web dialog (https://developers.facebook.com/docs/reference/dialogs/)
+such as feed or apprequest.</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (void)presentDialogModallyWithSession:(FBSession *)session dialog:(NSString *)dialog parameters:(NSDictionary *)parameters handler:(FBWebDialogHandler)handler</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">Represents the session to use for the dialog. May be nil, which uses
+the active session if present, or returns NO, if not.</Abstract>
+				</Parameter><Parameter>
+					<Name>dialog</Name>
+					<Abstract type="html">Represents the dialog or method name, such as @&quot;feed&quot;</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of parameters to be passed to the dialog</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">An optional handler that will be called when the dialog is dismissed. Note,
+that if the method returns NO, the handler is not called. May be nil.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/presentDialogModallyWithSession:dialog:parameters:handler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBWebDialogs/presentDialogModallyWithSession:dialog:parameters:handler:delegate:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Presents a Facebook web dialog (https://developers.facebook.com/docs/reference/dialogs/)
+such as feed or apprequest.</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (void)presentDialogModallyWithSession:(FBSession *)session dialog:(NSString *)dialog parameters:(NSDictionary *)parameters handler:(FBWebDialogHandler)handler delegate:(id&lt;FBWebDialogsDelegate&gt;)delegate</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">Represents the session to use for the dialog. May be nil, which uses
+the active session if present, or returns NO, if not.</Abstract>
+				</Parameter><Parameter>
+					<Name>dialog</Name>
+					<Abstract type="html">Represents the dialog or method name, such as @&quot;feed&quot;</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of parameters to be passed to the dialog</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">An optional handler that will be called when the dialog is dismissed. Note,
+that if the method returns NO, the handler is not called. May be nil.</Abstract>
+				</Parameter><Parameter>
+					<Name>delegate</Name>
+					<Abstract type="html">An optional delegate to allow for advanced processing of web based
+dialogs. See &apos;FBWebDialogsDelegate&apos; for more details.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/presentDialogModallyWithSession:dialog:parameters:handler:delegate:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBWebDialogs/presentRequestsDialogModallyWithSession:message:title:parameters:handler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Presents a Facebook apprequest dialog.</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (void)presentRequestsDialogModallyWithSession:(FBSession *)session message:(NSString *)message title:(NSString *)title parameters:(NSDictionary *)parameters handler:(FBWebDialogHandler)handler</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">Represents the session to use for the dialog. May be nil, which uses
+the active session if present.</Abstract>
+				</Parameter><Parameter>
+					<Name>message</Name>
+					<Abstract type="html">The required message for the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>title</Name>
+					<Abstract type="html">An optional title for the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of additional parameters to be passed to the dialog. May be nil</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">An optional handler that will be called when the dialog is dismissed. May be nil.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/presentRequestsDialogModallyWithSession:message:title:parameters:handler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBWebDialogs/presentRequestsDialogModallyWithSession:message:title:parameters:handler:friendCache:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Presents a Facebook apprequest dialog.</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (void)presentRequestsDialogModallyWithSession:(FBSession *)session message:(NSString *)message title:(NSString *)title parameters:(NSDictionary *)parameters handler:(FBWebDialogHandler)handler friendCache:(FBFrictionlessRecipientCache *)friendCache</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">Represents the session to use for the dialog. May be nil, which uses
+the active session if present.</Abstract>
+				</Parameter><Parameter>
+					<Name>message</Name>
+					<Abstract type="html">The required message for the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>title</Name>
+					<Abstract type="html">An optional title for the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of additional parameters to be passed to the dialog. May be nil</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">An optional handler that will be called when the dialog is dismissed. May be nil.</Abstract>
+				</Parameter><Parameter>
+					<Name>friendCache</Name>
+					<Abstract type="html">An optional cache object used to enable frictionless sharing for a known set of friends. The
+cache instance should be preserved for the life of the session and reused for multiple calls to the present method.
+As the users set of friends enabled for frictionless sharing changes, this method auto-updates the cache.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/presentRequestsDialogModallyWithSession:message:title:parameters:handler:friendCache:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBWebDialogs/presentFeedDialogModallyWithSession:parameters:handler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Presents a Facebook feed dialog.</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (void)presentFeedDialogModallyWithSession:(FBSession *)session parameters:(NSDictionary *)parameters handler:(FBWebDialogHandler)handler</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">Represents the session to use for the dialog. May be nil, which uses
+the active session if present.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of additional parameters to be passed to the dialog. May be nil</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">An optional handler that will be called when the dialog is dismissed. May be nil.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/presentFeedDialogModallyWithSession:parameters:handler:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

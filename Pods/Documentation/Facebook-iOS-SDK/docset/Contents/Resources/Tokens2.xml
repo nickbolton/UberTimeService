@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBAppBridge.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBAppBridge</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridge.h</DeclaredIn>
+			
+			<NodeRef refid="2"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppBridge/sharedInstance</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridge.h</DeclaredIn>			
+			
+			<Declaration>+ (id)sharedInstance</Declaration>
+			
+			
+			<Anchor>//api/name/sharedInstance</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppBridge/dispatchDialogAppCall:version:completionHandler:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridge.h</DeclaredIn>			
+			
+			<Declaration>- (void)dispatchDialogAppCall:(FBAppCall *)appCall version:(NSString *)version completionHandler:(FBDialogAppCallCompletionHandler)handler</Declaration>
+			
+			
+			<Anchor>//api/name/dispatchDialogAppCall:version:completionHandler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppBridge/handleOpenURL:sourceApplication:fallbackHandler:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridge.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication fallbackHandler:(FBAppCallHandler)fallbackHandler</Declaration>
+			
+			
+			<Anchor>//api/name/handleOpenURL:sourceApplication:fallbackHandler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppBridge/handleDidBecomeActive</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridge.h</DeclaredIn>			
+			
+			<Declaration>- (void)handleDidBecomeActive</Declaration>
+			
+			
+			<Anchor>//api/name/handleDidBecomeActive</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppBridge/installedFBNativeAppVersionForMethod:minVersion:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppBridge.h</DeclaredIn>			
+			
+			<Declaration>+ (NSString *)installedFBNativeAppVersionForMethod:(NSString *)method minVersion:(NSString *)minVersion</Declaration>
+			
+			
+			<Anchor>//api/name/installedFBNativeAppVersionForMethod:minVersion:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

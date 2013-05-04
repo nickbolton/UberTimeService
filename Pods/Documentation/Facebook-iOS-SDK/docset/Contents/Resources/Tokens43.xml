@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBShareDialogParams.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBShareDialogParams</TokenIdentifier>
+			<Abstract type="html">@class FBShareDialogParams</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>
+			
+			<NodeRef refid="43"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setLink:</TokenIdentifier>
+			<Abstract type="html">@abstract The URL link to be attached to the post. Only &quot;http&quot; or &quot;https&quot;
+schemes are supported.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSURL *link</Declaration>
+			
+			
+			<Anchor>//api/name/link</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/link</TokenIdentifier>
+			<Abstract type="html">@abstract The URL link to be attached to the post. Only &quot;http&quot; or &quot;https&quot;
+schemes are supported.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSURL *link</Declaration>
+			
+			
+			<Anchor>//api/name/link</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setName:</TokenIdentifier>
+			<Abstract type="html">@abstract The name, or title associated with the link. Is only used if the
+link is non-nil.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/name</TokenIdentifier>
+			<Abstract type="html">@abstract The name, or title associated with the link. Is only used if the
+link is non-nil.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setCaption:</TokenIdentifier>
+			<Abstract type="html">@abstract The caption to be used with the link. Is only used if the link is
+non-nil.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *caption</Declaration>
+			
+			
+			<Anchor>//api/name/caption</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/caption</TokenIdentifier>
+			<Abstract type="html">@abstract The caption to be used with the link. Is only used if the link is
+non-nil.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *caption</Declaration>
+			
+			
+			<Anchor>//api/name/caption</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setDescription:</TokenIdentifier>
+			<Abstract type="html">@abstract The description associated with the link. Is only used if the
+link is non-nil.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *description</Declaration>
+			
+			
+			<Anchor>//api/name/description</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/description</TokenIdentifier>
+			<Abstract type="html">@abstract The description associated with the link. Is only used if the
+link is non-nil.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *description</Declaration>
+			
+			
+			<Anchor>//api/name/description</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setPicture:</TokenIdentifier>
+			<Abstract type="html">@abstract The link to a thumbnail to associate with the post. Is only used
+if the link is non-nil. Only &quot;http&quot; or &quot;https&quot; schemes are supported.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSURL *picture</Declaration>
+			
+			
+			<Anchor>//api/name/picture</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/picture</TokenIdentifier>
+			<Abstract type="html">@abstract The link to a thumbnail to associate with the post. Is only used
+if the link is non-nil. Only &quot;http&quot; or &quot;https&quot; schemes are supported.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSURL *picture</Declaration>
+			
+			
+			<Anchor>//api/name/picture</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setFriends:</TokenIdentifier>
+			<Abstract type="html">@abstract An array of NSStrings or FBGraphUsers to tag in the post.
+If using NSStrings, the values must represent the IDs of the users to tag.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSArray *friends</Declaration>
+			
+			
+			<Anchor>//api/name/friends</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/friends</TokenIdentifier>
+			<Abstract type="html">@abstract An array of NSStrings or FBGraphUsers to tag in the post.
+If using NSStrings, the values must represent the IDs of the users to tag.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSArray *friends</Declaration>
+			
+			
+			<Anchor>//api/name/friends</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setPlace:</TokenIdentifier>
+			<Abstract type="html">@abstract An NSString or FBGraphPlace to tag in the status update. If
+NSString, the value must be the ID of the place to tag.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) id place</Declaration>
+			
+			
+			<Anchor>//api/name/place</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/place</TokenIdentifier>
+			<Abstract type="html">@abstract An NSString or FBGraphPlace to tag in the status update. If
+NSString, the value must be the ID of the place to tag.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) id place</Declaration>
+			
+			
+			<Anchor>//api/name/place</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setRef:</TokenIdentifier>
+			<Abstract type="html">@abstract A text reference for the category of the post, used on Facebook
+Insights.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *ref</Declaration>
+			
+			
+			<Anchor>//api/name/ref</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/ref</TokenIdentifier>
+			<Abstract type="html">@abstract A text reference for the category of the post, used on Facebook
+Insights.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSString *ref</Declaration>
+			
+			
+			<Anchor>//api/name/ref</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBShareDialogParams/setDataFailuresFatal:</TokenIdentifier>
+			<Abstract type="html">@abstract If YES, treats any data failures (e.g. failures when getting
+data for IDs passed through &quot;friends&quot; or &quot;place&quot;) as a fatal error, and will not
+continue with the status update.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign) BOOL dataFailuresFatal</Declaration>
+			
+			
+			<Anchor>//api/name/dataFailuresFatal</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBShareDialogParams/dataFailuresFatal</TokenIdentifier>
+			<Abstract type="html">@abstract If YES, treats any data failures (e.g. failures when getting
+data for IDs passed through &quot;friends&quot; or &quot;place&quot;) as a fatal error, and will not
+continue with the status update.</Abstract>
+			<DeclaredIn>FBShareDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign) BOOL dataFailuresFatal</Declaration>
+			
+			
+			<Anchor>//api/name/dataFailuresFatal</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

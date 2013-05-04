@@ -60,6 +60,16 @@
 		FEBD02CE173518C400DAB99D /* TCSGroupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02CD173518C300DAB99D /* TCSGroupTests.m */; };
 		FEBD02CF173518C400DAB99D /* TCSGroupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02CD173518C300DAB99D /* TCSGroupTests.m */; };
 		FEBD02D317352B5500DAB99D /* TCSLocalGroupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02D117352B5400DAB99D /* TCSLocalGroupTests.m */; };
+		FEBD02DD173546AE00DAB99D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02DC173546AE00DAB99D /* libsqlite3.dylib */; };
+		FEBD02DF173546B600DAB99D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02DE173546B600DAB99D /* Social.framework */; };
+		FEBD02E0173546CD00DAB99D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02DE173546B600DAB99D /* Social.framework */; };
+		FEBD02E1173546D300DAB99D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02DC173546AE00DAB99D /* libsqlite3.dylib */; };
+		FEBD02E717354A7500DAB99D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02E617354A7500DAB99D /* AdSupport.framework */; };
+		FEBD02E917354A8D00DAB99D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02E817354A8D00DAB99D /* Accounts.framework */; };
+		FEBD02EA17354AA100DAB99D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02E817354A8D00DAB99D /* Accounts.framework */; };
+		FEBD02EB17354AA500DAB99D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02E617354A7500DAB99D /* AdSupport.framework */; };
+		FEBD02ED17354AB700DAB99D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02EC17354AB700DAB99D /* Security.framework */; };
+		FEBD02EE17354ABA00DAB99D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEBD02EC17354AB700DAB99D /* Security.framework */; };
 		FEDAD2EB1732E60D0087EB4F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
 		FEDAD2ED1732E60D0087EB4F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
 		FEDAD2EF1732E60D0087EB4F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
@@ -137,6 +147,11 @@
 		FEBD02CC173518C300DAB99D /* TCSGroupTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSGroupTests.h; sourceTree = "<group>"; };
 		FEBD02CD173518C300DAB99D /* TCSGroupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSGroupTests.m; sourceTree = "<group>"; };
 		FEBD02D117352B5400DAB99D /* TCSLocalGroupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalGroupTests.m; sourceTree = "<group>"; };
+		FEBD02DC173546AE00DAB99D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		FEBD02DE173546B600DAB99D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		FEBD02E617354A7500DAB99D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		FEBD02E817354A8D00DAB99D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		FEBD02EC17354AB700DAB99D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FEDAD2E71732E60D0087EB4F /* UberTimeService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UberTimeService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEDAD2EA1732E60D0087EB4F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FEDAD2EC1732E60D0087EB4F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -193,6 +208,11 @@
 				FEBD024E1733D85A00DAB99D /* Foundation.framework in Frameworks */,
 				FEBD024F1733D85A00DAB99D /* CoreGraphics.framework in Frameworks */,
 				79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */,
+				FEBD02E0173546CD00DAB99D /* Social.framework in Frameworks */,
+				FEBD02E1173546D300DAB99D /* libsqlite3.dylib in Frameworks */,
+				FEBD02EA17354AA100DAB99D /* Accounts.framework in Frameworks */,
+				FEBD02EB17354AA500DAB99D /* AdSupport.framework in Frameworks */,
+				FEBD02EE17354ABA00DAB99D /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +220,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEBD02ED17354AB700DAB99D /* Security.framework in Frameworks */,
+				FEBD02E917354A8D00DAB99D /* Accounts.framework in Frameworks */,
+				FEBD02E717354A7500DAB99D /* AdSupport.framework in Frameworks */,
+				FEBD02DF173546B600DAB99D /* Social.framework in Frameworks */,
+				FEBD02DD173546AE00DAB99D /* libsqlite3.dylib in Frameworks */,
 				FEF8A0FB17332B4100C4DCF9 /* QuartzCore.framework in Frameworks */,
 				FEF8A0F31733265800C4DCF9 /* CoreData.framework in Frameworks */,
 				FEDAD2EB1732E60D0087EB4F /* UIKit.framework in Frameworks */,
@@ -314,6 +339,11 @@
 		FEDAD2E91732E60D0087EB4F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FEBD02EC17354AB700DAB99D /* Security.framework */,
+				FEBD02E817354A8D00DAB99D /* Accounts.framework */,
+				FEBD02E617354A7500DAB99D /* AdSupport.framework */,
+				FEBD02DE173546B600DAB99D /* Social.framework */,
+				FEBD02DC173546AE00DAB99D /* libsqlite3.dylib */,
 				FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */,
 				FEF8A0F21733265800C4DCF9 /* CoreData.framework */,
 				FEDAD2EA1732E60D0087EB4F /* UIKit.framework */,

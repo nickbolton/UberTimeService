@@ -1,23 +1,32 @@
 
+EXTERNAL SOURCES: 
+  PBFoundation: 
+    :podspec: LocalPods/PBFoundation.podspec
+
 COCOAPODS: 0.16.2
 
+SPEC CHECKSUMS: 
+  Parse: 8b3eef803a346d07324a3f27c296ffb9766cf413
+  MagicalRecord: 64e7184c240087a45e9588a722eaf05b0ad837f7
+  PBFoundation: 0350aacecf9f90663c2926635277e4648def4627
+  GHUnitIOS: bf149b2c44084eee2785ce4ac3675c3a699e509d
+  Facebook-iOS-SDK: 0dbd897e842cefeb012ec2eb8eba659ba6b96b12
+
 DEPENDENCIES: 
+- Facebook-iOS-SDK (~> 3.5)
+- Facebook-iOS-SDK (~> 3.5)
 - GHUnitIOS (~> 0.5.6)
 - MagicalRecord (~> 2.1)
 - MagicalRecord (~> 2.1)
 - PBFoundation (from `LocalPods/PBFoundation.podspec')
 - PBFoundation (from `LocalPods/PBFoundation.podspec')
-
-SPEC CHECKSUMS: 
-  GHUnitIOS: bf149b2c44084eee2785ce4ac3675c3a699e509d
-  MagicalRecord: 64e7184c240087a45e9588a722eaf05b0ad837f7
-  PBFoundation: 0350aacecf9f90663c2926635277e4648def4627
+- Parse (~> 1.2)
+- Parse (~> 1.2)
 
 PODS: 
+- Facebook-iOS-SDK (3.5.1)
 - GHUnitIOS (0.5.6)
 - MagicalRecord (2.1)
 - PBFoundation (0.0.1)
-
-EXTERNAL SOURCES: 
-  PBFoundation: 
-    :podspec: LocalPods/PBFoundation.podspec
+- Parse (1.2.8): 
+  - Facebook-iOS-SDK (~> 3.5.1)

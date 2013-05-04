@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBAppCall.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBAppCall</TokenIdentifier>
+			<Abstract type="html">@class FBAppCall</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>
+			
+			<NodeRef refid="4"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/setID:</TokenIdentifier>
+			<Abstract type="html">@abstract The ID of this FBAppCall instance</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSString *ID</Declaration>
+			
+			
+			<Anchor>//api/name/ID</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppCall/ID</TokenIdentifier>
+			<Abstract type="html">@abstract The ID of this FBAppCall instance</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSString *ID</Declaration>
+			
+			
+			<Anchor>//api/name/ID</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/setError:</TokenIdentifier>
+			<Abstract type="html">@abstract Error that occurred in processing this AppCall</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSError *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppCall/error</TokenIdentifier>
+			<Abstract type="html">@abstract Error that occurred in processing this AppCall</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSError *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/setDialogData:</TokenIdentifier>
+			<Abstract type="html">@abstract Data related to a Dialog AppCall</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) FBDialogsData *dialogData</Declaration>
+			
+			
+			<Anchor>//api/name/dialogData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppCall/dialogData</TokenIdentifier>
+			<Abstract type="html">@abstract Data related to a Dialog AppCall</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) FBDialogsData *dialogData</Declaration>
+			
+			
+			<Anchor>//api/name/dialogData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/setAppLinkData:</TokenIdentifier>
+			<Abstract type="html">@abstract Data for native app link</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) FBAppLinkData *appLinkData</Declaration>
+			
+			
+			<Anchor>//api/name/appLinkData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppCall/appLinkData</TokenIdentifier>
+			<Abstract type="html">@abstract Data for native app link</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) FBAppLinkData *appLinkData</Declaration>
+			
+			
+			<Anchor>//api/name/appLinkData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/setAccessTokenData:</TokenIdentifier>
+			<Abstract type="html">@abstract Access Token that was returned in this AppCall</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) FBAccessTokenData *accessTokenData</Declaration>
+			
+			
+			<Anchor>//api/name/accessTokenData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppCall/accessTokenData</TokenIdentifier>
+			<Abstract type="html">@abstract Access Token that was returned in this AppCall</Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) FBAccessTokenData *accessTokenData</Declaration>
+			
+			
+			<Anchor>//api/name/accessTokenData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/isEqualToAppCall:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Compares the receiving FBAppCall to the passed in FBAppCall</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)isEqualToAppCall:(FBAppCall *)appCall</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>appCall</Name>
+					<Abstract type="html">the other FBAppCall to compare to.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the AppCalls can be considered to be the same; NO if otherwise.</Abstract></ReturnValue>
+			<Anchor>//api/name/isEqualToAppCall:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppCall/handleOpenURL:sourceApplication:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
+of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+with the native Facebook app or as part of SSO authorization flow.</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>sourceApplication</Name>
+					<Abstract type="html">The sourceApplication as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the url was intended for the Facebook SDK, NO if not.</Abstract></ReturnValue>
+			<Anchor>//api/name/handleOpenURL:sourceApplication:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppCall/handleOpenURL:sourceApplication:fallbackHandler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
+of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+with the native Facebook app or as part of SSO authorization flow.</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication fallbackHandler:(FBAppCallHandler)handler</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>sourceApplication</Name>
+					<Abstract type="html">The sourceApplication as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">Optional handler that gives the app the opportunity to do some further processing on urls
+that the SDK could not completely process. A fallback handler is not a requirement for such a url to be considered
+handled. The fallback handler, if specified, is only ever called sychronously, before the method returns.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the url was intended for the Facebook SDK, NO if not.</Abstract></ReturnValue>
+			<Anchor>//api/name/handleOpenURL:sourceApplication:fallbackHandler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppCall/handleOpenURL:sourceApplication:withSession:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
+of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+with the native Facebook app or as part of SSO authorization flow.</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication withSession:(FBSession *)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>sourceApplication</Name>
+					<Abstract type="html">The sourceApplication as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>session</Name>
+					<Abstract type="html">If this url is being sent back to this app as part of SSO authorization flow, then pass in the
+session that was being opened. A nil value defaults to FBSession.activeSession</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the url was intended for the Facebook SDK, NO if not.</Abstract></ReturnValue>
+			<Anchor>//api/name/handleOpenURL:sourceApplication:withSession:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppCall/handleOpenURL:sourceApplication:withSession:fallbackHandler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
+of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+with the native Facebook app or as part of SSO authorization flow.</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication withSession:(FBSession *)session fallbackHandler:(FBAppCallHandler)handler</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>sourceApplication</Name>
+					<Abstract type="html">The sourceApplication as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].</Abstract>
+				</Parameter><Parameter>
+					<Name>session</Name>
+					<Abstract type="html">If this url is being sent back to this app as part of SSO authorization flow, then pass in the
+session that was being opened. A nil value defaults to FBSession.activeSession</Abstract>
+				</Parameter><Parameter>
+					<Name>handler</Name>
+					<Abstract type="html">Optional handler that gives the app the opportunity to do some further processing on urls
+that the SDK could not completely process. A fallback handler is not a requirement for such a url to be considered
+handled. The fallback handler, if specified, is only ever called sychronously, before the method returns.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">YES if the url was intended for the Facebook SDK, NO if not.</Abstract></ReturnValue>
+			<Anchor>//api/name/handleOpenURL:sourceApplication:withSession:fallbackHandler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppCall/handleDidBecomeActive</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method when the application&apos;s applicationDidBecomeActive: is invoked.
+This ensures proper state management of any pending FBAppCalls or pending login flow for the
+FBSession.activeSession. If any pending FBAppCalls are found, their registered callbacks
+will be invoked with appropriate state</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>+ (void)handleDidBecomeActive</Declaration>
+			
+			
+			<Anchor>//api/name/handleDidBecomeActive</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppCall/handleDidBecomeActiveWithSession:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Call this method when the application&apos;s applicationDidBecomeActive: is invoked.
+This ensures proper state management of any pending FBAppCalls or a pending open for the
+passed in FBSession. If any pending FBAppCalls are found, their registered callbacks will
+be invoked with appropriate state</Abstract>
+			<DeclaredIn>FBAppCall.h</DeclaredIn>			
+			
+			<Declaration>+ (void)handleDidBecomeActiveWithSession:(FBSession *)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">Session that is currently being used. Any pending calls to open will be cancelled.
+If no session is provided, then the activeSession (if present) is used.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/handleDidBecomeActiveWithSession:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/setIsValid:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL isValid</Declaration>
+			
+			
+			<Anchor>//api/name/isValid</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppCall/isValid</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL isValid</Declaration>
+			
+			
+			<Anchor>//api/name/isValid</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppCall/initWithID:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppCall+Internal.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithID:(NSString *)ID</Declaration>
+			
+			
+			<Anchor>//api/name/initWithID:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

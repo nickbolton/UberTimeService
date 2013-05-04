@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBDialogsParams.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBDialogsParams</TokenIdentifier>
+			<Abstract type="html">@class FBDialogsParams</Abstract>
+			<DeclaredIn>FBDialogsParams.h</DeclaredIn>
+			
+			<NodeRef refid="13"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsParams/dictionaryMethodArgs</TokenIdentifier>
+			<Abstract type="html">@abstract
+This method is abstract and must be defined by all classes that derive from FBDialogParams</Abstract>
+			<DeclaredIn>FBDialogsParams+Internal.h</DeclaredIn>			
+			
+			<Declaration>- (NSDictionary *)dictionaryMethodArgs</Declaration>
+			
+			
+			<Anchor>//api/name/dictionaryMethodArgs</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsParams/appBridgeVersion</TokenIdentifier>
+			<Abstract type="html">@abstract
+This method is abstract and must be defined by all classes that derive from &apos;FBDialogParams&apos;.
+It validates the parameters and returns the app bridge version they should be used on.</Abstract>
+			<DeclaredIn>FBDialogsParams+Internal.h</DeclaredIn>			
+			
+			<Declaration>- (NSString *)appBridgeVersion</Declaration>
+			
+			
+			<Anchor>//api/name/appBridgeVersion</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsParams/validate</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBDialogsParams+Internal.h</DeclaredIn>			
+			
+			<Declaration>- (NSError *)validate</Declaration>
+			
+			
+			<Anchor>//api/name/validate</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

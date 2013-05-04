@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBFetchedAppSettings.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBFetchedAppSettings</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>
+			
+			<NodeRef refid="15"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBFetchedAppSettings/setServerAppName:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (copy, nonatomic) NSString *serverAppName</Declaration>
+			
+			
+			<Anchor>//api/name/serverAppName</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBFetchedAppSettings/serverAppName</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (copy, nonatomic) NSString *serverAppName</Declaration>
+			
+			
+			<Anchor>//api/name/serverAppName</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBFetchedAppSettings/setSupportsAttribution:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (readwrite) BOOL supportsAttribution</Declaration>
+			
+			
+			<Anchor>//api/name/supportsAttribution</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBFetchedAppSettings/supportsAttribution</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (readwrite) BOOL supportsAttribution</Declaration>
+			
+			
+			<Anchor>//api/name/supportsAttribution</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBFetchedAppSettings/setSupportsImplicitSdkLogging:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (readwrite) BOOL supportsImplicitSdkLogging</Declaration>
+			
+			
+			<Anchor>//api/name/supportsImplicitSdkLogging</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBFetchedAppSettings/supportsImplicitSdkLogging</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (readwrite) BOOL supportsImplicitSdkLogging</Declaration>
+			
+			
+			<Anchor>//api/name/supportsImplicitSdkLogging</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBFetchedAppSettings/setSuppressNativeGdp:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (readwrite) BOOL suppressNativeGdp</Declaration>
+			
+			
+			<Anchor>//api/name/suppressNativeGdp</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBFetchedAppSettings/suppressNativeGdp</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBFetchedAppSettings.h</DeclaredIn>			
+			
+			<Declaration>@property (readwrite) BOOL suppressNativeGdp</Declaration>
+			
+			
+			<Anchor>//api/name/suppressNativeGdp</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

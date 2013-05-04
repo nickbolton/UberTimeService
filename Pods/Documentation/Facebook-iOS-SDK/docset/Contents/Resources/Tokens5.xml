@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBAppLinkData.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBAppLinkData</TokenIdentifier>
+			<Abstract type="html">@abstract This class contains information that represents an App Link from Facebook.</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>
+			
+			<NodeRef refid="5"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppLinkData/setTargetURL:</TokenIdentifier>
+			<Abstract type="html">@abstract The target</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSURL *targetURL</Declaration>
+			
+			
+			<Anchor>//api/name/targetURL</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppLinkData/targetURL</TokenIdentifier>
+			<Abstract type="html">@abstract The target</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSURL *targetURL</Declaration>
+			
+			
+			<Anchor>//api/name/targetURL</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppLinkData/setActionTypes:</TokenIdentifier>
+			<Abstract type="html">@abstract List of the types of actions for this target</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSArray *actionTypes</Declaration>
+			
+			
+			<Anchor>//api/name/actionTypes</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppLinkData/actionTypes</TokenIdentifier>
+			<Abstract type="html">@abstract List of the types of actions for this target</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSArray *actionTypes</Declaration>
+			
+			
+			<Anchor>//api/name/actionTypes</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppLinkData/setActionIDs:</TokenIdentifier>
+			<Abstract type="html">@abstract List of the ids of the actions for this target</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSArray *actionIDs</Declaration>
+			
+			
+			<Anchor>//api/name/actionIDs</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppLinkData/actionIDs</TokenIdentifier>
+			<Abstract type="html">@abstract List of the ids of the actions for this target</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSArray *actionIDs</Declaration>
+			
+			
+			<Anchor>//api/name/actionIDs</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppLinkData/setRef:</TokenIdentifier>
+			<Abstract type="html">@abstract Reference breadcrumb provided during creation of story</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSArray *ref</Declaration>
+			
+			
+			<Anchor>//api/name/ref</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppLinkData/ref</TokenIdentifier>
+			<Abstract type="html">@abstract Reference breadcrumb provided during creation of story</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSArray *ref</Declaration>
+			
+			
+			<Anchor>//api/name/ref</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppLinkData/setOriginalQueryParameters:</TokenIdentifier>
+			<Abstract type="html">@abstract Full set of query parameters for this app link</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSDictionary *originalQueryParameters</Declaration>
+			
+			
+			<Anchor>//api/name/originalQueryParameters</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppLinkData/originalQueryParameters</TokenIdentifier>
+			<Abstract type="html">@abstract Full set of query parameters for this app link</Abstract>
+			<DeclaredIn>FBAppLinkData.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSDictionary *originalQueryParameters</Declaration>
+			
+			
+			<Anchor>//api/name/originalQueryParameters</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBAppLinkData/setIsValid:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppLinkData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL isValid</Declaration>
+			
+			
+			<Anchor>//api/name/isValid</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBAppLinkData/isValid</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppLinkData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL isValid</Declaration>
+			
+			
+			<Anchor>//api/name/isValid</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBAppLinkData/createFromURL:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBAppLinkData+Internal.h</DeclaredIn>			
+			
+			<Declaration>+ (FBAppLinkData *)createFromURL:(NSURL *)url</Declaration>
+			
+			
+			<Anchor>//api/name/createFromURL:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

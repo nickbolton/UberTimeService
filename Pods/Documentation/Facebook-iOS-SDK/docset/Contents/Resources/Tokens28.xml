@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBLoginDialogParams.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBLoginDialogParams</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>
+			
+			<NodeRef refid="28"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBLoginDialogParams/setPermissions:</TokenIdentifier>
+			<Abstract type="html">Permissions being requested. Ex &quot;basic_info,email&quot;</Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSArray *permissions</Declaration>
+			
+			
+			<Anchor>//api/name/permissions</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBLoginDialogParams/permissions</TokenIdentifier>
+			<Abstract type="html">Permissions being requested. Ex &quot;basic_info,email&quot;</Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, copy) NSArray *permissions</Declaration>
+			
+			
+			<Anchor>//api/name/permissions</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBLoginDialogParams/setWritePrivacy:</TokenIdentifier>
+			<Abstract type="html">When requesting publish permissions, this must be set to a value other than FBSessionDefaultAudienceNone.
+If not requesting publish permissions, leave this property unset.</Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign) FBSessionDefaultAudience writePrivacy</Declaration>
+			
+			
+			<Anchor>//api/name/writePrivacy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBLoginDialogParams/writePrivacy</TokenIdentifier>
+			<Abstract type="html">When requesting publish permissions, this must be set to a value other than FBSessionDefaultAudienceNone.
+If not requesting publish permissions, leave this property unset.</Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign) FBSessionDefaultAudience writePrivacy</Declaration>
+			
+			
+			<Anchor>//api/name/writePrivacy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBLoginDialogParams/setIsRefreshOnly:</TokenIdentifier>
+			<Abstract type="html">When requesting for the access token to be renewed, set this property to YES.</Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL isRefreshOnly</Declaration>
+			
+			
+			<Anchor>//api/name/isRefreshOnly</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBLoginDialogParams/isRefreshOnly</TokenIdentifier>
+			<Abstract type="html">When requesting for the access token to be renewed, set this property to YES.</Abstract>
+			<DeclaredIn>FBLoginDialogParams.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL isRefreshOnly</Declaration>
+			
+			
+			<Anchor>//api/name/isRefreshOnly</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

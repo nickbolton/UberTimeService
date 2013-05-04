@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBNativeDialogs.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBNativeDialogs</TokenIdentifier>
+			<Abstract type="html">@class FBNativeDialogs</Abstract>
+			<DeclaredIn>FBNativeDialogs.h</DeclaredIn>
+			
+			<NodeRef refid="30"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBNativeDialogs/presentShareDialogModallyFrom:initialText:image:url:handler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Please note that this method has been deprecated, please migrate your
+code to use FBDialogs and the related method presentOSIntegratedShareDialogModallyFrom.</Abstract>
+			<DeclaredIn>FBNativeDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)presentShareDialogModallyFrom:(UIViewController *)viewController initialText:(NSString *)initialText image:(UIImage *)image url:(NSURL *)url handler:(FBShareDialogHandler)handler</Declaration>
+			
+			
+			<Anchor>//api/name/presentShareDialogModallyFrom:initialText:image:url:handler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBNativeDialogs/presentShareDialogModallyFrom:initialText:images:urls:handler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Please note that this method has been deprecated, please migrate your
+code to use FBDialogs and the related method presentOSIntegratedShareDialogModallyFrom.</Abstract>
+			<DeclaredIn>FBNativeDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)presentShareDialogModallyFrom:(UIViewController *)viewController initialText:(NSString *)initialText images:(NSArray *)images urls:(NSArray *)urls handler:(FBShareDialogHandler)handler</Declaration>
+			
+			
+			<Anchor>//api/name/presentShareDialogModallyFrom:initialText:images:urls:handler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBNativeDialogs/presentShareDialogModallyFrom:session:initialText:images:urls:handler:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Please note that this method has been deprecated, please migrate your
+code to use FBDialogs and the related method presentOSIntegratedShareDialogModallyFrom.</Abstract>
+			<DeclaredIn>FBNativeDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)presentShareDialogModallyFrom:(UIViewController *)viewController session:(FBSession *)session initialText:(NSString *)initialText images:(NSArray *)images urls:(NSArray *)urls handler:(FBShareDialogHandler)handler</Declaration>
+			
+			
+			<Anchor>//api/name/presentShareDialogModallyFrom:session:initialText:images:urls:handler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBNativeDialogs/canPresentShareDialogWithSession:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Please note that this method has been deprecated, please migrate your
+code to use FBDialogs and the related method canPresentOSIntegratedShareDialogWithSession.</Abstract>
+			<DeclaredIn>FBNativeDialogs.h</DeclaredIn>			
+			
+			<Declaration>+ (BOOL)canPresentShareDialogWithSession:(FBSession *)session</Declaration>
+			
+			
+			<Anchor>//api/name/canPresentShareDialogWithSession:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

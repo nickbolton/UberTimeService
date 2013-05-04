@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/FBWebDialogsDelegate.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/FBWebDialogsDelegate</TokenIdentifier>
+			<Abstract type="html">@protocol</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>
+			
+			<NodeRef refid="75"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBWebDialogsDelegate/webDialogsWillPresentDialog:parameters:session:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Called prior to the presentation of a web dialog</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>- (void)webDialogsWillPresentDialog:(NSString *)dialog parameters:(NSMutableDictionary *)parameters session:(FBSession *)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dialog</Name>
+					<Abstract type="html">A string representing the method or dialog name of the dialog being presented.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A mutable dictionary of parameters which will be sent to the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>session</Name>
+					<Abstract type="html">The session object to use with the dialog.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/webDialogsWillPresentDialog:parameters:session:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBWebDialogsDelegate/webDialogsDialog:parameters:session:shouldAutoHandleURL:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Called when the user of a dialog clicks a link that would cause a transition away from the application.
+Your application may handle this method, and return NO if the URL handling will be performed by the application.</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)webDialogsDialog:(NSString *)dialog parameters:(NSDictionary *)parameters session:(FBSession *)session shouldAutoHandleURL:(NSURL *)url</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dialog</Name>
+					<Abstract type="html">A string representing the method or dialog name of the dialog being presented.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of parameters which were sent to the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>session</Name>
+					<Abstract type="html">The session object to use with the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>url</Name>
+					<Abstract type="html">The url in question, which will not be handled by the SDK if this method NO</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/webDialogsDialog:parameters:session:shouldAutoHandleURL:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/FBWebDialogsDelegate/webDialogsWillDismissDialog:parameters:session:result:url:error:</TokenIdentifier>
+			<Abstract type="html">@abstract
+Called when the dialog is about to be dismissed</Abstract>
+			<DeclaredIn>FBWebDialogs.h</DeclaredIn>			
+			
+			<Declaration>- (void)webDialogsWillDismissDialog:(NSString *)dialog parameters:(NSDictionary *)parameters session:(FBSession *)session result:(FBWebDialogResult *)result url:(NSURL **)url error:(NSError **)error</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dialog</Name>
+					<Abstract type="html">A string representing the method or dialog name of the dialog being presented.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">A dictionary of parameters which were sent to the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>session</Name>
+					<Abstract type="html">The session object to use with the dialog.</Abstract>
+				</Parameter><Parameter>
+					<Name>result</Name>
+					<Abstract type="html">A pointer to a result, which may be read or changed by the handling method as needed</Abstract>
+				</Parameter><Parameter>
+					<Name>url</Name>
+					<Abstract type="html">A pointer to a pointer to a URL representing the URL returned by the dialog, which may be read or changed by this mehthod</Abstract>
+				</Parameter><Parameter>
+					<Name>error</Name>
+					<Abstract type="html">A pointer to a pointer to an error object which may be read or changed by this method as needed</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/webDialogsWillDismissDialog:parameters:session:result:url:error:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

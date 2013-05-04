@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBCrypto.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBCrypto</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>
+			
+			<NodeRef refid="8"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBCrypto/randomBytes:</TokenIdentifier>
+			<Abstract type="html">Generate numOfBytes random data
+This calls the system-provided function SecRandomCopyBytes, based on /dev/random.</Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>			
+			
+			<Declaration>+ (NSData *)randomBytes:(NSUInteger)numOfBytes</Declaration>
+			
+			
+			<Anchor>//api/name/randomBytes:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/FBCrypto/makeMasterKey</TokenIdentifier>
+			<Abstract type="html">Generate a fresh master key using SecRandomCopyBytes, the result is encoded in base64</Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>			
+			
+			<Declaration>+ (NSString *)makeMasterKey</Declaration>
+			
+			
+			<Anchor>//api/name/makeMasterKey</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBCrypto/initWithMasterKey:</TokenIdentifier>
+			<Abstract type="html">Initialize with a base64-encoded master key.
+This key and the current derivation function will be used to generate the encryption key and the mac key.</Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithMasterKey:(NSString *)masterKey</Declaration>
+			
+			
+			<Anchor>//api/name/initWithMasterKey:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBCrypto/initWithEncryptionKey:macKey:</TokenIdentifier>
+			<Abstract type="html">Initialize with base64-encoded encryption key and mac key</Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithEncryptionKey:(NSString *)encryptionKey macKey:(NSString *)macKey</Declaration>
+			
+			
+			<Anchor>//api/name/initWithEncryptionKey:macKey:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBCrypto/encrypt:additionalDataToSign:</TokenIdentifier>
+			<Abstract type="html">Encrypt plainText and return the base64 encoded result. MAC computation involves additionalDataToSign</Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>			
+			
+			<Declaration>- (NSString *)encrypt:(NSData *)plainText additionalDataToSign:(NSData *)additionalDataToSign</Declaration>
+			
+			
+			<Anchor>//api/name/encrypt:additionalDataToSign:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBCrypto/decrypt:additionalSignedData:</TokenIdentifier>
+			<Abstract type="html">Decrypt base64EncodedCipherText. MAC computation involves additionalSignedData</Abstract>
+			<DeclaredIn>FBCrypto.h</DeclaredIn>			
+			
+			<Declaration>- (NSData *)decrypt:(NSString *)base64EncodedCipherText additionalSignedData:(NSData *)additionalSignedData</Declaration>
+			
+			
+			<Anchor>//api/name/decrypt:additionalSignedData:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

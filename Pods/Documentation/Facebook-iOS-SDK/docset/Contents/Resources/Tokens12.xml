@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/FBDialogsData.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/FBDialogsData</TokenIdentifier>
+			<Abstract type="html">@abstract
+This class encapsulates state and data related to the presentation and completion
+of a dialog.</Abstract>
+			<DeclaredIn>FBDialogsData.h</DeclaredIn>
+			
+			<NodeRef refid="12"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsData/setMethod:</TokenIdentifier>
+			<Abstract type="html">@abstract The method being performed</Abstract>
+			<DeclaredIn>FBDialogsData.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSString *method</Declaration>
+			
+			
+			<Anchor>//api/name/method</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBDialogsData/method</TokenIdentifier>
+			<Abstract type="html">@abstract The method being performed</Abstract>
+			<DeclaredIn>FBDialogsData.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSString *method</Declaration>
+			
+			
+			<Anchor>//api/name/method</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsData/setArguments:</TokenIdentifier>
+			<Abstract type="html">@abstract The arguments being passed to the entity that will show the dialog</Abstract>
+			<DeclaredIn>FBDialogsData.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSDictionary *arguments</Declaration>
+			
+			
+			<Anchor>//api/name/arguments</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBDialogsData/arguments</TokenIdentifier>
+			<Abstract type="html">@abstract The arguments being passed to the entity that will show the dialog</Abstract>
+			<DeclaredIn>FBDialogsData.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSDictionary *arguments</Declaration>
+			
+			
+			<Anchor>//api/name/arguments</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsData/setClientState:</TokenIdentifier>
+			<Abstract type="html">@abstract Client JSON state that is passed through to the completion handler for context</Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSDictionary *clientState</Declaration>
+			
+			
+			<Anchor>//api/name/clientState</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBDialogsData/clientState</TokenIdentifier>
+			<Abstract type="html">@abstract Client JSON state that is passed through to the completion handler for context</Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSDictionary *clientState</Declaration>
+			
+			
+			<Anchor>//api/name/clientState</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsData/setResults:</TokenIdentifier>
+			<Abstract type="html">@abstract Results of this FBAppCall that are only set before calling an FBAppCallHandler</Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSDictionary *results</Declaration>
+			
+			
+			<Anchor>//api/name/results</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBDialogsData/results</TokenIdentifier>
+			<Abstract type="html">@abstract Results of this FBAppCall that are only set before calling an FBAppCallHandler</Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) NSDictionary *results</Declaration>
+			
+			
+			<Anchor>//api/name/results</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsData/setIsValid:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL isValid</Declaration>
+			
+			
+			<Anchor>//api/name/isValid</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/FBDialogsData/isValid</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL isValid</Declaration>
+			
+			
+			<Anchor>//api/name/isValid</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/FBDialogsData/initWithMethod:arguments:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>FBDialogsData+Internal.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithMethod:(NSString *)method arguments:(NSDictionary *)arguments</Declaration>
+			
+			
+			<Anchor>//api/name/initWithMethod:arguments:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>
