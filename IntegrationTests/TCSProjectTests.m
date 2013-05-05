@@ -11,24 +11,26 @@
 
 @interface TCSProjectTests()
 
+@property (nonatomic, strong) TCSProject *project;
+@property (nonatomic, strong) id projectEntityID;
+@property (nonatomic, strong) NSString *projectName;
+
 @end
 
 @implementation TCSProjectTests
 
 - (void)setUpClass {
-
     [super setUpClass];
-
     self.projectName = @"projectA";
-
     self.service = [TCSService sharedInstance];
 }
 
 - (void)tearDownClass {
     self.serviceProvider = nil;
     self.service = nil;
-    self.foundProject = nil;
+    self.project = nil;
     self.projectName = nil;
+    [super tearDownClass];
 }
 
 - (void)createProject:(SEL)selector {
@@ -38,6 +40,8 @@
     [self.serviceProvider
      createProjectWithName:_projectName
      success:^(TCSProject *project) {
+
+         self.projectEntityID = project.providerEntityID;
 
          [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
@@ -61,20 +65,20 @@
     NSString *name = @"bababooey";
     NSInteger color = 50;
 
-    self.foundProject.filteredModifiers = filteredModifiers;
-    self.foundProject.keyCode = keyCode;
-    self.foundProject.modifiers = modifiers;
-    self.foundProject.order = order;
-    self.foundProject.archived = archived;
-    self.foundProject.name = name;
-    self.foundProject.color = color;
+    self.project.filteredModifiers = filteredModifiers;
+    self.project.keyCode = keyCode;
+    self.project.modifiers = modifiers;
+    self.project.order = order;
+    self.project.archived = archived;
+    self.project.name = name;
+    self.project.color = color;
 
     [self.service
-     updateProject:self.foundProject
+     updateProject:self.project
      success:^{
 
          [self
-          findProjectWithEntityID:self.foundProject.providerEntityID
+          findProjectWithEntityID:self.project.providerEntityID
           serviceProvider:self.serviceProvider
           success:^(TCSProject *project) {
 
@@ -102,8 +106,8 @@
                            @"project.color (%d) != color (%d)",
                            project.color, color);
 
-              GHAssertEquals(project.name, name,
-                           @"project.name (%@) != name (%@)",
+              GHAssertTrue([project.name isEqualToString:name],
+                           @"projectName (%@) != name (%@)",
                            project.name, name);
 
               [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
@@ -125,7 +129,7 @@
     [self prepare];
         
     [self.service
-     deleteProject:self.foundProject
+     deleteProject:self.project
      success:^{
 
          [self.serviceProvider
@@ -148,35 +152,26 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
-- (void)findProjectWithName:(SEL)selector {
-
-    [self
-     findProjectNamed:_projectName
-     serviceProvider:self.serviceProvider
-     success:^(TCSProject *project){
-
-         self.foundProject = project;
-
-         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-     } failure:^{
-         [self notify:kGHUnitWaitStatusFailure forSelector:_cmd];
-     }];
-}
-
 - (void)fetchProjectByEntityID:(SEL)selector {
 
+    [self prepare];
+
     [self
-     findProjectWithEntityID:self.foundProject.providerEntityID
-     name:_projectName
+     findProjectWithEntityID:self.projectEntityID
      serviceProvider:self.serviceProvider
      success:^(TCSProject *project) {
+
+         self.project = project;
+
+         GHAssertNotNil(project, @"fetched project is nil");
 
          [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^{
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
+
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)fetchAllProjects:(SEL)selector {
@@ -220,6 +215,8 @@
 
     if (nextProject == nil) {
 
+        [self.serviceProvider clearCache];
+
         [self.serviceProvider
          fetchProjects:^(NSArray *projects) {
 
@@ -233,7 +230,7 @@
          }];
     } else {
 
-        [self.serviceProvider
+        [self.service
          deleteProject:nextProject
          success:^{
 

@@ -45,7 +45,7 @@
 }
 
 - (NSArray *)timers {
-    return [self providerToManyRelationForKey:@"timers" andType:[TCSTimer class]];
+    return [self providerToManyRelationForKey:@"timers" andType:[TCSTimer class] error:NULL];
 }
 
 - (void)setTimers:(NSArray *)timers {
@@ -53,7 +53,7 @@
 }
 
 - (TCSGroup *)parent {
-    return (id)[self providerRelationForKey:@"parent" andType:[TCSGroup class]];
+    return (id)[self providerRelationForKey:@"parent" andType:[TCSGroup class] error:NULL];
 }
 
 - (void)setParent:(TCSGroup *)parent {

@@ -28,10 +28,10 @@
 - (void)setProviderStringValue:(NSString *)value forKey:(NSString *)key;
 - (void)setProviderDateValue:(NSDate *)value forKey:(NSString *)key;
 
-- (TCSBaseEntity *)providerRelationForKey:(NSString *)key andType:(Class)type;
+- (TCSBaseEntity *)providerRelationForKey:(NSString *)key andType:(Class)type error:(NSError **)error;
 - (void)setProviderRelation:(TCSBaseEntity *)entity forKey:(NSString *)key;
 
-- (NSArray *)providerToManyRelationForKey:(NSString *)key andType:(Class)type;
+- (NSArray *)providerToManyRelationForKey:(NSString *)key andType:(Class)type error:(NSError **)error;
 - (void)setProviderToManyRelation:(NSArray *)entities forKey:(NSString *)key;
 
 - (void)addParentRelation:(TCSBaseEntity *)parent forKey:(NSString *)key;

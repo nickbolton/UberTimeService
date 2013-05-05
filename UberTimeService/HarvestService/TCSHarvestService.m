@@ -14,6 +14,9 @@
     return NSLocalizedString(@"Harvest", nil);
 }
 
+- (void)clearCache {
+}
+
 - (id)entityIDForEntity:(id)entity {
     
 }
@@ -58,7 +61,7 @@
 
 }
 
-- (TCSBaseEntity *)relation:(id)entity forKey:(NSString *)key andType:(Class)type {
+- (TCSBaseEntity *)relation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error{
 
 }
 
@@ -70,7 +73,7 @@
 
 }
 
-- (void)setEntity:(id)entity toManyRelation:(NSArray *)relations forKey:(NSString *)key {
+- (void)setEntity:(id)entity toManyRelation:(NSArray *)relations forKey:(NSString *)key error:(NSError **)error {
 
 }
 
@@ -80,6 +83,14 @@
 
 - (void)setEntity:(id)entity removeParentRelationForKey:(NSString *)key {
 
+}
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock {
+
+    if (successBlock != nil) {
+        successBlock();
+    }
 }
 
 #pragma mark - Project Methods
@@ -220,6 +231,11 @@
                        success:(void(^)(NSArray *timers))successBlock
                        failure:(void(^)(NSError *error))failureBlock {
 
+}
+
+- (void)fetchTimers:(void(^)(NSArray *groups))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+    
 }
 
 #pragma mark - Singleton Methods

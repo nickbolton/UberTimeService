@@ -46,7 +46,7 @@
 }
 
 - (TCSProject *)project {
-    return (id)[self providerRelationForKey:@"project" andType:[TCSProject class]];
+    return (id)[self providerRelationForKey:@"project" andType:[TCSProject class] error:NULL];
 }
 
 - (void)setProject:(TCSProject *)project {

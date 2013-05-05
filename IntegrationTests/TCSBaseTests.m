@@ -13,20 +13,14 @@
 
 #pragma mark - Helpers
 
-- (void)findProjectNamed:(NSString *)name
-         serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                 success:(void(^)(TCSProject *project))successBlock
-                 failure:(void(^)(void))failureBlock {
+- (void)findProjectWithEntityID:(id)entityID
+                serviceProvider:(id <TCSServiceProvider>)serviceProvider
+                        success:(void(^)(TCSProject *project))successBlock
+                        failure:(void(^)(void))failureBlock {
 
     [serviceProvider
-     fetchProjectWithName:name
-     success:^(NSArray *projects) {
-
-         GHAssertTrue(projects.count == 1, @"Only one project should be returned (%d)", projects.count);
-
-         TCSProject *project = projects[0];
-         GHAssertEquals(project.name, name,
-                        @"Project name (%@) does not match (%)", project.name, name);
+     fetchProjectWithID:entityID
+     success:^(TCSProject *project) {
 
          NSLog(@"ZZZ project.name: %@", project.name);
 
@@ -42,19 +36,18 @@
      }];
 }
 
-- (void)findProjectWithEntityID:(id)entityID
-                serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                        success:(void(^)(TCSProject *project))successBlock
-                        failure:(void(^)(void))failureBlock {
-
+- (void)findTimerWithEntityID:(id)entityID
+              serviceProvider:(id <TCSServiceProvider>)serviceProvider
+                      success:(void(^)(TCSTimer *timer))successBlock
+                      failure:(void(^)(void))failureBlock {
     [serviceProvider
-     fetchProjectWithID:entityID
-     success:^(TCSProject *project) {
+     fetchTimerWithID:entityID
+     success:^(TCSTimer *timer) {
 
-         NSLog(@"ZZZ project.name: %@", project.name);
+         NSLog(@"ZZZ timer: %@", timer);
 
          if (successBlock != nil) {
-             successBlock(project);
+             successBlock(timer);
          }
 
      } failure:^(NSError *error) {
@@ -86,27 +79,6 @@
              failureBlock();
          }
      }];
-}
-
-- (void)findProjectWithEntityID:(id)entityID
-                           name:(NSString *)name
-                serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                        success:(void(^)(TCSProject *project))successBlock
-                        failure:(void(^)(void))failureBlock {
-
-    [self
-     findProjectWithEntityID:entityID
-     serviceProvider:serviceProvider
-     success:^(TCSProject *project) {
-
-         GHAssertEquals(project.name, name,
-                        @"Project name (%@) does not match (%)", project.name, name);
-
-         if (successBlock != nil) {
-             successBlock(project);
-         }
-
-     } failure:failureBlock];
 }
 
 @end

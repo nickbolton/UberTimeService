@@ -11,6 +11,7 @@
 @protocol TCSServiceProvider;
 @class TCSProject;
 @class TCSGroup;
+@class TCSTimer;
 @class TCSService;
 
 @interface TCSBaseTests : GHAsyncTestCase
@@ -18,25 +19,19 @@
 @property (nonatomic, strong) TCSService *service;
 @property (nonatomic, strong) id <TCSServiceProvider> serviceProvider;
 
-- (void)findProjectNamed:(NSString *)name
-         serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                 success:(void(^)(TCSProject *project))successBlock
-                 failure:(void(^)(void))failureBlock;
-
 - (void)findProjectWithEntityID:(id)entityID
                 serviceProvider:(id <TCSServiceProvider>)serviceProvider
                         success:(void(^)(TCSProject *project))successBlock
                         failure:(void(^)(void))failureBlock;
+
+- (void)findTimerWithEntityID:(id)entityID
+              serviceProvider:(id <TCSServiceProvider>)serviceProvider
+                      success:(void(^)(TCSTimer *timer))successBlock
+                      failure:(void(^)(void))failureBlock;
 
 - (void)findGroupWithEntityID:(id)entityID
               serviceProvider:(id <TCSServiceProvider>)serviceProvider
                       success:(void(^)(TCSGroup *group))successBlock
                       failure:(void(^)(void))failureBlock;
-
-- (void)findProjectWithEntityID:(id)entityID
-                           name:(NSString *)name
-                serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                        success:(void(^)(TCSProject *project))successBlock
-                        failure:(void(^)(void))failureBlock;
 
 @end

@@ -9,6 +9,7 @@
 #import "TCSDefaultProvider.h"
 #import "TCSBaseEntity.h"
 #import "TCSService.h"
+#import "TCSServicePrivate.h"
 
 @implementation TCSDefaultProvider
 
@@ -20,46 +21,6 @@
     return nil;
 }
 
-- (BOOL)entityBoolValue:(id)entity forKey:(NSString *)key {
-    return [entity valueForKey:key];
-}
-
-- (NSInteger)entityIntegerValue:(id)entity forKey:(NSString *)key {
-
-}
-
-- (CGFloat)entityFloatValue:(id)entity forKey:(NSString *)key {
-
-}
-
-- (NSString *)entityStringValue:(id)entity forKey:(NSString *)key {
-
-}
-
-- (NSDate *)entityDateValue:(id)entity forKey:(NSString *)key {
-
-}
-
-- (void)setEntity:(id)entity boolValue:(BOOL)value forKey:(NSString *)key {
-
-}
-
-- (void)setEntity:(id)entity integerValue:(NSInteger)value forKey:(NSString *)key {
-
-}
-
-- (void)setEntity:(id)entity floatValue:(CGFloat)value forKey:(NSString *)key {
-
-}
-
-- (void)setEntity:(id)entity stringValue:(NSString *)value forKey:(NSString *)key {
-
-}
-
-- (void)setEntity:(id)entity dateValue:(NSDate *)value forKey:(NSString *)key {
-    
-}
-
 - (TCSBaseEntity *)wrapProviderEntity:(id)entity
                                inType:(Class)type
                              provider:(id <TCSServiceProvider>)serviceProvider {
@@ -67,7 +28,7 @@
     if (entity != nil) {
         TCSBaseEntity *wrappedEntity = [[type alloc] init];
         wrappedEntity.providerEntity = entity;
-        wrappedEntity.providerEntityID = [serviceProvider entityIDForEntity:entity];
+        wrappedEntity.providerEntityID = [(id <TCSServiceProviderPrivate>)serviceProvider entityIDForEntity:entity];
         wrappedEntity.serviceProvider = (id)self;
 
         return wrappedEntity;
@@ -89,6 +50,28 @@
     }
 
     return result;
+}
+
+#pragma mark - User Authentication
+
+- (void)authenticateUser:(NSString *)username
+                password:(NSString *)password
+                 success:(void(^)(void))successBlock
+                 failure:(void(^)(NSError *error))failureBlock {
+    if (successBlock != nil) {
+        successBlock();
+    }
+}
+
+- (void)logoutUser:(void(^)(void))successBlock
+           failure:(void(^)(NSError *error))failureBlock {
+    if (successBlock != nil) {
+        successBlock();
+    }
+}
+
+- (BOOL)isUserAuthenticated {
+    return YES;
 }
 
 @end

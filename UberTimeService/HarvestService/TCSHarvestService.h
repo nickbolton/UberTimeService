@@ -8,7 +8,8 @@
 
 #import "TCSDefaultProvider.h"
 #import "TCSService.h"
+#import "TCSServicePrivate.h"
 
-@interface TCSHarvestService : TCSDefaultProvider <TCSServiceProvider>
+@interface TCSHarvestService : TCSDefaultProvider <TCSServiceProvider, TCSServiceProviderPrivate>
 
 @end

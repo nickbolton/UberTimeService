@@ -7,8 +7,9 @@
 //
 #import "TCSDefaultProvider.h"
 #import "TCSService.h"
+#import "TCSServicePrivate.h"
 
-@interface TCSLocalService : TCSDefaultProvider <TCSServiceProvider>
+@interface TCSLocalService : TCSDefaultProvider <TCSServiceProvider, TCSServiceProviderPrivate>
 
 - (void)resetCoreDataStack;
 

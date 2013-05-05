@@ -25,5 +25,6 @@
 - (void)ungroupSecondProject:(SEL)selector;
 - (void)editGroup:(SEL)selector;
 - (void)deleteGroup:(SEL)selector;
+- (void)deleteAllData:(SEL)selector;
 
 @end

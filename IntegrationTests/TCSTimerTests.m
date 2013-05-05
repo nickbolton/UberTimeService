@@ -12,9 +12,7 @@
 @implementation TCSTimerTests
 
 - (void)setUpClass {
-
     [super setUpClass];
-
     self.service = [TCSService sharedInstance];
 }
 
@@ -24,6 +22,7 @@
     self.project = nil;
     self.secondProject = nil;
     self.timer = nil;
+    [super tearDownClass];
 }
 
 - (void)createProject:(SEL)selector {
@@ -69,7 +68,8 @@
 
          GHAssertNotNil(timer.providerEntity, @"timer providerEntity is nil");
          GHAssertNotNil(timer.providerEntityID, @"timer providerEntityID is nil");
-         GHAssertEquals(timer.project.providerEntityID, self.project.providerEntityID, @"parent project entityID is not equal to test project entityID");
+         GHAssertTrue([timer.project.providerEntityID isEqualToString:self.project.providerEntityID],
+                      @"parent project entityID is not equal to test project entityID");
 
          __block NSInteger asyncCount = 2;
 
@@ -81,7 +81,7 @@
 
               TCSTimer *projectTimer = project.timers.lastObject;
 
-              GHAssertEquals(projectTimer.providerEntityID, timer.providerEntityID,
+              GHAssertTrue([projectTimer.providerEntityID isEqualToString:timer.providerEntityID],
                              @"fetched project.timer != created timer");
 
               @synchronized (self) {
@@ -111,10 +111,10 @@
               TCSTimer *fetchedTimer = timers[0];
 
               GHAssertNotNil(fetchedTimer.providerEntityID, @"fetchedTimer providerEntityID is nil");
-              GHAssertEquals(timer.providerEntityID, fetchedTimer.providerEntityID,
-                             @"fetchedTimer entityID is not equal to entityID");
+              GHAssertTrue([timer.providerEntityID isEqualToString:fetchedTimer.providerEntityID],
+                           @"fetchedTimer entityID is not equal to entityID");
 
-              GHAssertEquals(fetchedTimer.providerEntityID, self.service.activeTimer.providerEntityID, @"activeTimer is not returned timer");
+              GHAssertTrue([fetchedTimer.providerEntityID isEqualToString:self.service.activeTimer.providerEntityID], @"activeTimer is not returned timer");
 
               NSLog(@"timer: %@ - %@ (%f) %@", timer.startTime, timer.endTime, timer.adjustment, timer.message);
               NSLog(@"timer.project: %@", timer.project.name);
@@ -206,15 +206,17 @@
           fetchTimerWithID:self.timer.providerEntityID
           success:^(TCSTimer *timer) {
 
-              GHAssertEquals(self.timer.providerEntityID, timer.providerEntityID,
+              GHAssertTrue([self.timer.providerEntityID isEqualToString:timer.providerEntityID],
                              @"fetched timer does not have the same entityID");
 
-              GHAssertEquals(message, timer.message,
-                             @"timer message (%@) does not match (%@)", timer.message, message);
-              GHAssertTrue([startTime isEqualToDate:timer.startTime],
-                             @"timer startTime (%@) does not match (%@)", timer.startTime, startTime);
-              GHAssertTrue([endTime isEqualToDate:timer.endTime],
-                             @"timer endTime (%@) does not match (%@)", timer.endTime, endTime);
+              GHAssertTrue([message isEqualToString:timer.message],
+                           @"timer message (%@) does not match (%@)", timer.message, message);
+              GHAssertTrue(roundf(startTime.timeIntervalSinceReferenceDate*1000.0f) == roundf(timer.startTime.timeIntervalSinceReferenceDate*1000.0f),
+                           @"timer startTime (%f) does not match (%f)",
+                           timer.startTime.timeIntervalSinceReferenceDate, startTime.timeIntervalSinceReferenceDate);
+              GHAssertTrue(roundf(endTime.timeIntervalSinceReferenceDate*1000.0f) == roundf(timer.endTime.timeIntervalSinceReferenceDate*1000.0f),
+                           @"timer endTime (%f) does not match (%f)",
+                           timer.endTime.timeIntervalSinceReferenceDate, endTime.timeIntervalSinceReferenceDate);
 
               GHAssertTrue(adjustment == timer.adjustment,
                            @"timer adjustment (%f) does not match (%f)", timer.adjustment, adjustment);
@@ -251,13 +253,23 @@
 
          void (^executionBlock)(void) = ^{
 
+             NSArray *sourceProjectTimers = sourceProject.timers;
+             NSArray *targetProjectTimers = targetProject.timers;
+
+             NSLog(@"self.project: %@", self.project);
+             NSLog(@"sourceProject: %@", sourceProject);
+             NSLog(@"self.secondProject: %@", self.secondProject);
+             NSLog(@"targetProject: %@", targetProject);
+             NSLog(@"sourceProjectTimers: %@", sourceProjectTimers);
+             NSLog(@"targetProjectTimers: %@", targetProjectTimers);
+             
              GHAssertTrue(sourceProject.timers.count == 0,
                           @"sourceProject.timers.count != 0");
              GHAssertTrue(targetProject.timers.count == 1,
                           @"targetProject.timers.count != 1");
              TCSTimer *targetProjectTimer = targetProject.timers.lastObject;
 
-             GHAssertEquals(movedTimer.providerEntityID, targetProjectTimer.providerEntityID,
+             GHAssertTrue([movedTimer.providerEntityID isEqualToString:targetProjectTimer.providerEntityID],
                             @"timer.providerEntityID != targetProjectTimer.providerEntityID");
 
              [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
@@ -268,6 +280,8 @@
          [self.project.serviceProvider
           fetchProjectWithID:self.project.providerEntityID
           success:^(TCSProject *project) {
+
+              NSLog(@"setting sourceProject with ID: %@", project.providerEntityID);
 
               sourceProject = project;
 
@@ -288,6 +302,7 @@
           fetchProjectWithID:self.secondProject.providerEntityID
           success:^(TCSProject *project) {
 
+              NSLog(@"setting targetProject with ID: %@", project.providerEntityID);
               targetProject = project;
 
               @synchronized (self) {

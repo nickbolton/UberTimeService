@@ -8,47 +8,48 @@
 
 #import "TCSBaseEntity.h"
 #import "TCSService.h"
+#import "TCSServicePrivate.h"
 
 @implementation TCSBaseEntity
 
 - (BOOL)providerBoolValueForKey:(NSString *)key {
-    return [_serviceProvider entityBoolValue:_providerEntity forKey:key];
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider entityBoolValue:_providerEntity forKey:key];
 }
 
 - (NSInteger)providerIntegerValueForKey:(NSString *)key {
-    return [_serviceProvider entityIntegerValue:_providerEntity forKey:key];
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider entityIntegerValue:_providerEntity forKey:key];
 }
 
 - (CGFloat)providerFloatValueForKey:(NSString *)key {
-    return [_serviceProvider entityFloatValue:_providerEntity forKey:key];
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider entityFloatValue:_providerEntity forKey:key];
 }
 
 - (NSString *)providerStringValueForKey:(NSString *)key {
-    return [_serviceProvider entityStringValue:_providerEntity forKey:key];
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider entityStringValue:_providerEntity forKey:key];
 }
 
 - (NSDate *)providerDateValueForKey:(NSString *)key {
-    return [_serviceProvider entityDateValue:_providerEntity forKey:key];
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider entityDateValue:_providerEntity forKey:key];
 }
 
 - (void)setProviderBoolValue:(BOOL)value forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity boolValue:value forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity boolValue:value forKey:key];
 }
 
 - (void)setProviderIntegerValue:(NSInteger)value forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity integerValue:value forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity integerValue:value forKey:key];
 }
 
 - (void)setProviderFloatValue:(CGFloat)value forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity floatValue:value forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity floatValue:value forKey:key];
 }
 
 - (void)setProviderStringValue:(NSString *)value forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity stringValue:value forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity stringValue:value forKey:key];
 }
 
 - (void)setProviderDateValue:(NSDate *)value forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity dateValue:value forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity dateValue:value forKey:key];
 }
 
 - (NSString *)description {
@@ -72,23 +73,23 @@
 #pragma mark - Relations
 
 - (void)addParentRelation:(TCSBaseEntity *)parent forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity addParentRelation:parent.providerEntity forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity addParentRelation:parent.providerEntity forKey:key];
 }
 
 - (void)removeParentRelationForKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity removeParentRelationForKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity removeParentRelationForKey:key];
 }
 
-- (TCSBaseEntity *)providerRelationForKey:(NSString *)key andType:(Class)type {
-    return [_serviceProvider relation:_providerEntity forKey:key andType:type];
+- (TCSBaseEntity *)providerRelationForKey:(NSString *)key andType:(Class)type error:(NSError **)error {
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider relation:_providerEntity forKey:key andType:type error:error];
 }
 
 - (void)setProviderRelation:(TCSBaseEntity *)entity forKey:(NSString *)key {
-    [_serviceProvider setEntity:_providerEntity relation:entity.providerEntity forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity relation:entity.providerEntity forKey:key];
 }
 
-- (NSArray *)providerToManyRelationForKey:(NSString *)key andType:(Class)type {
-    return [_serviceProvider toManyRelation:_providerEntity forKey:key andType:type];
+- (NSArray *)providerToManyRelationForKey:(NSString *)key andType:(Class)type error:(NSError **)error{
+    return [(id <TCSServiceProviderPrivate>)_serviceProvider toManyRelation:_providerEntity forKey:key andType:type error:error];
 }
 
 - (void)setProviderToManyRelation:(NSArray *)entities forKey:(NSString *)key {
@@ -100,7 +101,7 @@
         [values addObject:childEntity.providerEntity];
     }
 
-    [_serviceProvider setEntity:_providerEntity toManyRelation:values forKey:key];
+    [(id <TCSServiceProviderPrivate>)_serviceProvider setEntity:_providerEntity toManyRelation:values forKey:key];
 }
 
 @end

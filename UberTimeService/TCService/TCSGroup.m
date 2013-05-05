@@ -12,7 +12,7 @@
 @implementation TCSGroup
 
 - (NSArray *)children {
-    return [self providerToManyRelationForKey:@"children" andType:[TCSProject class]];
+    return [self providerToManyRelationForKey:@"children" andType:[TCSProject class] error:NULL];
 }
 
 - (void)setChildren:(NSArray *)children {

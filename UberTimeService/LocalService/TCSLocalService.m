@@ -26,7 +26,7 @@
 #if IntegrationTests
         [MagicalRecord setupCoreDataStackWithInMemoryStore];
 #else
-        [MagicalRecord setupCoreDataStackWithStoreNamed:@"TCSLocalService"];
+        [MagicalRecord setupCoreDataStackWithStoreNamed:@"TCSLocalService.data"];
 #endif
     }
     return self;
@@ -38,12 +38,67 @@
 #if IntegrationTests
     [MagicalRecord setupCoreDataStackWithInMemoryStore];
 #else
-    [MagicalRecord setupCoreDataStackWithStoreNamed:@"TCSLocalService"];
+
+    @synchronized ([NSThread mainThread]) {
+        NSMutableDictionary *threadDict = [[NSThread mainThread] threadDictionary];
+
+        [threadDict
+         setObject:[NSMutableSet set]
+         forKey:@"MagicalRecord_NSManagedObjectContextForThreadKeyRegistry"];
+    }
+
+    NSString *storeName = @"TCSLocalService.data";
+
+    NSString *applicationSupportDir =
+    [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+
+    NSString *storeFile =
+    [[applicationSupportDir stringByAppendingPathComponent:@"UberTimeService"]
+     stringByAppendingPathComponent:storeName];
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:storeFile]) {
+        [[NSFileManager defaultManager] removeItemAtPath:storeFile error:NULL];
+    }
+
+    [MagicalRecord setupCoreDataStackWithStoreNamed:storeName];
 #endif
 }
 
 - (NSString *)name {
     return NSLocalizedString(@"Local", nil);
+}
+
+- (NSManagedObjectContext *)managedObjectContextForCurrentThread {
+
+    if ([NSThread isMainThread]) {
+        return [NSManagedObjectContext MR_defaultContext];
+    } else {
+
+        NSMutableSet *threadRegistry = nil;
+
+        @synchronized ([NSThread mainThread]) {
+            NSMutableDictionary *mainThreadDict = [[NSThread mainThread] threadDictionary];
+
+            threadRegistry =
+            [mainThreadDict
+             objectForKey:@"MagicalRecord_NSManagedObjectContextForThreadKeyRegistry"];
+        }
+
+        NSString *currentThreadKey = [[NSThread currentThread] description];
+
+        NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
+		NSManagedObjectContext *threadContext = [threadDict objectForKey:@"MagicalRecord_NSManagedObjectContextForThreadKey"];
+        if (threadContext == nil || [threadRegistry containsObject:currentThreadKey] == NO) {
+			threadContext = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+			[threadDict setObject:threadContext forKey:@"MagicalRecord_NSManagedObjectContextForThreadKey"];
+            [threadRegistry addObject:currentThreadKey];
+		}
+
+        return threadContext;
+    }
+}
+
+- (void)clearCache {
 }
 
 #pragma mark - Entity Primitives
@@ -150,13 +205,15 @@
 
 - (id)entityIDForEntity:(id)entity {
 
-    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"No a NSManagedObject class");
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
 
     NSManagedObject *managedObject = entity;
     return managedObject.objectID;
 }
 
-- (TCSBaseEntity *)relation:(id)entity forKey:(NSString *)key andType:(Class)type {
+- (TCSBaseEntity *)relation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error {
+
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
 
     NSManagedObject *managedObject = entity;
 
@@ -172,6 +229,9 @@
 
 - (void)setEntity:(id)entity relation:(id)relation forKey:(NSString *)key {
 
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
+    NSAssert([relation isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
+
     NSManagedObject *managedObject = entity;
 
     [managedObject willChangeValueForKey:key];
@@ -179,7 +239,9 @@
     [managedObject didChangeValueForKey:key];
 }
 
-- (NSArray *)toManyRelation:(id)entity forKey:(NSString *)key andType:(Class)type {
+- (NSArray *)toManyRelation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error {
+
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
 
     NSManagedObject *managedObject = entity;
 
@@ -200,6 +262,8 @@
 
 - (void)setEntity:(id)entity toManyRelation:(NSArray *)entities forKey:(NSString *)key {
 
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
+
     NSManagedObject *managedObject = entity;
 
     NSMutableOrderedSet *values = [NSMutableOrderedSet orderedSetWithCapacity:entities.count];
@@ -212,6 +276,8 @@
 
 - (void)setEntity:(id)entity addParentRelation:(id)relation forKey:(NSString *)key {
 
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
+
     NSManagedObject *managedObject = entity;
 
     [managedObject willChangeValueForKey:key];
@@ -220,6 +286,8 @@
 }
 
 - (void)setEntity:(id)entity removeParentRelationForKey:(NSString *)key {
+
+    NSAssert([entity isKindOfClass:[NSManagedObject class]], @"Not an NSManagedObject class");
 
     NSManagedObject *managedObject = entity;
 
@@ -235,7 +303,7 @@
         NSManagedObject *providerEntity = entity.providerEntity;
 
         if (context == nil) {
-            context = [NSManagedObjectContext MR_contextForCurrentThread];
+            context = [self managedObjectContextForCurrentThread];
         }
 
         return
@@ -252,10 +320,19 @@
         NSManagedObject *managedObject = wrappedEntity.providerEntity;
 
         managedObject = (id)
-        [[NSManagedObjectContext MR_contextForCurrentThread]
+        [[self managedObjectContextForCurrentThread]
          objectWithID:managedObject.objectID];
 
         wrappedEntity.providerEntity = managedObject;
+    }
+}
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock {
+
+    [self resetCoreDataStack];
+    if (successBlock != nil) {
+        successBlock();
     }
 }
 
@@ -323,7 +400,7 @@
             if (successBlock != nil) {
 
                 localProject = (id)
-                [[NSManagedObjectContext MR_contextForCurrentThread]
+                [[self managedObjectContextForCurrentThread]
                  objectWithID:localProject.objectID];
 
                 TCSProject *project = (id)
@@ -397,7 +474,7 @@
         [self localServiceEntityFromWrapper:project inContext:localContext];
 
         if (localProject != nil) {
-            [localProject MR_deleteEntity];
+            [localProject MR_deleteInContext:localContext];
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -422,7 +499,10 @@
     if (successBlock != nil) {
 
         NSArray *localProjects =
-        [TCSLocalProject MR_findByAttribute:@"name" withValue:name];
+        [TCSLocalProject
+         MR_findByAttribute:@"name"
+         withValue:name
+         inContext:[self managedObjectContextForCurrentThread]];
 
         NSArray *result =
         [self
@@ -431,6 +511,8 @@
          provider:self];
 
         successBlock(result);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -441,7 +523,7 @@
     if (successBlock != nil) {
 
         TCSLocalProject *localProject = (id)
-        [[NSManagedObjectContext MR_contextForCurrentThread]
+        [[self managedObjectContextForCurrentThread]
          existingObjectWithID:entityID
          error:NULL];
 
@@ -456,6 +538,8 @@
         }
 
         successBlock(project);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -464,7 +548,9 @@
 
     if (successBlock != nil) {
         
-        NSArray *localProjects = [TCSLocalProject MR_findAll];
+        NSArray *localProjects =
+        [TCSLocalProject
+         MR_findAllInContext:[self managedObjectContextForCurrentThread]];
 
         NSArray *result =
         [self
@@ -473,6 +559,8 @@
          provider:self];
 
         successBlock(result);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -533,7 +621,7 @@
         [self localServiceEntityFromWrapper:group inContext:localContext];
 
         if (localGroup != nil) {
-            [localGroup MR_deleteEntity];
+            [localGroup MR_deleteInContext:localContext];
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -558,7 +646,7 @@
     if (successBlock != nil) {
 
         TCSLocalGroup *localGroup = (id)
-        [[NSManagedObjectContext MR_contextForCurrentThread]
+        [[self managedObjectContextForCurrentThread]
          existingObjectWithID:entityID
          error:NULL];
 
@@ -573,6 +661,8 @@
         }
 
         successBlock(group);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -581,7 +671,9 @@
 
     if (successBlock != nil) {
 
-        NSArray *localGroups = [TCSLocalGroup MR_findAll];
+        NSArray *localGroups =
+        [TCSLocalGroup
+         MR_findAllInContext:[self managedObjectContextForCurrentThread]];
 
         NSArray *result =
         [self
@@ -590,6 +682,8 @@
          provider:self];
 
         successBlock(result);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -622,7 +716,7 @@
          toGroup:localGroup
          inContext:localContext];
 
-        [localToProject MR_deleteEntity];
+        [localToProject MR_deleteInContext:localContext];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -641,7 +735,7 @@
             if (successBlock != nil) {
 
                 localGroup = (id)
-                [[NSManagedObjectContext MR_contextForCurrentThread]
+                [[self managedObjectContextForCurrentThread]
                  objectWithID:localGroup.objectID];
 
                 TCSGroup *group = (id)
@@ -722,7 +816,7 @@
         [parent.parent addChildrenObject:demotedProject];
         [parent.parent removeChildrenObject:parent];
 
-        [parent MR_deleteEntity];
+        [parent MR_deleteInContext:context];
     }
 }
 
@@ -761,7 +855,7 @@
                 [self updateWrappedEntityProviderInfo:project];
 
                 localTimer = (id)
-                [[NSManagedObjectContext MR_contextForCurrentThread]
+                [[self managedObjectContextForCurrentThread]
                  objectWithID:localTimer.objectID];
 
                 TCSTimer *timer = (id)
@@ -1002,7 +1096,7 @@
         } else {
 
             NSManagedObjectContext *moc =
-            [NSManagedObjectContext MR_contextForCurrentThread];
+            [self managedObjectContextForCurrentThread];
 
             for (TCSTimer *t in rolledTimers) {
                 t.providerEntity =
@@ -1067,7 +1161,7 @@
         [self localServiceEntityFromWrapper:timer inContext:localContext];
 
         if (localTimer != nil) {
-            [localTimer MR_deleteEntity];
+            [localTimer MR_deleteInContext:localContext];
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -1092,7 +1186,7 @@
     if (successBlock != nil) {
 
         TCSLocalTimer *localTimer = (id)
-        [[NSManagedObjectContext MR_contextForCurrentThread]
+        [[self managedObjectContextForCurrentThread]
          existingObjectWithID:entityID
          error:NULL];
 
@@ -1100,6 +1194,8 @@
         [self wrapProviderEntity:localTimer inType:[TCSTimer class] provider:self];
 
         successBlock(wrappedTimer);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -1120,7 +1216,7 @@
         NSArray *timers =
         [TCSLocalTimer
          MR_findAllWithPredicate:predicate
-         inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+         inContext:[self managedObjectContextForCurrentThread]];
 
         NSArray *wrappedResult =
         [self
@@ -1129,6 +1225,29 @@
          provider:self];
 
         successBlock(wrappedResult);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
+    }
+}
+
+- (void)fetchTimers:(void(^)(NSArray *groups))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    if (successBlock != nil) {
+
+        NSArray *timers =
+        [TCSLocalTimer
+         MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+
+        NSArray *wrappedResult =
+        [self
+         wrapProviderEntities:timers
+         inType:[TCSTimer class]
+         provider:self];
+
+        successBlock(wrappedResult);
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 

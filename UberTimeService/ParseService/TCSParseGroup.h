@@ -1,0 +1,17 @@
+//
+//  TCSParseGroup.h
+//  UberTimeService
+//
+//  Created by Nick Bolton on 5/4/13.
+//  Copyright (c) 2013 Pixelbleed. All rights reserved.
+//
+
+#import "TCSParseTimedEntity.h"
+
+@interface TCSParseGroup : TCSParseTimedEntity<PFSubclassing>
+
++ (NSString *)parseClassName;
+
+@property (nonatomic) NSArray *children;
+
+@end

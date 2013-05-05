@@ -8,6 +8,9 @@
 
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
+#import "TCSServicePrivate.h"
+
+NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotification";
 
 @interface TCSService()
 
@@ -48,11 +51,66 @@
     NSAssert([serviceProvider conformsToProtocol:@protocol(TCSServiceProvider)],
              @"Class must conform to TCSServiceProvider protocol");
 
+    NSAssert([serviceProvider conformsToProtocol:@protocol(TCSServiceProviderPrivate)],
+             @"Class must conform to TCSServiceProviderPrivate protocol");
+
     _serviceProviders[NSStringFromClass(projectServiceClass)] = serviceProvider;
 }
 
 - (id <TCSServiceProvider>)serviceProviderOfType:(Class)projectServiceClass {
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
     return _serviceProviders[NSStringFromClass(projectServiceClass)];
+}
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock {
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    __block NSInteger asyncCount = _serviceProviders.count;
+    __block BOOL sentFailure = NO;    
+
+    for (id <TCSServiceProvider> serviceProvider in _serviceProviders.allValues) {
+        [(id <TCSServiceProviderPrivate>)serviceProvider
+          deleteAllData:^{
+
+              @synchronized (self) {
+
+                  asyncCount--;
+                  if (asyncCount == 0) {
+
+                      [self clearCaches];
+
+                      if (successBlock != nil) {
+                          successBlock();
+                      }
+
+                      [[NSNotificationCenter defaultCenter]
+                       postNotificationName:kTCSServiceDataResetNotification
+                       object:self
+                       userInfo:nil];
+                  }
+              }
+
+          } failure:^(NSError *error) {
+
+              if (sentFailure == NO) {
+                  sentFailure = YES;
+                  if (failureBlock != nil) {
+                      failureBlock(error);
+                  }
+              }
+          }];
+    }
+}
+
+- (void)clearCaches {
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    for (id <TCSServiceProvider> serviceProvider in _serviceProviders.allValues) {
+        [serviceProvider clearCache];
+    }
 }
 
 #pragma mark - Project Methods
@@ -61,7 +119,9 @@
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    [project.serviceProvider
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)project.serviceProvider
      updateProject:project
      success:successBlock
      failure:failureBlock];
@@ -71,7 +131,9 @@
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    [project.serviceProvider
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)project.serviceProvider
      deleteProject:project
      success:successBlock
      failure:failureBlock];
@@ -81,6 +143,8 @@
                       ignoreOrder:(BOOL)ignoreOrder
                           success:(void(^)(NSArray *projects))successBlock
                           failure:(void(^)(NSError *error))failureBlock {
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
 
     if (successBlock != nil) {
 
@@ -146,6 +210,8 @@
                 }
             }];
         }
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -153,6 +219,9 @@
                               ignoreOrder:(BOOL)ignoreOrder
                                   success:(void(^)(NSArray *projects))successBlock
                                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
     if (successBlock != nil) {
 
         NSComparator nameComparator = ^NSComparisonResult(id obj1, id obj2) {
@@ -228,6 +297,8 @@
                 }
             }];
         }
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 
@@ -237,7 +308,9 @@
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    [group.serviceProvider
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)group.serviceProvider
      updateGroup:group
      success:successBlock
      failure:failureBlock];
@@ -247,7 +320,9 @@
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    [group.serviceProvider
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)group.serviceProvider
      deleteGroup:group
      success:successBlock
      failure:failureBlock];
@@ -258,9 +333,11 @@
             success:(void(^)(TCSGroup *))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
     if (sourceProject.serviceProvider == toProject.serviceProvider) {
 
-        [sourceProject.serviceProvider
+        [(id <TCSServiceProviderPrivate>)sourceProject.serviceProvider
          moveProject:sourceProject
          toProject:toProject
          success:successBlock
@@ -270,7 +347,7 @@
 
 #warning TODO : rollback??
 
-        [toProject.serviceProvider
+        [(id <TCSServiceProviderPrivate>)toProject.serviceProvider
          moveProject:sourceProject
          toProject:toProject
          success:^(TCSGroup *group) {
@@ -297,7 +374,7 @@
     if ((sourceProject.serviceProvider == group.serviceProvider) ||
         (group == nil)) {
 
-        [sourceProject.serviceProvider
+        [(id <TCSServiceProviderPrivate>)sourceProject.serviceProvider
          moveProject:sourceProject
          toGroup:group
          success:successBlock
@@ -307,7 +384,7 @@
 
 #warning TODO : rollback??
 
-        [group.serviceProvider
+        [(id <TCSServiceProviderPrivate>)group.serviceProvider
          moveProject:sourceProject
          toGroup:group
          success:^{
@@ -327,9 +404,11 @@
                      success:(void(^)(TCSTimer *timer))successBlock
                      failure:(void(^)(NSError *error))failureBlock {
 
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
     void (^executionBlock)(void) = ^{
 
-        [project.serviceProvider
+        [(id <TCSServiceProviderPrivate>)project.serviceProvider
          startTimerForProject:project
          success:^(TCSTimer *timer) {
 
@@ -357,7 +436,9 @@
           success:(void(^)(void))successBlock
           failure:(void(^)(NSError *error))failureBlock {
 
-    [timer.serviceProvider
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)timer.serviceProvider
      stopTimer:timer
      success:^{
 
@@ -373,7 +454,10 @@
 - (void)updateTimer:(TCSTimer *)timer
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-    [timer.serviceProvider
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)timer.serviceProvider
      updateTimer:timer
      success:successBlock
      failure:failureBlock];
@@ -382,7 +466,10 @@
 - (void)deleteTimer:(TCSTimer *)timer
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-    [timer.serviceProvider
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
+    [(id <TCSServiceProviderPrivate>)timer.serviceProvider
      deleteTimer:timer
      success:successBlock
      failure:failureBlock];
@@ -393,13 +480,15 @@
           success:(void(^)(void))successBlock
           failure:(void(^)(NSError *error))failureBlock {
 
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
     if ([timer.project isEqual:project]) {
         return;
     }
 
     if (timer.serviceProvider == project.serviceProvider) {
 
-        [timer.serviceProvider
+        [(id <TCSServiceProviderPrivate>)timer.serviceProvider
          moveTimer:timer
          toProject:project
          success:successBlock
@@ -414,11 +503,11 @@
         NSTimeInterval adjustment = timer.adjustment;
         NSString *message = timer.message;
 
-        [timer.serviceProvider
+        [(id <TCSServiceProviderPrivate>)timer.serviceProvider
          deleteTimer:timer
          success:^{
 
-             [project.serviceProvider
+             [(id <TCSServiceProviderPrivate>)project.serviceProvider
               startTimerForProject:project
               success:^(TCSTimer *localTimer) {
 
@@ -427,7 +516,7 @@
                   localTimer.adjustment = adjustment;
                   localTimer.message = message;
 
-                  [localTimer.serviceProvider
+                  [(id <TCSServiceProviderPrivate>)localTimer.serviceProvider
                    updateTimer:localTimer
                    success:^{
 
@@ -451,11 +540,13 @@
           success:(void(^)(NSArray *rolledTimers))successBlock
           failure:(void(^)(NSError *error))failureBlock {
 
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
+
     BOOL isActive = [self.activeTimer isEqual:timer];
 
     if (successBlock != nil && timer.adjustment == 0) {
 
-        [timer.serviceProvider
+        [(id <TCSServiceProviderPrivate>)timer.serviceProvider
          rollTimer:timer
          maxDuration:maxDuration
          success:^(NSArray *rolledTimers) {
@@ -478,6 +569,8 @@
                sortByStartTime:(BOOL)sortByStartTime
                        success:(void(^)(NSArray *timers))successBlock
                        failure:(void(^)(NSError *error))failureBlock {
+
+    NSAssert(_serviceProviders.count > 0, @"No service providers regsistered.");
 
     if (successBlock != nil) {
 
@@ -532,7 +625,7 @@
 
         for (NSArray *projects in serviceProviders.allValues) {
 
-            [serviceProvider
+            [(id <TCSServiceProviderPrivate>)serviceProvider
              fetchTimersForProjects:projects
              fromDate:from
              toDate:to
@@ -572,6 +665,8 @@
                  }
              }];
         }
+    } else {
+        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
     }
 }
 

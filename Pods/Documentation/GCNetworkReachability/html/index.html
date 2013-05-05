@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>GCNetworkReachability 1.3.0 Reference</title>
+		<link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.1 (build 840)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="index.html">GCNetworkReachability 1.3.0 </a></h1>
+				<a id="developerHome" href="index.html">Glenn Chiu</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">GCNetworkReachability 1.3.0 Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar"></ul>
+		</header>
+		<article>
+			<div id="overview_contents" role="main">
+				<div class="main-navigation navigation-top">
+					<a href="hierarchy.html">Next</a>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">GCNetworkReachability 1.3.0 Reference</h1>
+					</div>		
+				</div>
+				<div id="container">
+					
+					<div class="section section-overview index-overview">
+						
+						
+						<h1><a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a></h1>
+
+<p><a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a> monitors the network state on iOS and OS X devices.</p>
+
+<p>The API is inspired by Apple&rsquo;s Reachability class for iOS but the implementation is built from the ground up to utilize modern LLVM compiler features and POSIX standards. It also runs concurrently with GCD (libdispatch) and has OS X and IPv6 support.</p>
+
+<h2>Features / Design</h2>
+
+<ul>
+<li>Network monitoring is done on a secondary thread (via libdispatch) and thus fully asynchronous. Resolving DNS, which can take up to 30 seconds on a slow connection, will not block the main thread (and will not invoke the watchdog timer).</li>
+<li>Supports modern Clang / LLVM compiler features like Blocks.</li>
+<li>Uses POSIX socket API instead of BSD sockets.</li>
+<li>Full support for iOS and OS X.</li>
+<li>Full ARC support.</li>
+<li>Supports IPv4 and IPv6 addresses.</li>
+</ul>
+
+
+<h2>Requirements</h2>
+
+<p><a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a> requires iOS 5.0 and above or OS X 10.7 and above. It also requires Xcode 4.5 and above and LLVM Compiler 4.1.</p>
+
+<h2>Installation</h2>
+
+<p>Add the source code to your project. Link your target against the <code>SystemConfiguration.framework</code>.</p>
+
+<p>If you use this class in a non-ARC project, make sure you add the <code>-fobjc-arc</code> compiler flag for the implementation file.</p>
+
+<p>CocoaPods support: <code>pod 'GCNetworkReachability'</code></p>
+
+<h2>Usage</h2>
+
+<p>The recommended way is to use a global instance variable of <a href="Classes/GCNetworkReachability.html"><code>GCNetworkReachability</code></a> in a class that stays alive during the whole runtime of your application (e.g. AppDelegate). This ensures that <a href="Classes/GCNetworkReachability.html"><code>GCNetworkReachability</code></a> can keep monitoring the network state of the device. When you&rsquo;re done monitoring, always call <code>-stopMonitoringNetworkReachability</code> to clean up memory and to stop the monitoring process.</p>
+
+<p>Should you use the block handler or notification API? Well, notifications allow you to listen for changes in networking state in your whole project. If that&rsquo;s not necessary then you should use the handler as this requires less code and is more efficient for your application.</p>
+
+<p>Block handler example:</p>
+
+<p>```objectivec
+self.reachability = [GCNetworkReachability reachabilityWithHostName:@&ldquo;www.google.com&rdquo;];</p>
+
+<p>[self.reachability startMonitoringNetworkReachabilityWithHandler:^(GCNetworkReachabilityStatus status) {</p>
+
+<pre><code>// this block is called on the main thread   
+switch (status) {
+    case GCNetworkReachabilityStatusNotReachable:
+        NSLog(@"No connection");
+        break;
+    case GCNetworkReachabilityStatusWWAN:
+    case GCNetworkReachabilityStatusWiFi:
+        // e.g. start syncing...
+        break;
+}
+</code></pre>
+
+<p>}];
+<code>``
+If you use notifications, you can access the instance of </code>GCNetworkReachability<code> via the block parameter</code>NSNotification<code>. The status value can be accessed inside the</code>userInfo<code>dictionary via the key</code>kGCNetworkReachabilityStatusKey`.</p>
+
+<p>Notification example:</p>
+
+<p>```objectivec
+[self.reachability startMonitoringNetworkReachabilityWithNotification];</p>
+
+<p>self.observer = [[NSNotificationCenter defaultCenter] addObserverForName:kGCNetworkReachabilityDidChangeNotification</p>
+
+<pre><code>                                                              object:nil
+                                                               queue:[NSOperationQueue mainQueue]
+                                                          usingBlock:^(NSNotification *note) {
+
+                                                              GCNetworkReachabilityStatus status = [[note userInfo][kGCNetworkReachabilityStatusKey] integerValue];
+
+                                                              switch (status) {
+                                                                  case GCNetworkReachabilityStatusNotReachable:
+                                                                      NSLog(@"No connection");
+                                                                      break;
+                                                                  case GCNetworkReachabilityStatusWWAN:
+                                                                      NSLog(@"Reachable via WWAN");
+                                                                      break;
+                                                                  case GCNetworkReachabilityStatusWiFi:
+                                                                      NSLog(@"Reachable via WiFi");
+                                                                      break;
+
+                                                              }
+                                                          }];
+</code></pre>
+
+<p>```</p>
+
+<p>You are not forced to start monitoring the network state, just to check the reachability. It&rsquo;s also possible to check the current network state when you need to via a single method. Please note that you should not use the hostname initializer for this, as this requires DNS to resolve the hostname before it can determine the reachability of that host. This may take time on certain network connections. Because of this, the API will return <code>GCNetworkReachabilityStatusNotReachable</code> until name resolution has completed:</p>
+
+<p>```objectivec
+<a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a> *reachability = <a href="Classes/GCNetworkReachability.html#//api/name/reachabilityForInternetConnection">[GCNetworkReachability reachabilityForInternetConnection]</a>;</p>
+
+<p>if ([reachability isReachable])
+{</p>
+
+<pre><code>// do stuff that requires an internet connection…
+</code></pre>
+
+<p>}</p>
+
+<p>&hellip;</p>
+
+<p>switch ([reachability currentReachabilityStatus]) {</p>
+
+<pre><code>case GCNetworkReachabilityStatusWWAN:
+    // e.g. download smaller file sized images...
+    break;
+case GCNetworkReachabilityStatusWiFi:
+    // e.g. download default file sized images...
+    break;
+default:
+    break;
+</code></pre>
+
+<p>}
+```
+Check for IP address reachability:</p>
+
+<p>```objectivec
+// IPv4 address
+<a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a> *reachability = [GCNetworkReachability reachabilityWithInternetAddressString:@&ldquo;173.194.43.0&rdquo;];</p>
+
+<p>// IPv6 address
+<a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a> *reachability = [GCNetworkReachability reachabilityWithIPv6AddressString:@&ldquo;2a00:1450:4007:801::1013&rdquo;];
+```</p>
+
+<h2>License</h2>
+
+<p>This code is distributed under the terms and conditions of the MIT license.</p>
+
+<p>Copyright &copy; 2013 Glenn Chiu</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &ldquo;Software&rdquo;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED &ldquo;AS IS&rdquo;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+						
+						
+					</div>
+					
+                        
+                    
+					
+					
+					<div class="index-column">
+						<h2 class="index-title">Class References</h2>
+						<ul>
+							
+							<li><a href="Classes/GCNetworkReachability.html">GCNetworkReachability</a></li>
+							
+						</ul>
+					</div>
+					
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<a href="hierarchy.html">Next</a>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2013 Glenn Chiu. All rights reserved. (Last updated: 2013-05-04)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.1 (build 840)</a>.</span></p>
+						
+	
+					</div>
+				</div>
+			</div>
+		</article>		
+	</body>
+</html>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/GCNetworkReachability.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/GCNetworkReachability</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>
+			
+			<NodeRef refid="1"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityWithHostName:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityWithHostName:(NSString *)hostName</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityWithHostName:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityWithHostAddress:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityWithHostAddress:(const struct sockaddr *)hostAddress</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityWithHostAddress:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityWithInternetAddress:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityWithInternetAddress:(in_addr_t)internetAddress</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityWithInternetAddress:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityWithInternetAddressString:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityWithInternetAddressString:(NSString *)internetAddress</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityWithInternetAddressString:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityWithIPv6Address:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityWithIPv6Address:(const struct in6_addr)internetAddress</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityWithIPv6Address:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityWithIPv6AddressString:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityWithIPv6AddressString:(NSString *)internetAddress</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityWithIPv6AddressString:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityForInternetConnection</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityForInternetConnection</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityForInternetConnection</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/GCNetworkReachability/reachabilityForLocalWiFi</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>+ (instancetype)reachabilityForLocalWiFi</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityForLocalWiFi</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/initWithHostAddress:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (instancetype)initWithHostAddress:(const struct sockaddr *)hostAddress</Declaration>
+			
+			
+			<Anchor>//api/name/initWithHostAddress:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/initWithHostName:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (instancetype)initWithHostName:(NSString *)hostName</Declaration>
+			
+			
+			<Anchor>//api/name/initWithHostName:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/initWithReachability:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability</Declaration>
+			
+			
+			<Anchor>//api/name/initWithReachability:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/startMonitoringNetworkReachabilityWithHandler:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (void)startMonitoringNetworkReachabilityWithHandler:(void ( ^ ) ( GCNetworkReachabilityStatus status ))block</Declaration>
+			
+			
+			<Anchor>//api/name/startMonitoringNetworkReachabilityWithHandler:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/startMonitoringNetworkReachabilityWithNotification</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (void)startMonitoringNetworkReachabilityWithNotification</Declaration>
+			
+			
+			<Anchor>//api/name/startMonitoringNetworkReachabilityWithNotification</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/stopMonitoringNetworkReachability</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (void)stopMonitoringNetworkReachability</Declaration>
+			
+			
+			<Anchor>//api/name/stopMonitoringNetworkReachability</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/currentReachabilityStatus</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (GCNetworkReachabilityStatus)currentReachabilityStatus</Declaration>
+			
+			
+			<Anchor>//api/name/currentReachabilityStatus</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/isReachable</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)isReachable</Declaration>
+			
+			
+			<Anchor>//api/name/isReachable</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/isReachableViaWiFi</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)isReachableViaWiFi</Declaration>
+			
+			
+			<Anchor>//api/name/isReachableViaWiFi</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/isReachableViaWWAN</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)isReachableViaWWAN</Declaration>
+			
+			
+			<Anchor>//api/name/isReachableViaWWAN</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/GCNetworkReachability/reachabilityFlags</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>GCNetworkReachability.h</DeclaredIn>			
+			
+			<Declaration>- (SCNetworkReachabilityFlags)reachabilityFlags</Declaration>
+			
+			
+			<Anchor>//api/name/reachabilityFlags</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

@@ -14,9 +14,7 @@
 @implementation TCSGroupTests
 
 - (void)setUpClass {
-
     [super setUpClass];
-
     self.service = [TCSService sharedInstance];
 }
 
@@ -27,6 +25,7 @@
     self.secondProject = nil;
     self.targetProject = nil;
     self.group = nil;
+    [super tearDownClass];
 }
 
 - (void)createProjects:(SEL)selector {
@@ -95,9 +94,8 @@
                    GHAssertTrue(fetchedGroup.children.count == 1,
                                 @"fetchedGroup.children.count (%d) != 1", fetchedGroup.children.count);
 
-                   GHAssertEquals(fetchedProject.parent.providerEntityID,
-                                  fetchedGroup.providerEntityID,
-                                  @"fetchedProject.parent.providerEntityID != fetchedGroup.providerEntityID");
+                   GHAssertTrue([fetchedProject.parent.providerEntityID isEqualToString:fetchedGroup.providerEntityID],
+                                @"fetchedProject.parent.providerEntityID != fetchedGroup.providerEntityID");
 
                    [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
@@ -141,9 +139,8 @@
                    GHAssertTrue(fetchedGroup.children.count == 2,
                                 @"fetchedGroup.children.count (%d) != 2", fetchedGroup.children.count);
 
-                   GHAssertEquals(fetchedProject.parent.providerEntityID,
-                                  fetchedGroup.providerEntityID,
-                                  @"fetchedProject.parent.providerEntityID != fetchedGroup.providerEntityID");
+                   GHAssertTrue([fetchedProject.parent.providerEntityID isEqualToString:fetchedGroup.providerEntityID],
+                                @"fetchedProject.parent.providerEntityID != fetchedGroup.providerEntityID");
 
                    [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
@@ -282,7 +279,7 @@
                            @"group.color (%d) != color (%d)",
                            group.color, color);
 
-              GHAssertEquals(group.name, name,
+              GHAssertTrue([group.name isEqualToString:name],
                              @"group.name (%@) != name (%@)",
                              group.name, name);
 
@@ -325,6 +322,53 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
     
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
+}
+
+- (void)deleteAllData:(SEL)selector {
+
+    [self prepare];
+
+    [self.service
+     deleteAllData:^{
+
+         [self.serviceProvider
+          fetchTimers:^(NSArray *timers) {
+
+              GHAssertTrue(timers.count == 0, @"Timer remains after delete all data");
+
+              [self.serviceProvider
+               fetchProjects:^(NSArray *projects) {
+
+                   GHAssertTrue(projects.count == 0, @"Project remains after delete all data");
+
+                   [self.serviceProvider
+                    fetchGroups:^(NSArray *groups) {
+
+                        GHAssertTrue(groups.count == 0, @"Group remains after delete all data");
+
+                        [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
+
+                    } failure:^(NSError *error) {
+                        NSLog(@"ZZZ Error: %@", error);
+                        [self notify:kGHUnitWaitStatusFailure forSelector:selector];
+                    }];
+
+               } failure:^(NSError *error) {
+                   NSLog(@"ZZZ Error: %@", error);
+                   [self notify:kGHUnitWaitStatusFailure forSelector:selector];
+               }];
+
+          } failure:^(NSError *error) {
+              NSLog(@"ZZZ Error: %@", error);
+              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
+          }];
+
+     } failure:^(NSError *error) {
+         NSLog(@"ZZZ Error: %@", error);
+         [self notify:kGHUnitWaitStatusFailure forSelector:selector];
+     }];
+
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 

@@ -11,11 +11,7 @@
 
 @interface TCSProjectTests : TCSBaseTests
 
-@property (nonatomic, strong) TCSProject *foundProject;
-@property (nonatomic, strong) NSString *projectName;
-
 - (void)createProject:(SEL)selector;
-- (void)findProjectWithName:(SEL)selector;
 - (void)fetchProjectByEntityID:(SEL)selector;
 - (void)fetchAllProjects:(SEL)selector;
 - (void)editProject:(SEL)selector;

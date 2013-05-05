@@ -6,6 +6,7 @@ platform :ios, :deployment_target => '6.0'
       pod 'MagicalRecord', '~> 2.1'
       pod 'Parse', '~> 1.2'
       pod 'Facebook-iOS-SDK', '~> 3.5'
+      pod 'GCNetworkReachability', '~> 1.3'
   end
 
   target :'IntegrationTests' do
@@ -14,6 +15,7 @@ platform :ios, :deployment_target => '6.0'
       pod 'MagicalRecord', '~> 2.1'
       pod 'Parse', '~> 1.2'
       pod 'Facebook-iOS-SDK', '~> 3.5'
+      pod 'GCNetworkReachability', '~> 1.3'
       pod 'GHUnitIOS', '~> 0.5.6'
   end
 
