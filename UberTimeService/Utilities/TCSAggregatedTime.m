@@ -6,93 +6,75 @@
 //  Copyright 2011 Pixelbleed LLC. All rights reserved.
 //
 
-#import "TCAggregatedTime.h"
-#import "TCTimedEntity.h"
-#import "TCGroup.h"
-#import "TCProject.h"
-#import "NSDate-Utilities.h"
-#import "TCDataModelEntityManager.h"
-#import "TCTimerComment.h"
-#import "TCDateFormatManager.h"
-#import "TCDateRange.h"
+#import "TCSAggregatedTime.h"
+#import "NSDate+Utilities.h"
+#import "TCSDateFormatManager.h"
+#import "TCSDateRange.h"
+#import "TCSService.h"
 
-@interface TCAggregatedTime() {
-    BOOL timePeriodActive_;
-    NSTimeInterval elapsedTime_;
-    NSTimeInterval rawElapsedTime_;
-    NSArray *timers_;
+@interface TCSAggregatedTime() {
+
+    NSTimeInterval _elapsedTime;
+    NSTimeInterval _rawElapsedTime;
+    NSTimeInterval _recalculatedTimestamp;
 }
 
+@property (nonatomic, readwrite) NSArray *timers;
+
 - (void)calculateElapsedTimes;
+
 @end
 
 
-@implementation TCAggregatedTime 
+@implementation TCSAggregatedTime 
 
-@synthesize timedEntity = timedEntity_;
-@synthesize applications = applications_;
-@synthesize dateRange = dateRange_;
-@synthesize expanded = expanded_;
-@synthesize selected = selected_;
-@synthesize recalculatedTimestamp = recalculatedTimestamp_;
-
-- (id)initWithTimedEntity:(TCTimedEntity *)timedEntity
-                dateRange:(TCDateRange *)dateRange {
+- (id)initWithTimedEntity:(TCSTimedEntity *)timedEntity
+                dateRange:(TCSDateRange *)dateRange {
     
     if ((self = [super init])) {
         self.timedEntity = timedEntity;;
         self.dateRange = dateRange;
-        elapsedTime_ = -1.0f;
-        rawElapsedTime_ = -1.0f;
-        applications_ = NO;
+        _elapsedTime = -1.0f;
+        _rawElapsedTime = -1.0f;
     }
     
     return self;
 }
 
 - (id)initRootEntityWithApplications:(BOOL)applications
-                           dateRange:(TCDateRange *)dateRange {
+                           dateRange:(TCSDateRange *)dateRange {
     
     if ((self = [super init])) {
         self.timedEntity = nil;
-        applications_ = applications;
         self.dateRange = dateRange;
-        elapsedTime_ = -1.0f;
-        rawElapsedTime_ = -1.0f;
+        _elapsedTime = -1.0f;
+        _rawElapsedTime = -1.0f;
     }
     
     return self;
 }
 
-- (void)dealloc {
-    [timedEntity_ release], timedEntity_ = nil;
-    [dateRange_ release], dateRange_ = nil;
-    [timers_ release], timers_ = nil;
-    [super dealloc];
-}
-
 - (id)copyWithZone:(NSZone *)zone {
-    TCAggregatedTime *aggregatedTime = [[TCAggregatedTime alloc] init];
+    TCSAggregatedTime *aggregatedTime = [[TCSAggregatedTime alloc] init];
     aggregatedTime.timedEntity = self.timedEntity;
     aggregatedTime.dateRange = self.dateRange;
     aggregatedTime.selected = self.selected;
     aggregatedTime.expanded = self.expanded;
-    aggregatedTime.applications = self.applications;
     return aggregatedTime;
 }
 
 - (NSDate *)startDate {
-    return dateRange_.startDate;
+    return _dateRange.startDate;
 }
 
 - (NSDate *)endDate {
-    return dateRange_.endDate;
+    return _dateRange.endDate;
 }
 
 - (BOOL)isEqual:(id)object {
-    TCAggregatedTime *that = object;
+    TCSAggregatedTime *that = object;
     
-    if ([that isKindOfClass:[TCAggregatedTime class]] == YES) {
+    if ([that isKindOfClass:[TCSAggregatedTime class]] == YES) {
         
         if (self.timedEntity != nil && that.timedEntity != nil) {
             return [self.timedEntity.objectID isEqual:that.timedEntity.objectID] &&
@@ -100,16 +82,15 @@
         } else if (self.timedEntity != nil || that.timedEntity != nil) {
             return NO;
         } else {
-            return self.applications == that.applications &&
-            [self.dateRange isEqual:that.dateRange];
+            return [self.dateRange isEqual:that.dateRange];
         }
     }
     return NO;
 }
 
-- (BOOL)containsTimer:(TCTimer *)timer {    
+- (BOOL)containsTimer:(TCSTimer *)timer {
 
-    for (TCTimer *t in self.timers) {
+    for (TCSTimer *t in self.timers) {
         if ([t.objectID isEqual:timer.objectID]) {
             return YES;
         }
@@ -118,7 +99,7 @@
 }
 
 - (void)refreshOnBackground:(BOOL)background
-                 completion:(void(^)(TCAggregatedTime *aggregatedTime))completionBlock {
+                 completion:(void(^)(TCSAggregatedTime *aggregatedTime))completionBlock {
 
     __block typeof(self) this = self;
 
@@ -157,21 +138,20 @@
 
 - (BOOL)isTimePeriodActive {
     
-    TCTimer *activeTimer;
+    TCSTimer *activeTimer;
     
-    if (timedEntity_.active == YES ) {
-        activeTimer = timedEntity_.activeTimer;
-        return [dateRange_.startDate isLessThanOrEqualTo:activeTimer.startTime] == YES &&
-        [activeTimer.startTime isLessThanOrEqualTo:dateRange_.endDate] == YES;
-    } else if (timedEntity_ == nil) {
-        NSArray *activeProjects = [[TCDataModelEntityManager sharedInstance] activeProjects];
-        if ([activeProjects count] > 0) {
-            for (TCProject *project in activeProjects) {
-                activeTimer = timedEntity_.activeTimer;
-                if ([dateRange_.startDate isLessThanOrEqualTo:activeTimer.startTime] == YES &&
-                    [activeTimer.startTime isLessThanOrEqualTo:dateRange_.endDate] == YES) {
-                    return YES;
-                }
+    if (_timedEntity.active == YES ) {
+        activeTimer = [TCSService sharedInstance].activeTimer;
+        return [_dateRange.startDate isLessThanOrEqualTo:activeTimer.startTime] == YES &&
+        [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate] == YES;
+    } else if (_timedEntity == nil) {
+        TCSProject *activeProject = [TCSService sharedInstance].activeTimer.project;
+        
+        if (activeProject != nil) {
+            activeTimer = [TCSService sharedInstance].activeTimer;
+            if ([_dateRange.startDate isLessThanOrEqualTo:activeTimer.startTime] == YES &&
+                [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate] == YES) {
+                return YES;
             }
         }
     }
@@ -179,7 +159,7 @@
 }
 
 - (void)ensureTimeIsCalculated {
-    if (elapsedTime_ < 0) {
+    if (_elapsedTime < 0) {
         [self calculateElapsedTimes];
     }
 }
@@ -189,12 +169,12 @@
 
     if (self.isTimePeriodActive) {
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - recalculatedTimestamp_;
+        [NSDate timeIntervalSinceReferenceDate] - _recalculatedTimestamp;
 
-        return elapsedTime_ + timeSinceLastCalculated;
+        return _elapsedTime + timeSinceLastCalculated;
     }
 
-    return elapsedTime_;
+    return _elapsedTime;
 }
 
 - (NSTimeInterval)rawElapsedTime {
@@ -203,109 +183,54 @@
 
     if (self.isTimePeriodActive) {
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - recalculatedTimestamp_;
+        [NSDate timeIntervalSinceReferenceDate] - _recalculatedTimestamp;
 
-        return rawElapsedTime_ + timeSinceLastCalculated;
+        return _rawElapsedTime + timeSinceLastCalculated;
     }
     
-    return rawElapsedTime_;
+    return _rawElapsedTime;
 }
 
 - (NSArray *)timers {
     [self ensureTimeIsCalculated];
-    return timers_;
+    return _timers;
 }
 
 - (NSArray *)sortedTimerArray {    
-    return [timers_ sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        TCTimer *tc1 = obj1;
-        TCTimer *tc2 = obj2;
+    return [_timers sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        TCSTimer *tc1 = obj1;
+        TCSTimer *tc2 = obj2;
         return [tc1.startTime compare:tc2.startTime];
     }];
-}
-
-- (NSArray *)sortedTimerCommentArray {
-    NSMutableArray *content = [NSMutableArray array];
-    TCTimerComment *timerComment;
-    
-    for (TCTimer *timer in timers_) {
-        timerComment = [[TCTimerComment alloc] init];
-        timerComment.timestamp = timer.startTime;
-        timerComment.timestampString = [[TCDateFormatManager sharedInstance] formatTime:timer.startTime includeSeconds:YES];
-        timerComment.comment = timer.message != nil ? timer.message : @"";
-        [content addObject:timerComment];
-        [timerComment release];
-    }
-    
-    return [content sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        TCTimerComment *tc1 = obj1;
-        TCTimerComment *tc2 = obj2;
-        return [tc1.timestamp compare:tc2.timestamp];
-    }];
-}
-
-- (BOOL)containsComments {
-    
-    for (TCTimer *timer in timers_) {
-        if ([timer.message length] > 0) {
-            return YES;
-        }
-    }
-    
-    return NO;
-}
-
-- (TCTimer *)singleTimerOwner {
-    TCTimer *owner = nil;
-    TCTimer *firstTimer = nil;
-    
-    for (TCTimer *timer in timers_) {
-        if (firstTimer == nil) {
-            firstTimer = timer;
-        }
-        if ([timer.message length] > 0 || timer.externalId != nil) {
-            owner = timer;
-            break;
-        }
-    }
-    
-    if (owner == nil) {
-        owner = firstTimer;
-    }
-    
-    return owner;
 }
         
 - (void)calculateElapsedTimes {
 
-    [timers_ release], timers_ = nil;
+    self.timers = nil;
 
-    recalculatedTimestamp_ = [NSDate timeIntervalSinceReferenceDate];
+    _recalculatedTimestamp = [NSDate timeIntervalSinceReferenceDate];
 
     NSMutableArray *mutableTimerList;
 
-    if (timedEntity_ != nil) {
-        mutableTimerList = [[[TCDataModelEntityManager sharedInstance]
-                             timersForEntity:timedEntity_
-                             fromDate:dateRange_.startDate
-                             toDate:dateRange_.endDate] mutableCopy];
-    } else {
-        mutableTimerList = [[[TCDataModelEntityManager sharedInstance]
-                             timersForRootEntityWithApplications:applications_
-                             fromDate:dateRange_.startDate
-                             toDate:dateRange_.endDate] mutableCopy];
+    if (_timedEntity != nil) {
+        mutableTimerList =
+        [[[TCSService sharedInstance]
+          timersForProjects:@[_timedEntity]
+          fromDate:_dateRange.startDate
+          toDate:_dateRange.endDate
+          sortByStartTime:NO] mutableCopy];
     }
 
-    elapsedTime_ = 0.0f;
-    rawElapsedTime_ = 0.0f;
+    _elapsedTime = 0.0f;
+    _rawElapsedTime = 0.0f;
 
     NSInteger count = 0;
     NSMutableArray *timerIndexesToRemove = [NSMutableArray array];
-    for (TCTimer *timer in mutableTimerList) {
+    for (TCSTimer *timer in mutableTimerList) {
 
-        NSTimeInterval combinedTime = [timer combinedTimeForDateRange:dateRange_];
-        rawElapsedTime_ += [timer timeIntervalForDateRange:dateRange_];
-        elapsedTime_ += combinedTime;
+        NSTimeInterval combinedTime = [timer combinedTimeForDateRange:_dateRange];
+        _rawElapsedTime += [timer timeIntervalForDateRange:_dateRange];
+        _elapsedTime += combinedTime;
 
         if (timer.endTime != nil && combinedTime <= 0.0f) {
             [timerIndexesToRemove addObject:@(count)];
@@ -321,12 +246,12 @@
          [mutableTimerList removeObjectAtIndex:timerIndex.integerValue];
      }];
 
-    timers_ = mutableTimerList;
+    self.timers = mutableTimerList;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"(%p) Entity: %@, applications: %d, timers: %@, startDate: %@, endDate: %@, rawTime: %.0f, totalTime: %.0f",
-            self, [timedEntity_ name], applications_, timers_, dateRange_.startDate, dateRange_.endDate, self.rawElapsedTime, self.elapsedTime];
+    return [NSString stringWithFormat:@"(%p) Entity: %@, timers: %@, startDate: %@, endDate: %@, rawTime: %.0f, totalTime: %.0f",
+            self, [_timedEntity name], _timers, _dateRange.startDate, _dateRange.endDate, self.rawElapsedTime, self.elapsedTime];
 }
 
 @end

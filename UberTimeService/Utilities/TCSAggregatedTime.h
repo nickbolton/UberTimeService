@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "TCTimer.h"
 
 @class TCSProject;
 @class TCSTimer;
@@ -17,19 +16,18 @@
 
 @interface TCSAggregatedTime : NSObject <NSCopying>
 
-@property (nonatomic, retain) TCSTimedEntity *timedEntity;
-@property (nonatomic, assign) BOOL applications;
-@property (nonatomic, retain) TCSDateRange *dateRange;
+@property (nonatomic, strong) TCSTimedEntity *timedEntity;
+@property (nonatomic, strong) TCSDateRange *dateRange;
 @property (nonatomic, readonly) NSDate *startDate;
 @property (nonatomic, readonly) NSDate *endDate;
-@property (nonatomic, retain, readonly) NSArray *timers;
-@property (nonatomic, assign, readonly) NSTimeInterval elapsedTime;
-@property (nonatomic, assign, readonly) NSTimeInterval rawElapsedTime;
-@property (nonatomic, assign, readonly, getter = isTimePeriodActive) BOOL timePeriodActive;
-@property (nonatomic, assign) BOOL selected;
-@property (nonatomic, assign, getter = isUpdating) BOOL updating;
-@property (nonatomic, assign) BOOL expanded;
-@property (nonatomic, assign) NSTimeInterval recalculatedTimestamp;
+@property (nonatomic, readonly) NSArray *timers;
+@property (nonatomic, readonly) NSTimeInterval elapsedTime;
+@property (nonatomic, readonly) NSTimeInterval rawElapsedTime;
+@property (nonatomic, readonly, getter = isTimePeriodActive) BOOL timePeriodActive;
+@property (nonatomic) BOOL selected;
+@property (nonatomic, getter = isUpdating) BOOL updating;
+@property (nonatomic) BOOL expanded;
+@property (nonatomic) NSTimeInterval recalculatedTimestamp;
 
 - (id)initWithTimedEntity:(TCSTimedEntity *)timedEntity
                 dateRange:(TCSDateRange *)dateRange;
@@ -41,8 +39,6 @@
 - (BOOL)containsTimer:(TCSTimer *)timer;
 - (void)refreshOnBackground:(BOOL)background
                  completion:(void(^)(TCSAggregatedTime *aggregatedTime))completionBlock;
-- (BOOL)containsComments;
-- (NSArray *)sortedTimerCommentArray;
 - (NSArray *)sortedTimerArray;
 - (void)ensureTimeIsCalculated;
 
