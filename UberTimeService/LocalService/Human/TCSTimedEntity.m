@@ -2,6 +2,8 @@
 
 @implementation TCSTimedEntity
 
-// Custom logic goes here.
+- (BOOL)isActive {
+    return NO;
+}
 
 @end

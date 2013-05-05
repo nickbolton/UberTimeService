@@ -28,8 +28,20 @@
 #else
         [MagicalRecord setupCoreDataStackWithStoreNamed:@"TCSLocalService.data"];
 #endif
+
+#if TARGET_OS_IPHONE
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(applicationDidEnterBackground:)
+         name:UIApplicationDidEnterBackgroundNotification
+         object:nil];
+#endif
     }
     return self;
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
 }
 
 - (void)resetCoreDataStack {

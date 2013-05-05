@@ -1,6 +1,6 @@
 //
 //  TCSDateRange.m
-//  Timecop
+//  UberTimeService
 //
 //  Created by Nick Bolton on 3/24/12.
 //  Copyright (c) 2012 Pixelbleed LLC. All rights reserved.

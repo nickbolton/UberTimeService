@@ -1,5 +1,7 @@
 #import "_TCSTimedEntity.h"
 
 @interface TCSTimedEntity : _TCSTimedEntity {}
-// Custom logic goes here.
+
+@property (nonatomic, readonly, getter = isActive) BOOL active;
+
 @end

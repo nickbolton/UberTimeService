@@ -1,7 +1,12 @@
 #import "TCSProject.h"
+#import "TCSService.h"
 
 @implementation TCSProject
 
-// Custom logic goes here.
+- (BOOL)isActive {
+    TCSProject *activeProject =
+    [TCSService sharedInstance].activeTimer.project;
+    return [self.objectID isEqual:activeProject.objectID];
+}
 
 @end

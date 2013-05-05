@@ -30,6 +30,14 @@
 		FE837E121736EEE600CBD853 /* TCSLocalAAAProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02671733D9E700DAB99D /* TCSLocalAAAProjectTests.m */; };
 		FE837E131736EF7000CBD853 /* TCSLocalBBBTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02821733EE6A00DAB99D /* TCSLocalBBBTimerTests.m */; };
 		FE837E141736F03300CBD853 /* TCSLocalCCCGroupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02D117352B5400DAB99D /* TCSLocalCCCGroupTests.m */; };
+		FE837E941736F98C00CBD853 /* TCSDateFormatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E931736F98C00CBD853 /* TCSDateFormatManager.m */; };
+		FE837E951736F98C00CBD853 /* TCSDateFormatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E931736F98C00CBD853 /* TCSDateFormatManager.m */; };
+		FE837E9D1736FDEA00CBD853 /* TCSTimerReport.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E9A1736FDEA00CBD853 /* TCSTimerReport.m */; };
+		FE837E9E1736FDEA00CBD853 /* TCSTimerReport.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E9A1736FDEA00CBD853 /* TCSTimerReport.m */; };
+		FE837E9F1736FDEA00CBD853 /* TCSTimerReportItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E9C1736FDEA00CBD853 /* TCSTimerReportItem.m */; };
+		FE837EA01736FDEA00CBD853 /* TCSTimerReportItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E9C1736FDEA00CBD853 /* TCSTimerReportItem.m */; };
+		FE837EA91737037900CBD853 /* TCSAggregatedTime.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837EA81737037900CBD853 /* TCSAggregatedTime.m */; };
+		FE837EAA1737037900CBD853 /* TCSAggregatedTime.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837EA81737037900CBD853 /* TCSAggregatedTime.m */; };
 		FEBD024D1733D85A00DAB99D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
 		FEBD024E1733D85A00DAB99D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
 		FEBD024F1733D85A00DAB99D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
@@ -130,6 +138,14 @@
 		FE837E051736C5C400CBD853 /* _TCSTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSTimedEntity.m; sourceTree = "<group>"; };
 		FE837E061736C5C400CBD853 /* _TCSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSTimer.h; sourceTree = "<group>"; };
 		FE837E071736C5C400CBD853 /* _TCSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSTimer.m; sourceTree = "<group>"; };
+		FE837E921736F98C00CBD853 /* TCSDateFormatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSDateFormatManager.h; sourceTree = "<group>"; };
+		FE837E931736F98C00CBD853 /* TCSDateFormatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSDateFormatManager.m; sourceTree = "<group>"; };
+		FE837E991736FDEA00CBD853 /* TCSTimerReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimerReport.h; sourceTree = "<group>"; };
+		FE837E9A1736FDEA00CBD853 /* TCSTimerReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimerReport.m; sourceTree = "<group>"; };
+		FE837E9B1736FDEA00CBD853 /* TCSTimerReportItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimerReportItem.h; sourceTree = "<group>"; };
+		FE837E9C1736FDEA00CBD853 /* TCSTimerReportItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimerReportItem.m; sourceTree = "<group>"; };
+		FE837EA71737037900CBD853 /* TCSAggregatedTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSAggregatedTime.h; sourceTree = "<group>"; };
+		FE837EA81737037900CBD853 /* TCSAggregatedTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSAggregatedTime.m; sourceTree = "<group>"; };
 		FEBD024C1733D85A00DAB99D /* IntegrationTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBD02521733D85A00DAB99D /* IntegrationTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IntegrationTests-Info.plist"; sourceTree = "<group>"; };
 		FEBD02541733D85A00DAB99D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -330,10 +346,18 @@
 		FEBD02A6173487AD00DAB99D /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				FE837E991736FDEA00CBD853 /* TCSTimerReport.h */,
+				FE837E9A1736FDEA00CBD853 /* TCSTimerReport.m */,
+				FE837E9B1736FDEA00CBD853 /* TCSTimerReportItem.h */,
+				FE837E9C1736FDEA00CBD853 /* TCSTimerReportItem.m */,
+				FE837E921736F98C00CBD853 /* TCSDateFormatManager.h */,
+				FE837E931736F98C00CBD853 /* TCSDateFormatManager.m */,
 				FEBD02B1173487DF00DAB99D /* TCSCalendarManager.h */,
 				FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */,
 				FEBD02A7173487AE00DAB99D /* TCSDateRange.h */,
 				FEBD02A8173487AE00DAB99D /* TCSDateRange.m */,
+				FE837EA71737037900CBD853 /* TCSAggregatedTime.h */,
+				FE837EA81737037900CBD853 /* TCSAggregatedTime.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -676,6 +700,10 @@
 				FE837E121736EEE600CBD853 /* TCSLocalAAAProjectTests.m in Sources */,
 				FE837E131736EF7000CBD853 /* TCSLocalBBBTimerTests.m in Sources */,
 				FE837E141736F03300CBD853 /* TCSLocalCCCGroupTests.m in Sources */,
+				FE837E951736F98C00CBD853 /* TCSDateFormatManager.m in Sources */,
+				FE837E9E1736FDEA00CBD853 /* TCSTimerReport.m in Sources */,
+				FE837EA01736FDEA00CBD853 /* TCSTimerReportItem.m in Sources */,
+				FE837EAA1737037900CBD853 /* TCSAggregatedTime.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -708,6 +736,10 @@
 				FE837E0A1736C5C400CBD853 /* _TCSProject.m in Sources */,
 				FE837E0C1736C5C400CBD853 /* _TCSTimedEntity.m in Sources */,
 				FE837E0E1736C5C400CBD853 /* _TCSTimer.m in Sources */,
+				FE837E941736F98C00CBD853 /* TCSDateFormatManager.m in Sources */,
+				FE837E9D1736FDEA00CBD853 /* TCSTimerReport.m in Sources */,
+				FE837E9F1736FDEA00CBD853 /* TCSTimerReportItem.m in Sources */,
+				FE837EA91737037900CBD853 /* TCSAggregatedTime.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
