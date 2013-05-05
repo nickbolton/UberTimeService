@@ -1,5 +1,5 @@
 //
-//  TCSLocalTimerTests.m
+//  TCSLocalBBBTimerTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
@@ -10,17 +10,11 @@
 #import "TCSService.h"
 #import "TCSLocalService.h"
 
-@interface TCSBBBLocalTimerTests : TCSTimerTests { }
+@interface TCSLocalBBBTimerTests : TCSTimerTests { }
 
 @end
 
-@implementation TCSBBBLocalTimerTests
-
-- (void)setUpClass {
-    [super setUpClass];
-    self.serviceProvider = [self.service serviceProviderOfType:[TCSLocalService class]];
-    [(TCSLocalService *)self.serviceProvider resetCoreDataStack];
-}
+@implementation TCSLocalBBBTimerTests
 
 - (void)testAAALocalCreateProject {
     [self createProject:_cmd];
@@ -34,19 +28,31 @@
     [self stopTimer:_cmd];
 }
 
-- (void)testDDDLocalEditTimer {
+- (void)testDDDDeleteTimer {
+    [self deleteTimer:_cmd];
+}
+
+- (void)testEEELocalStartTimer {
+    [self startTimer:_cmd];
+}
+
+- (void)testFFFLocalStartSecondTimer {
+    [self startSecondTimer:_cmd];
+}
+
+- (void)testGGGLocalEditTimer {
     [self editTimer:_cmd];
 }
 
-- (void)testEEELocalMoveTimer {
+- (void)testHHHLocalMoveTimer {
     [self moveTimer:_cmd];
 }
 
-- (void)testFFFLocalRollTimer {
+- (void)testIIILocalRollTimer {
     [self rollTimer:_cmd];
 }
 
-- (void)testGGGLocalDeleteTimer {
+- (void)testJJJLocalDeleteTimer {
     [self deleteTimer:_cmd];
 }
 

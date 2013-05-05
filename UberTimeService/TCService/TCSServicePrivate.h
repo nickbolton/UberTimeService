@@ -8,30 +8,43 @@
 
 @protocol TCSServiceProviderPrivate <NSObject>
 
-- (id)entityIDForEntity:(id)entity;
+@end
 
-- (BOOL)entityBoolValue:(id)entity forKey:(NSString *)key;
-- (NSInteger)entityIntegerValue:(id)entity forKey:(NSString *)key;
-- (CGFloat)entityFloatValue:(id)entity forKey:(NSString *)key;
-- (NSString *)entityStringValue:(id)entity forKey:(NSString *)key;
-- (NSDate *)entityDateValue:(id)entity forKey:(NSString *)key;
+@protocol TCSServiceRemoteProvider <NSObject>
 
-- (void)setEntity:(id)entity boolValue:(BOOL)value forKey:(NSString *)key;
-- (void)setEntity:(id)entity integerValue:(NSInteger)value forKey:(NSString *)key;
-- (void)setEntity:(id)entity floatValue:(CGFloat)value forKey:(NSString *)key;
-- (void)setEntity:(id)entity stringValue:(NSString *)value forKey:(NSString *)key;
-- (void)setEntity:(id)entity dateValue:(NSDate *)value forKey:(NSString *)key;
++ (id <TCSServiceRemoteProvider>)sharedInstance;
 
-- (TCSBaseEntity *)relation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error;
-- (void)setEntity:(id)entity relation:(id)relation forKey:(NSString *)key;
-- (NSArray *)toManyRelation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error;
-- (void)setEntity:(id)entity toManyRelation:(NSArray *)relations forKey:(NSString *)key;
+@property (nonatomic, readonly) NSString *name;
 
-- (void)setEntity:(id)entity addParentRelation:(id)relation forKey:(NSString *)key;
-- (void)setEntity:(id)entity removeParentRelationForKey:(NSString *)key;
+- (void)clearCache;
 
 - (void)deleteAllData:(void(^)(void))successBlock
-               failure:(void(^)(NSError *error))failureBlock;
+              failure:(void(^)(NSError *error))failureBlock;
+
+// Authentication
+
+- (void)authenticateUser:(NSString *)username
+                password:(NSString *)password
+                 success:(void(^)(void))successBlock
+                 failure:(void(^)(NSError *error))failureBlock;
+
+- (void)logoutUser:(void(^)(void))successBlock
+           failure:(void(^)(NSError *error))failureBlock;
+
+- (BOOL)isUserAuthenticated;
+
+// Project
+
+- (void)createProjectWithName:(NSString *)name
+                      success:(void(^)(TCSProject *project))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
+- (void)createProjectWithName:(NSString *)name
+            filteredModifiers:(NSInteger)filteredModifiers
+                      keyCode:(NSInteger)keyCode
+                    modifiers:(NSInteger)modifiers
+                      success:(void(^)(TCSProject *project))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateProject:(TCSProject *)project
               success:(void(^)(void))successBlock
@@ -41,6 +54,23 @@
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
+- (void)fetchProjectWithName:(NSString *)name
+                     success:(void(^)(NSArray *projects))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
+
+- (void)fetchProjectWithID:(id)entityID
+                   success:(void(^)(TCSProject *project))successBlock
+                   failure:(void(^)(NSError *error))failureBlock;
+
+- (void)fetchProjects:(void(^)(NSArray *projects))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+// Group
+
+- (void)createGroupWithName:(NSString *)name
+                    success:(void(^)(TCSProject *project))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
 - (void)updateGroup:(TCSGroup *)group
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
@@ -49,31 +79,119 @@
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)moveProject:(TCSProject *)sourceProject
-          toProject:(TCSProject *)toProject
-            success:(void(^)(TCSGroup *group))successBlock
+- (void)fetchGroupWithID:(id)entityID
+                 success:(void(^)(TCSGroup *group))successBlock
+                 failure:(void(^)(NSError *error))failureBlock;
+
+- (void)fetchGroups:(void(^)(NSArray *groups))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)moveProject:(TCSProject *)sourceProject
-            toGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+// Timer
+
+- (void)createTimer;
+
+- (void)fetchTimerWithID:(id)entityID
+                 success:(void(^)(TCSTimer *timer))successBlock
+                 failure:(void(^)(NSError *error))failureBlock;
+
+- (void)fetchTimers:(void(^)(NSArray *groups))successBlock
             failure:(void(^)(NSError *error))failureBlock;
-
-- (void)startTimerForProject:(TCSProject *)project
-                     success:(void(^)(TCSTimer *timer))successBlock
-                     failure:(void(^)(NSError *error))failureBlock;
-
-- (void)stopTimer:(TCSTimer *)timer
-          success:(void(^)(void))successBlock
-          failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateTimer:(TCSTimer *)timer
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
+- (void)deleteTimer:(TCSTimer *)timer
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateEntities:(NSArray *)entities
+               success:(void(^)(void))successBlock
+               failure:(void(^)(NSError *error))failureBlock;
+
+@end
+
+@protocol TCSServiceLocalService <NSObject>
+
+@property (nonatomic, strong) id <TCSServiceRemoteProvider> removeProvider;
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+- (void)createProjectWithName:(NSString *)name
+               remoteProvider:(NSString *)remoteProvider
+                      success:(void(^)(TCSProject *project))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
+- (void)createProjectWithName:(NSString *)name
+               remoteProvider:(NSString *)remoteProvider
+            filteredModifiers:(NSInteger)filteredModifiers
+                      keyCode:(NSInteger)keyCode
+                    modifiers:(NSInteger)modifiers
+                      success:(void(^)(TCSProject *project))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
+- (NSArray *)allProjects;
+
+- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder;
+
+- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder;
+
+- (TCSProject *)projectWithID:(NSManagedObjectID *)objectID;
+
+- (void)moveProject:(TCSProject *)sourceProject
+          toProject:(TCSProject *)toProject
+            success:(void(^)(TCSGroup *group, TCSProject *updatedSourceProject, TCSProject *updatedTargetProject))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)moveProject:(TCSProject *)sourceProject
+            toGroup:(TCSGroup *)group
+            success:(void(^)(TCSProject *updatedSourceProject, TCSGroup *updatedGroup))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateProject:(TCSProject *)project
+              success:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteProject:(TCSProject *)project
+              success:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+- (TCSGroup *)groupWithID:(NSManagedObjectID *)objectID;
+
+- (NSArray *)allGroups;
+
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateTimer:(TCSTimer *)timer
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteTimer:(TCSTimer *)timer
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateEntities:(NSArray *)entities
+               success:(void(^)(void))successBlock
+               failure:(void(^)(NSError *error))failureBlock;
+
+- (void)startTimerForProject:(TCSProject *)project
+                     success:(void(^)(TCSTimer *timer, TCSProject *updatedProject))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
+
+- (void)stopTimer:(TCSTimer *)timer
+          success:(void(^)(TCSTimer *updatedTimer))successBlock
+          failure:(void(^)(NSError *error))failureBlock;
+
 - (void)moveTimer:(TCSTimer *)timer
         toProject:(TCSProject *)project
-          success:(void(^)(void))successBlock
+          success:(void(^)(TCSTimer *updatedTimer, TCSProject *updatedProject))successBlock
           failure:(void(^)(NSError *error))failureBlock;
 
 - (void)rollTimer:(TCSTimer *)timer
@@ -81,15 +199,13 @@
           success:(void(^)(NSArray *rolledTimers))successBlock
           failure:(void(^)(NSError *error))failureBlock;
 
-- (void)deleteTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
+- (NSArray *)allTimers;
 
-- (void)fetchTimersForProjects:(NSArray *)projects
+- (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID;
+
+- (NSArray *)timersForProjects:(NSArray *)projects
                       fromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
-                           now:(NSDate *)now
-                       success:(void(^)(NSArray *timers))successBlock
-                       failure:(void(^)(NSError *error))failureBlock;
+               sortByStartTime:(BOOL)sortByStartTime;
 
 @end

@@ -1,43 +1,43 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalProject.m instead.
+// Make changes to TCSProject.m instead.
 
-#import "_TCSLocalProject.h"
+#import "_TCSProject.h"
 
-const struct TCSLocalProjectAttributes TCSLocalProjectAttributes = {
+const struct TCSProjectAttributes TCSProjectAttributes = {
 	.filteredModifiers = @"filteredModifiers",
 	.keyCode = @"keyCode",
 	.modifiers = @"modifiers",
 	.order = @"order",
 };
 
-const struct TCSLocalProjectRelationships TCSLocalProjectRelationships = {
+const struct TCSProjectRelationships TCSProjectRelationships = {
 	.timers = @"timers",
 };
 
-const struct TCSLocalProjectFetchedProperties TCSLocalProjectFetchedProperties = {
+const struct TCSProjectFetchedProperties TCSProjectFetchedProperties = {
 };
 
-@implementation TCSLocalProjectID
+@implementation TCSProjectID
 @end
 
-@implementation _TCSLocalProject
+@implementation _TCSProject
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSLocalProject" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSProject" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"TCSLocalProject";
+	return @"TCSProject";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"TCSLocalProject" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"TCSProject" inManagedObjectContext:moc_];
 }
 
-- (TCSLocalProjectID*)objectID {
-	return (TCSLocalProjectID*)[super objectID];
+- (TCSProjectID*)objectID {
+	return (TCSProjectID*)[super objectID];
 }
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {

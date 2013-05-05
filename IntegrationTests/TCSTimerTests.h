@@ -17,11 +17,13 @@
 @property (nonatomic, strong) TCSProject *project;
 @property (nonatomic, strong) TCSProject *secondProject;
 @property (nonatomic, strong) TCSTimer *timer;
+@property (nonatomic, strong) TCSTimer *secondTimer;
 @property (nonatomic, strong) TCSProject *timerProject;
 @property (nonatomic, strong) NSArray *projectTimers;
 
 - (void)createProject:(SEL)selector;
 - (void)startTimer:(SEL)selector;
+- (void)startSecondTimer:(SEL)selector;
 - (void)stopTimer:(SEL)selector;
 - (void)editTimer:(SEL)selector;
 - (void)moveTimer:(SEL)selector;

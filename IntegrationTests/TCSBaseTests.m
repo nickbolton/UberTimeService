@@ -8,77 +8,32 @@
 
 #import "TCSBaseTests.h"
 #import "TCSService.h"
+#import <CoreData/CoreData.h>
 
 @implementation TCSBaseTests
 
 #pragma mark - Helpers
 
-- (void)findProjectWithEntityID:(id)entityID
-                serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                        success:(void(^)(TCSProject *project))successBlock
-                        failure:(void(^)(void))failureBlock {
-
-    [serviceProvider
-     fetchProjectWithID:entityID
-     success:^(TCSProject *project) {
-
-         NSLog(@"ZZZ project.name: %@", project.name);
-
-         if (successBlock != nil) {
-             successBlock(project);
-         }
-
-     } failure:^(NSError *error) {
-         NSLog(@"ZZZ Error: %@", error);
-         if (failureBlock != nil) {
-             failureBlock();
-         }
-     }];
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(void))failureBlock {
+    [_service deleteAllData:successBlock failure:^(NSError *error) {
+        NSLog(@"ZZZ Error: %@", error);
+        if (failureBlock != nil) {
+            failureBlock();
+        }
+    }];;
 }
 
-- (void)findTimerWithEntityID:(id)entityID
-              serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                      success:(void(^)(TCSTimer *timer))successBlock
-                      failure:(void(^)(void))failureBlock {
-    [serviceProvider
-     fetchTimerWithID:entityID
-     success:^(TCSTimer *timer) {
-
-         NSLog(@"ZZZ timer: %@", timer);
-
-         if (successBlock != nil) {
-             successBlock(timer);
-         }
-
-     } failure:^(NSError *error) {
-         NSLog(@"ZZZ Error: %@", error);
-         if (failureBlock != nil) {
-             failureBlock();
-         }
-     }];
+- (TCSProject *)projectWithEntityID:(NSManagedObjectID *)objectID {
+    return [_service projectWithID:objectID];
 }
 
-- (void)findGroupWithEntityID:(id)entityID
-              serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                      success:(void(^)(TCSGroup *group))successBlock
-                      failure:(void(^)(void))failureBlock {
+- (TCSTimer *)timerWithEntityID:(NSManagedObjectID *)objectID {
+    return [_service timerWithID:objectID];
+}
 
-    [serviceProvider
-     fetchGroupWithID:entityID
-     success:^(TCSGroup *group) {
-
-         NSLog(@"ZZZ group.name: %@", group.name);
-
-         if (successBlock != nil) {
-             successBlock(group);
-         }
-
-     } failure:^(NSError *error) {
-         NSLog(@"ZZZ Error: %@", error);
-         if (failureBlock != nil) {
-             failureBlock();
-         }
-     }];
+- (TCSGroup *)groupWithEntityID:(NSManagedObjectID *)objectID {
+    return [_service groupWithID:objectID];
 }
 
 @end

@@ -57,140 +57,6 @@
     return NSLocalizedString(@"Parse", nil);
 }
 
-- (BOOL)entityBoolValue:(id)entity forKey:(NSString *)key {
-    NSNumber *value = [entity objectForKey:key];
-    NSAssert(value == nil || [value isKindOfClass:[NSNumber class]], @"not an NSNumber class");
-    return value.boolValue;
-}
-
-- (NSInteger)entityIntegerValue:(id)entity forKey:(NSString *)key {
-    NSNumber *value = [entity objectForKey:key];
-    NSAssert(value == nil || [value isKindOfClass:[NSNumber class]], @"not an NSNumber class");
-    return value.integerValue;
-}
-
-- (CGFloat)entityFloatValue:(id)entity forKey:(NSString *)key {
-    NSNumber *value = [entity objectForKey:key];
-    NSAssert(value == nil || [value isKindOfClass:[NSNumber class]], @"not an NSNumber class");
-    return value.floatValue;
-}
-
-- (NSString *)entityStringValue:(id)entity forKey:(NSString *)key {
-    NSString *value = [entity objectForKey:key];
-    NSAssert(value == nil || [value isKindOfClass:[NSString class]], @"not an NSString class");
-    return value;
-}
-
-- (NSDate *)entityDateValue:(id)entity forKey:(NSString *)key {
-    NSDate *value = [entity objectForKey:key];
-    NSAssert(value == nil || [value isKindOfClass:[NSDate class]], @"not an NSDate class");
-    return value;
-}
-
-- (void)setEntity:(id)entity boolValue:(BOOL)value forKey:(NSString *)key {
-    [entity setObject:@(value) forKey:key];
-}
-
-- (void)setEntity:(id)entity integerValue:(NSInteger)value forKey:(NSString *)key {
-    [entity setObject:@(value) forKey:key];
-}
-
-- (void)setEntity:(id)entity floatValue:(CGFloat)value forKey:(NSString *)key {
-    [entity setObject:@(value) forKey:key];
-}
-
-- (void)setEntity:(id)entity stringValue:(NSString *)value forKey:(NSString *)key {
-    [entity setObject:value forKey:key];
-}
-
-- (void)setEntity:(id)entity dateValue:(NSDate *)value forKey:(NSString *)key {
-    [entity setObject:value forKey:key];
-}
-
-- (id)entityIDForEntity:(id)entity {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-    
-    PFObject *object = entity;
-    return object.objectId;
-}
-
-- (TCSBaseEntity *)relation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-
-    PFObject *object = entity;
-    PFObject *value = [object valueForKey:key];
-
-    PFObject *fetchedValue = [value fetchIfNeeded:error];
-
-    TCSBaseEntity *wrappedEntity = nil;
-
-    if (fetchedValue != nil) {
-        wrappedEntity =
-        [self wrapProviderEntity:fetchedValue inType:type provider:self];
-    }
-
-    return wrappedEntity;
-}
-
-- (void)setEntity:(id)entity relation:(id)relation forKey:(NSString *)key {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-    NSAssert([relation isKindOfClass:[PFObject class]], @"Not a PFObject class");
-
-    PFObject *object = entity;
-    [object setObject:relation forKey:key];
-}
-
-- (NSArray *)toManyRelation:(id)entity forKey:(NSString *)key andType:(Class)type error:(NSError **)error {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-
-    PFObject *object = entity;
-    PFRelation *values = [object relationforKey:key];
-
-    NSArray *fetchedValues = [[values query] findObjects:error];
-
-    NSMutableArray *wrappedValues = [NSMutableArray array];
-
-    if (fetchedValues != nil) {
-
-        for (PFObject *child in fetchedValues) {
-            TCSBaseEntity *wrappedEntity =
-            [self wrapProviderEntity:child inType:type provider:self];
-            [wrappedValues addObject:wrappedEntity];
-        }
-    }
-
-    return wrappedValues;
-}
-
-- (void)setEntity:(id)entity toManyRelation:(NSArray *)relations forKey:(NSString *)key {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-
-    PFObject *object = entity;
-    [object setObject:relations forKey:key];
-}
-
-- (void)setEntity:(id)entity addParentRelation:(id)relation forKey:(NSString *)key {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-    NSAssert([relation isKindOfClass:[PFObject class]], @"Not a PFObject class");
-
-    PFObject *object = entity;
-    [object setObject:relation forKey:key];
-}
-
-- (void)setEntity:(id)entity removeParentRelationForKey:(NSString *)key {
-
-    NSAssert([entity isKindOfClass:[PFObject class]], @"Not a PFObject class");
-
-    PFObject *object = entity;
-    [object removeObjectForKey:key];
-}
-
 - (void)clearCache {
 
     if ([PFUser currentUser] != nil) {
@@ -436,8 +302,6 @@
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    NSAssert(project.serviceProvider == self, @"wrong service provider");
-
     TCSParseProject *parseProject = project.providerEntity;
 
     void (^executionBlock)(NSError *error) = ^(NSError *error) {
@@ -472,8 +336,6 @@
 - (void)deleteProject:(TCSProject *)project
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(project.serviceProvider == self, @"wrong service provider");
 
     TCSParseProject *parseProject = project.providerEntity;
 
@@ -526,7 +388,7 @@
         PFQuery *query = [TCSParseProject query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
         [query whereKey:@"name" equalTo:name];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
 
@@ -568,7 +430,7 @@
 
         PFQuery *query = [TCSParseProject query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          getObjectInBackgroundWithId:entityID
@@ -611,7 +473,7 @@
 
         PFQuery *query = [TCSParseProject query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -643,8 +505,6 @@
 - (void)updateGroup:(TCSGroup *)group
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(group.serviceProvider == self, @"wrong service provider");
 
     TCSParseGroup *parseGroup = group.providerEntity;
 
@@ -681,8 +541,6 @@
 - (void)deleteGroup:(TCSGroup *)group
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(group.serviceProvider == self, @"wrong service provider");
 
     TCSParseGroup *parseGroup = group.providerEntity;
 
@@ -734,7 +592,7 @@
 
         PFQuery *query = [TCSParseGroup query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          getObjectInBackgroundWithId:entityID
@@ -777,7 +635,7 @@
 
         PFQuery *query = [TCSParseGroup query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -804,250 +662,11 @@
     }
 }
 
-- (void)moveProject:(TCSProject *)sourceProject
-          toProject:(TCSProject *)toProject
-            success:(void(^)(TCSGroup *group))successBlock
-            failure:(void(^)(NSError *error))failureBlock {
-
-    TCSParseProject *parseSourceProject = sourceProject.providerEntity;
-    TCSParseProject *parseToProject = toProject.providerEntity;
-
-    TCSParseGroup *parseGroupTarget = parseToProject.parent.parent;
-
-    TCSParseGroup *parseGroup = [TCSParseGroup object];
-
-    PFRelation *relation = [parseGroupTarget relationforKey:@"children"];
-
-    parseGroup.parent = parseGroupTarget;
-    [relation addObject:parseGroup];
-
-    parseGroup.name = toProject.name;
-
-    NSArray *dirtyObjects =
-    [self
-     doMoveProject:parseSourceProject
-     toGroup:parseGroup];
-
-    NSMutableArray *savingObjects = [NSMutableArray array];
-
-    [savingObjects addObjectsFromArray:dirtyObjects];
-    [savingObjects addObject:parseSourceProject];
-    [savingObjects addObject:parseGroupTarget];
-    [savingObjects addObject:parseGroup];
-
-    [PFObject
-     saveAllInBackground:savingObjects
-     block:^(BOOL succeeded, NSError *error) {
-
-         if (error != nil) {
-
-             if (failureBlock != nil) {
-                 failureBlock(error);
-             }
-         } else {
-
-             if (_connected) {
-                 [parseToProject deleteInBackground];
-             } else {
-                 [parseToProject deleteEventually];
-             }
-
-             toProject.providerEntity = nil;
-             toProject.providerEntityID = nil;
-
-             if (successBlock != nil) {
-
-                 TCSGroup *group = (id)
-                 [self
-                  wrapProviderEntity:parseGroup
-                  inType:[TCSGroup class]
-                  provider:self];
-                 
-                 successBlock(group);
-             }
-         }
-     }];
-}
-
-- (void)moveProject:(TCSProject *)sourceProject
-            toGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock {
-
-
-    TCSParseProject *parseSourceProject = sourceProject.providerEntity;
-
-    TCSParseGroup *parseGroup = group.providerEntity;
-
-    NSMutableArray *savingObjects = [NSMutableArray array];
-
-    NSArray *dirtyObjects =
-    [self
-     doMoveProject:parseSourceProject
-     toGroup:parseGroup];
-
-    [savingObjects addObjectsFromArray:dirtyObjects];
-    [savingObjects addObject:parseSourceProject];
-    [savingObjects addObject:parseGroup];
-
-    [PFObject
-     saveAllInBackground:savingObjects
-     block:^(BOOL succeeded, NSError *error) {
-
-         if (error != nil) {
-
-             if (failureBlock != nil) {
-                 failureBlock(error);
-             }
-         } else {
-
-             if (successBlock != nil) {
-                 successBlock();
-             }
-         }
-     }];
-}
-
-- (NSArray *)doMoveProject:(TCSParseProject *)project
-                   toGroup:(TCSParseGroup *)group {
-
-    NSMutableArray *dirtyObjects = [NSMutableArray array];
-    
-    TCSParseGroup *parent = project.parent;
-
-    PFRelation *children = [parent relationforKey:@"children"];
-    [children removeObject:project];
-
-    if (group != nil) {
-
-        children = [group relationforKey:@"children"];
-        [children addObject:project];
-
-    } else {
-        project.parent = nil;
-    }
-
-    if (parent != nil && [parent.children count] == 0) {
-        // demote to a project
-
-        TCSParseProject *demotedProject =
-        [self
-         doCreateProjectWithName:parent.name
-         filteredModifiers:0
-         keyCode:0
-         modifiers:0];
-
-        demotedProject.archived = parent.archived;
-
-        children = [parent.parent relationforKey:@"children"];
-        [children addObject:demotedProject];
-        [children removeObject:parent];
-
-        [dirtyObjects addObject:demotedProject];
-        [dirtyObjects addObject:parent];
-    }
-
-    return dirtyObjects;
-}
-
 #pragma mark - Timer Methods
-
-- (void)startTimerForProject:(TCSProject *)project
-                     success:(void(^)(TCSTimer *timer))successBlock
-                     failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(project.serviceProvider == self, @"wrong service provider");
-
-    TCSParseProject *parseProject = project.providerEntity;
-    TCSParseTimer *parseTimer = [TCSParseTimer object];
-
-    parseTimer.startTime = [NSDate date];
-    parseTimer.project = parseProject;
-
-    void (^timerSaveCompletion)(NSError *error) = ^(NSError *error) {
-
-        PFRelation *timers = [parseProject relationforKey:@"timers"];
-        [timers addObject:parseTimer];
-
-        void (^executionBlock)(NSError *error) = ^(NSError *error) {
-
-            if (error != nil) {
-
-                if (_connected) {
-
-                    [parseProject saveInBackground];
-
-                } else {
-
-                    [parseProject saveEventually];
-                }
-
-                if (failureBlock != nil) {
-                    failureBlock(error);
-                }
-                
-            } else {
-
-                TCSTimer *timer = (id)
-                [self
-                 wrapProviderEntity:parseTimer
-                 inType:[TCSTimer class]
-                 provider:self];
-
-                if (successBlock != nil) {
-                    successBlock(timer);
-                }
-            }
-        };
-
-        if (_connected) {
-
-            [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                executionBlock(error);
-            }];
-
-        } else {
-
-            [parseProject saveEventually:^(BOOL succeeded, NSError *error) {
-                executionBlock(error);
-            }];
-        }
-    };
-
-    if (_connected) {
-
-        [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            timerSaveCompletion(error);
-        }];
-
-    } else {
-
-        [parseTimer saveEventually:^(BOOL succeeded, NSError *error) {
-            timerSaveCompletion(error);
-        }];
-    }
-}
-
-- (void)stopTimer:(TCSTimer *)timer
-          success:(void(^)(void))successBlock
-          failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(timer.serviceProvider == self, @"wrong service provider");
-
-    TCSParseTimer *parseTimer = timer.providerEntity;
-
-    if (parseTimer != nil) {
-        parseTimer.endTime = [NSDate date];
-    }
-
-    [self updateTimer:timer success:successBlock failure:failureBlock];
-}
 
 - (void)updateTimer:(TCSTimer *)timer
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(timer.serviceProvider == self, @"wrong service provider");
 
     TCSParseTimer *parseTimer = timer.providerEntity;
 
@@ -1081,147 +700,9 @@
     }
 }
 
-- (void)moveTimer:(TCSTimer *)timer
-        toProject:(TCSProject *)project
-          success:(void(^)(void))successBlock
-          failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(project.serviceProvider == self, @"wrong service provider");
-
-    TCSParseTimer *parseTimer = timer.providerEntity;
-    TCSParseProject *parseProject = project.providerEntity;
-    TCSParseProject *parseOldProject = parseTimer.project;
-
-    NSAssert(parseTimer != nil, @"parseTimer is null");
-    NSAssert(parseProject != nil, @"parseProject is null");
-
-    // remove timer child relation from old parent
-    PFRelation *oldProjectChildren = [parseOldProject relationforKey:@"children"];
-    [oldProjectChildren removeObject:parseTimer];
-
-    // establish a new project->timer relation with target project
-    parseTimer.project = parseProject;
-
-    PFRelation *newProjectChildren = [parseProject relationforKey:@"children"];
-    [newProjectChildren addObject:parseTimer];
-
-    [[newProjectChildren query] clearCachedResult];
-    [[oldProjectChildren query] clearCachedResult];
-
-    [[TCSParseProject query] clearCachedResult];
-
-    // save
-    
-    [PFObject
-     saveAllInBackground:@[parseOldProject, parseTimer, parseProject]
-     block:^(BOOL succeeded, NSError *error) {
-
-         if (error != nil) {
-
-             if (failureBlock != nil) {
-                 failureBlock(error);
-             }
-
-         } else {
-
-             if (successBlock != nil) {
-                 successBlock();
-             }
-         }
-     }];
-}
-
-- (void)rollTimer:(TCSTimer *)timer
-      maxDuration:(NSTimeInterval)maxDuration
-          success:(void(^)(NSArray *rolledTimers))successBlock
-          failure:(void(^)(NSError *error))failureBlock {
-    
-    NSAssert(timer.serviceProvider == self, @"wrong service provider");
-
-    NSMutableArray *dirtyObjects = [NSMutableArray array];
-    NSMutableArray *rolledTimers = [NSMutableArray array];
-
-    TCSParseProject *parseProject = timer.project.providerEntity;
-
-    [dirtyObjects addObject:timer.providerEntity];
-    [dirtyObjects addObject:parseProject];
-    [rolledTimers addObject:timer];
-
-    TCSTimer *rollingTimer = timer;
-
-    while (parseProject != nil && rollingTimer != nil && rollingTimer.combinedTime > maxDuration) {
-
-        NSDate *endDate =
-        [rollingTimer.startTime dateByAddingTimeInterval:maxDuration];
-
-        rollingTimer =
-        [self
-         doRolloverActiveTimer:rollingTimer
-         localProject:parseProject
-         endDate:endDate];
-
-        [dirtyObjects addObject:rollingTimer.providerEntity];
-        [rolledTimers addObject:rollingTimer];
-    }
-
-    [PFObject
-     saveAllInBackground:dirtyObjects
-     block:^(BOOL succeeded, NSError *error) {
-
-         if (error != nil) {
-
-             if (failureBlock != nil) {
-                 failureBlock(error);
-             }
-         } else {
-
-             if (successBlock != nil) {
-                 successBlock(rolledTimers);
-             }
-         }
-     }];
-}
-
-- (TCSTimer *)doRolloverActiveTimer:(TCSTimer *)timer
-                       localProject:(TCSParseProject *)parseProject
-                            endDate:(NSDate *)endDate {
-
-    TCSParseTimer *parseTimer = timer.providerEntity;
-
-    NSDate *finalEndTime = parseTimer.endTime;
-
-    if (endDate == nil || [endDate isLessThan:timer.startTime]) {
-        parseTimer.endTime = [NSDate date];
-    } else {
-        parseTimer.endTime = endDate;
-    }
-
-    timer.providerEntity = parseTimer;
-
-    TCSParseTimer *rolledTimer = [TCSParseTimer object];
-
-    rolledTimer.startTime = parseTimer.endTime;
-    rolledTimer.project = parseProject;
-    rolledTimer.endTime = finalEndTime;
-    rolledTimer.message = parseTimer.message;
-
-    PFRelation *timers = [parseProject relationforKey:@"timers"];
-    [timers addObject:rolledTimer];
-
-    TCSTimer *result = (id)
-    [self
-     wrapProviderEntity:rolledTimer
-     inType:[TCSTimer class]
-     provider:self];
-    
-    return result;
-}
-
 - (void)deleteTimer:(TCSTimer *)timer
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert(timer.serviceProvider == self, @"wrong service provider");
 
     TCSParseTimer *parseTimer = timer.providerEntity;
 
@@ -1272,7 +753,7 @@
 
         PFQuery *query = [TCSParseTimer query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          getObjectInBackgroundWithId:entityID
@@ -1366,7 +847,7 @@
          predicate:predicate];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
 
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -1408,7 +889,7 @@
 
         PFQuery *query = [TCSParseTimer query];
         [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkElseCache;
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
 
         [query
          findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

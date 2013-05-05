@@ -14,6 +14,6 @@
 #import "TCSParseTimer.h"
 #import "TCSServicePrivate.h"
 
-@interface TCSParseService : TCSDefaultProvider <TCSServiceProvider, TCSServiceProviderPrivate>
+@interface TCSParseService : TCSDefaultProvider <TCSServiceRemoteProvider>
 
 @end

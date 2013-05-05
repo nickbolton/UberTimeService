@@ -1,42 +1,44 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalTimedEntity.m instead.
+// Make changes to TCSTimedEntity.m instead.
 
-#import "_TCSLocalTimedEntity.h"
+#import "_TCSTimedEntity.h"
 
-const struct TCSLocalTimedEntityAttributes TCSLocalTimedEntityAttributes = {
+const struct TCSTimedEntityAttributes TCSTimedEntityAttributes = {
 	.archived = @"archived",
 	.color = @"color",
 	.name = @"name",
+	.remoteId = @"remoteId",
+	.remoteProvider = @"remoteProvider",
 };
 
-const struct TCSLocalTimedEntityRelationships TCSLocalTimedEntityRelationships = {
+const struct TCSTimedEntityRelationships TCSTimedEntityRelationships = {
 	.parent = @"parent",
 };
 
-const struct TCSLocalTimedEntityFetchedProperties TCSLocalTimedEntityFetchedProperties = {
+const struct TCSTimedEntityFetchedProperties TCSTimedEntityFetchedProperties = {
 };
 
-@implementation TCSLocalTimedEntityID
+@implementation TCSTimedEntityID
 @end
 
-@implementation _TCSLocalTimedEntity
+@implementation _TCSTimedEntity
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSLocalTimedEntity" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSTimedEntity" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"TCSLocalTimedEntity";
+	return @"TCSTimedEntity";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"TCSLocalTimedEntity" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"TCSTimedEntity" inManagedObjectContext:moc_];
 }
 
-- (TCSLocalTimedEntityID*)objectID {
-	return (TCSLocalTimedEntityID*)[super objectID];
+- (TCSTimedEntityID*)objectID {
+	return (TCSTimedEntityID*)[super objectID];
 }
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
@@ -110,6 +112,20 @@ const struct TCSLocalTimedEntityFetchedProperties TCSLocalTimedEntityFetchedProp
 
 
 @dynamic name;
+
+
+
+
+
+
+@dynamic remoteId;
+
+
+
+
+
+
+@dynamic remoteProvider;
 
 
 

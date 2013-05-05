@@ -12,7 +12,7 @@
 @interface TCSProjectTests()
 
 @property (nonatomic, strong) TCSProject *project;
-@property (nonatomic, strong) id projectEntityID;
+@property (nonatomic, strong) NSManagedObjectID *projectEntityID;
 @property (nonatomic, strong) NSString *projectName;
 
 @end
@@ -26,22 +26,40 @@
 }
 
 - (void)tearDownClass {
-    self.serviceProvider = nil;
     self.service = nil;
     self.project = nil;
     self.projectName = nil;
+    self.remoteProvider = nil;
     [super tearDownClass];
+}
+
+- (void)deleteAllData:(SEL)selector {
+
+    [self prepare];
+
+    [self.service
+     deleteAllData:^{
+
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
+
+     } failure:^(NSError *error) {
+         NSLog(@"ZZZ Error: %@", error);
+         [self notify:kGHUnitWaitStatusFailure forSelector:selector];
+     }];
+
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
 - (void)createProject:(SEL)selector {
 
     [self prepare];
 
-    [self.serviceProvider
+    [self.service
      createProjectWithName:_projectName
+     remoteProvider:self.remoteProvider
      success:^(TCSProject *project) {
 
-         self.projectEntityID = project.providerEntityID;
+         self.projectEntityID = project.objectID;
 
          [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
@@ -65,56 +83,51 @@
     NSString *name = @"bababooey";
     NSInteger color = 50;
 
-    self.project.filteredModifiers = filteredModifiers;
-    self.project.keyCode = keyCode;
-    self.project.modifiers = modifiers;
-    self.project.order = order;
-    self.project.archived = archived;
+    self.project.filteredModifiersValue = filteredModifiers;
+    self.project.keyCodeValue = keyCode;
+    self.project.modifiersValue = modifiers;
+    self.project.orderValue = order;
+    self.project.archivedValue = archived;
     self.project.name = name;
-    self.project.color = color;
+    self.project.colorValue = color;
 
     [self.service
      updateProject:self.project
      success:^{
 
-         [self
-          findProjectWithEntityID:self.project.providerEntityID
-          serviceProvider:self.serviceProvider
-          success:^(TCSProject *project) {
+         TCSProject *project = [self projectWithEntityID:self.project.objectID];
 
-              GHAssertTrue(project.filteredModifiers == filteredModifiers,
-                           @"project.filteredModifiers (%d) != filteredModifiers (%d)",
-                           project.filteredModifiers, filteredModifiers);
+         GHAssertNotNil(project, @"project not found");
+         
+         GHAssertTrue(project.filteredModifiersValue == filteredModifiers,
+                      @"project.filteredModifiers (%d) != filteredModifiers (%d)",
+                      project.filteredModifiersValue, filteredModifiers);
 
-              GHAssertTrue(project.keyCode == keyCode,
-                           @"project.keyCode (%d) != keyCode (%d)",
-                           project.keyCode, keyCode);
+         GHAssertTrue(project.keyCodeValue == keyCode,
+                      @"project.keyCode (%d) != keyCode (%d)",
+                      project.keyCodeValue, keyCode);
 
-              GHAssertTrue(project.modifiers == modifiers,
-                           @"project.modifiers (%d) != modifiers (%d)",
-                           project.modifiers, modifiers);
+         GHAssertTrue(project.modifiersValue == modifiers,
+                      @"project.modifiers (%d) != modifiers (%d)",
+                      project.modifiersValue, modifiers);
 
-              GHAssertTrue(project.order == order,
-                           @"project.order (%d) != order (%d)",
-                           project.order, order);
+         GHAssertTrue(project.orderValue == order,
+                      @"project.order (%d) != order (%d)",
+                      project.orderValue, order);
 
-              GHAssertTrue(project.archived == archived,
-                           @"project.archived (%d) != archived (%d)",
-                           project.archived, archived);
+         GHAssertTrue(project.archivedValue == archived,
+                      @"project.archived (%d) != archived (%d)",
+                      project.archivedValue, archived);
 
-              GHAssertTrue(project.color == color,
-                           @"project.color (%d) != color (%d)",
-                           project.color, color);
+         GHAssertTrue(project.colorValue == color,
+                      @"project.color (%d) != color (%d)",
+                      project.colorValue, color);
 
-              GHAssertTrue([project.name isEqualToString:name],
-                           @"projectName (%@) != name (%@)",
-                           project.name, name);
+         GHAssertTrue([project.name isEqualToString:name],
+                      @"projectName (%@) != name (%@)",
+                      project.name, name);
 
-              [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-          } failure:^{
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -132,17 +145,11 @@
      deleteProject:self.project
      success:^{
 
-         [self.serviceProvider
-          fetchProjects:^(NSArray *projects) {
+         NSArray *projects = [self.service allProjects];
 
-              GHAssertTrue(projects.count == 0, @"Project remains after deletion");
+         GHAssertTrue(projects.count == 0, @"Project remains after deletion");
 
-              [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -152,59 +159,34 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
 
-- (void)fetchProjectByEntityID:(SEL)selector {
+- (void)projectByEntityID:(SEL)selector {
 
-    [self prepare];
+    self.project = [self projectWithEntityID:self.projectEntityID];
+    
+    GHAssertNotNil(_project, @"fetched project is nil");
 
-    [self
-     findProjectWithEntityID:self.projectEntityID
-     serviceProvider:self.serviceProvider
-     success:^(TCSProject *project) {
-
-         self.project = project;
-
-         GHAssertNotNil(project, @"fetched project is nil");
-
-         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-     } failure:^{
-         [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-     }];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
+    [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 }
 
-- (void)fetchAllProjects:(SEL)selector {
+- (void)allProjects:(SEL)selector {
 
     NSLog(@"All Projects...");
-    
-    [self.serviceProvider
-     fetchProjects:^(NSArray *projects) {
 
-         for (TCSProject *p in projects) {
-             NSLog(@"ZZZ p: %@", p.name);
-         }
-         
-     } failure:^(NSError *error) {
-         NSLog(@"Error: %@", error);
-         [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-     }];
+    NSArray *projects = [self.service allProjects];
+
+    for (TCSProject *p in projects) {
+        NSLog(@"ZZZ p: %@", p.name);
+    }
 }
 
 - (void)deleteAllProjects:(SEL)selector {
 
     [self prepare];
 
-    [self.serviceProvider
-     fetchProjects:^(NSArray *projects) {
+    NSArray *projects = [self.service allProjects];
 
-         NSEnumerator *enumerator = [projects objectEnumerator];
-         [self deleteNextProject:enumerator selector:selector];
-
-     } failure:^(NSError *error) {
-         NSLog(@"Error: %@", error);
-         [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-     }];
+    NSEnumerator *enumerator = [projects objectEnumerator];
+    [self deleteNextProject:enumerator selector:selector];
 
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
 }
@@ -215,19 +197,12 @@
 
     if (nextProject == nil) {
 
-        [self.serviceProvider clearCache];
+        NSArray *projects = [self.service allProjects];
 
-        [self.serviceProvider
-         fetchProjects:^(NSArray *projects) {
+        GHAssertTrue(projects.count == 0, @"Project remains after deleting all");
 
-             GHAssertTrue(projects.count == 0, @"Project remains after deleting all");
+        [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
-             [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-         } failure:^(NSError *error) {
-             NSLog(@"Error: %@", error);
-             [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-         }];
     } else {
 
         [self.service

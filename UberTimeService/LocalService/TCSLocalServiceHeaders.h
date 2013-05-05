@@ -1,4 +1,4 @@
-#import "TCSLocalGroup.h"
-#import "TCSLocalProject.h"
-#import "TCSLocalTimedEntity.h"
-#import "TCSLocalTimer.h"
+#import "TCSGroup.h"
+#import "TCSProject.h"
+#import "TCSTimedEntity.h"
+#import "TCSTimer.h"

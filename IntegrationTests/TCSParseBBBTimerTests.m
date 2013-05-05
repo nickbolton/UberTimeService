@@ -18,7 +18,8 @@
 
 - (void)setUpClass {
     [super setUpClass];
-    self.serviceProvider = [self.service serviceProviderOfType:[TCSParseService class]];
+    [self.service registerRemoteServiceProvider:[TCSParseService class]];
+    self.remoteProvider = NSStringFromClass([TCSParseService class]);
 }
 
 - (void)testAAAParseCreateProject {

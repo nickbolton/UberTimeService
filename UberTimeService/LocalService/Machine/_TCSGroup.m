@@ -1,39 +1,39 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalGroup.m instead.
+// Make changes to TCSGroup.m instead.
 
-#import "_TCSLocalGroup.h"
+#import "_TCSGroup.h"
 
-const struct TCSLocalGroupAttributes TCSLocalGroupAttributes = {
+const struct TCSGroupAttributes TCSGroupAttributes = {
 };
 
-const struct TCSLocalGroupRelationships TCSLocalGroupRelationships = {
+const struct TCSGroupRelationships TCSGroupRelationships = {
 	.children = @"children",
 };
 
-const struct TCSLocalGroupFetchedProperties TCSLocalGroupFetchedProperties = {
+const struct TCSGroupFetchedProperties TCSGroupFetchedProperties = {
 };
 
-@implementation TCSLocalGroupID
+@implementation TCSGroupID
 @end
 
-@implementation _TCSLocalGroup
+@implementation _TCSGroup
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSLocalGroup" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSGroup" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"TCSLocalGroup";
+	return @"TCSGroup";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"TCSLocalGroup" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"TCSGroup" inManagedObjectContext:moc_];
 }
 
-- (TCSLocalGroupID*)objectID {
-	return (TCSLocalGroupID*)[super objectID];
+- (TCSGroupID*)objectID {
+	return (TCSGroupID*)[super objectID];
 }
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {

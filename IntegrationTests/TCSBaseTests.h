@@ -8,30 +8,24 @@
 
 #import <GHUnitIOS/GHUnit.h>
 
-@protocol TCSServiceProvider;
 @class TCSProject;
 @class TCSGroup;
 @class TCSTimer;
 @class TCSService;
+@class NSManagedObjectID;
 
 @interface TCSBaseTests : GHAsyncTestCase
 
 @property (nonatomic, strong) TCSService *service;
-@property (nonatomic, strong) id <TCSServiceProvider> serviceProvider;
+@property (nonatomic, strong) NSString *remoteProvider;
 
-- (void)findProjectWithEntityID:(id)entityID
-                serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                        success:(void(^)(TCSProject *project))successBlock
-                        failure:(void(^)(void))failureBlock;
+- (TCSProject *)projectWithEntityID:(NSManagedObjectID *)objectID;
 
-- (void)findTimerWithEntityID:(id)entityID
-              serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                      success:(void(^)(TCSTimer *timer))successBlock
-                      failure:(void(^)(void))failureBlock;
+- (TCSTimer *)timerWithEntityID:(NSManagedObjectID *)objectID;
 
-- (void)findGroupWithEntityID:(id)entityID
-              serviceProvider:(id <TCSServiceProvider>)serviceProvider
-                      success:(void(^)(TCSGroup *group))successBlock
-                      failure:(void(^)(void))failureBlock;
+- (TCSGroup *)groupWithEntityID:(NSManagedObjectID *)objectID;
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(void))failureBlock;
 
 @end

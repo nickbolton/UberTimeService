@@ -1,38 +1,40 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalTimer.h instead.
+// Make changes to TCSTimer.h instead.
 
 #import <CoreData/CoreData.h>
 
 
-extern const struct TCSLocalTimerAttributes {
+extern const struct TCSTimerAttributes {
 	__unsafe_unretained NSString *adjustment;
 	__unsafe_unretained NSString *endTime;
 	__unsafe_unretained NSString *message;
+	__unsafe_unretained NSString *remoteId;
 	__unsafe_unretained NSString *startTime;
-} TCSLocalTimerAttributes;
+} TCSTimerAttributes;
 
-extern const struct TCSLocalTimerRelationships {
+extern const struct TCSTimerRelationships {
 	__unsafe_unretained NSString *project;
-} TCSLocalTimerRelationships;
+} TCSTimerRelationships;
 
-extern const struct TCSLocalTimerFetchedProperties {
-} TCSLocalTimerFetchedProperties;
+extern const struct TCSTimerFetchedProperties {
+} TCSTimerFetchedProperties;
 
-@class TCSLocalProject;
-
-
+@class TCSProject;
 
 
 
 
-@interface TCSLocalTimerID : NSManagedObjectID {}
+
+
+
+@interface TCSTimerID : NSManagedObjectID {}
 @end
 
-@interface _TCSLocalTimer : NSManagedObject {}
+@interface _TCSTimer : NSManagedObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (TCSLocalTimerID*)objectID;
+- (TCSTimerID*)objectID;
 
 
 
@@ -65,6 +67,14 @@ extern const struct TCSLocalTimerFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* remoteId;
+
+
+//- (BOOL)validateRemoteId:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSDate* startTime;
 
 
@@ -74,7 +84,7 @@ extern const struct TCSLocalTimerFetchedProperties {
 
 
 
-@property (nonatomic, strong) TCSLocalProject* project;
+@property (nonatomic, strong) TCSProject* project;
 
 //- (BOOL)validateProject:(id*)value_ error:(NSError**)error_;
 
@@ -84,11 +94,11 @@ extern const struct TCSLocalTimerFetchedProperties {
 
 @end
 
-@interface _TCSLocalTimer (CoreDataGeneratedAccessors)
+@interface _TCSTimer (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _TCSLocalTimer (CoreDataGeneratedPrimitiveAccessors)
+@interface _TCSTimer (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSNumber*)primitiveAdjustment;
@@ -112,6 +122,12 @@ extern const struct TCSLocalTimerFetchedProperties {
 
 
 
+- (NSString*)primitiveRemoteId;
+- (void)setPrimitiveRemoteId:(NSString*)value;
+
+
+
+
 - (NSDate*)primitiveStartTime;
 - (void)setPrimitiveStartTime:(NSDate*)value;
 
@@ -119,8 +135,8 @@ extern const struct TCSLocalTimerFetchedProperties {
 
 
 
-- (TCSLocalProject*)primitiveProject;
-- (void)setPrimitiveProject:(TCSLocalProject*)value;
+- (TCSProject*)primitiveProject;
+- (void)setPrimitiveProject:(TCSProject*)value;
 
 
 @end

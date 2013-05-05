@@ -12,69 +12,7 @@
 
 extern NSString * const kTCSServiceDataResetNotification;
 
-@protocol TCSServiceProvider <NSObject>
-
-+ (id <TCSServiceProvider>)sharedInstance;
-
-@property (nonatomic, readonly) NSString *name;
-
-- (void)clearCache;
-
-// Authentication
-
-- (void)authenticateUser:(NSString *)username
-                password:(NSString *)password
-                 success:(void(^)(void))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
-
-- (void)logoutUser:(void(^)(void))successBlock
-           failure:(void(^)(NSError *error))failureBlock;
-
-- (BOOL)isUserAuthenticated;
-
-// Project
-
-- (void)createProjectWithName:(NSString *)name
-                      success:(void(^)(TCSProject *project))successBlock
-                      failure:(void(^)(NSError *error))failureBlock;
-
-- (void)createProjectWithName:(NSString *)name
-            filteredModifiers:(NSInteger)filteredModifiers
-                      keyCode:(NSInteger)keyCode
-                    modifiers:(NSInteger)modifiers
-                      success:(void(^)(TCSProject *project))successBlock
-                      failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchProjectWithName:(NSString *)name
-                     success:(void(^)(NSArray *projects))successBlock
-                     failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchProjectWithID:(id)entityID
-                     success:(void(^)(TCSProject *project))successBlock
-                     failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchProjects:(void(^)(NSArray *projects))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-// Group
-
-- (void)fetchGroupWithID:(id)entityID
-                 success:(void(^)(TCSGroup *group))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchGroups:(void(^)(NSArray *groups))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-// Timer
-
-- (void)fetchTimerWithID:(id)entityID
-                 success:(void(^)(TCSTimer *timer))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchTimers:(void(^)(NSArray *groups))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-@end
+@protocol TCSServiceRemoteProvider;
 
 // import depends on protocol being defined already
 #import "TCSDefaultProvider.h"
@@ -91,11 +29,22 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 #pragma mark - Projects
 
-- (void)clearCaches;
+- (NSArray *)registeredRemoteProviders;
+- (void)registerRemoteServiceProvider:(Class)providerClass;
+- (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass;
 
-- (NSArray *)registeredServiceProviders;
-- (void)registerServiceProvider:(Class)projectServiceClass;
-- (id <TCSServiceProvider>)serviceProviderOfType:(Class)serviceProviderType;
+- (void)createProjectWithName:(NSString *)name
+               remoteProvider:(NSString *)remoteProvider
+                      success:(void(^)(TCSProject *project))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
+- (void)createProjectWithName:(NSString *)name
+               remoteProvider:(NSString *)remoteProvider
+            filteredModifiers:(NSInteger)filteredModifiers
+                      keyCode:(NSInteger)keyCode
+                    modifiers:(NSInteger)modifiers
+                      success:(void(^)(TCSProject *project))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateProject:(TCSProject *)project
               success:(void(^)(void))successBlock
@@ -105,17 +54,19 @@ extern NSString * const kTCSServiceDataResetNotification;
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
-- (void)fetchProjectsSortedByName:(NSArray *)serviceProviders
-                      ignoreOrder:(BOOL)ignoreOrder
-                          success:(void(^)(NSArray *projects))successBlock
-                          failure:(void(^)(NSError *error))failureBlock;
+- (NSArray *)allProjects;
 
-- (void)fetchProjectsSortedByGroupAndName:(NSArray *)serviceProviders
-                              ignoreOrder:(BOOL)ignoreOrder
-                                  success:(void(^)(NSArray *projects))successBlock
-                                  failure:(void(^)(NSError *error))failureBlock;
+- (TCSProject *)projectWithID:(NSManagedObjectID *)objectID;
+
+- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder;
+
+- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder;
 
 #pragma mark - Groups
+
+- (NSArray *)allGroups;
+
+- (TCSGroup *)groupWithID:(NSManagedObjectID *)objectID;
 
 - (void)updateGroup:(TCSGroup *)group
             success:(void(^)(void))successBlock
@@ -127,22 +78,26 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (void)moveProject:(TCSProject *)sourceProject
           toProject:(TCSProject *)toProject
-            success:(void(^)(TCSGroup *group))successBlock
+            success:(void(^)(TCSGroup *group, TCSProject *updatedSourceProject, TCSProject *updatedTargetProject))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)moveProject:(TCSProject *)sourceProject
             toGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSProject *updatedSourceProject, TCSGroup *updatedGroup))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 #pragma mark - Timers
 
+- (NSArray *)allTimers;
+
+- (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID;
+
 - (void)startTimerForProject:(TCSProject *)project
-                     success:(void(^)(TCSTimer *timer))successBlock
+                     success:(void(^)(TCSTimer *timer, TCSProject *updatedProject))successBlock
                      failure:(void(^)(NSError *error))failureBlock;
 
 - (void)stopTimer:(TCSTimer *)timer
-          success:(void(^)(void))successBlock
+          success:(void(^)(TCSTimer *updatedTimer))successBlock
           failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateTimer:(TCSTimer *)timer
@@ -151,7 +106,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (void)moveTimer:(TCSTimer *)timer
         toProject:(TCSProject *)project
-          success:(void(^)(void))successBlock
+          success:(void(^)(TCSTimer *updatedTimer, TCSProject *updatedProject))successBlock
           failure:(void(^)(NSError *error))failureBlock;
 
 - (void)rollTimer:(TCSTimer *)timer
@@ -163,11 +118,9 @@ extern NSString * const kTCSServiceDataResetNotification;
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)fetchTimersForProjects:(NSArray *)projects
+- (NSArray *)timersForProjects:(NSArray *)projects
                       fromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
-               sortByStartTime:(BOOL)sortByStartTime
-                       success:(void(^)(NSArray *timers))successBlock
-                       failure:(void(^)(NSError *error))failureBlock;
+               sortByStartTime:(BOOL)sortByStartTime;
 
 @end

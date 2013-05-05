@@ -11,7 +11,25 @@
 		79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A161D6FDF95340609138410D /* libPods-IntegrationTests.a */; };
 		FE837DE91735B98500CBD853 /* TCSView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DE81735B98500CBD853 /* TCSView.m */; };
 		FE837DEE1736A7A300CBD853 /* TCSAAASetupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */; };
-		FE837DEF1736ABE700CBD853 /* TCSParseBBBTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD030617354E1500DAB99D /* TCSParseBBBTimerTests.m */; };
+		FE837DF81736C5BC00CBD853 /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF11736C5BC00CBD853 /* TCSGroup.m */; };
+		FE837DF91736C5BC00CBD853 /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF11736C5BC00CBD853 /* TCSGroup.m */; };
+		FE837DFA1736C5BC00CBD853 /* TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF31736C5BC00CBD853 /* TCSProject.m */; };
+		FE837DFB1736C5BC00CBD853 /* TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF31736C5BC00CBD853 /* TCSProject.m */; };
+		FE837DFC1736C5BC00CBD853 /* TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF51736C5BC00CBD853 /* TCSTimedEntity.m */; };
+		FE837DFD1736C5BC00CBD853 /* TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF51736C5BC00CBD853 /* TCSTimedEntity.m */; };
+		FE837DFE1736C5BC00CBD853 /* TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF71736C5BC00CBD853 /* TCSTimer.m */; };
+		FE837DFF1736C5BC00CBD853 /* TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF71736C5BC00CBD853 /* TCSTimer.m */; };
+		FE837E081736C5C400CBD853 /* _TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E011736C5C400CBD853 /* _TCSGroup.m */; };
+		FE837E091736C5C400CBD853 /* _TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E011736C5C400CBD853 /* _TCSGroup.m */; };
+		FE837E0A1736C5C400CBD853 /* _TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E031736C5C400CBD853 /* _TCSProject.m */; };
+		FE837E0B1736C5C400CBD853 /* _TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E031736C5C400CBD853 /* _TCSProject.m */; };
+		FE837E0C1736C5C400CBD853 /* _TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E051736C5C400CBD853 /* _TCSTimedEntity.m */; };
+		FE837E0D1736C5C400CBD853 /* _TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E051736C5C400CBD853 /* _TCSTimedEntity.m */; };
+		FE837E0E1736C5C400CBD853 /* _TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E071736C5C400CBD853 /* _TCSTimer.m */; };
+		FE837E0F1736C5C400CBD853 /* _TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837E071736C5C400CBD853 /* _TCSTimer.m */; };
+		FE837E121736EEE600CBD853 /* TCSLocalAAAProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02671733D9E700DAB99D /* TCSLocalAAAProjectTests.m */; };
+		FE837E131736EF7000CBD853 /* TCSLocalBBBTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02821733EE6A00DAB99D /* TCSLocalBBBTimerTests.m */; };
+		FE837E141736F03300CBD853 /* TCSLocalCCCGroupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02D117352B5400DAB99D /* TCSLocalCCCGroupTests.m */; };
 		FEBD024D1733D85A00DAB99D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
 		FEBD024E1733D85A00DAB99D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
 		FEBD024F1733D85A00DAB99D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
@@ -21,41 +39,21 @@
 		FEBD025F1733D85A00DAB99D /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEBD025E1733D85A00DAB99D /* Default@2x.png */; };
 		FEBD02611733D85A00DAB99D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEBD02601733D85A00DAB99D /* Default-568h@2x.png */; };
 		FEBD02651733D98900DAB99D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */; };
-		FEBD02691733DBDE00DAB99D /* TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */; };
-		FEBD026A1733DBDE00DAB99D /* TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */; };
-		FEBD026B1733DBDE00DAB99D /* TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */; };
-		FEBD026C1733DBDE00DAB99D /* TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */; };
-		FEBD026D1733DBDE00DAB99D /* _TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */; };
-		FEBD026E1733DBDE00DAB99D /* _TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */; };
-		FEBD026F1733DBDE00DAB99D /* _TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */; };
-		FEBD02701733DBDE00DAB99D /* _TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */; };
 		FEBD02711733DBDE00DAB99D /* TCSLocalService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */; };
 		FEBD027C1733E64E00DAB99D /* TCSLocalService.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D61733225C00C4DCF9 /* TCSLocalService.xcdatamodeld */; };
 		FEBD02801733EC3D00DAB99D /* TCSBaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD027E1733EBED00DAB99D /* TCSBaseTests.m */; };
 		FEBD02891733EF4200DAB99D /* TCSProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02881733EF4200DAB99D /* TCSProjectTests.m */; };
 		FEBD028C1733EFE400DAB99D /* TCSTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD028B1733EFE400DAB99D /* TCSTimerTests.m */; };
 		FEBD02911734853E00DAB99D /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02901734853E00DAB99D /* NSDate+Utilities.m */; };
-		FEBD02A9173487AE00DAB99D /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */; };
 		FEBD02AA173487AE00DAB99D /* TCSDefaultProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */; };
-		FEBD02AB173487AE00DAB99D /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029D173487AD00DAB99D /* TCSGroup.m */; };
-		FEBD02AC173487AE00DAB99D /* TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029F173487AD00DAB99D /* TCSProject.m */; };
 		FEBD02AD173487AE00DAB99D /* TCSService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A1173487AD00DAB99D /* TCSService.m */; };
-		FEBD02AE173487AE00DAB99D /* TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */; };
-		FEBD02AF173487AE00DAB99D /* TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A5173487AD00DAB99D /* TCSTimer.m */; };
 		FEBD02B0173487AE00DAB99D /* TCSDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A8173487AE00DAB99D /* TCSDateRange.m */; };
 		FEBD02B3173487DF00DAB99D /* TCSCalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */; };
 		FEBD02BA173489C600DAB99D /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02901734853E00DAB99D /* NSDate+Utilities.m */; };
 		FEBD02BB173489C600DAB99D /* TCSCalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02B2173487DF00DAB99D /* TCSCalendarManager.m */; };
 		FEBD02BC173489C600DAB99D /* TCSDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A8173487AE00DAB99D /* TCSDateRange.m */; };
-		FEBD02BD17348A0C00DAB99D /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */; };
 		FEBD02BE17348A0C00DAB99D /* TCSDefaultProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */; };
-		FEBD02BF17348A0C00DAB99D /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029D173487AD00DAB99D /* TCSGroup.m */; };
-		FEBD02C017348A0C00DAB99D /* TCSProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD029F173487AD00DAB99D /* TCSProject.m */; };
 		FEBD02C117348A0C00DAB99D /* TCSService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A1173487AD00DAB99D /* TCSService.m */; };
-		FEBD02C217348A0C00DAB99D /* TCSTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */; };
-		FEBD02C317348A0C00DAB99D /* TCSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02A5173487AD00DAB99D /* TCSTimer.m */; };
-		FEBD02C61734B9B500DAB99D /* TCSParseService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02C51734B9B500DAB99D /* TCSParseService.m */; };
-		FEBD02C71734B9B500DAB99D /* TCSParseService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02C51734B9B500DAB99D /* TCSParseService.m */; };
 		FEBD02CA1734B9FA00DAB99D /* TCSHarvestService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02C91734B9FA00DAB99D /* TCSHarvestService.m */; };
 		FEBD02CB1734B9FA00DAB99D /* TCSHarvestService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02C91734B9FA00DAB99D /* TCSHarvestService.m */; };
 		FEBD02CF173518C400DAB99D /* TCSGroupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD02CD173518C300DAB99D /* TCSGroupTests.m */; };
@@ -100,15 +98,7 @@
 		FEDAD3071732E60D0087EB4F /* TCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDAD3061732E60D0087EB4F /* TCViewController.m */; };
 		FEF8A0DA1733225C00C4DCF9 /* TCSLocalService.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */; };
 		FEF8A0DB1733225C00C4DCF9 /* TCSLocalService.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0D61733225C00C4DCF9 /* TCSLocalService.xcdatamodeld */; };
-		FEF8A0E7173325E300C4DCF9 /* TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */; };
-		FEF8A0E8173325E300C4DCF9 /* TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */; };
-		FEF8A0E9173325E300C4DCF9 /* _TCSLocalGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */; };
-		FEF8A0EA173325E300C4DCF9 /* _TCSLocalProject.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */; };
-		FEF8A0ED1733261B00C4DCF9 /* TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */; };
-		FEF8A0F01733262300C4DCF9 /* _TCSLocalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */; };
 		FEF8A0F31733265800C4DCF9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8A0F21733265800C4DCF9 /* CoreData.framework */; };
-		FEF8A0F617332B0400C4DCF9 /* _TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */; };
-		FEF8A0F917332B0B00C4DCF9 /* TCSLocalTimedEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */; };
 		FEF8A0FB17332B4100C4DCF9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -124,6 +114,22 @@
 		FE837DE71735B98500CBD853 /* TCSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSView.h; sourceTree = "<group>"; };
 		FE837DE81735B98500CBD853 /* TCSView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSView.m; sourceTree = "<group>"; };
 		FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSAAASetupTests.m; sourceTree = "<group>"; };
+		FE837DF01736C5BC00CBD853 /* TCSGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSGroup.h; sourceTree = "<group>"; };
+		FE837DF11736C5BC00CBD853 /* TCSGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSGroup.m; sourceTree = "<group>"; };
+		FE837DF21736C5BC00CBD853 /* TCSProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSProject.h; sourceTree = "<group>"; };
+		FE837DF31736C5BC00CBD853 /* TCSProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSProject.m; sourceTree = "<group>"; };
+		FE837DF41736C5BC00CBD853 /* TCSTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimedEntity.h; sourceTree = "<group>"; };
+		FE837DF51736C5BC00CBD853 /* TCSTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimedEntity.m; sourceTree = "<group>"; };
+		FE837DF61736C5BC00CBD853 /* TCSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimer.h; sourceTree = "<group>"; };
+		FE837DF71736C5BC00CBD853 /* TCSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimer.m; sourceTree = "<group>"; };
+		FE837E001736C5C400CBD853 /* _TCSGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSGroup.h; sourceTree = "<group>"; };
+		FE837E011736C5C400CBD853 /* _TCSGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSGroup.m; sourceTree = "<group>"; };
+		FE837E021736C5C400CBD853 /* _TCSProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSProject.h; sourceTree = "<group>"; };
+		FE837E031736C5C400CBD853 /* _TCSProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSProject.m; sourceTree = "<group>"; };
+		FE837E041736C5C400CBD853 /* _TCSTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSTimedEntity.h; sourceTree = "<group>"; };
+		FE837E051736C5C400CBD853 /* _TCSTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSTimedEntity.m; sourceTree = "<group>"; };
+		FE837E061736C5C400CBD853 /* _TCSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSTimer.h; sourceTree = "<group>"; };
+		FE837E071736C5C400CBD853 /* _TCSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSTimer.m; sourceTree = "<group>"; };
 		FEBD024C1733D85A00DAB99D /* IntegrationTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBD02521733D85A00DAB99D /* IntegrationTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IntegrationTests-Info.plist"; sourceTree = "<group>"; };
 		FEBD02541733D85A00DAB99D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -142,20 +148,10 @@
 		FEBD028B1733EFE400DAB99D /* TCSTimerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimerTests.m; sourceTree = "<group>"; };
 		FEBD028F1734853E00DAB99D /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
 		FEBD02901734853E00DAB99D /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
-		FEBD0298173487AD00DAB99D /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
-		FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
 		FEBD029A173487AD00DAB99D /* TCSDefaultProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSDefaultProvider.h; sourceTree = "<group>"; };
 		FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSDefaultProvider.m; sourceTree = "<group>"; };
-		FEBD029C173487AD00DAB99D /* TCSGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSGroup.h; sourceTree = "<group>"; };
-		FEBD029D173487AD00DAB99D /* TCSGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSGroup.m; sourceTree = "<group>"; };
-		FEBD029E173487AD00DAB99D /* TCSProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSProject.h; sourceTree = "<group>"; };
-		FEBD029F173487AD00DAB99D /* TCSProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSProject.m; sourceTree = "<group>"; };
 		FEBD02A0173487AD00DAB99D /* TCSService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSService.h; sourceTree = "<group>"; };
 		FEBD02A1173487AD00DAB99D /* TCSService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSService.m; sourceTree = "<group>"; };
-		FEBD02A2173487AD00DAB99D /* TCSTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimedEntity.h; sourceTree = "<group>"; };
-		FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimedEntity.m; sourceTree = "<group>"; };
-		FEBD02A4173487AD00DAB99D /* TCSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimer.h; sourceTree = "<group>"; };
-		FEBD02A5173487AD00DAB99D /* TCSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimer.m; sourceTree = "<group>"; };
 		FEBD02A7173487AE00DAB99D /* TCSDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSDateRange.h; sourceTree = "<group>"; };
 		FEBD02A8173487AE00DAB99D /* TCSDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSDateRange.m; sourceTree = "<group>"; };
 		FEBD02B1173487DF00DAB99D /* TCSCalendarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSCalendarManager.h; sourceTree = "<group>"; };
@@ -214,24 +210,8 @@
 		FEF8A0D51733225C00C4DCF9 /* TCSLocalService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalService.m; sourceTree = "<group>"; };
 		FEF8A0D71733225C00C4DCF9 /* TCSLocalService.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TCSLocalService.xcdatamodel; sourceTree = "<group>"; };
 		FEF8A0DC1733257E00C4DCF9 /* TCSLocalService 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TCSLocalService 2.xcdatamodel"; sourceTree = "<group>"; };
-		FEF8A0DE173325E300C4DCF9 /* TCSLocalGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalGroup.h; sourceTree = "<group>"; };
-		FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalGroup.m; sourceTree = "<group>"; };
-		FEF8A0E0173325E300C4DCF9 /* TCSLocalProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalProject.h; sourceTree = "<group>"; };
-		FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalProject.m; sourceTree = "<group>"; };
-		FEF8A0E3173325E300C4DCF9 /* _TCSLocalGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalGroup.h; sourceTree = "<group>"; };
-		FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalGroup.m; sourceTree = "<group>"; };
-		FEF8A0E5173325E300C4DCF9 /* _TCSLocalProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalProject.h; sourceTree = "<group>"; };
-		FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalProject.m; sourceTree = "<group>"; };
-		FEF8A0EB1733261B00C4DCF9 /* TCSLocalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalTimer.h; sourceTree = "<group>"; };
-		FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalTimer.m; sourceTree = "<group>"; };
-		FEF8A0EE1733262200C4DCF9 /* _TCSLocalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalTimer.h; sourceTree = "<group>"; };
-		FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalTimer.m; sourceTree = "<group>"; };
 		FEF8A0F11733263100C4DCF9 /* TCSLocalServiceHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalServiceHeaders.h; sourceTree = "<group>"; };
 		FEF8A0F21733265800C4DCF9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		FEF8A0F417332B0300C4DCF9 /* _TCSLocalTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSLocalTimedEntity.h; sourceTree = "<group>"; };
-		FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSLocalTimedEntity.m; sourceTree = "<group>"; };
-		FEF8A0F717332B0B00C4DCF9 /* TCSLocalTimedEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSLocalTimedEntity.h; sourceTree = "<group>"; };
-		FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalTimedEntity.m; sourceTree = "<group>"; };
 		FEF8A0FA17332B4100C4DCF9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		FEF8A1041733D56C00C4DCF9 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		FEF8A1061733D56C00C4DCF9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -337,21 +317,11 @@
 		FEBD0297173487AC00DAB99D /* UberTimeService */ = {
 			isa = PBXGroup;
 			children = (
-				FEBD0298173487AD00DAB99D /* TCSBaseEntity.h */,
-				FEBD0299173487AD00DAB99D /* TCSBaseEntity.m */,
 				FEBD029A173487AD00DAB99D /* TCSDefaultProvider.h */,
 				FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */,
-				FEBD029C173487AD00DAB99D /* TCSGroup.h */,
-				FEBD029D173487AD00DAB99D /* TCSGroup.m */,
-				FEBD029E173487AD00DAB99D /* TCSProject.h */,
-				FEBD029F173487AD00DAB99D /* TCSProject.m */,
 				FEBD0308173550DC00DAB99D /* TCSServicePrivate.h */,
 				FEBD02A0173487AD00DAB99D /* TCSService.h */,
 				FEBD02A1173487AD00DAB99D /* TCSService.m */,
-				FEBD02A2173487AD00DAB99D /* TCSTimedEntity.h */,
-				FEBD02A3173487AD00DAB99D /* TCSTimedEntity.m */,
-				FEBD02A4173487AD00DAB99D /* TCSTimer.h */,
-				FEBD02A5173487AD00DAB99D /* TCSTimer.m */,
 			);
 			name = UberTimeService;
 			path = TCService;
@@ -502,14 +472,14 @@
 		FEF8A0DD173325E300C4DCF9 /* Human */ = {
 			isa = PBXGroup;
 			children = (
-				FEF8A0DE173325E300C4DCF9 /* TCSLocalGroup.h */,
-				FEF8A0DF173325E300C4DCF9 /* TCSLocalGroup.m */,
-				FEF8A0E0173325E300C4DCF9 /* TCSLocalProject.h */,
-				FEF8A0E1173325E300C4DCF9 /* TCSLocalProject.m */,
-				FEF8A0EB1733261B00C4DCF9 /* TCSLocalTimer.h */,
-				FEF8A0EC1733261B00C4DCF9 /* TCSLocalTimer.m */,
-				FEF8A0F717332B0B00C4DCF9 /* TCSLocalTimedEntity.h */,
-				FEF8A0F817332B0B00C4DCF9 /* TCSLocalTimedEntity.m */,
+				FE837DF01736C5BC00CBD853 /* TCSGroup.h */,
+				FE837DF11736C5BC00CBD853 /* TCSGroup.m */,
+				FE837DF21736C5BC00CBD853 /* TCSProject.h */,
+				FE837DF31736C5BC00CBD853 /* TCSProject.m */,
+				FE837DF41736C5BC00CBD853 /* TCSTimedEntity.h */,
+				FE837DF51736C5BC00CBD853 /* TCSTimedEntity.m */,
+				FE837DF61736C5BC00CBD853 /* TCSTimer.h */,
+				FE837DF71736C5BC00CBD853 /* TCSTimer.m */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -517,14 +487,14 @@
 		FEF8A0E2173325E300C4DCF9 /* Machine */ = {
 			isa = PBXGroup;
 			children = (
-				FEF8A0E3173325E300C4DCF9 /* _TCSLocalGroup.h */,
-				FEF8A0E4173325E300C4DCF9 /* _TCSLocalGroup.m */,
-				FEF8A0E5173325E300C4DCF9 /* _TCSLocalProject.h */,
-				FEF8A0E6173325E300C4DCF9 /* _TCSLocalProject.m */,
-				FEF8A0EE1733262200C4DCF9 /* _TCSLocalTimer.h */,
-				FEF8A0EF1733262300C4DCF9 /* _TCSLocalTimer.m */,
-				FEF8A0F417332B0300C4DCF9 /* _TCSLocalTimedEntity.h */,
-				FEF8A0F517332B0400C4DCF9 /* _TCSLocalTimedEntity.m */,
+				FE837E001736C5C400CBD853 /* _TCSGroup.h */,
+				FE837E011736C5C400CBD853 /* _TCSGroup.m */,
+				FE837E021736C5C400CBD853 /* _TCSProject.h */,
+				FE837E031736C5C400CBD853 /* _TCSProject.m */,
+				FE837E041736C5C400CBD853 /* _TCSTimedEntity.h */,
+				FE837E051736C5C400CBD853 /* _TCSTimedEntity.m */,
+				FE837E061736C5C400CBD853 /* _TCSTimer.h */,
+				FE837E071736C5C400CBD853 /* _TCSTimer.m */,
 			);
 			path = Machine;
 			sourceTree = "<group>";
@@ -677,14 +647,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEBD02571733D85A00DAB99D /* main.m in Sources */,
-				FEBD02691733DBDE00DAB99D /* TCSLocalGroup.m in Sources */,
-				FEBD026A1733DBDE00DAB99D /* TCSLocalProject.m in Sources */,
-				FEBD026B1733DBDE00DAB99D /* TCSLocalTimer.m in Sources */,
-				FEBD026C1733DBDE00DAB99D /* TCSLocalTimedEntity.m in Sources */,
-				FEBD026D1733DBDE00DAB99D /* _TCSLocalGroup.m in Sources */,
-				FEBD026E1733DBDE00DAB99D /* _TCSLocalProject.m in Sources */,
-				FEBD026F1733DBDE00DAB99D /* _TCSLocalTimer.m in Sources */,
-				FEBD02701733DBDE00DAB99D /* _TCSLocalTimedEntity.m in Sources */,
 				FEBD02711733DBDE00DAB99D /* TCSLocalService.m in Sources */,
 				FEBD027C1733E64E00DAB99D /* TCSLocalService.xcdatamodeld in Sources */,
 				FEBD02801733EC3D00DAB99D /* TCSBaseTests.m in Sources */,
@@ -693,14 +655,8 @@
 				FEBD02BA173489C600DAB99D /* NSDate+Utilities.m in Sources */,
 				FEBD02BB173489C600DAB99D /* TCSCalendarManager.m in Sources */,
 				FEBD02BC173489C600DAB99D /* TCSDateRange.m in Sources */,
-				FEBD02BD17348A0C00DAB99D /* TCSBaseEntity.m in Sources */,
 				FEBD02BE17348A0C00DAB99D /* TCSDefaultProvider.m in Sources */,
-				FEBD02BF17348A0C00DAB99D /* TCSGroup.m in Sources */,
-				FEBD02C017348A0C00DAB99D /* TCSProject.m in Sources */,
 				FEBD02C117348A0C00DAB99D /* TCSService.m in Sources */,
-				FEBD02C217348A0C00DAB99D /* TCSTimedEntity.m in Sources */,
-				FEBD02C317348A0C00DAB99D /* TCSTimer.m in Sources */,
-				FEBD02C71734B9B500DAB99D /* TCSParseService.m in Sources */,
 				FEBD02CB1734B9FA00DAB99D /* TCSHarvestService.m in Sources */,
 				FEBD02CF173518C400DAB99D /* TCSGroupTests.m in Sources */,
 				FEBD02F217354CB100DAB99D /* TCSParseTimedEntity.m in Sources */,
@@ -709,7 +665,17 @@
 				FEBD02FE17354D0F00DAB99D /* TCSParseTimer.m in Sources */,
 				FEBD032B1735735900DAB99D /* TCSParseBaseEntity.m in Sources */,
 				FE837DEE1736A7A300CBD853 /* TCSAAASetupTests.m in Sources */,
-				FE837DEF1736ABE700CBD853 /* TCSParseBBBTimerTests.m in Sources */,
+				FE837DF91736C5BC00CBD853 /* TCSGroup.m in Sources */,
+				FE837DFB1736C5BC00CBD853 /* TCSProject.m in Sources */,
+				FE837DFD1736C5BC00CBD853 /* TCSTimedEntity.m in Sources */,
+				FE837DFF1736C5BC00CBD853 /* TCSTimer.m in Sources */,
+				FE837E091736C5C400CBD853 /* _TCSGroup.m in Sources */,
+				FE837E0B1736C5C400CBD853 /* _TCSProject.m in Sources */,
+				FE837E0D1736C5C400CBD853 /* _TCSTimedEntity.m in Sources */,
+				FE837E0F1736C5C400CBD853 /* _TCSTimer.m in Sources */,
+				FE837E121736EEE600CBD853 /* TCSLocalAAAProjectTests.m in Sources */,
+				FE837E131736EF7000CBD853 /* TCSLocalBBBTimerTests.m in Sources */,
+				FE837E141736F03300CBD853 /* TCSLocalCCCGroupTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,25 +688,11 @@
 				FEDAD3071732E60D0087EB4F /* TCViewController.m in Sources */,
 				FEF8A0DA1733225C00C4DCF9 /* TCSLocalService.m in Sources */,
 				FEF8A0DB1733225C00C4DCF9 /* TCSLocalService.xcdatamodeld in Sources */,
-				FEF8A0E7173325E300C4DCF9 /* TCSLocalGroup.m in Sources */,
-				FEF8A0E8173325E300C4DCF9 /* TCSLocalProject.m in Sources */,
-				FEF8A0E9173325E300C4DCF9 /* _TCSLocalGroup.m in Sources */,
-				FEF8A0EA173325E300C4DCF9 /* _TCSLocalProject.m in Sources */,
-				FEF8A0ED1733261B00C4DCF9 /* TCSLocalTimer.m in Sources */,
-				FEF8A0F01733262300C4DCF9 /* _TCSLocalTimer.m in Sources */,
-				FEF8A0F617332B0400C4DCF9 /* _TCSLocalTimedEntity.m in Sources */,
-				FEF8A0F917332B0B00C4DCF9 /* TCSLocalTimedEntity.m in Sources */,
 				FEBD02911734853E00DAB99D /* NSDate+Utilities.m in Sources */,
-				FEBD02A9173487AE00DAB99D /* TCSBaseEntity.m in Sources */,
 				FEBD02AA173487AE00DAB99D /* TCSDefaultProvider.m in Sources */,
-				FEBD02AB173487AE00DAB99D /* TCSGroup.m in Sources */,
-				FEBD02AC173487AE00DAB99D /* TCSProject.m in Sources */,
 				FEBD02AD173487AE00DAB99D /* TCSService.m in Sources */,
-				FEBD02AE173487AE00DAB99D /* TCSTimedEntity.m in Sources */,
-				FEBD02AF173487AE00DAB99D /* TCSTimer.m in Sources */,
 				FEBD02B0173487AE00DAB99D /* TCSDateRange.m in Sources */,
 				FEBD02B3173487DF00DAB99D /* TCSCalendarManager.m in Sources */,
-				FEBD02C61734B9B500DAB99D /* TCSParseService.m in Sources */,
 				FEBD02CA1734B9FA00DAB99D /* TCSHarvestService.m in Sources */,
 				FEBD02F117354CB100DAB99D /* TCSParseTimedEntity.m in Sources */,
 				FEBD02F517354CF600DAB99D /* TCSParseGroup.m in Sources */,
@@ -748,6 +700,14 @@
 				FEBD02FD17354D0F00DAB99D /* TCSParseTimer.m in Sources */,
 				FEBD032A1735735900DAB99D /* TCSParseBaseEntity.m in Sources */,
 				FE837DE91735B98500CBD853 /* TCSView.m in Sources */,
+				FE837DF81736C5BC00CBD853 /* TCSGroup.m in Sources */,
+				FE837DFA1736C5BC00CBD853 /* TCSProject.m in Sources */,
+				FE837DFC1736C5BC00CBD853 /* TCSTimedEntity.m in Sources */,
+				FE837DFE1736C5BC00CBD853 /* TCSTimer.m in Sources */,
+				FE837E081736C5C400CBD853 /* _TCSGroup.m in Sources */,
+				FE837E0A1736C5C400CBD853 /* _TCSProject.m in Sources */,
+				FE837E0C1736C5C400CBD853 /* _TCSTimedEntity.m in Sources */,
+				FE837E0E1736C5C400CBD853 /* _TCSTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

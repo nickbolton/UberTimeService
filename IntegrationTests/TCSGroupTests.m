@@ -19,12 +19,12 @@
 }
 
 - (void)tearDownClass {
-    self.serviceProvider = nil;
     self.service = nil;
     self.project = nil;
     self.secondProject = nil;
     self.targetProject = nil;
     self.group = nil;
+    self.remoteProvider = nil;
     [super tearDownClass];
 }
 
@@ -32,20 +32,23 @@
 
     [self prepare];
 
-    [self.serviceProvider
+    [self.service
      createProjectWithName:@"projectC"
+     remoteProvider:self.remoteProvider
      success:^(TCSProject *project) {
 
          self.project = project;
 
-         [self.serviceProvider
+         [self.service
           createProjectWithName:@"second project"
+          remoteProvider:self.remoteProvider
           success:^(TCSProject *project) {
 
               self.secondProject = project;
 
-              [self.serviceProvider
+              [self.service
                createProjectWithName:@"target project"
+               remoteProvider:self.remoteProvider
                success:^(TCSProject *project) {
 
                    self.targetProject = project;
@@ -77,37 +80,25 @@
     [self.service
      moveProject:self.project
      toProject:self.targetProject
-     success:^(TCSGroup *group) {
+     success:^(TCSGroup *group, TCSProject *updatedSourceProject, TCSProject *updatedTargetProject) {
 
          self.group = group;
 
-         [self.project.serviceProvider
-          fetchProjectWithID:self.project.providerEntityID
-          success:^(TCSProject *fetchedProject) {
+         TCSProject *fetchedProject =
+         [self.service projectWithID:self.project.objectID];
 
-              [self.group.serviceProvider
-               fetchGroupWithID:self.group.providerEntityID
-               success:^(TCSGroup *fetchedGroup) {
+         TCSGroup *fetchedGroup =
+         [self.service groupWithID:self.group.objectID];
 
-                   GHAssertNotNil(fetchedProject.parent,
-                                  @"fetchedProject.parent is nil");
-                   GHAssertTrue(fetchedGroup.children.count == 1,
-                                @"fetchedGroup.children.count (%d) != 1", fetchedGroup.children.count);
+         GHAssertNotNil(fetchedProject.parent,
+                        @"fetchedProject.parent is nil");
+         GHAssertTrue(fetchedGroup.children.count == 1,
+                      @"fetchedGroup.children.count (%d) != 1", fetchedGroup.children.count);
 
-                   GHAssertTrue([fetchedProject.parent.providerEntityID isEqualToString:fetchedGroup.providerEntityID],
-                                @"fetchedProject.parent.providerEntityID != fetchedGroup.providerEntityID");
+         GHAssertTrue([fetchedProject.parent.objectID isEqual:fetchedGroup.objectID],
+                      @"fetchedProject.parent.objectID != fetchedGroup.objectID");
 
-                   [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-               } failure:^(NSError *error) {
-                   NSLog(@"ZZZ Error: %@", error);
-                   [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-               }];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
          
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -124,35 +115,23 @@
     [self.service
      moveProject:self.secondProject
      toGroup:self.group
-     success:^{
+     success:^(TCSProject *updatedProject, TCSGroup *updatedGroup) {
 
-         [self.secondProject.serviceProvider
-          fetchProjectWithID:self.secondProject.providerEntityID
-          success:^(TCSProject *fetchedProject) {
+         TCSProject *fetchedProject =
+         [self.service projectWithID:self.secondProject.objectID];
 
-              [self.group.serviceProvider
-               fetchGroupWithID:self.group.providerEntityID
-               success:^(TCSGroup *fetchedGroup) {
+         TCSGroup *fetchedGroup =
+         [self.service groupWithID:self.group.objectID];
 
-                   GHAssertNotNil(fetchedProject.parent,
-                                  @"fetchedProject.parent is nil");
-                   GHAssertTrue(fetchedGroup.children.count == 2,
-                                @"fetchedGroup.children.count (%d) != 2", fetchedGroup.children.count);
+         GHAssertNotNil(fetchedProject.parent,
+                        @"fetchedProject.parent is nil");
+         GHAssertTrue(fetchedGroup.children.count == 2,
+                      @"fetchedGroup.children.count (%d) != 2", fetchedGroup.children.count);
 
-                   GHAssertTrue([fetchedProject.parent.providerEntityID isEqualToString:fetchedGroup.providerEntityID],
-                                @"fetchedProject.parent.providerEntityID != fetchedGroup.providerEntityID");
+         GHAssertTrue([fetchedProject.parent.objectID isEqual:fetchedGroup.objectID],
+                      @"fetchedProject.parent.objectID != fetchedGroup.objectID");
 
-                   [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-               } failure:^(NSError *error) {
-                   NSLog(@"ZZZ Error: %@", error);
-                   [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-               }];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -166,37 +145,23 @@
 
     [self prepare];
 
-    id groupProviderID = self.group.providerEntityID;
-
     [self.service
      moveProject:self.project
      toGroup:nil
-     success:^{
+     success:^(TCSProject *updatedProject, TCSGroup *updatedGroup) {
 
-         [self.project.serviceProvider
-          fetchProjectWithID:self.project.providerEntityID
-          success:^(TCSProject *fetchedProject) {
+         TCSProject *fetchedProject =
+         [self.service projectWithID:self.project.objectID];
 
-              [self.project.serviceProvider
-               fetchGroupWithID:groupProviderID
-               success:^(TCSGroup *fetchedGroup) {
+         TCSGroup *fetchedGroup =
+         [self.service groupWithID:self.group.objectID];
 
-                   GHAssertNil(fetchedProject.parent,
-                               @"fetchedProject.parent is not nil");
-                   GHAssertTrue(fetchedGroup.children.count == 1,
-                                @"fetchedGroup.children.count (%d) != 1", fetchedGroup.children.count);
+         GHAssertNil(fetchedProject.parent,
+                     @"fetchedProject.parent is not nil");
+         GHAssertTrue(fetchedGroup.children.count == 1,
+                      @"fetchedGroup.children.count (%d) != 1", fetchedGroup.children.count);
 
-                   [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-               } failure:^(NSError *error) {
-                   NSLog(@"ZZZ Error: %@", error);
-                   [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-               }];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -210,37 +175,23 @@
 
     [self prepare];
 
-    id groupProviderID = self.group.providerEntityID;
-
     [self.service
      moveProject:self.secondProject
      toGroup:nil
-     success:^{
+     success:^(TCSProject *updatedProject, TCSGroup *updatedGroup) {
 
-         [self.secondProject.serviceProvider
-          fetchProjectWithID:self.secondProject.providerEntityID
-          success:^(TCSProject *fetchedProject) {
+         TCSProject *fetchedProject =
+         [self.service projectWithID:self.secondProject.objectID];
 
-              [self.secondProject.serviceProvider
-               fetchGroupWithID:groupProviderID
-               success:^(TCSGroup *fetchedGroup) {
+         TCSGroup *fetchedGroup =
+         [self.service groupWithID:self.group.objectID];
 
-                   GHAssertNil(fetchedProject.parent,
-                               @"fetchedProject.parent is not nil");
-                   GHAssertNil(fetchedGroup,
-                               @"fetchedGroup is not nil");
+         GHAssertNil(fetchedProject.parent,
+                     @"fetchedProject.parent is not nil");
+         GHAssertNil(fetchedGroup,
+                     @"fetchedGroup is not nil");
 
-                   [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-               } failure:^(NSError *error) {
-                   NSLog(@"ZZZ Error: %@", error);
-                   [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-               }];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -258,36 +209,30 @@
     NSString *name = @"bababooey group";
     NSInteger color = 50;
 
-    self.group.archived = archived;
+    self.group.archivedValue = archived;
     self.group.name = name;
-    self.group.color = color;
+    self.group.colorValue = color;
 
     [self.service
      updateGroup:self.group
      success:^{
 
-         [self
-          findGroupWithEntityID:self.group.providerEntityID
-          serviceProvider:self.serviceProvider
-          success:^(TCSGroup *group) {
+         TCSGroup *group =
+         [self.service groupWithID:self.group.objectID];
 
-              GHAssertTrue(group.archived == archived,
-                           @"group.archived (%d) != archived (%d)",
-                           group.archived, archived);
+         GHAssertTrue(group.archivedValue == archived,
+                      @"group.archived (%d) != archived (%d)",
+                      group.archived, archived);
 
-              GHAssertTrue(group.color == color,
-                           @"group.color (%d) != color (%d)",
-                           group.color, color);
+         GHAssertTrue(group.colorValue == color,
+                      @"group.color (%d) != color (%d)",
+                      group.color, color);
 
-              GHAssertTrue([group.name isEqualToString:name],
-                             @"group.name (%@) != name (%@)",
-                             group.name, name);
+         GHAssertTrue([group.name isEqualToString:name],
+                      @"group.name (%@) != name (%@)",
+                      group.name, name);
 
-              [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-          } failure:^{
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -305,17 +250,11 @@
      deleteGroup:self.group
      success:^{
 
-         [self.serviceProvider
-          fetchGroups:^(NSArray *groups) {
+         NSArray *groups = [self.service allGroups];
 
-              GHAssertTrue(groups.count == 0, @"Group remains after deletion");
+         GHAssertTrue(groups.count == 0, @"Group remains after deletion");
 
-              [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);
@@ -332,37 +271,19 @@
     [self.service
      deleteAllData:^{
 
-         [self.serviceProvider
-          fetchTimers:^(NSArray *timers) {
+         NSArray *timers = [self.service allTimers];
 
-              GHAssertTrue(timers.count == 0, @"Timer remains after delete all data");
+         GHAssertTrue(timers.count == 0, @"Timer remains after delete all data");
 
-              [self.serviceProvider
-               fetchProjects:^(NSArray *projects) {
+         NSArray *projects = [self.service allProjects];
 
-                   GHAssertTrue(projects.count == 0, @"Project remains after delete all data");
+         GHAssertTrue(projects.count == 0, @"Project remains after delete all data");
 
-                   [self.serviceProvider
-                    fetchGroups:^(NSArray *groups) {
+         NSArray *groups = [self.service allGroups];
 
-                        GHAssertTrue(groups.count == 0, @"Group remains after delete all data");
+         GHAssertTrue(groups.count == 0, @"Group remains after delete all data");
 
-                        [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
-
-                    } failure:^(NSError *error) {
-                        NSLog(@"ZZZ Error: %@", error);
-                        [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-                    }];
-
-               } failure:^(NSError *error) {
-                   NSLog(@"ZZZ Error: %@", error);
-                   [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-               }];
-
-          } failure:^(NSError *error) {
-              NSLog(@"ZZZ Error: %@", error);
-              [self notify:kGHUnitWaitStatusFailure forSelector:selector];
-          }];
+         [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
      } failure:^(NSError *error) {
          NSLog(@"ZZZ Error: %@", error);

@@ -1,5 +1,5 @@
 //
-//  TCSLocalGroupTests.m
+//  TCSLocalCCCGroupTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/4/13.
@@ -9,17 +9,11 @@
 #import "TCSGroupTests.h"
 #import "TCSLocalService.h"
 
-@interface TCSCCCLocalGroupTests : TCSGroupTests { }
+@interface TCSLocalCCCGroupTests : TCSGroupTests { }
 
 @end
 
-@implementation TCSCCCLocalGroupTests
-
-- (void)setUpClass {
-    [super setUpClass];
-    self.serviceProvider = [self.service serviceProviderOfType:[TCSLocalService class]];
-    [(TCSLocalService *)self.serviceProvider resetCoreDataStack];
-}
+@implementation TCSLocalCCCGroupTests
 
 - (void)testAAALocalCreateProjects {
     [self createProjects:_cmd];

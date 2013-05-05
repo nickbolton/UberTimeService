@@ -1,43 +1,44 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalTimer.m instead.
+// Make changes to TCSTimer.m instead.
 
-#import "_TCSLocalTimer.h"
+#import "_TCSTimer.h"
 
-const struct TCSLocalTimerAttributes TCSLocalTimerAttributes = {
+const struct TCSTimerAttributes TCSTimerAttributes = {
 	.adjustment = @"adjustment",
 	.endTime = @"endTime",
 	.message = @"message",
+	.remoteId = @"remoteId",
 	.startTime = @"startTime",
 };
 
-const struct TCSLocalTimerRelationships TCSLocalTimerRelationships = {
+const struct TCSTimerRelationships TCSTimerRelationships = {
 	.project = @"project",
 };
 
-const struct TCSLocalTimerFetchedProperties TCSLocalTimerFetchedProperties = {
+const struct TCSTimerFetchedProperties TCSTimerFetchedProperties = {
 };
 
-@implementation TCSLocalTimerID
+@implementation TCSTimerID
 @end
 
-@implementation _TCSLocalTimer
+@implementation _TCSTimer
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSLocalTimer" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"TCSTimer" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"TCSLocalTimer";
+	return @"TCSTimer";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"TCSLocalTimer" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"TCSTimer" inManagedObjectContext:moc_];
 }
 
-- (TCSLocalTimerID*)objectID {
-	return (TCSLocalTimerID*)[super objectID];
+- (TCSTimerID*)objectID {
+	return (TCSTimerID*)[super objectID];
 }
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
@@ -88,6 +89,13 @@ const struct TCSLocalTimerFetchedProperties TCSLocalTimerFetchedProperties = {
 
 
 @dynamic message;
+
+
+
+
+
+
+@dynamic remoteId;
 
 
 

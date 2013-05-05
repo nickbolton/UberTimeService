@@ -1,36 +1,40 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalTimedEntity.h instead.
+// Make changes to TCSTimedEntity.h instead.
 
 #import <CoreData/CoreData.h>
 
 
-extern const struct TCSLocalTimedEntityAttributes {
+extern const struct TCSTimedEntityAttributes {
 	__unsafe_unretained NSString *archived;
 	__unsafe_unretained NSString *color;
 	__unsafe_unretained NSString *name;
-} TCSLocalTimedEntityAttributes;
+	__unsafe_unretained NSString *remoteId;
+	__unsafe_unretained NSString *remoteProvider;
+} TCSTimedEntityAttributes;
 
-extern const struct TCSLocalTimedEntityRelationships {
+extern const struct TCSTimedEntityRelationships {
 	__unsafe_unretained NSString *parent;
-} TCSLocalTimedEntityRelationships;
+} TCSTimedEntityRelationships;
 
-extern const struct TCSLocalTimedEntityFetchedProperties {
-} TCSLocalTimedEntityFetchedProperties;
+extern const struct TCSTimedEntityFetchedProperties {
+} TCSTimedEntityFetchedProperties;
 
-@class TCSLocalGroup;
-
-
+@class TCSGroup;
 
 
 
-@interface TCSLocalTimedEntityID : NSManagedObjectID {}
+
+
+
+
+@interface TCSTimedEntityID : NSManagedObjectID {}
 @end
 
-@interface _TCSLocalTimedEntity : NSManagedObject {}
+@interface _TCSTimedEntity : NSManagedObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (TCSLocalTimedEntityID*)objectID;
+- (TCSTimedEntityID*)objectID;
 
 
 
@@ -67,8 +71,24 @@ extern const struct TCSLocalTimedEntityFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* remoteId;
 
-@property (nonatomic, strong) TCSLocalGroup* parent;
+
+//- (BOOL)validateRemoteId:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSString* remoteProvider;
+
+
+//- (BOOL)validateRemoteProvider:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) TCSGroup* parent;
 
 //- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
 
@@ -78,11 +98,11 @@ extern const struct TCSLocalTimedEntityFetchedProperties {
 
 @end
 
-@interface _TCSLocalTimedEntity (CoreDataGeneratedAccessors)
+@interface _TCSTimedEntity (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _TCSLocalTimedEntity (CoreDataGeneratedPrimitiveAccessors)
+@interface _TCSTimedEntity (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSNumber*)primitiveArchived;
@@ -109,9 +129,21 @@ extern const struct TCSLocalTimedEntityFetchedProperties {
 
 
 
+- (NSString*)primitiveRemoteId;
+- (void)setPrimitiveRemoteId:(NSString*)value;
 
-- (TCSLocalGroup*)primitiveParent;
-- (void)setPrimitiveParent:(TCSLocalGroup*)value;
+
+
+
+- (NSString*)primitiveRemoteProvider;
+- (void)setPrimitiveRemoteProvider:(NSString*)value;
+
+
+
+
+
+- (TCSGroup*)primitiveParent;
+- (void)setPrimitiveParent:(TCSGroup*)value;
 
 
 @end

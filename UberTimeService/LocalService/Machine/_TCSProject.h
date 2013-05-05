@@ -1,38 +1,38 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to TCSLocalProject.h instead.
+// Make changes to TCSProject.h instead.
 
 #import <CoreData/CoreData.h>
-#import "TCSLocalTimedEntity.h"
+#import "TCSTimedEntity.h"
 
-extern const struct TCSLocalProjectAttributes {
+extern const struct TCSProjectAttributes {
 	__unsafe_unretained NSString *filteredModifiers;
 	__unsafe_unretained NSString *keyCode;
 	__unsafe_unretained NSString *modifiers;
 	__unsafe_unretained NSString *order;
-} TCSLocalProjectAttributes;
+} TCSProjectAttributes;
 
-extern const struct TCSLocalProjectRelationships {
+extern const struct TCSProjectRelationships {
 	__unsafe_unretained NSString *timers;
-} TCSLocalProjectRelationships;
+} TCSProjectRelationships;
 
-extern const struct TCSLocalProjectFetchedProperties {
-} TCSLocalProjectFetchedProperties;
+extern const struct TCSProjectFetchedProperties {
+} TCSProjectFetchedProperties;
 
-@class TCSLocalTimer;
-
-
+@class TCSTimer;
 
 
 
 
-@interface TCSLocalProjectID : NSManagedObjectID {}
+
+
+@interface TCSProjectID : NSManagedObjectID {}
 @end
 
-@interface _TCSLocalProject : TCSLocalTimedEntity {}
+@interface _TCSProject : TCSTimedEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (TCSLocalProjectID*)objectID;
+- (TCSProjectID*)objectID;
 
 
 
@@ -96,16 +96,16 @@ extern const struct TCSLocalProjectFetchedProperties {
 
 @end
 
-@interface _TCSLocalProject (CoreDataGeneratedAccessors)
+@interface _TCSProject (CoreDataGeneratedAccessors)
 
 - (void)addTimers:(NSSet*)value_;
 - (void)removeTimers:(NSSet*)value_;
-- (void)addTimersObject:(TCSLocalTimer*)value_;
-- (void)removeTimersObject:(TCSLocalTimer*)value_;
+- (void)addTimersObject:(TCSTimer*)value_;
+- (void)removeTimersObject:(TCSTimer*)value_;
 
 @end
 
-@interface _TCSLocalProject (CoreDataGeneratedPrimitiveAccessors)
+@interface _TCSProject (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSNumber*)primitiveFilteredModifiers;

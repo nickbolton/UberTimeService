@@ -12,10 +12,11 @@
 @interface TCSProjectTests : TCSBaseTests
 
 - (void)createProject:(SEL)selector;
-- (void)fetchProjectByEntityID:(SEL)selector;
-- (void)fetchAllProjects:(SEL)selector;
+- (void)projectByEntityID:(SEL)selector;
+- (void)allProjects:(SEL)selector;
 - (void)editProject:(SEL)selector;
 - (void)deleteProject:(SEL)selector;
 - (void)deleteAllProjects:(SEL)selector;
+- (void)deleteAllData:(SEL)selector;
 
 @end

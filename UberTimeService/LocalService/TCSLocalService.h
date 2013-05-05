@@ -9,7 +9,11 @@
 #import "TCSService.h"
 #import "TCSServicePrivate.h"
 
-@interface TCSLocalService : TCSDefaultProvider <TCSServiceProvider, TCSServiceProviderPrivate>
+@interface TCSLocalService : TCSDefaultProvider <TCSServiceLocalService>
+
+@property (nonatomic, strong) id <TCSServiceRemoteProvider> removeProvider;
+
++ (instancetype)sharedInstance;
 
 - (void)resetCoreDataStack;
 

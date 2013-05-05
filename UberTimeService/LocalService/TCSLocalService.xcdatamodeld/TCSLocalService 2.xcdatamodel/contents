@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="TCSLocalGroup" representedClassName="TCSLocalGroup" parentEntity="TCSLocalTimedEntity" syncable="YES">
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TCSLocalTimedEntity" inverseName="parent" inverseEntity="TCSLocalTimedEntity" syncable="YES"/>
+    <entity name="TCSGroup" representedClassName="TCSGroup" parentEntity="TCSTimedEntity" syncable="YES">
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TCSTimedEntity" inverseName="parent" inverseEntity="TCSTimedEntity" syncable="YES"/>
     </entity>
-    <entity name="TCSLocalProject" representedClassName="TCSLocalProject" parentEntity="TCSLocalTimedEntity" syncable="YES">
+    <entity name="TCSProject" representedClassName="TCSProject" parentEntity="TCSTimedEntity" syncable="YES">
         <attribute name="filteredModifiers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="keyCode" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="modifiers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="timers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TCSLocalTimer" inverseName="project" inverseEntity="TCSLocalTimer" syncable="YES"/>
+        <relationship name="timers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TCSTimer" inverseName="project" inverseEntity="TCSTimer" syncable="YES"/>
     </entity>
-    <entity name="TCSLocalTimedEntity" representedClassName="TCSLocalTimedEntity" isAbstract="YES" syncable="YES">
+    <entity name="TCSTimedEntity" representedClassName="TCSTimedEntity" isAbstract="YES" syncable="YES">
         <attribute name="archived" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="color" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSLocalGroup" inverseName="children" inverseEntity="TCSLocalGroup" syncable="YES"/>
+        <attribute name="remoteId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remoteProvider" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSGroup" inverseName="children" inverseEntity="TCSGroup" syncable="YES"/>
     </entity>
-    <entity name="TCSLocalTimer" representedClassName="TCSLocalTimer" syncable="YES">
+    <entity name="TCSTimer" representedClassName="TCSTimer" syncable="YES">
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remoteId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startTime" attributeType="Date" syncable="YES"/>
-        <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSLocalProject" inverseName="timers" inverseEntity="TCSLocalProject" syncable="YES"/>
+        <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProject" inverseName="timers" inverseEntity="TCSProject" syncable="YES"/>
     </entity>
     <elements>
-        <element name="TCSLocalGroup" positionX="160" positionY="192" width="128" height="60"/>
-        <element name="TCSLocalProject" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="TCSLocalTimedEntity" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="TCSLocalTimer" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="TCSGroup" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="TCSProject" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="TCSTimedEntity" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="TCSTimer" positionX="160" positionY="192" width="128" height="135"/>
     </elements>
 </model>

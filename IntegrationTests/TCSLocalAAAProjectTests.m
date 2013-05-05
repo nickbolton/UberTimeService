@@ -1,5 +1,5 @@
 //
-//  TCSLocalProjectTests.m
+//  TCSLocalAAAProjectTests.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/3/13.
@@ -10,22 +10,14 @@
 #import "TCSProjectTests.h"
 #import "TCSService.h"
 
-@interface TCSAAALocalProjectTests : TCSProjectTests { }
+@interface TCSLocalAAAProjectTests : TCSProjectTests { }
 
 @end
 
-@implementation TCSAAALocalProjectTests
+@implementation TCSLocalAAAProjectTests
 
-- (void)setUpClass {
-
-    [super setUpClass];
-
-    self.serviceProvider = [self.service serviceProviderOfType:[TCSLocalService class]];
-    [(TCSLocalService *)self.serviceProvider resetCoreDataStack];
-}
-
-- (void)testAAAADeleteAllProjects {
-    [self deleteAllProjects:_cmd];
+- (void)testAAAADeleteAllData {
+    [self deleteAllData:_cmd];
 }
 
 - (void)testAAALocalCreateProject {
@@ -33,11 +25,11 @@
 }
 
 - (void)testBBBBLocalFetchAllProjects {
-    [self fetchAllProjects:_cmd];
+    [self allProjects:_cmd];
 }
 
 - (void)testCCCLocalFetchProjectByEntityID {
-    [self fetchProjectByEntityID:_cmd];
+    [self projectByEntityID:_cmd];
 }
 
 - (void)testDDDLocalEditProject {
@@ -49,7 +41,7 @@
 }
 
 - (void)testZZZLocalFetchAllProjects {
-    [self fetchAllProjects:_cmd];
+    [self allProjects:_cmd];
 }
 
 @end

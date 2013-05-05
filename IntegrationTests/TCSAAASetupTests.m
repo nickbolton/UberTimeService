@@ -8,7 +8,7 @@
 
 #import <GHUnitIOS/GHUnit.h>
 #import "TCSService.h"
-#import "TCSParseService.h"
+//#import "TCSParseService.h"
 
 @interface TCSAAASetupTests : GHAsyncTestCase {}
 
@@ -21,10 +21,6 @@
 - (void)setUpClass {
     [super setUpClass];
     self.service = [TCSService sharedInstance];
-
-    [_service registerServiceProvider:[TCSLocalService class]];
-    [_service registerServiceProvider:[TCSParseService class]];
-
     
 }
 
@@ -33,29 +29,29 @@
     [super tearDownClass];
 }
 
-- (void)testAAAParseUserLogin {
-
-    [self prepare];
-
-    id <TCSServiceProvider> parseService =
-    [_service serviceProviderOfType:[TCSParseService class]];
-    
-    [parseService
-     authenticateUser:@"larvelljones"
-     password:@"tqopklm1"
-     success:^{
-
-         GHAssertNotNil([PFUser currentUser], @"[PFUser currentUser] is nil");
-         
-         [self notify:kGHUnitWaitStatusSuccess forSelector:_cmd];
-
-     } failure:^(NSError *error) {
-         NSLog(@"Error: %@", error);
-         [self notify:kGHUnitWaitStatusFailure forSelector:_cmd];
-     }];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
-}
+//- (void)testAAAParseUserLogin {
+//
+//    [self prepare];
+//
+//    id <TCSServiceRemoteProvider> parseService =
+//    [_service serviceProviderOfType:[TCSParseService class]];
+//    
+//    [parseService
+//     authenticateUser:@"larvelljones"
+//     password:@"tqopklm1"
+//     success:^{
+//
+//         GHAssertNotNil([PFUser currentUser], @"[PFUser currentUser] is nil");
+//         
+//         [self notify:kGHUnitWaitStatusSuccess forSelector:_cmd];
+//
+//     } failure:^(NSError *error) {
+//         NSLog(@"Error: %@", error);
+//         [self notify:kGHUnitWaitStatusFailure forSelector:_cmd];
+//     }];
+//
+//    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
+//}
 
 - (void)testBBBDeleteAllData {
 

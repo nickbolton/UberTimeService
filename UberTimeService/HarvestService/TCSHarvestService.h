@@ -10,6 +10,6 @@
 #import "TCSService.h"
 #import "TCSServicePrivate.h"
 
-@interface TCSHarvestService : TCSDefaultProvider <TCSServiceProvider, TCSServiceProviderPrivate>
+@interface TCSHarvestService : TCSDefaultProvider <TCSServiceRemoteProvider>
 
 @end
