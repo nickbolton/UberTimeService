@@ -6,8 +6,8 @@
 //  Copyright (c) 2011 Pixelbleed LLC. All rights reserved.
 //
 
-#ifndef timecop_TCSConstants_h
-#define timecop_TCSConstants_h
+#ifndef UberTimeService_TCSConstants_h
+#define UberTimeService_TCSConstants_h
 
 
 #define TCS_APP_NAME @"com.timecopapp.Timecop"

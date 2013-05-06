@@ -1,6 +1,6 @@
 //
 //  TCSAggregatedTime.h
-//  Timecop
+//  UberTimeService
 //
 //  Created by Nick Bolton on 2/21/11.
 //  Copyright 2011 Pixelbleed LLC. All rights reserved.

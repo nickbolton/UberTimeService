@@ -16,6 +16,7 @@
 		FE7F8CB4173731DF008EE46E /* TCSCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */; };
 		FE7F8CB7173731E6008EE46E /* _TCSCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */; };
 		FE7F8CBB173733A2008EE46E /* TCSCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB9173733A2008EE46E /* TCSCommon.m */; };
+		FE7F8CE01737E523008EE46E /* TCSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CDF1737E523008EE46E /* TCSUtilities.m */; };
 		FE837DE91735B98500CBD853 /* TCSView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DE81735B98500CBD853 /* TCSView.m */; };
 		FE837DEE1736A7A300CBD853 /* TCSAAASetupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */; };
 		FE837DF81736C5BC00CBD853 /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF11736C5BC00CBD853 /* TCSGroup.m */; };
@@ -137,6 +138,8 @@
 		FE7F8CB8173733A2008EE46E /* TCSCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSCommon.h; sourceTree = "<group>"; };
 		FE7F8CB9173733A2008EE46E /* TCSCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSCommon.m; sourceTree = "<group>"; };
 		FE7F8CBA173733A2008EE46E /* TCSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSConstants.h; sourceTree = "<group>"; };
+		FE7F8CDE1737E523008EE46E /* TCSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSUtilities.h; sourceTree = "<group>"; };
+		FE7F8CDF1737E523008EE46E /* TCSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSUtilities.m; sourceTree = "<group>"; };
 		FE837DE71735B98500CBD853 /* TCSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSView.h; sourceTree = "<group>"; };
 		FE837DE81735B98500CBD853 /* TCSView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSView.m; sourceTree = "<group>"; };
 		FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSAAASetupTests.m; sourceTree = "<group>"; };
@@ -379,6 +382,8 @@
 				FEBD02A8173487AE00DAB99D /* TCSDateRange.m */,
 				FE837EA71737037900CBD853 /* TCSAggregatedTime.h */,
 				FE837EA81737037900CBD853 /* TCSAggregatedTime.m */,
+				FE7F8CDE1737E523008EE46E /* TCSUtilities.h */,
+				FE7F8CDF1737E523008EE46E /* TCSUtilities.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -776,6 +781,7 @@
 				FE7F8CB4173731DF008EE46E /* TCSCannedMessage.m in Sources */,
 				FE7F8CB7173731E6008EE46E /* _TCSCannedMessage.m in Sources */,
 				FE7F8CBB173733A2008EE46E /* TCSCommon.m in Sources */,
+				FE7F8CE01737E523008EE46E /* TCSUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
