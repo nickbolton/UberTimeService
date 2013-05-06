@@ -29,9 +29,8 @@ typedef enum _TCPreferencesMaxTimerSession {
 
 @interface TCSDummyClass : NSObject {} @end
 
-#define TCSLoc(key) TCLocalizedString(key, nil)
-#define PBLoc(key) TCLocalizedString(key, nil)
-#define TCLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"timecop", [NSBundle bundleForClass: [TCDummyClass class]], comment)
+#define TCSLoc(key) TCSLocalizedString(key, nil)
+#define TCSLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"timecop", [NSBundle bundleForClass: [TCSDummyClass class]], comment)
 
 #define TCSError(...) NSLog(@"[%@:%d (%p)]: %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, self, [NSString stringWithFormat:__VA_ARGS__])
 
