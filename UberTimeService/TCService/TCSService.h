@@ -89,6 +89,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 #pragma mark - Timers
 
 - (NSArray *)allTimers;
+- (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime;
 
 - (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID;
 

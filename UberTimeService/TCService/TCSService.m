@@ -182,6 +182,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     return [_localService allTimers];
 }
 
+- (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime {
+    return [_localService allTimersSortedByStartTime:sortedByStartTime];
+}
+
 - (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID {
     return [_localService timerWithID:objectID];
 }

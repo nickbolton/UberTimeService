@@ -988,6 +988,19 @@
      MR_findAllInContext:[self managedObjectContextForCurrentThread]];
 }
 
+- (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime {
+
+    if (sortedByStartTime) {
+        return
+        [TCSTimer
+         MR_findAllSortedBy:@"startTime"
+         ascending:YES
+         inContext:[self managedObjectContextForCurrentThread]];
+    }
+
+    return [self allTimers];
+}
+
 - (void)updateEntities:(NSArray *)entities
                success:(void (^)(void))successBlock
                failure:(void (^)(NSError *))failureBlock {

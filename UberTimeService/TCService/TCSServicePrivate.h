@@ -201,6 +201,8 @@
 
 - (NSArray *)allTimers;
 
+- (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime;
+
 - (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID;
 
 - (NSArray *)timersForProjects:(NSArray *)projects
