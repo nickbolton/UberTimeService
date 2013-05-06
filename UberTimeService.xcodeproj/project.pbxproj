@@ -13,6 +13,8 @@
 		FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
 		FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
 		FE7F8BEC17372DC3008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
+		FE7F8CB4173731DF008EE46E /* TCSCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */; };
+		FE7F8CB7173731E6008EE46E /* _TCSCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */; };
 		FE837DE91735B98500CBD853 /* TCSView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DE81735B98500CBD853 /* TCSView.m */; };
 		FE837DEE1736A7A300CBD853 /* TCSAAASetupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */; };
 		FE837DF81736C5BC00CBD853 /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF11736C5BC00CBD853 /* TCSGroup.m */; };
@@ -127,6 +129,10 @@
 		FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
 		FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseEntity.h; sourceTree = "<group>"; };
 		FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSBaseEntity.m; sourceTree = "<group>"; };
+		FE7F8CB2173731DE008EE46E /* TCSCannedMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSCannedMessage.h; sourceTree = "<group>"; };
+		FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSCannedMessage.m; sourceTree = "<group>"; };
+		FE7F8CB5173731E6008EE46E /* _TCSCannedMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSCannedMessage.h; sourceTree = "<group>"; };
+		FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSCannedMessage.m; sourceTree = "<group>"; };
 		FE837DE71735B98500CBD853 /* TCSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSView.h; sourceTree = "<group>"; };
 		FE837DE81735B98500CBD853 /* TCSView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSView.m; sourceTree = "<group>"; };
 		FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSAAASetupTests.m; sourceTree = "<group>"; };
@@ -514,6 +520,8 @@
 				FE837DF51736C5BC00CBD853 /* TCSTimedEntity.m */,
 				FE837DF61736C5BC00CBD853 /* TCSTimer.h */,
 				FE837DF71736C5BC00CBD853 /* TCSTimer.m */,
+				FE7F8CB2173731DE008EE46E /* TCSCannedMessage.h */,
+				FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -531,6 +539,8 @@
 				FE837E051736C5C400CBD853 /* _TCSTimedEntity.m */,
 				FE837E061736C5C400CBD853 /* _TCSTimer.h */,
 				FE837E071736C5C400CBD853 /* _TCSTimer.m */,
+				FE7F8CB5173731E6008EE46E /* _TCSCannedMessage.h */,
+				FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */,
 			);
 			path = Machine;
 			sourceTree = "<group>";
@@ -756,6 +766,8 @@
 				FE837EA91737037900CBD853 /* TCSAggregatedTime.m in Sources */,
 				FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */,
 				FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */,
+				FE7F8CB4173731DF008EE46E /* TCSCannedMessage.m in Sources */,
+				FE7F8CB7173731E6008EE46E /* _TCSCannedMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

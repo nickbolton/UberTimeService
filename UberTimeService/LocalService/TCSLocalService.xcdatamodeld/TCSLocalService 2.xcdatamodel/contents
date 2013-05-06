@@ -4,6 +4,10 @@
         <attribute name="remoteId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteProvider" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="TCSCannedMessage" representedClassName="TCSCannedMessage" parentEntity="TCSBaseEntity" syncable="YES">
+        <attribute name="message" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="order" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
     <entity name="TCSGroup" representedClassName="TCSGroup" parentEntity="TCSTimedEntity" syncable="YES">
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TCSTimedEntity" inverseName="parent" inverseEntity="TCSTimedEntity" syncable="YES"/>
     </entity>
@@ -33,5 +37,6 @@
         <element name="TCSTimedEntity" positionX="160" positionY="192" width="128" height="105"/>
         <element name="TCSTimer" positionX="160" positionY="192" width="128" height="120"/>
         <element name="TCSBaseEntity" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="TCSCannedMessage" positionX="160" positionY="192" width="128" height="75"/>
     </elements>
 </model>
