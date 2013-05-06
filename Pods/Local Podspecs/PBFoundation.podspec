@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true 
   s.author    = { 'nickbolton' => 'nick@deucent.com' }             
   s.source    = { :git => 'https://github.com/nickbolton/PBFoundation.git',
-                  :commit => 'e740e1afdb21cb7856f048f302956df0c3290233'}
+                  :commit => 'd3fc5d7213d52f307c5bbe65bbe34c69e1411504'}
   s.osx.source_files  = '*.{h,m}', 'Shared', 'Shared/**/*.{h,m}', 'Mac', 'Mac/**/*.{h,m}'
   s.ios.source_files  = '*.{h,m}', 'Shared', 'Shared/**/*.{h,m}', 'iOS', 'iOS/**/*.{h,m}'
   s.prefix_header_contents = '#import "PBFoundation.h"'

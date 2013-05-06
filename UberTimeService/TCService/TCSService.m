@@ -67,6 +67,13 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     [_localService deleteAllData:successBlock failure:failureBlock];
 }
 
+- (TCSTimer *)activeTimer {
+    if (_activeTimer != nil) {
+        return [self timerWithID:_activeTimer.objectID];
+    }
+    return nil;
+}
+
 #pragma mark - Project Methods
 
 - (void)createProjectWithName:(NSString *)name
