@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		7155735B2001481DA0734471 /* libPods-BasePods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB51A264C2846AD9D3F2A50 /* libPods-BasePods.a */; };
 		79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A161D6FDF95340609138410D /* libPods-IntegrationTests.a */; };
+		FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
+		FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
+		FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
+		FE7F8BEC17372DC3008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
 		FE837DE91735B98500CBD853 /* TCSView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DE81735B98500CBD853 /* TCSView.m */; };
 		FE837DEE1736A7A300CBD853 /* TCSAAASetupTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */; };
 		FE837DF81736C5BC00CBD853 /* TCSGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = FE837DF11736C5BC00CBD853 /* TCSGroup.m */; };
@@ -119,6 +123,10 @@
 		A161D6FDF95340609138410D /* libPods-IntegrationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IntegrationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CAE1762EAA41928F4E4B0A /* Pods-OCTests-IntegrationTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCTests-IntegrationTests.xcconfig"; path = "Pods/Pods-OCTests-IntegrationTests.xcconfig"; sourceTree = SOURCE_ROOT; };
 		E999345D174A464E853C247E /* Pods-BasePods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods.xcconfig"; path = "Pods/Pods-BasePods.xcconfig"; sourceTree = SOURCE_ROOT; };
+		FE7F8BE517372D9D008EE46E /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
+		FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
+		FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseEntity.h; sourceTree = "<group>"; };
+		FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSBaseEntity.m; sourceTree = "<group>"; };
 		FE837DE71735B98500CBD853 /* TCSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSView.h; sourceTree = "<group>"; };
 		FE837DE81735B98500CBD853 /* TCSView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSView.m; sourceTree = "<group>"; };
 		FE837DED1736A7A200CBD853 /* TCSAAASetupTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSAAASetupTests.m; sourceTree = "<group>"; };
@@ -496,6 +504,8 @@
 		FEF8A0DD173325E300C4DCF9 /* Human */ = {
 			isa = PBXGroup;
 			children = (
+				FE7F8BE517372D9D008EE46E /* TCSBaseEntity.h */,
+				FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */,
 				FE837DF01736C5BC00CBD853 /* TCSGroup.h */,
 				FE837DF11736C5BC00CBD853 /* TCSGroup.m */,
 				FE837DF21736C5BC00CBD853 /* TCSProject.h */,
@@ -511,6 +521,8 @@
 		FEF8A0E2173325E300C4DCF9 /* Machine */ = {
 			isa = PBXGroup;
 			children = (
+				FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */,
+				FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */,
 				FE837E001736C5C400CBD853 /* _TCSGroup.h */,
 				FE837E011736C5C400CBD853 /* _TCSGroup.m */,
 				FE837E021736C5C400CBD853 /* _TCSProject.h */,
@@ -704,6 +716,8 @@
 				FE837E9E1736FDEA00CBD853 /* TCSTimerReport.m in Sources */,
 				FE837EA01736FDEA00CBD853 /* TCSTimerReportItem.m in Sources */,
 				FE837EAA1737037900CBD853 /* TCSAggregatedTime.m in Sources */,
+				FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */,
+				FE7F8BEC17372DC3008EE46E /* _TCSBaseEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -740,6 +754,8 @@
 				FE837E9D1736FDEA00CBD853 /* TCSTimerReport.m in Sources */,
 				FE837E9F1736FDEA00CBD853 /* TCSTimerReportItem.m in Sources */,
 				FE837EA91737037900CBD853 /* TCSAggregatedTime.m in Sources */,
+				FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */,
+				FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,14 +2,12 @@
 // Make changes to TCSTimedEntity.h instead.
 
 #import <CoreData/CoreData.h>
-
+#import "TCSBaseEntity.h"
 
 extern const struct TCSTimedEntityAttributes {
 	__unsafe_unretained NSString *archived;
 	__unsafe_unretained NSString *color;
 	__unsafe_unretained NSString *name;
-	__unsafe_unretained NSString *remoteId;
-	__unsafe_unretained NSString *remoteProvider;
 } TCSTimedEntityAttributes;
 
 extern const struct TCSTimedEntityRelationships {
@@ -25,12 +23,10 @@ extern const struct TCSTimedEntityFetchedProperties {
 
 
 
-
-
 @interface TCSTimedEntityID : NSManagedObjectID {}
 @end
 
-@interface _TCSTimedEntity : NSManagedObject {}
+@interface _TCSTimedEntity : TCSBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -67,22 +63,6 @@ extern const struct TCSTimedEntityFetchedProperties {
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
-
-
-
-
-@property (nonatomic, strong) NSString* remoteId;
-
-
-//- (BOOL)validateRemoteId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-@property (nonatomic, strong) NSString* remoteProvider;
-
-
-//- (BOOL)validateRemoteProvider:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -125,18 +105,6 @@ extern const struct TCSTimedEntityFetchedProperties {
 
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveRemoteId;
-- (void)setPrimitiveRemoteId:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveRemoteProvider;
-- (void)setPrimitiveRemoteProvider:(NSString*)value;
 
 
 

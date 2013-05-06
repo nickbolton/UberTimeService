@@ -7,7 +7,6 @@ const struct TCSTimerAttributes TCSTimerAttributes = {
 	.adjustment = @"adjustment",
 	.endTime = @"endTime",
 	.message = @"message",
-	.remoteId = @"remoteId",
 	.startTime = @"startTime",
 };
 
@@ -89,13 +88,6 @@ const struct TCSTimerFetchedProperties TCSTimerFetchedProperties = {
 
 
 @dynamic message;
-
-
-
-
-
-
-@dynamic remoteId;
 
 
 

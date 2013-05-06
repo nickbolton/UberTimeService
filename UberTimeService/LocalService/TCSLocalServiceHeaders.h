@@ -1,3 +1,4 @@
+#import "TCSBaseEntity.h"
 #import "TCSGroup.h"
 #import "TCSProject.h"
 #import "TCSTimedEntity.h"

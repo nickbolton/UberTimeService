@@ -7,8 +7,6 @@ const struct TCSTimedEntityAttributes TCSTimedEntityAttributes = {
 	.archived = @"archived",
 	.color = @"color",
 	.name = @"name",
-	.remoteId = @"remoteId",
-	.remoteProvider = @"remoteProvider",
 };
 
 const struct TCSTimedEntityRelationships TCSTimedEntityRelationships = {
@@ -112,20 +110,6 @@ const struct TCSTimedEntityFetchedProperties TCSTimedEntityFetchedProperties = {
 
 
 @dynamic name;
-
-
-
-
-
-
-@dynamic remoteId;
-
-
-
-
-
-
-@dynamic remoteProvider;
 
 
 

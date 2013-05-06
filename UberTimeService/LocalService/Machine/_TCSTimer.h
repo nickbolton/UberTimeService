@@ -2,13 +2,12 @@
 // Make changes to TCSTimer.h instead.
 
 #import <CoreData/CoreData.h>
-
+#import "TCSBaseEntity.h"
 
 extern const struct TCSTimerAttributes {
 	__unsafe_unretained NSString *adjustment;
 	__unsafe_unretained NSString *endTime;
 	__unsafe_unretained NSString *message;
-	__unsafe_unretained NSString *remoteId;
 	__unsafe_unretained NSString *startTime;
 } TCSTimerAttributes;
 
@@ -26,11 +25,10 @@ extern const struct TCSTimerFetchedProperties {
 
 
 
-
 @interface TCSTimerID : NSManagedObjectID {}
 @end
 
-@interface _TCSTimer : NSManagedObject {}
+@interface _TCSTimer : TCSBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -63,14 +61,6 @@ extern const struct TCSTimerFetchedProperties {
 
 
 //- (BOOL)validateMessage:(id*)value_ error:(NSError**)error_;
-
-
-
-
-@property (nonatomic, strong) NSString* remoteId;
-
-
-//- (BOOL)validateRemoteId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -118,12 +108,6 @@ extern const struct TCSTimerFetchedProperties {
 
 - (NSString*)primitiveMessage;
 - (void)setPrimitiveMessage:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveRemoteId;
-- (void)setPrimitiveRemoteId:(NSString*)value;
 
 
 
