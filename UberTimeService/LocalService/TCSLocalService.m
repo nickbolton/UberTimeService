@@ -11,6 +11,7 @@
 #import "CoreData+MagicalRecord.h"
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
+#import "NSArray+PBFoundation.h"
 
 @interface TCSLocalService()
 
@@ -999,6 +1000,11 @@
     }
 
     return [self allTimers];
+}
+
+- (TCSTimer *)oldestTimer {
+    NSArray *allTimers = [self allTimersSortedByStartTime:YES];
+    return allTimers.firstObject;
 }
 
 - (void)updateEntities:(NSArray *)entities

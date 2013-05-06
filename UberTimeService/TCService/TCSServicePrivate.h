@@ -200,9 +200,8 @@
           failure:(void(^)(NSError *error))failureBlock;
 
 - (NSArray *)allTimers;
-
 - (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime;
-
+- (TCSTimer *)oldestTimer;
 - (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID;
 
 - (NSArray *)timersForProjects:(NSArray *)projects

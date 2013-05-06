@@ -11,6 +11,8 @@
 @interface NSArray (PBFoundation)
 
 + (NSArray *)arrayWithCollections:(id)collectionObject, ...;
+
 - (NSArray *)objectIDArray;
 
+- (id)firstObject;
 @end

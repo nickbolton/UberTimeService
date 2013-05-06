@@ -90,6 +90,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (NSArray *)allTimers;
 - (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime;
+- (TCSTimer *)oldestTimer;
 
 - (TCSTimer *)timerWithID:(NSManagedObjectID *)objectID;
 

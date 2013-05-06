@@ -25,6 +25,17 @@
     return result;
 }
 
+- (id)firstObject {
+
+    id first = nil;
+
+    if (self.count > 0) {
+        first = self[0];
+    }
+
+    return first;
+}
+
 + (NSArray *)arrayWithCollections:(id)collectionObject, ... {
 
     if (collectionObject == nil) {
