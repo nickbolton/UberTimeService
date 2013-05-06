@@ -81,6 +81,10 @@
     return NSLocalizedString(@"Local", nil);
 }
 
+- (NSManagedObjectContext *)defaultLocalManagedObjectContext {
+    return [NSManagedObjectContext MR_defaultContext];
+}
+
 - (NSManagedObjectContext *)managedObjectContextForCurrentThread {
 
     if ([NSThread isMainThread]) {

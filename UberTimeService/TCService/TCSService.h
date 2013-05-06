@@ -23,6 +23,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 + (TCSService *)sharedInstance;
 
 @property (nonatomic, readonly) TCSTimer *activeTimer;
+@property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

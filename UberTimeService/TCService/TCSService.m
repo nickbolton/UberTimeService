@@ -32,6 +32,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     return self;
 }
 
+- (NSManagedObjectContext *)defaultLocalManagedObjectContext {
+    return _localService.defaultLocalManagedObjectContext;
+}
+
 - (NSArray *)registeredRemoteProviders {
     static NSArray *sortDescriptors = nil;
 
