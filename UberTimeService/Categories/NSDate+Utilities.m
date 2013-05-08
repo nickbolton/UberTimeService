@@ -330,7 +330,7 @@
             toDate = [cal dateFromComponents:dateComponents];
             break;            
         case TimePeriod_PreviousWeek:
-            toDate = self;
+            toDate = [self yesterday].startDate;
             fromDate = [toDate dateByAddingDays:-6 withCal:cal];
             break;            
         case TimePeriod_PreviousMonth:
@@ -341,7 +341,7 @@
             fromDate = [cal dateByAddingComponents:dateComponents toDate:toDate options:0];
             toDate = [self dateByAddingDays:-1 withCal:cal];
              */
-            toDate = self;
+            toDate = [self yesterday].startDate;
             fromDate = [toDate dateByAddingDays:-29 withCal:cal];
             break;            
         case TimePeriod_PreviousYear:
@@ -352,7 +352,7 @@
             fromDate = [cal dateByAddingComponents:dateComponents toDate:toDate options:0];
             toDate = [self dateByAddingDays:-1 withCal:cal];            
              */
-            toDate = self;
+            toDate = [self yesterday].startDate;
             fromDate = [toDate dateByAddingDays:-364 withCal:cal];
             break;            
         default:

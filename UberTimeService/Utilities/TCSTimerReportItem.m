@@ -66,9 +66,14 @@
 
         for (TCSProject *project in _projects) {
 
+//            NSLog(@"(1): %d", [project.objectID isEqual:activeProject.objectID]);
+//            NSLog(@"(2): %d", activeTimer.endTime == nil);
+//            NSLog(@"(3): %d", [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate]);
+//            NSLog(@"(4): %d", [now isGreaterThanOrEqualTo:_dateRange.startDate]);
+
             if ([project.objectID isEqual:activeProject.objectID] &&
                 activeTimer.endTime == nil &&
-                [activeTimer.startTime isLessThanOrEqualTo:now] &&
+                [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate] &&
                 [now isGreaterThanOrEqualTo:_dateRange.startDate]) {
                 return YES;
             }
