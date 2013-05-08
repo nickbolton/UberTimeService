@@ -65,10 +65,11 @@
         TCSProject *activeProject = activeTimer.project;
 
         for (TCSProject *project in _projects) {
-            if ([project.objectID isEqual:activeProject] &&
+
+            if ([project.objectID isEqual:activeProject.objectID] &&
                 activeTimer.endTime == nil &&
                 [activeTimer.startTime isLessThanOrEqualTo:now] &&
-                [activeTimer.endTime isGreaterThanOrEqualTo:_dateRange.startDate]) {
+                [now isGreaterThanOrEqualTo:_dateRange.startDate]) {
                 return YES;
             }
         }
