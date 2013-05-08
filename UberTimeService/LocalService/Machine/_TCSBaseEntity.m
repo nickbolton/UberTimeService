@@ -4,6 +4,7 @@
 #import "_TCSBaseEntity.h"
 
 const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
+	.dirty = @"dirty",
 	.remoteId = @"remoteId",
 	.remoteProvider = @"remoteProvider",
 };
@@ -40,9 +41,39 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"dirtyValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"dirty"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic dirty;
+
+
+
+- (BOOL)dirtyValue {
+	NSNumber *result = [self dirty];
+	return [result boolValue];
+}
+
+- (void)setDirtyValue:(BOOL)value_ {
+	[self setDirty:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveDirtyValue {
+	NSNumber *result = [self primitiveDirty];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveDirtyValue:(BOOL)value_ {
+	[self setPrimitiveDirty:[NSNumber numberWithBool:value_]];
+}
+
 
 
 

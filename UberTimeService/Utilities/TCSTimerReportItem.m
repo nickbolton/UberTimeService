@@ -10,6 +10,7 @@
 #import "TCSProject.h"
 #import "TCSTimer.h"
 #import "TCSService.h"
+#import "NSDate+Utilities.h"
 
 @interface TCSTimerReportItem() {
 
@@ -55,9 +56,21 @@
 
 - (BOOL)isActive {
 
-    for (TCSProject *project in _projects) {
-        if (project.isActive) {
-            return YES;
+    TCSTimer *activeTimer =
+    [TCSService sharedInstance].activeTimer;
+
+    if (activeTimer != nil) {
+
+        NSDate *now = [NSDate date];
+        TCSProject *activeProject = activeTimer.project;
+
+        for (TCSProject *project in _projects) {
+            if ([project.objectID isEqual:activeProject] &&
+                activeTimer.endTime == nil &&
+                [activeTimer.startTime isLessThanOrEqualTo:now] &&
+                [activeTimer.endTime isGreaterThanOrEqualTo:_dateRange.startDate]) {
+                return YES;
+            }
         }
     }
 

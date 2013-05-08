@@ -618,19 +618,26 @@
 
     __block TCSTimer *timer = nil;
     __block TCSProject *updatedProject = nil;
+    __block NSError *projectError = nil;
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
         updatedProject = (id)
-        [localContext objectWithID:project.objectID];
-        
+        [localContext existingObjectWithID:project.objectID error:&projectError];
+
         timer = [TCSTimer MR_createInContext:localContext];
         timer.startTime = [NSDate date];
         timer.project = updatedProject;
 
     } completion:^(BOOL success, NSError *error) {
 
-        if (error != nil) {
+        if (projectError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(projectError);
+            }
+            
+        } else if (error != nil) {
 
             if (failureBlock != nil) {
                 failureBlock(error);
@@ -969,10 +976,41 @@
         sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES]];
     }
 
+//    NSPredicate *p1 =
+//    [NSPredicate predicateWithFormat:@"((project in %@) or (project.parent in %@))",
+//     timedEntities, timedEntities];
+//
+//    NSArray *matchesProject =
+//    [TCSTimer
+//     MR_findAllWithPredicate:p1
+//     inContext:[self managedObjectContextForCurrentThread]];
+//
+//    NSPredicate *p2 =
+//    [NSPredicate predicateWithFormat:@"(startTime <= %@ and endTime >= %@)",
+//     toDate, fromDate];
+//
+//    NSArray *stoppedTimer =
+//    [TCSTimer
+//     MR_findAllWithPredicate:p2
+//     inContext:[self managedObjectContextForCurrentThread]];
+//
+//    NSPredicate *p3 =
+//    [NSPredicate predicateWithFormat:@"(endTime = nil and startTime <= %@ and %@ >= %@)",
+//     toDate, now, fromDate];
+//
+//    NSArray *activeTimer =
+//    [TCSTimer
+//     MR_findAllWithPredicate:p3
+//     inContext:[self managedObjectContextForCurrentThread]];
+//
+//    NSLog(@"matchesProject: %@", matchesProject);
+//    NSLog(@"stoppedTimers: %@", stoppedTimer);
+//    NSLog(@"activeTimer: %@", activeTimer);
+
     NSPredicate * predicate =
     [NSPredicate predicateWithFormat:
-     @"((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ <= %@))",
-     timedEntities, timedEntities, toDate, fromDate, now, fromDate, now];
+     @"((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
+     timedEntities, timedEntities, toDate, fromDate, toDate, now, fromDate];
 
     NSArray *timers =
     [TCSTimer

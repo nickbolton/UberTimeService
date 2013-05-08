@@ -112,6 +112,7 @@
 #define TCS_PREF_CALENDAR_ALL_SELECTED @"calendarAllProjectsSelected"
 #define TCS_PREF_SNAP_TO_TIMER_BOUNDARY @"snapToTimerBoundary"
 #define TCS_PREF_TIMER_EDIT_TAP_HOLD_ACTION @"timerEditTapHoldAction"
+#define TCS_PREF_SELECTED_SECTION @"selectedSection"
 
 #else
 

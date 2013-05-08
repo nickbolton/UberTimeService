@@ -5,6 +5,7 @@
 
 
 extern const struct TCSBaseEntityAttributes {
+	__unsafe_unretained NSString *dirty;
 	__unsafe_unretained NSString *remoteId;
 	__unsafe_unretained NSString *remoteProvider;
 } TCSBaseEntityAttributes;
@@ -19,6 +20,7 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 
 
+
 @interface TCSBaseEntityID : NSManagedObjectID {}
 @end
 
@@ -27,6 +29,18 @@ extern const struct TCSBaseEntityFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (TCSBaseEntityID*)objectID;
+
+
+
+
+@property (nonatomic, strong) NSNumber* dirty;
+
+
+@property BOOL dirtyValue;
+- (BOOL)dirtyValue;
+- (void)setDirtyValue:(BOOL)value_;
+
+//- (BOOL)validateDirty:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -56,6 +70,15 @@ extern const struct TCSBaseEntityFetchedProperties {
 @end
 
 @interface _TCSBaseEntity (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveDirty;
+- (void)setPrimitiveDirty:(NSNumber*)value;
+
+- (BOOL)primitiveDirtyValue;
+- (void)setPrimitiveDirtyValue:(BOOL)value_;
+
+
 
 
 - (NSString*)primitiveRemoteId;
