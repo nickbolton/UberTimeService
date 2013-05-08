@@ -28,6 +28,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     if (self) {
         self.remoteServiceProviders = [NSMutableDictionary dictionary];
         self.localService = [TCSLocalService sharedInstance];
+        [self updateActiveTimer];
     }
     return self;
 }
@@ -72,6 +73,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
         return [self timerWithID:_activeTimer.objectID];
     }
     return nil;
+}
+
+- (void)updateActiveTimer {
+    self.activeTimer = [_localService activeTimer];
 }
 
 #pragma mark - Project Methods
