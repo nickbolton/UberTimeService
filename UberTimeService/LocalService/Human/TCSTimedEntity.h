@@ -10,6 +10,9 @@ typedef NS_ENUM(NSInteger, TCSTimedEntityColor) {
 
 };
 
+extern TCSTimedEntityColor const kTCSTimedEntityDefaultColor;
+extern TCSTimedEntityColor const kTCSTimedEntityMaxColor;
+
 @interface TCSTimedEntity : _TCSTimedEntity {}
 
 @property (nonatomic, readonly, getter = isActive) BOOL active;

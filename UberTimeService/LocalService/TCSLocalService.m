@@ -1050,9 +1050,9 @@
 }
 
 - (TCSTimer *)activeTimer {
-    NSArray *activeTimers = [TCSTimer findByAttribute:@"endTime" withValue:nil];
-    NSAssert(activeTimers.count <= 1, @"More than one active timer!");
-    return activeTimers.firstObject;
+//    NSArray *activeTimers = [TCSTimer findByAttribute:@"endTime" withValue:nil];
+//    NSAssert(activeTimers.count <= 1, @"More than one active timer!");
+//    return activeTimers.firstObject;
 }
 
 - (void)updateEntities:(NSArray *)entities

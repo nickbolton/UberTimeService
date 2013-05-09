@@ -1,4 +1,8 @@
 #import "TCSTimedEntity.h"
+#import "UIColor+PBFoundation.h"
+
+TCSTimedEntityColor const kTCSTimedEntityDefaultColor = TCSTimedEntityColorBlue;
+TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 
 @implementation TCSTimedEntity
 
@@ -30,8 +34,8 @@
 
     NSInteger rgbHexValue = 0;
 
-    if (timerColor > TCSTimedEntityMaxColor) {
-        timerColor = TCSTimedEntityDefaultColor;
+    if (timerColor > kTCSTimedEntityMaxColor) {
+        timerColor = kTCSTimedEntityDefaultColor;
     }
 
     switch (timerColor) {
@@ -63,8 +67,8 @@
 
     NSInteger rgbHexValue = 0;
 
-    if (timerColor > TCSTimedEntityMaxColor) {
-        timerColor = TCSTimedEntityDefaultColor;
+    if (timerColor > kTCSTimedEntityMaxColor) {
+        timerColor = kTCSTimedEntityDefaultColor;
     }
 
     switch (timerColor) {
@@ -97,8 +101,8 @@
 
     NSInteger rgbHexValue = 0;
 
-    if (timerColor > TCSTimedEntityMaxColor) {
-        timerColor = TCSTimedEntityDefaultColor;
+    if (timerColor > kTCSTimedEntityMaxColor) {
+        timerColor = kTCSTimedEntityDefaultColor;
     }
 
     switch (timerColor) {
@@ -131,8 +135,8 @@
 
     NSInteger rgbHexValue = 0;
 
-    if (timerColor > TCSTimedEntityMaxColor) {
-        timerColor = TCSTimedEntityDefaultColor;
+    if (timerColor > kTCSTimedEntityMaxColor) {
+        timerColor = kTCSTimedEntityDefaultColor;
     }
 
     switch (timerColor) {
@@ -163,8 +167,8 @@
 
 + (UIImage *)dragImageForTimerColor:(TCSTimedEntityColor)timerColor {
 
-    if (timerColor > TCSTimedEntityMaxColor) {
-        timerColor = TCSTimedEntityDefaultColor;
+    if (timerColor > kTCSTimedEntityMaxColor) {
+        timerColor = kTCSTimedEntityDefaultColor;
     }
 
     NSString *imageName;
