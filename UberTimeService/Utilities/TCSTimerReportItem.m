@@ -20,7 +20,6 @@
 @property (nonatomic, readwrite) NSArray *projects;
 @property (nonatomic, readwrite) TCSDateRange *dateRange;
 @property (nonatomic, readwrite) NSTimeInterval elapsedTime;
-@property (nonatomic, readwrite) NSArray *timers;
 
 @end
 
@@ -28,21 +27,18 @@
 
 + (TCSTimerReportItem *)reportItemWithProjects:(NSArray *)projects
                                      dateRange:(TCSDateRange *)dateRange
-                                   elapsedTime:(NSTimeInterval)elapsedTime
-                                        timers:(NSArray *)timers {
+                                   elapsedTime:(NSTimeInterval)elapsedTime {
 
     return
     [[TCSTimerReportItem alloc]
      initWithProjects:projects
      dateRange:dateRange
-     elapsedTime:elapsedTime
-     timers:timers];
+     elapsedTime:elapsedTime];
 }
 
 - (id)initWithProjects:(NSArray *)projects
              dateRange:(TCSDateRange *)dateRange
-           elapsedTime:(NSTimeInterval)elapsedTime
-                timers:(NSArray *)timers {
+           elapsedTime:(NSTimeInterval)elapsedTime {
     
     self = [super init];
     if (self) {
