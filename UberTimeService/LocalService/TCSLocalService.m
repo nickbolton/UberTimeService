@@ -715,6 +715,12 @@
     }];
 }
 
+- (void)doStopTimer:(TCSTimer *)timer {
+    if (timer != nil) {
+        timer.endTime = [NSDate date];
+    }
+}
+
 - (void)stopTimer:(TCSTimer *)timer
           success:(void(^)(TCSTimer *updatedTimer))successBlock
           failure:(void(^)(NSError *error))failureBlock {
@@ -726,10 +732,8 @@
         TCSTimer *localTimer = (id)
         (id)[localContext existingObjectWithID:timer.objectID error:NULL];
 
-        if (localTimer != nil) {
-            localTimer.endTime = [NSDate date];
-        }
-
+        [self doStopTimer:localTimer];
+        
     } completion:^(BOOL success, NSError *error) {
 
         if (localError != nil) {
@@ -1028,6 +1032,57 @@
     [project addTimersObject:rolledTimer];
 
     return rolledTimer;
+}
+
+- (void)resumeTimer:(TCSTimer *)timer
+          success:(void(^)(TCSTimer *updatedTimer))successBlock
+          failure:(void(^)(NSError *error))failureBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSTimer *localTimer = (id)
+        [localContext
+         existingObjectWithID:timer.objectID
+         error:NULL];
+
+        NSDate *now = [NSDate date];
+
+        NSDate *virtualEndTime =
+        [localTimer.startTime dateByAddingSeconds:localTimer.combinedTime];
+
+        if (localTimer.endTime != nil &&
+            [[virtualEndTime midnight] isEqualToDate:[now midnight]] &&
+            [virtualEndTime isLessThanOrEqualTo:now]) {
+
+            TCSTimer *activeTimer = [TCSService sharedInstance].activeTimer;
+            [self doStopTimer:activeTimer];
+
+            timer.endTime = nil;
+            timer.adjustment = @(0);
+
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setObject:self forKey:@"project"];
+        }
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+
+                TCSTimer *updatedTimer = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:timer.objectID];
+
+                successBlock(updatedTimer);
+            }
+        }
+    }];
 }
 
 - (void)deleteTimer:(TCSTimer *)timer

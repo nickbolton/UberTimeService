@@ -241,6 +241,23 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     }
 }
 
+- (void)resumeTimer:(TCSTimer *)timer
+            success:(void(^)(TCSTimer *updatedTimer))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    [_localService
+     resumeTimer:timer
+     success:^(TCSTimer *updatedTimer) {
+
+         self.activeTimer = updatedTimer;
+
+         if (successBlock != nil) {
+             successBlock(timer);
+         }
+
+     } failure:failureBlock];
+}
+
 - (void)createTimerForProject:(TCSProject *)project
                     startTime:(NSDate *)startTime
                      duration:(NSTimeInterval)duration

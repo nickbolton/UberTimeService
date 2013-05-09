@@ -114,6 +114,10 @@ extern NSString * const kTCSServiceDataResetNotification;
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
+- (void)resumeTimer:(TCSTimer *)timer
+            success:(void(^)(TCSTimer *updatedTimer))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
 - (void)moveTimer:(TCSTimer *)timer
         toProject:(TCSProject *)project
           success:(void(^)(TCSTimer *updatedTimer, TCSProject *updatedProject))successBlock
