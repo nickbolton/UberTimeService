@@ -468,10 +468,10 @@
 - (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"self.parent = nil"];
+    [NSPredicate predicateWithFormat:@"parent = null"];
 
     NSArray *entities =
-    [TCSGroup
+    [TCSTimedEntity
      MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 
@@ -706,7 +706,7 @@
         timer.startTime = startTime;
         timer.endTime = [startTime dateByAddingSeconds:duration];
         timer.adjustment = @(0);
-        timer.project = project;
+        timer.project = updatedProject;
 
     } completion:^(BOOL success, NSError *error) {
 
