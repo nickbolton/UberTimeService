@@ -162,6 +162,8 @@
 
 - (NSArray *)allGroups;
 
+- (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName;
+
 - (void)updateGroup:(TCSGroup *)group
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;

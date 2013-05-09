@@ -146,6 +146,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     return [_localService allGroups];
 }
 
+- (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
+    return [_localService topLevelEntitiesSortedByName:sortedByName];
+}
+
 - (TCSGroup *)groupWithID:(NSManagedObjectID *)objectID {
     return [_localService groupWithID:objectID];
 }

@@ -65,6 +65,8 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 #pragma mark - Groups
 
+- (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName;
+
 - (NSArray *)allGroups;
 
 - (TCSGroup *)groupWithID:(NSManagedObjectID *)objectID;

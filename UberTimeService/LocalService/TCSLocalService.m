@@ -465,6 +465,31 @@
      MR_findAllInContext:[self managedObjectContextForCurrentThread]];
 }
 
+- (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
+
+    NSPredicate *predicate =
+    [NSPredicate predicateWithFormat:@"self.parent = nil"];
+
+    NSArray *entities =
+    [TCSGroup
+     MR_findAllWithPredicate:predicate
+     inContext:[self managedObjectContextForCurrentThread]];
+
+    if (sortedByName) {
+
+        NSComparator nameComparator = ^NSComparisonResult(id obj1, id obj2) {
+            TCSTimedEntity *timedEntity1 = obj1;
+            TCSTimedEntity *timedEntity2 = obj2;
+
+            return [timedEntity1.name.lowercaseString compare:timedEntity2.name.lowercaseString];
+        };
+
+        return [entities sortedArrayUsingComparator:nameComparator];
+    }
+
+    return entities;
+}
+
 - (void)moveProject:(TCSProject *)sourceProject
           toProject:(TCSProject *)toProject
             success:(void(^)(TCSGroup *createdGroup, TCSProject *updatedSourceProject, TCSProject *updatedTargetProject))successBlock
