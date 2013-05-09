@@ -4,6 +4,8 @@
 
 @interface TCSTimer : _TCSTimer {}
 
+@property (nonatomic, getter = isEditing) BOOL editing;
+
 - (NSTimeInterval)timeInterval;
 - (NSTimeInterval)timeIntervalForDateRange:(TCSDateRange *)dateRange;
 - (CGFloat)elapsedTimeInHours;
