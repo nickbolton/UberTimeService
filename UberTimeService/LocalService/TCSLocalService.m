@@ -745,6 +745,39 @@
     }];
 }
 
+- (NSError *)doMoveTimer:(TCSTimer *)timer
+               toProject:(TCSProject *)project
+               inContext:(NSManagedObjectContext *)context {
+
+    NSError *error = nil;
+
+    TCSTimer *localTimer = (id)
+    [context
+     existingObjectWithID:timer.objectID
+     error:&error];
+
+    if (error != nil) {
+        return error;
+    }
+
+    NSAssert(localTimer != nil, @"timer is null");
+
+    TCSProject *localProject = (id)
+    [context
+     existingObjectWithID:project.objectID
+     error:&error];
+
+    if (error != nil) {
+        return error;
+    }
+
+    NSAssert(localProject != nil, @"project is null");
+
+    localTimer.project = localProject;
+
+    return nil;
+}
+
 - (void)moveTimer:(TCSTimer *)timer
         toProject:(TCSProject *)project
           success:(void(^)(TCSTimer *updatedTimer, TCSProject *updatedProject))successBlock
@@ -752,12 +785,8 @@
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        NSError *error = nil;
-
-        TCSTimer *localTimer = (id)
-        [localContext
-         existingObjectWithID:timer.objectID
-         error:&error];
+        NSError *error =
+        [self doMoveTimer:timer toProject:project inContext:localContext];
 
         if (error != nil) {
             if (failureBlock != nil) {
@@ -765,27 +794,7 @@
                 return;
             }
         }
-
-        NSAssert(localTimer != nil, @"timer is null");
-
-        error = nil;
-
-        TCSProject *localProject = (id)
-        [localContext
-         existingObjectWithID:project.objectID
-         error:&error];
-
-        if (error != nil) {
-            if (failureBlock != nil) {
-                failureBlock(error);
-                return;
-            }
-        }
-
-        NSAssert(localProject != nil, @"project is null");
-
-        localTimer.project = localProject;
-
+        
     } completion:^(BOOL success, NSError *error) {
 
         if (error != nil) {
@@ -806,6 +815,56 @@
                  objectWithID:project.objectID];
 
                 successBlock(updatedTimer, updatedProject);
+            }
+        }
+    }];
+}
+
+- (void)moveTimers:(NSArray *)timers
+         toProject:(TCSProject *)project
+           success:(void (^)(NSArray *, TCSProject *))successBlock
+           failure:(void (^)(NSError *))failureBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        for (TCSTimer *timer in timers) {
+            NSError *error =
+            [self doMoveTimer:timer toProject:project inContext:localContext];
+
+            if (error != nil) {
+                if (failureBlock != nil) {
+                    failureBlock(error);
+                    return;
+                }
+            }
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+
+            if (successBlock != nil) {
+
+                NSMutableArray *updatedTimers =
+                [NSMutableArray arrayWithCapacity:timers.count];
+
+                for (TCSTimer *timer in timers) {
+                    TCSTimer *updatedTimer = (id)
+                    [[self managedObjectContextForCurrentThread]
+                     objectWithID:timer.objectID];
+                    [updatedTimers addObject:updatedTimer];
+                }
+
+                TCSProject *updatedProject = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:project.objectID];
+
+                successBlock(updatedTimers, updatedProject);
             }
         }
     }];
@@ -1050,9 +1109,9 @@
 }
 
 - (TCSTimer *)activeTimer {
-//    NSArray *activeTimers = [TCSTimer findByAttribute:@"endTime" withValue:nil];
-//    NSAssert(activeTimers.count <= 1, @"More than one active timer!");
-//    return activeTimers.firstObject;
+    NSArray *activeTimers = [TCSTimer findByAttribute:@"endTime" withValue:nil];
+    NSAssert(activeTimers.count <= 1, @"More than one active timer!");
+    return activeTimers.firstObject;
 }
 
 - (void)updateEntities:(NSArray *)entities

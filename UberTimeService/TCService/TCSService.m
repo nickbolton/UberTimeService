@@ -294,7 +294,20 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
      toProject:project
      success:successBlock
      failure:failureBlock];
+}
 
+- (void)moveTimers:(NSArray *)timers
+         toProject:(TCSProject *)project
+           success:(void(^)(NSArray *updatedTimer, TCSProject *updatedProject))successBlock
+           failure:(void(^)(NSError *error))failureBlock {
+
+#warning TODO : rollback??
+
+    [_localService
+     moveTimers:timers
+     toProject:project
+     success:successBlock
+     failure:failureBlock];
 }
 
 - (void)rollTimer:(TCSTimer *)timer

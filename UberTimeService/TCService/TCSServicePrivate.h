@@ -195,6 +195,11 @@
           success:(void(^)(TCSTimer *updatedTimer, TCSProject *updatedProject))successBlock
           failure:(void(^)(NSError *error))failureBlock;
 
+- (void)moveTimers:(NSArray *)timers
+         toProject:(TCSProject *)project
+           success:(void(^)(NSArray *updatedTimer, TCSProject *updatedProject))successBlock
+           failure:(void(^)(NSError *error))failureBlock;
+
 - (void)rollTimer:(TCSTimer *)timer
       maxDuration:(NSTimeInterval)maxDuration
           success:(void(^)(NSArray *rolledTimers))successBlock
