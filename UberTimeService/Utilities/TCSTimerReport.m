@@ -198,11 +198,18 @@
 
     if (filterEmptyItems == NO || elapsedTime > 0.0f) {
 
+        NSArray *reportTimers = nil;
+        
+        if ([dateRange.startDate isEqualToDate:dateRange.endDate.midnight]) {
+            reportTimers = timers;
+        }
+
         reportItem =
         [TCSTimerReportItem
          reportItemWithProjects:@[project]
          dateRange:dateRange
-         elapsedTime:elapsedTime];
+         elapsedTime:elapsedTime
+         timers:reportTimers];
     }
 
     return reportItem;
