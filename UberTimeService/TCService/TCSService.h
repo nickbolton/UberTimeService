@@ -126,6 +126,10 @@ extern NSString * const kTCSServiceDataResetNotification;
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
+- (void)deleteTimers:(NSArray *)timers
+             success:(void(^)(void))successBlock
+             failure:(void(^)(NSError *error))failureBlock;
+
 - (NSArray *)timersForProjects:(NSArray *)projects
                       fromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate

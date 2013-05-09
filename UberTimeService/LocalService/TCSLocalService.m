@@ -1004,6 +1004,36 @@
     }];
 }
 
+- (void)deleteTimers:(NSArray *)timers
+             success:(void(^)(void))successBlock
+             failure:(void(^)(NSError *error))failureBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        for (TCSTimer *timer in timers) {
+            TCSTimer *localTimer = (id)
+            (id)[localContext existingObjectWithID:timer.objectID error:NULL];
+
+            if (localTimer != nil) {
+                [localTimer MR_deleteInContext:localContext];
+            }
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
 - (TCSTimer *)timerWithID:(id)entityID {
 
     return (id)

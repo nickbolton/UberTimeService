@@ -174,6 +174,10 @@
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
+- (void)deleteTimers:(NSArray *)timers
+             success:(void(^)(void))successBlock
+             failure:(void(^)(NSError *error))failureBlock;
+
 - (void)deleteTimer:(TCSTimer *)timer
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock;
