@@ -4,6 +4,8 @@
 
 @implementation TCSTimer
 
+@synthesize editing = _editing;
+
 + (NSTimeInterval)combinedTimeForStartTime:(NSDate *)startTime
                                    endTime:(NSDate *)endDate
                                 adjustment:(NSTimeInterval)adjustment {
