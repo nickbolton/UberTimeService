@@ -16,12 +16,10 @@
 @property (nonatomic, readonly) TCSDateRange *dateRange;
 @property (nonatomic, readonly, getter = isActive) BOOL active;
 @property (nonatomic, readonly) NSTimeInterval elapsedTime;
-@property (nonatomic, readonly) NSArray *timers;
 
 + (TCSTimerReportItem *)reportItemWithProjects:(NSArray *)projects
                                      dateRange:(TCSDateRange *)dateRange
-                                   elapsedTime:(NSTimeInterval)elapsedTime
-                                        timers:(NSArray *)timers;
+                                   elapsedTime:(NSTimeInterval)elapsedTime;
 
 - (void)updateActiveTime;
 
