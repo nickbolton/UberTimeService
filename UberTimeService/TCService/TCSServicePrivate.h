@@ -190,6 +190,12 @@
                      success:(void(^)(TCSTimer *timer, TCSProject *updatedProject))successBlock
                      failure:(void(^)(NSError *error))failureBlock;
 
+- (void)createTimerForProject:(TCSProject *)project
+                    startTime:(NSDate *)startTime
+                     duration:(NSTimeInterval)duration
+                      success:(void(^)(TCSTimer *timer, TCSProject *updatedProject))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
 - (void)stopTimer:(TCSTimer *)timer
           success:(void(^)(TCSTimer *updatedTimer))successBlock
           failure:(void(^)(NSError *error))failureBlock;

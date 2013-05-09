@@ -661,6 +661,60 @@
     }];
 }
 
+- (void)createTimerForProject:(TCSProject *)project
+                    startTime:(NSDate *)startTime
+                     duration:(NSTimeInterval)duration
+                      success:(void(^)(TCSTimer *timer, TCSProject *updatedProject))successBlock
+                      failure:(void(^)(NSError *error))failureBlock {
+
+    __block TCSTimer *timer = nil;
+    __block TCSProject *updatedProject = nil;
+    __block NSError *projectError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        updatedProject = (id)
+        [localContext existingObjectWithID:project.objectID error:&projectError];
+
+        timer = [TCSTimer MR_createInContext:localContext];
+
+        timer.startTime = startTime;
+        timer.endTime = [startTime dateByAddingSeconds:duration];
+        timer.adjustment = @(0);
+        timer.project = project;
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (projectError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(projectError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+
+                timer = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:timer.objectID];
+
+                updatedProject = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:updatedProject.objectID];
+                
+                successBlock(timer, updatedProject);
+            }
+        }
+    }];
+}
+
 - (void)stopTimer:(TCSTimer *)timer
           success:(void(^)(TCSTimer *updatedTimer))successBlock
           failure:(void(^)(NSError *error))failureBlock {
