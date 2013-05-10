@@ -29,6 +29,7 @@ typedef struct {
 - (NSString *)formatShortTimeInterval:(NSTimeInterval)timeInterval 
                      withSeconds:(BOOL)withSeconds;
 - (NSString *)formatDate:(NSDate *)date;
+- (NSString *)formatLongDate:(NSDate *)date;
 - (NSString *)formatDay:(NSDate *)date;
 - (NSString *)formatDayShort:(NSDate *)date;
 - (NSString *)formatAbbreviatedDay:(NSDate *)date;

@@ -73,6 +73,12 @@ static TCSDateFormatManager *sharedInstance_ = nil;
                                           timeStyle:NSDateFormatterNoStyle];
 }
 
+- (NSString *)formatLongDate:(NSDate *)date {
+    return [NSDateFormatter localizedStringFromDate:date
+                                          dateStyle:NSDateFormatterMediumStyle
+                                          timeStyle:NSDateFormatterNoStyle];
+}
+
 - (NSString *)formatWeek:(NSDate *)date {
     return [NSDateFormatter localizedStringFromDate:date
                                           dateStyle:NSDateFormatterShortStyle
