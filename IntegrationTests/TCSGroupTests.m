@@ -215,22 +215,19 @@
 
     [self.service
      updateGroup:self.group
-     success:^{
+     success:^(TCSGroup *updatedGroup){
 
-         TCSGroup *group =
-         [self.service groupWithID:self.group.objectID];
-
-         GHAssertTrue(group.archivedValue == archived,
+         GHAssertTrue(updatedGroup.archivedValue == archived,
                       @"group.archived (%d) != archived (%d)",
-                      group.archived, archived);
+                      updatedGroup.archived, archived);
 
-         GHAssertTrue(group.colorValue == color,
+         GHAssertTrue(updatedGroup.colorValue == color,
                       @"group.color (%d) != color (%d)",
-                      group.color, color);
+                      updatedGroup.color, color);
 
-         GHAssertTrue([group.name isEqualToString:name],
+         GHAssertTrue([updatedGroup.name isEqualToString:name],
                       @"group.name (%@) != name (%@)",
-                      group.name, name);
+                      updatedGroup.name, name);
 
          [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 

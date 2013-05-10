@@ -104,6 +104,10 @@
 		FEBD032B1735735900DAB99D /* TCSParseBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBD03291735735900DAB99D /* TCSParseBaseEntity.m */; };
 		FEBEF70C173B299D006D2A7E /* TCSAggregatedTimeList.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBEF70B173B299D006D2A7E /* TCSAggregatedTimeList.m */; };
 		FEBEF70D173B29A0006D2A7E /* TCSAggregatedTimeList.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBEF70B173B299D006D2A7E /* TCSAggregatedTimeList.m */; };
+		FEC3F54D173D74600092D7B1 /* TCSCannedMessageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC3F54C173D74600092D7B1 /* TCSCannedMessageTests.m */; };
+		FEC3F550173D7C090092D7B1 /* TCSLocalDDDCannedMessageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC3F54F173D7C090092D7B1 /* TCSLocalDDDCannedMessageTests.m */; };
+		FEC3F551173D7D010092D7B1 /* TCSCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */; };
+		FEC3F552173D7D060092D7B1 /* _TCSCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */; };
 		FEDAD2EB1732E60D0087EB4F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
 		FEDAD2ED1732E60D0087EB4F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
 		FEDAD2EF1732E60D0087EB4F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
@@ -232,6 +236,9 @@
 		FEBD03291735735900DAB99D /* TCSParseBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseBaseEntity.m; sourceTree = "<group>"; };
 		FEBEF70A173B299C006D2A7E /* TCSAggregatedTimeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSAggregatedTimeList.h; sourceTree = "<group>"; };
 		FEBEF70B173B299D006D2A7E /* TCSAggregatedTimeList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSAggregatedTimeList.m; sourceTree = "<group>"; };
+		FEC3F54B173D74600092D7B1 /* TCSCannedMessageTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSCannedMessageTests.h; sourceTree = "<group>"; };
+		FEC3F54C173D74600092D7B1 /* TCSCannedMessageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSCannedMessageTests.m; sourceTree = "<group>"; };
+		FEC3F54F173D7C090092D7B1 /* TCSLocalDDDCannedMessageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSLocalDDDCannedMessageTests.m; sourceTree = "<group>"; };
 		FEDAD2E71732E60D0087EB4F /* UberTimeService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UberTimeService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEDAD2EA1732E60D0087EB4F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FEDAD2EC1732E60D0087EB4F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -317,12 +324,15 @@
 				FEBD02671733D9E700DAB99D /* TCSLocalAAAProjectTests.m */,
 				FEBD02821733EE6A00DAB99D /* TCSLocalBBBTimerTests.m */,
 				FEBD02D117352B5400DAB99D /* TCSLocalCCCGroupTests.m */,
+				FEC3F54F173D7C090092D7B1 /* TCSLocalDDDCannedMessageTests.m */,
 				FEBD02871733EF4200DAB99D /* TCSProjectTests.h */,
 				FEBD02881733EF4200DAB99D /* TCSProjectTests.m */,
 				FEBD028A1733EFE400DAB99D /* TCSTimerTests.h */,
 				FEBD028B1733EFE400DAB99D /* TCSTimerTests.m */,
 				FEBD02CC173518C300DAB99D /* TCSGroupTests.h */,
 				FEBD02CD173518C300DAB99D /* TCSGroupTests.m */,
+				FEC3F54B173D74600092D7B1 /* TCSCannedMessageTests.h */,
+				FEC3F54C173D74600092D7B1 /* TCSCannedMessageTests.m */,
 				FEBD027D1733EBED00DAB99D /* TCSBaseTests.h */,
 				FEBD027E1733EBED00DAB99D /* TCSBaseTests.m */,
 				FEBD030017354DF700DAB99D /* TCSParseAAAProjectTests.m */,
@@ -749,6 +759,10 @@
 				FE7F8BEC17372DC3008EE46E /* _TCSBaseEntity.m in Sources */,
 				FE7F8CE11737E623008EE46E /* TCSUtilities.m in Sources */,
 				FEBEF70D173B29A0006D2A7E /* TCSAggregatedTimeList.m in Sources */,
+				FEC3F54D173D74600092D7B1 /* TCSCannedMessageTests.m in Sources */,
+				FEC3F550173D7C090092D7B1 /* TCSLocalDDDCannedMessageTests.m in Sources */,
+				FEC3F551173D7D010092D7B1 /* TCSCannedMessage.m in Sources */,
+				FEC3F552173D7D060092D7B1 /* _TCSCannedMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

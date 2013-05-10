@@ -8,9 +8,6 @@
 
 #import "TCSBaseTests.h"
 
-@class TCSProject;
-@class TCSGroup;
-
 @interface TCSGroupTests : TCSBaseTests
 
 @property (nonatomic, strong) TCSProject *project;

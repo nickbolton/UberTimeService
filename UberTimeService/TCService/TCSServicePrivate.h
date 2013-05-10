@@ -151,7 +151,7 @@
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
+              success:(void(^)(TCSProject *updatedProject))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteProject:(TCSProject *)project
@@ -165,7 +165,7 @@
 - (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName;
 
 - (void)updateGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSGroup *updatedGroup))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteGroup:(TCSGroup *)group
@@ -173,7 +173,7 @@
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSTimer *updatedTimer))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)resumeTimer:(TCSTimer *)timer
@@ -189,7 +189,7 @@
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateEntities:(NSArray *)entities
-               success:(void(^)(void))successBlock
+               success:(void(^)(NSArray *updatedEntities))successBlock
                failure:(void(^)(NSError *error))failureBlock;
 
 - (void)startTimerForProject:(TCSProject *)project
@@ -231,5 +231,26 @@
                       fromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
                sortByStartTime:(BOOL)sortByStartTime;
+
+- (NSArray *)allCannedMessages;
+
+- (TCSCannedMessage *)cannedMessageWithID:(NSManagedObjectID *)objectID;
+
+- (void)createCannedMessage:(NSString *)message
+                    success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (void)reorderCannedMessage:(TCSCannedMessage *)cannedMessage
+                       order:(NSInteger)order
+                     success:(void(^)(void))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(TCSCannedMessage *updatedCannedMessage))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(void))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
 
 @end

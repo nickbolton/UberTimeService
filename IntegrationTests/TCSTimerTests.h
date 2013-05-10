@@ -9,9 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "TCSBaseTests.h"
 
-@class TCSProject;
-@class TCSTimer;
-
 @interface TCSTimerTests : TCSBaseTests
 
 @property (nonatomic, strong) TCSProject *project;

@@ -111,7 +111,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (void)updateProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
+              success:(void(^)(TCSProject *updatedProject))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
     [_localService updateProject:project success:successBlock failure:failureBlock];
@@ -155,7 +155,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (void)updateGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSGroup *updatedGroup))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
     [_localService updateGroup:group success:successBlock failure:failureBlock];
@@ -293,7 +293,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (void)updateTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSTimer *updatedTimer))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
     [_localService
@@ -402,6 +402,54 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
      fromDate:fromDate
      toDate:toDate
      sortByStartTime:sortByStartTime];
+}
+
+#pragma mark - Canned Messages
+
+- (NSArray *)allCannedMessages {
+    return [_localService allCannedMessages];
+}
+
+- (TCSCannedMessage *)cannedMessageWithID:(NSManagedObjectID *)objectID {
+    return [_localService cannedMessageWithID:objectID];
+}
+
+- (void)createCannedMessage:(NSString *)message
+                    success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+    [_localService
+     createCannedMessage:message
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)reorderCannedMessage:(TCSCannedMessage *)cannedMessage
+                       order:(NSInteger)order
+                     success:(void(^)(void))successBlock
+                     failure:(void(^)(NSError *error))failureBlock {
+    [_localService
+     reorderCannedMessage:cannedMessage
+     order:order
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(TCSCannedMessage *updatedCannedMessage))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+    [_localService
+     updateCannedMessage:cannedMessage
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(void))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+    [_localService
+     deleteCannedMessage:cannedMessage
+     success:successBlock
+     failure:failureBlock];
 }
 
 #pragma mark - Singleton Methods

@@ -203,26 +203,35 @@
     }];
 }
 
+- (NSError *)doUpdateProject:(TCSProject *)project
+                   inContext:(NSManagedObjectContext *)context {
+
+    NSError *error = nil;
+    TCSProject *localProject =
+    (id)[context existingObjectWithID:project.objectID error:&error];
+
+    if (localProject != nil) {
+        localProject.name = project.name;
+        localProject.color = project.color;
+        localProject.filteredModifiers = project.filteredModifiers;
+        localProject.keyCode = project.keyCode;
+        localProject.modifiers = project.modifiers;
+        localProject.order = project.order;
+        localProject.archived = project.archived;
+    }
+
+    return error;
+}
+
 - (void)updateProject:(TCSProject *)project
-               success:(void(^)(void))successBlock
+               success:(void(^)(TCSProject *updatedProject))successBlock
                failure:(void(^)(NSError *error))failureBlock {
 
     __block NSError *localError = nil;
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        TCSProject *localProject =
-        (id)[localContext existingObjectWithID:project.objectID error:NULL];
-
-        if (localProject != nil) {
-            localProject.name = project.name;
-            localProject.color = project.color;
-            localProject.filteredModifiers = project.filteredModifiers;
-            localProject.keyCode = project.keyCode;
-            localProject.modifiers = project.modifiers;
-            localProject.order = project.order;
-            localProject.archived = project.archived;
-        }
+        localError = [self doUpdateProject:project inContext:localContext];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -240,7 +249,12 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+
+                TCSProject *updatedProject = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:project.objectID];
+
+                successBlock(updatedProject);
             }
         }
     }];
@@ -383,22 +397,32 @@
 
 #pragma mark - Group Methods
 
+- (NSError *)doUpdateGroup:(TCSGroup *)group
+                 inContext:(NSManagedObjectContext *)context {
+
+    NSError *error = nil;
+
+    TCSGroup *localGroup = (id)
+    (id)[context existingObjectWithID:group.objectID error:&error];
+
+    if (localGroup != nil) {
+        localGroup.name = group.name;
+        localGroup.color = group.color;
+        localGroup.archived = group.archived;
+    }
+
+    return error;
+}
+
 - (void)updateGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSGroup *updatedGroup))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
     __block NSError *localError = nil;
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        TCSGroup *localGroup = (id)
-        (id)[localContext existingObjectWithID:group.objectID error:NULL];
-
-        if (localGroup != nil) {
-            localGroup.name = group.name;
-            localGroup.color = group.color;
-            localGroup.archived = group.archived;
-        }
+        localError = [self doUpdateGroup:group inContext:localContext];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -416,7 +440,12 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+
+                TCSGroup *updatedGroup = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:group.objectID];
+
+                successBlock(updatedGroup);
             }
         }
     }];
@@ -451,7 +480,6 @@
 }
 
 - (TCSGroup *)groupWithID:(id)entityID {
-
     return (id)
     [[self managedObjectContextForCurrentThread]
      existingObjectWithID:entityID
@@ -459,7 +487,6 @@
 }
 
 - (NSArray *)allGroups {
-
     return
     [TCSGroup
      MR_findAllInContext:[self managedObjectContextForCurrentThread]];
@@ -787,24 +814,34 @@
     }];
 }
 
+- (NSError *)doUpdateTimer:(TCSTimer *)timer
+                 inContext:(NSManagedObjectContext *)context {
+
+    NSError *error = nil;
+
+    TCSTimer *localTimerTimer = (id)
+    (id)[context existingObjectWithID:timer.objectID error:NULL];
+
+    if (localTimerTimer != nil) {
+        localTimerTimer.message = timer.message;
+        localTimerTimer.adjustment= timer.adjustment;
+        if (localTimerTimer.endTime != nil && timer.endTime != nil) {
+            localTimerTimer.endTime = timer.endTime;
+        }
+    }
+
+    return error;
+}
+
 - (void)updateTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
+            success:(void(^)(TCSTimer *updatedTimer))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
     __block NSError *localError = nil;
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        TCSTimer *localTimerTimer = (id)
-        (id)[localContext existingObjectWithID:timer.objectID error:NULL];
-
-        if (localTimerTimer != nil) {
-            localTimerTimer.message = timer.message;
-            localTimerTimer.adjustment= timer.adjustment;
-            if (localTimerTimer.endTime != nil && timer.endTime != nil) {
-                localTimerTimer.endTime = timer.endTime;
-            }
-        }
+        localError = [self doUpdateTimer:timer inContext:localContext];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -822,7 +859,12 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+
+                TCSTimer *updatedTimer = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:timer.objectID];
+
+                successBlock(updatedTimer);
             }
         }
     }];
@@ -1273,16 +1315,269 @@
 }
 
 - (TCSTimer *)activeTimer {
-    NSArray *activeTimers = [TCSTimer findByAttribute:@"endTime" withValue:nil];
+    NSArray *activeTimers = [TCSTimer MR_findByAttribute:@"endTime" withValue:nil];
     NSAssert(activeTimers.count <= 1, @"More than one active timer!");
     return activeTimers.firstObject;
 }
 
 - (void)updateEntities:(NSArray *)entities
-               success:(void (^)(void))successBlock
+               success:(void (^)(NSArray *updatedEntities))successBlock
                failure:(void (^)(NSError *))failureBlock {
 
-    NSAssert(NO, @"No implemented!");
+    __block NSError *localError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        for (NSManagedObject *entity in entities) {
+
+            if ([entity isKindOfClass:[TCSTimer class]]) {
+                localError =
+                [self doUpdateTimer:(id)entity inContext:localContext];
+            } else if ([entity isKindOfClass:[TCSProject class]]) {
+                localError =
+                [self doUpdateProject:(id)entity inContext:localContext];
+            } else if ([entity isKindOfClass:[TCSGroup class]]) {
+                localError =
+                [self doUpdateGroup:(id)entity inContext:localContext];
+            }
+
+            if (localError != nil) {
+                break;
+            }
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+
+            if (successBlock != nil) {
+
+                NSMutableArray *updatedEntities =
+                [NSMutableArray arrayWithCapacity:entities.count];
+
+                for (NSManagedObject *entity in entities) {
+                    NSManagedObject *updatedEntity =
+                    [[self managedObjectContextForCurrentThread]
+                     objectWithID:entity.objectID];
+                    [updatedEntities addObject:updatedEntity];
+                }
+
+                successBlock(updatedEntities);
+            }
+        }
+    }];
+}
+
+#pragma mark - Canned Messages
+
+- (NSArray *)allCannedMessages {
+    return
+    [TCSCannedMessage
+     MR_findAllSortedBy:@"order"
+     ascending:YES
+     inContext:[self managedObjectContextForCurrentThread]];
+}
+
+- (TCSCannedMessage *)cannedMessageWithID:(NSManagedObjectID *)objectID {
+    return (id)
+    [[self managedObjectContextForCurrentThread]
+     existingObjectWithID:objectID
+     error:NULL];
+}
+
+- (void)createCannedMessage:(NSString *)message
+                    success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    __block TCSCannedMessage *cannedMessage = nil;
+    __block NSError *localError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSCannedMessage *lastCannedMessage =
+        [TCSCannedMessage MR_findFirstOrderedByAttribute:@"order" ascending:NO];
+
+        NSInteger order = 0;
+
+        if (lastCannedMessage != nil) {
+            order = lastCannedMessage.orderValue + 1;
+        }
+
+        cannedMessage = [TCSCannedMessage MR_createInContext:localContext];
+
+        cannedMessage.message = message;
+        cannedMessage.orderValue = order;
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+
+                TCSCannedMessage *updatedCannedMessage = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:cannedMessage.objectID];
+                
+                successBlock(updatedCannedMessage);
+            }
+        }
+    }];
+}
+
+- (void)reorderCannedMessage:(TCSCannedMessage *)cannedMessage
+                       order:(NSInteger)order
+                     success:(void(^)(void))successBlock
+                     failure:(void(^)(NSError *error))failureBlock {
+
+    __block NSError *localError = nil;
+
+    NSInteger previousOrder = cannedMessage.orderValue;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        NSArray *orderedMessages =
+        [TCSCannedMessage
+         MR_findAllSortedBy:@"order"
+         ascending:YES
+         inContext:localContext];
+
+        TCSCannedMessage *localCannedMessage =
+        (id)[localContext existingObjectWithID:cannedMessage.objectID error:&localError];
+
+        for (TCSCannedMessage *message in orderedMessages) {
+            if ([message.objectID isEqual:localCannedMessage.objectID]) {
+                message.orderValue = order;
+            } else if (message.orderValue >= previousOrder && message.orderValue <= order) {
+                message.orderValue--;
+            }
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
+- (NSError *)doUpdateCannedMessage:(TCSCannedMessage *)cannedMessage
+                 inContext:(NSManagedObjectContext *)context {
+
+    NSError *error = nil;
+
+    TCSCannedMessage *localCannedMessage = (id)
+    (id)[context existingObjectWithID:cannedMessage.objectID error:&error];
+
+    if (localCannedMessage != nil) {
+        localCannedMessage.message = cannedMessage.message;
+        localCannedMessage.orderValue = cannedMessage.orderValue;
+    }
+
+    return error;
+}
+
+- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(TCSCannedMessage *updatedCannedMessage))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    __block NSError *localError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        [self doUpdateCannedMessage:cannedMessage inContext:localContext];
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+
+                TCSCannedMessage *updatedCannedMessage = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:cannedMessage.objectID];
+
+                successBlock(updatedCannedMessage);
+            }
+        }
+    }];
+}
+
+- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(void))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSCannedMessage *localCannedMessage = (id)
+        (id)[localContext existingObjectWithID:cannedMessage.objectID error:NULL];
+
+        if (localCannedMessage != nil) {
+            [localCannedMessage MR_deleteInContext:localContext];
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
 }
 
 #pragma mark - Singleton Methods

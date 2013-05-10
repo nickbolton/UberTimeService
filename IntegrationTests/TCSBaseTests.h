@@ -8,10 +8,8 @@
 
 #import <GHUnitIOS/GHUnit.h>
 
-@class TCSProject;
-@class TCSGroup;
-@class TCSTimer;
-@class TCSService;
+#import "TCSService.h"
+
 @class NSManagedObjectID;
 
 @interface TCSBaseTests : GHAsyncTestCase

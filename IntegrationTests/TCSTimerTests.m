@@ -234,24 +234,22 @@
 
     [self.service
      updateTimer:self.timer
-     success:^{
+     success:^(TCSTimer *updatedTimer){
 
-         TCSTimer *timer = [self.service timerWithID:self.timer.objectID];
-
-         GHAssertTrue([self.timer.objectID isEqual:timer.objectID],
+         GHAssertTrue([self.timer.objectID isEqual:updatedTimer.objectID],
                       @"fetched timer does not have the same entityID");
 
-         GHAssertTrue([message isEqualToString:timer.message],
-                      @"timer message (%@) does not match (%@)", timer.message, message);
-         GHAssertTrue(roundf(startTime.timeIntervalSinceReferenceDate*1000.0f) == roundf(timer.startTime.timeIntervalSinceReferenceDate*1000.0f),
+         GHAssertTrue([message isEqualToString:updatedTimer.message],
+                      @"timer message (%@) does not match (%@)", updatedTimer.message, message);
+         GHAssertTrue(roundf(startTime.timeIntervalSinceReferenceDate*1000.0f) == roundf(updatedTimer.startTime.timeIntervalSinceReferenceDate*1000.0f),
                       @"timer startTime (%f) does not match (%f)",
-                      timer.startTime.timeIntervalSinceReferenceDate, startTime.timeIntervalSinceReferenceDate);
-         GHAssertTrue(roundf(endTime.timeIntervalSinceReferenceDate*1000.0f) == roundf(timer.endTime.timeIntervalSinceReferenceDate*1000.0f),
+                      updatedTimer.startTime.timeIntervalSinceReferenceDate, startTime.timeIntervalSinceReferenceDate);
+         GHAssertTrue(roundf(endTime.timeIntervalSinceReferenceDate*1000.0f) == roundf(updatedTimer.endTime.timeIntervalSinceReferenceDate*1000.0f),
                       @"timer endTime (%f) does not match (%f)",
-                      timer.endTime.timeIntervalSinceReferenceDate, endTime.timeIntervalSinceReferenceDate);
+                      updatedTimer.endTime.timeIntervalSinceReferenceDate, endTime.timeIntervalSinceReferenceDate);
 
-         GHAssertTrue(adjustment == timer.adjustmentValue,
-                      @"timer adjustment (%f) does not match (%f)", timer.adjustmentValue, adjustment);
+         GHAssertTrue(adjustment == updatedTimer.adjustmentValue,
+                      @"timer adjustment (%f) does not match (%f)", updatedTimer.adjustmentValue, adjustment);
 
          NSLog(@"timer: %@ - %@ (%f) %@",
                self.timer.startTime, self.timer.endTime,
@@ -313,7 +311,7 @@
 
     [self.service
      updateTimer:self.timer
-     success:^{
+     success:^(TCSTimer *updatedTimer){
 
          GHAssertTrue(self.timer.combinedTime == 100.0f,
                       @"combinedTime (%f) != 100", self.timer.combinedTime);

@@ -93,39 +93,37 @@
 
     [self.service
      updateProject:self.project
-     success:^{
+     success:^(TCSProject *updatedProject){
 
-         TCSProject *project = [self projectWithEntityID:self.project.objectID];
-
-         GHAssertNotNil(project, @"project not found");
+         GHAssertNotNil(updatedProject, @"project not found");
          
-         GHAssertTrue(project.filteredModifiersValue == filteredModifiers,
+         GHAssertTrue(updatedProject.filteredModifiersValue == filteredModifiers,
                       @"project.filteredModifiers (%d) != filteredModifiers (%d)",
-                      project.filteredModifiersValue, filteredModifiers);
+                      updatedProject.filteredModifiersValue, filteredModifiers);
 
-         GHAssertTrue(project.keyCodeValue == keyCode,
+         GHAssertTrue(updatedProject.keyCodeValue == keyCode,
                       @"project.keyCode (%d) != keyCode (%d)",
-                      project.keyCodeValue, keyCode);
+                      updatedProject.keyCodeValue, keyCode);
 
-         GHAssertTrue(project.modifiersValue == modifiers,
+         GHAssertTrue(updatedProject.modifiersValue == modifiers,
                       @"project.modifiers (%d) != modifiers (%d)",
-                      project.modifiersValue, modifiers);
+                      updatedProject.modifiersValue, modifiers);
 
-         GHAssertTrue(project.orderValue == order,
+         GHAssertTrue(updatedProject.orderValue == order,
                       @"project.order (%d) != order (%d)",
-                      project.orderValue, order);
+                      updatedProject.orderValue, order);
 
-         GHAssertTrue(project.archivedValue == archived,
+         GHAssertTrue(updatedProject.archivedValue == archived,
                       @"project.archived (%d) != archived (%d)",
-                      project.archivedValue, archived);
+                      updatedProject.archivedValue, archived);
 
-         GHAssertTrue(project.colorValue == color,
+         GHAssertTrue(updatedProject.colorValue == color,
                       @"project.color (%d) != color (%d)",
-                      project.colorValue, color);
+                      updatedProject.colorValue, color);
 
-         GHAssertTrue([project.name isEqualToString:name],
+         GHAssertTrue([updatedProject.name isEqualToString:name],
                       @"projectName (%@) != name (%@)",
-                      project.name, name);
+                      updatedProject.name, name);
 
          [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 
