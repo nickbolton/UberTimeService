@@ -150,6 +150,10 @@
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
+    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
+        remoteProvider = _defaultRemoteProvider;
+    }
+
     [self
      createProjectWithName:name
      remoteProvider:remoteProvider
@@ -166,6 +170,10 @@
                                      keyCode:(NSInteger)keyCode
                                    modifiers:(NSInteger)modifiers
                                    inContext:(NSManagedObjectContext *)context {
+
+    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
+        remoteProvider = _defaultRemoteProvider;
+    }
 
     TCSProject *project =
     [TCSProject MR_createInContext:context];
@@ -186,6 +194,10 @@
                     modifiers:(NSInteger)modifiers
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
+
+    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
+        remoteProvider = _defaultRemoteProvider;
+    }
 
     __block TCSProject *project = nil;
 
@@ -1441,6 +1453,10 @@
              remoteProvider:(NSString *)remoteProvider
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
+
+    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
+        remoteProvider = _defaultRemoteProvider;
+    }
 
     __block TCSCannedMessage *cannedMessage = nil;
     __block NSError *localError = nil;

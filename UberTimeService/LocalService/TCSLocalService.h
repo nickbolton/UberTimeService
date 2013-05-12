@@ -11,7 +11,7 @@
 
 @interface TCSLocalService : TCSDefaultProvider <TCSServiceLocalService>
 
-@property (nonatomic, strong) id <TCSServiceRemoteProvider> removeProvider;
+@property (nonatomic, strong) NSString *defaultRemoteProvider;
 
 + (instancetype)sharedInstance;
 
