@@ -6,111 +6,6 @@
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-@protocol TCSServiceProviderPrivate <NSObject>
-
-@end
-
-@protocol TCSServiceRemoteProvider <NSObject>
-
-+ (id <TCSServiceRemoteProvider>)sharedInstance;
-
-@property (nonatomic, readonly) NSString *name;
-
-- (void)clearCache;
-
-- (void)deleteAllData:(void(^)(void))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-// Authentication
-
-- (void)authenticateUser:(NSString *)username
-                password:(NSString *)password
-                 success:(void(^)(void))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
-
-- (void)logoutUser:(void(^)(void))successBlock
-           failure:(void(^)(NSError *error))failureBlock;
-
-- (BOOL)isUserAuthenticated;
-
-// Project
-
-- (void)createProjectWithName:(NSString *)name
-                      success:(void(^)(TCSProject *project))successBlock
-                      failure:(void(^)(NSError *error))failureBlock;
-
-- (void)createProjectWithName:(NSString *)name
-            filteredModifiers:(NSInteger)filteredModifiers
-                      keyCode:(NSInteger)keyCode
-                    modifiers:(NSInteger)modifiers
-                      success:(void(^)(TCSProject *project))successBlock
-                      failure:(void(^)(NSError *error))failureBlock;
-
-- (void)updateProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-- (void)deleteProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchProjectWithName:(NSString *)name
-                     success:(void(^)(NSArray *projects))successBlock
-                     failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchProjectWithID:(id)entityID
-                   success:(void(^)(TCSProject *project))successBlock
-                   failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchProjects:(void(^)(NSArray *projects))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-// Group
-
-- (void)createGroupWithName:(NSString *)name
-                    success:(void(^)(TCSProject *project))successBlock
-                    failure:(void(^)(NSError *error))failureBlock;
-
-- (void)updateGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-- (void)deleteGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchGroupWithID:(id)entityID
-                 success:(void(^)(TCSGroup *group))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchGroups:(void(^)(NSArray *groups))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-// Timer
-
-- (void)createTimer;
-
-- (void)fetchTimerWithID:(id)entityID
-                 success:(void(^)(TCSTimer *timer))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
-
-- (void)fetchTimers:(void(^)(NSArray *groups))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-- (void)updateTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-- (void)deleteTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock;
-
-- (void)updateEntities:(NSArray *)entities
-               success:(void(^)(void))successBlock
-               failure:(void(^)(NSError *error))failureBlock;
-
-@end
-
 @protocol TCSServiceLocalService <NSObject>
 
 @property (nonatomic, strong) id <TCSServiceRemoteProvider> removeProvider;
@@ -237,6 +132,7 @@
 - (TCSCannedMessage *)cannedMessageWithID:(NSManagedObjectID *)objectID;
 
 - (void)createCannedMessage:(NSString *)message
+             remoteProvider:(NSString *)remoteProvider
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock;
 

@@ -8,10 +8,6 @@
 
 #import "TCSDefaultProvider.h"
 #import "TCSService.h"
-#import "TCSParseTimedEntity.h"
-#import "TCSParseGroup.h"
-#import "TCSParseProject.h"
-#import "TCSParseTimer.h"
 #import "TCSServicePrivate.h"
 
 @interface TCSParseService : TCSDefaultProvider <TCSServiceRemoteProvider>

@@ -4,9 +4,12 @@
 #import "_TCSBaseEntity.h"
 
 const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
-	.dirty = @"dirty",
+	.entityVersion = @"entityVersion",
+	.pending = @"pending",
+	.remoteDeleted = @"remoteDeleted",
 	.remoteId = @"remoteId",
 	.remoteProvider = @"remoteProvider",
+	.updateTime = @"updateTime",
 };
 
 const struct TCSBaseEntityRelationships TCSBaseEntityRelationships = {
@@ -41,8 +44,16 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"dirtyValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"dirty"];
+	if ([key isEqualToString:@"entityVersionValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"entityVersion"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
+	if ([key isEqualToString:@"pendingValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"pending"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
+	if ([key isEqualToString:@"remoteDeletedValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"remoteDeleted"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 	}
 
@@ -52,26 +63,78 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 
 
-@dynamic dirty;
+@dynamic entityVersion;
 
 
 
-- (BOOL)dirtyValue {
-	NSNumber *result = [self dirty];
+- (int64_t)entityVersionValue {
+	NSNumber *result = [self entityVersion];
+	return [result longLongValue];
+}
+
+- (void)setEntityVersionValue:(int64_t)value_ {
+	[self setEntityVersion:[NSNumber numberWithLongLong:value_]];
+}
+
+- (int64_t)primitiveEntityVersionValue {
+	NSNumber *result = [self primitiveEntityVersion];
+	return [result longLongValue];
+}
+
+- (void)setPrimitiveEntityVersionValue:(int64_t)value_ {
+	[self setPrimitiveEntityVersion:[NSNumber numberWithLongLong:value_]];
+}
+
+
+
+
+
+@dynamic pending;
+
+
+
+- (BOOL)pendingValue {
+	NSNumber *result = [self pending];
 	return [result boolValue];
 }
 
-- (void)setDirtyValue:(BOOL)value_ {
-	[self setDirty:[NSNumber numberWithBool:value_]];
+- (void)setPendingValue:(BOOL)value_ {
+	[self setPending:[NSNumber numberWithBool:value_]];
 }
 
-- (BOOL)primitiveDirtyValue {
-	NSNumber *result = [self primitiveDirty];
+- (BOOL)primitivePendingValue {
+	NSNumber *result = [self primitivePending];
 	return [result boolValue];
 }
 
-- (void)setPrimitiveDirtyValue:(BOOL)value_ {
-	[self setPrimitiveDirty:[NSNumber numberWithBool:value_]];
+- (void)setPrimitivePendingValue:(BOOL)value_ {
+	[self setPrimitivePending:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+@dynamic remoteDeleted;
+
+
+
+- (BOOL)remoteDeletedValue {
+	NSNumber *result = [self remoteDeleted];
+	return [result boolValue];
+}
+
+- (void)setRemoteDeletedValue:(BOOL)value_ {
+	[self setRemoteDeleted:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveRemoteDeletedValue {
+	NSNumber *result = [self primitiveRemoteDeleted];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveRemoteDeletedValue:(BOOL)value_ {
+	[self setPrimitiveRemoteDeleted:[NSNumber numberWithBool:value_]];
 }
 
 
@@ -86,6 +149,13 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 
 @dynamic remoteProvider;
+
+
+
+
+
+
+@dynamic updateTime;
 
 
 

@@ -13,7 +13,89 @@
 
 extern NSString * const kTCSServiceDataResetNotification;
 
-@protocol TCSServiceRemoteProvider;
+@protocol TCSServiceRemoteProvider <NSObject>
+
++ (id <TCSServiceRemoteProvider>)sharedInstance;
+
+@property (nonatomic, readonly) NSString *name;
+
+- (void)clearCache;
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+// Authentication
+
+- (void)authenticateUser:(NSString *)username
+                password:(NSString *)password
+                 success:(void(^)(void))successBlock
+                 failure:(void(^)(NSError *error))failureBlock;
+
+- (void)logoutUser:(void(^)(void))successBlock
+           failure:(void(^)(NSError *error))failureBlock;
+
+- (BOOL)isUserAuthenticated;
+
+- (void)deleteAllData:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+// Project
+
+- (void)createProject:(TCSProject *)project
+              success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateProject:(TCSProject *)project
+              success:(void(^)(NSManagedObjectID *objectID))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteProject:(TCSProject *)project
+              success:(void(^)(void))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
+// Group
+
+- (void)createGroup:(TCSGroup *)group
+            success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteGroup:(TCSGroup *)group
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+// Timer
+
+- (void)createTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteTimer:(TCSTimer *)timer
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+// Canned Message
+
+- (void)createCannedMessage:(TCSCannedMessage *)cannedMessage
+            success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock;
+
+@end
 
 // import depends on protocol being defined already
 #import "TCSDefaultProvider.h"
@@ -34,6 +116,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (NSArray *)registeredRemoteProviders;
 - (void)registerRemoteServiceProvider:(Class)providerClass;
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass;
+- (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName;
 
 - (void)createProjectWithName:(NSString *)name
                remoteProvider:(NSString *)remoteProvider
@@ -156,6 +239,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (TCSCannedMessage *)cannedMessageWithID:(NSManagedObjectID *)objectID;
 
 - (void)createCannedMessage:(NSString *)message
+             remoteProvider:(NSString *)remoteProvider
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock;
 

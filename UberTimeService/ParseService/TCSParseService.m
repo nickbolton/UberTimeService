@@ -11,6 +11,11 @@
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
 #import "GCNetworkReachability.h"
+#import "TCSParseTimedEntity.h"
+#import "TCSParseGroup.h"
+#import "TCSParseProject.h"
+#import "TCSParseTimer.h"
+#import "TCSParseCannedMessage.h"
 
 @interface TCSParseService()
 
@@ -78,8 +83,11 @@
 
     if ([PFUser currentUser] == nil) {
         if (failureBlock != nil) {
-#warning TODO : add NSError
-            failureBlock(nil);
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"User not logged in.")];
+
+            failureBlock(error);
         }
         return;
     }
@@ -219,50 +227,32 @@
     return YES;
 }
 
-#pragma mark - Project Methods
+// Project
 
-- (void)createProjectWithName:(NSString *)name
-                      success:(void(^)(TCSProject *project))successBlock
-                      failure:(void(^)(NSError *error))failureBlock {
-    [self
-     createProjectWithName:name
-     filteredModifiers:0
-     keyCode:0
-     modifiers:0
-     success:successBlock
-     failure:failureBlock];
+- (void)updateProjectProperties:(TCSParseProject *)parseProject
+                        project:(TCSProject *)project {
+
+    parseProject.name = project.name;
+    parseProject.filteredModifiers = project.filteredModifiersValue;
+    parseProject.keyCode = project.keyCodeValue;
+    parseProject.modifiers = project.modifiersValue;
+    parseProject.color = project.colorValue;
+    parseProject.archived = project.archivedValue;
+    parseProject.order = project.orderValue;
 }
 
-- (TCSParseProject *)doCreateProjectWithName:(NSString *)name
-                           filteredModifiers:(NSInteger)filteredModifiers
-                                     keyCode:(NSInteger)keyCode
-                                   modifiers:(NSInteger)modifiers {
+- (void)createProject:(TCSProject *)project
+              success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+              failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     TCSParseProject *parseProject = [TCSParseProject object];
-    parseProject.name = name;
-    parseProject.filteredModifiers = filteredModifiers;
-    parseProject.keyCode = keyCode;
-    parseProject.modifiers = modifiers;
+    [self updateProjectProperties:parseProject project:project];
 
-    return parseProject;
-}
+    NSManagedObjectID *objectID = project.objectID;
 
-- (void)createProjectWithName:(NSString *)name
-            filteredModifiers:(NSInteger)filteredModifiers
-                      keyCode:(NSInteger)keyCode
-                    modifiers:(NSInteger)modifiers
-                      success:(void(^)(TCSProject *project))successBlock
-                      failure:(void(^)(NSError *error))failureBlock {
-
-    TCSParseProject *parseProject =
-    [self
-     doCreateProjectWithName:name
-     filteredModifiers:filteredModifiers
-     keyCode:keyCode
-     modifiers:modifiers];
-
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
-
+    [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -272,39 +262,37 @@
         } else {
 
             if (successBlock != nil) {
-
-                TCSProject *project = (id)
-                [self
-                 wrapProviderEntity:parseProject
-                 inType:[TCSProject class]
-                 provider:self];
-
-                successBlock(project);
+                successBlock(objectID, parseProject.objectId);
             }
         }
-    };
-
-    if (_connected) {
-
-        [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-
-    } else {
-
-        [parseProject saveEventually:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-    }
+    }];
 }
 
 - (void)updateProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
+              success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    TCSParseProject *parseProject = project.providerEntity;
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
+    if (project.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for project update")];
+
+            failureBlock(error);
+        }
+        return;
+    }
+
+    TCSParseProject *parseProject = [TCSParseProject object];
+    parseProject.objectId = project.remoteId;
+    [self updateProjectProperties:parseProject project:project];
+
+    NSManagedObjectID *objectID = project.objectID;
+
+    [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -314,202 +302,36 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+                successBlock(objectID);
             }
         }
-    };
-
-    if (_connected) {
-
-        [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-
-    } else {
-
-        [parseProject saveEventually:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-    }
+    }];
 }
 
 - (void)deleteProject:(TCSProject *)project
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    TCSParseProject *parseProject = project.providerEntity;
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
+    if (project.remoteId.length == 0) {
 
-        if (error != nil && error.code != kPFErrorObjectNotFound) {
+        if (failureBlock != nil) {
 
-            if (failureBlock != nil) {
-                failureBlock(error);
-            }
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for project delete")];
 
-        } else {
-
-            project.providerEntity = nil;
-            project.providerEntityID = nil;
-
-            if (successBlock != nil) {
-                successBlock();
-            }
+            failureBlock(error);
         }
-    };
-
-    if (_connected) {
-
-        [parseProject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-
-    } else {
-
-        [parseProject deleteEventually];
-        executionBlock(nil);
+        return;
     }
-}
 
-- (void)fetchProjectWithName:(NSString *)name
-                     success:(void(^)(NSArray *projects))successBlock
-                     failure:(void(^)(NSError *error))failureBlock {
+    TCSParseProject *parseProject = [TCSParseProject object];
+    parseProject.objectId = project.remoteId;
+    parseProject.softDeleted = YES;
+    [self updateProjectProperties:parseProject project:project];
 
-    if (successBlock != nil) {
-
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
-        }
-
-        PFQuery *query = [TCSParseProject query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        [query whereKey:@"name" equalTo:name];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-
-            if (error != nil) {
-
-                if (failureBlock != nil) {
-                    failureBlock(error);
-                }
-                
-            } else {
-
-                NSArray *result =
-                [self
-                 wrapProviderEntities:objects
-                 inType:[TCSProject class]
-                 provider:self];
-
-                successBlock(result);
-            }
-        }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
-}
-
-- (void)fetchProjectWithID:(id)entityID
-                   success:(void(^)(TCSProject *project))successBlock
-                   failure:(void(^)(NSError *error))failureBlock {
-
-    if (successBlock != nil) {
-
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
-        }
-
-        PFQuery *query = [TCSParseProject query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         getObjectInBackgroundWithId:entityID
-         block:^(PFObject *project, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 TCSProject *result = (id)
-                 [self
-                  wrapProviderEntity:project
-                  inType:[TCSProject class]
-                  provider:self];
-
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
-}
-
-- (void)fetchProjects:(void(^)(NSArray *projects))successBlock
-              failure:(void(^)(NSError *error))failureBlock {
-
-    if (successBlock != nil) {
-
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
-        }
-
-        PFQuery *query = [TCSParseProject query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 NSArray *result =
-                 [self
-                  wrapProviderEntities:objects
-                  inType:[TCSProject class]
-                  provider:self];
-
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
-}
-
-#pragma mark - Group Methods
-
-- (void)updateGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock {
-
-    TCSParseGroup *parseGroup = group.providerEntity;
-
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
-
+    [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -522,156 +344,109 @@
                 successBlock();
             }
         }
-    };
+    }];
+}
 
-    if (_connected) {
+// Group
 
-        [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
+- (void)updateGroupProperties:(TCSParseGroup *)parseGroup
+                      group:(TCSGroup *)group {
+    parseGroup.name = group.name;
+    parseGroup.color = group.colorValue;
+    parseGroup.archived = group.archivedValue;
+}
 
-    } else {
+- (void)createGroup:(TCSGroup *)group
+            success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
 
-        [parseGroup saveEventually:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    TCSParseGroup *parseGroup = [TCSParseGroup object];
+    [self updateGroupProperties:parseGroup group:group];
+
+    NSManagedObjectID *objectID = group.objectID;
+
+    [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseGroup.objectId);
+            }
+        }
+    }];
+}
+
+- (void)updateGroup:(TCSGroup *)group
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (group.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for group update")];
+
+            failureBlock(error);
+        }
+        return;
     }
+
+    TCSParseGroup *parseGroup = [TCSParseGroup object];
+    parseGroup.objectId = group.remoteId;
+    [self updateGroupProperties:parseGroup group:group];
+
+    NSManagedObjectID *objectID = group.objectID;
+
+    [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+        }
+    }];
 }
 
 - (void)deleteGroup:(TCSGroup *)group
             success:(void(^)(void))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    TCSParseGroup *parseGroup = group.providerEntity;
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
+    if (group.remoteId.length == 0) {
 
-        if (error != nil && error.code != kPFErrorObjectNotFound) {
+        if (failureBlock != nil) {
 
-            if (failureBlock != nil) {
-                failureBlock(error);
-            }
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for group delete")];
 
-        } else {
-
-            group.providerEntity = nil;
-            group.providerEntityID = nil;
-
-            if (successBlock != nil) {
-                successBlock();
-            }
+            failureBlock(error);
         }
-    };
-
-    if (_connected) {
-
-        [parseGroup deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-
-    } else {
-
-        [parseGroup deleteEventually];
-        executionBlock(nil);
+        return;
     }
-}
 
-- (void)fetchGroupWithID:(id)entityID
-                 success:(void(^)(TCSGroup *group))successBlock
-                 failure:(void(^)(NSError *error))failureBlock {
+    TCSParseGroup *parseGroup = [TCSParseGroup object];
+    parseGroup.objectId = group.remoteId;
+    parseGroup.softDeleted = YES;
+    [self updateGroupProperties:parseGroup group:group];
 
-    if (successBlock != nil) {
-
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
-        }
-
-        PFQuery *query = [TCSParseGroup query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         getObjectInBackgroundWithId:entityID
-         block:^(PFObject *object, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 TCSGroup *result = (id)
-                 [self
-                  wrapProviderEntity:object
-                  inType:[TCSGroup class]
-                  provider:self];
-                 
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
-}
-
-- (void)fetchGroups:(void(^)(NSArray *groups))successBlock
-            failure:(void(^)(NSError *error))failureBlock {
-
-    if (successBlock != nil) {
-
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
-        }
-
-        PFQuery *query = [TCSParseGroup query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 NSArray *result =
-                 [self
-                  wrapProviderEntities:objects
-                  inType:[TCSGroup class]
-                  provider:self];
-                 
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
-}
-
-#pragma mark - Timer Methods
-
-- (void)updateTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
-            failure:(void(^)(NSError *error))failureBlock {
-
-    TCSParseTimer *parseTimer = timer.providerEntity;
-
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
-
+    [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -684,236 +459,237 @@
                 successBlock();
             }
         }
-    };
-
-    if (_connected) {
-
-        [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-
-    } else {
-
-        [parseTimer saveEventually:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-    }
+    }];
 }
 
-- (void)deleteTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
+// Timer
+
+- (void)updateTimerProperties:(TCSParseTimer *)parseTimer
+                        timer:(TCSTimer *)timer {
+    parseTimer.startTime = timer.startTime;
+    parseTimer.endTime = timer.endTime;
+    parseTimer.adjustment = timer.adjustmentValue;
+    parseTimer.message = timer.message;
+}
+
+- (void)createTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    TCSParseTimer *parseTimer = timer.providerEntity;
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    void (^executionBlock)(NSError *error) = ^(NSError *error) {
+    TCSParseTimer *parseTimer = [TCSParseTimer object];
+    [self updateTimerProperties:parseTimer timer:timer];
 
-        if (error != nil && error.code != kPFErrorObjectNotFound) {
+    NSManagedObjectID *objectID = timer.objectID;
+
+    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
 
             if (failureBlock != nil) {
                 failureBlock(error);
             }
 
         } else {
-            
-            timer.providerEntity = nil;
-            timer.providerEntityID = nil;
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseTimer.objectId);
+            }
+        }
+    }];
+}
+
+- (void)updateTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (timer.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer update")];
+
+            failureBlock(error);
+        }
+        return;
+    }
+
+    TCSParseTimer *parseTimer = [TCSParseTimer object];
+    parseTimer.objectId = timer.remoteId;
+    [self updateTimerProperties:parseTimer timer:timer];
+
+    NSManagedObjectID *objectID = timer.objectID;
+
+    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+        }
+    }];
+}
+
+- (void)deleteTimer:(TCSTimer *)timer
+            success:(void(^)(void))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (timer.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer delete")];
+
+            failureBlock(error);
+        }
+        return;
+    }
+
+    TCSParseTimer *parseTimer = [TCSParseTimer object];
+    parseTimer.objectId = timer.remoteId;
+    parseTimer.softDeleted = YES;
+    [self updateTimerProperties:parseTimer timer:timer];
+
+    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
 
             if (successBlock != nil) {
                 successBlock();
             }
         }
-    };
-
-    if (_connected) {
-
-        [parseTimer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            executionBlock(error);
-        }];
-
-    } else {
-        [parseTimer deleteEventually];
-        executionBlock(nil);
-    }
+    }];
 }
 
-- (void)fetchTimerWithID:(id)entityID
-                 success:(void(^)(TCSTimer *timer))successBlock
-                 failure:(void(^)(NSError *error))failureBlock {
+// Canned Message
 
-    if (successBlock != nil) {
-
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
-        }
-
-        PFQuery *query = [TCSParseTimer query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         getObjectInBackgroundWithId:entityID
-         block:^(PFObject *object, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 TCSTimer *result = (id)
-                 [self
-                  wrapProviderEntity:object
-                  inType:[TCSTimer class]
-                  provider:self];
-
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
+- (void)updateCannedMessageProperties:(TCSParseCannedMessage *)parseCannedMessage
+                        cannedMessage:(TCSCannedMessage *)cannedMessage {
+    parseCannedMessage.message = cannedMessage.message;
+    parseCannedMessage.order = cannedMessage.orderValue;
 }
 
-- (void)fetchTimersForProjects:(NSArray *)projects
-                      fromDate:(NSDate *)fromDate
-                        toDate:(NSDate *)toDate
-                           now:(NSDate *)now
-                       success:(void(^)(NSArray *timers))successBlock
-                       failure:(void(^)(NSError *error))failureBlock {
+- (void)createCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
 
-    if (successBlock != nil) {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
-        if ([PFUser currentUser] == nil) {
+    TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
+    [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
+
+    NSManagedObjectID *objectID = cannedMessage.objectID;
+
+    [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
             if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
+                failureBlock(error);
             }
-            return;
-        }
-
-        if (projects.count == 0) {
-            successBlock(nil);
-            return;
-        }
-
-        NSMutableArray *projectList = [NSMutableArray array];
-        NSMutableArray *groupList = [NSMutableArray array];
-
-        for (id obj in projects) {
-            if ([obj isKindOfClass:[TCSParseGroup class]]) {
-                [groupList addObject:obj];
-            } else {
-                [projectList addObject:obj];
-            }
-        }
-
-        for (TCSParseGroup *group in groupList) {
-            for (TCSParseProject *project in group.children) {
-                if ([projectList containsObject:project] == NO) {
-                    [projectList addObject:project];
-                }
-            }
-        }
-
-        NSPredicate *predicate;
-
-        if ([fromDate isLessThanOrEqualTo:now]) {
-
-            predicate =
-            [NSPredicate predicateWithFormat:
-             @"(project in %@) and ((startTime <= %@ and endTime >= %@) or (endTime = null and startTime <= %@))",
-             projectList, toDate, fromDate, now];
 
         } else {
 
-            predicate =
-            [NSPredicate predicateWithFormat:
-             @"(project in %@) and (startTime <= %@ and endTime >= %@)",
-             projectList, toDate, fromDate];
+            if (successBlock != nil) {
+                successBlock(objectID, parseCannedMessage.objectId);
+            }
         }
-
-        NSString *className =
-        NSStringFromClass([TCSParseTimer class]);
-        PFQuery *query =
-        [PFQuery
-         queryWithClassName:className
-         predicate:predicate];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 NSArray *result =
-                 [self
-                  wrapProviderEntities:objects
-                  inType:[TCSTimer class]
-                  provider:self];
-
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
-    }
+    }];
 }
 
-- (void)fetchTimers:(void(^)(NSArray *groups))successBlock
-            failure:(void(^)(NSError *error))failureBlock {
+- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
 
-    if (successBlock != nil) {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 
-        if ([PFUser currentUser] == nil) {
-            if (failureBlock != nil) {
-#warning TODO : add NSError
-                failureBlock(nil);
-            }
-            return;
+    if (cannedMessage.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for cannedMessage update")];
+
+            failureBlock(error);
         }
-
-        PFQuery *query = [TCSParseTimer query];
-        [query whereKey:@"user" equalTo:[PFUser currentUser]];
-        query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-        [query
-         findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-
-             if (error != nil) {
-
-                 if (failureBlock != nil) {
-                     failureBlock(error);
-                 }
-
-             } else {
-
-                 NSArray *result =
-                 [self
-                  wrapProviderEntities:objects
-                  inType:[TCSTimer class]
-                  provider:self];
-
-                 successBlock(result);
-             }
-         }];
-    } else {
-        NSLog(@"%s - Warning: called fetch method with no successBlock", __PRETTY_FUNCTION__);
+        return;
     }
+
+    TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
+    parseCannedMessage.objectId = cannedMessage.remoteId;
+    [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
+
+    NSManagedObjectID *objectID = cannedMessage.objectID;
+
+    [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+        }
+    }];
+}
+
+- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+                    success:(void(^)(void))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (cannedMessage.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for cannedMessage delete")];
+
+            failureBlock(error);
+        }
+        return;
+    }
+
+    TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
+    parseCannedMessage.objectId = cannedMessage.remoteId;
+    parseCannedMessage.softDeleted = YES;
+    [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
+
+    [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
 }
 
 #pragma mark - Singleton Methods

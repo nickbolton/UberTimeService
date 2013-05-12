@@ -59,8 +59,12 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
 }
 
-- (id <TCSServiceRemoteProvider>)serviceProviderOfType:(Class)providerClass {
-    return _remoteServiceProviders[NSStringFromClass(providerClass)];
+- (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass {
+    return [self serviceProviderNamed:NSStringFromClass(providerClass)];
+}
+
+- (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName {
+    return _remoteServiceProviders[providerName];
 }
 
 - (void)deleteAllData:(void(^)(void))successBlock
@@ -415,10 +419,12 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (void)createCannedMessage:(NSString *)message
+             remoteProvider:(NSString *)remoteProvider
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
     [_localService
      createCannedMessage:message
+     remoteProvider:remoteProvider
      success:successBlock
      failure:failureBlock];
 }

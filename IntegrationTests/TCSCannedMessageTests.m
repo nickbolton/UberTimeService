@@ -32,6 +32,7 @@
 
     [self.service
      createCannedMessage:messageValue
+     remoteProvider:nil
      success:^(TCSCannedMessage *cannedMessage) {
 
          self.cannedMessage1 = cannedMessage;
@@ -46,6 +47,7 @@
 
          [self.service
           createCannedMessage:messageValue2
+          remoteProvider:nil
           success:^(TCSCannedMessage *cannedMessage) {
 
               self.cannedMessage2 = cannedMessage;
@@ -60,6 +62,7 @@
 
               [self.service
                createCannedMessage:messageValue3
+               remoteProvider:nil
                success:^(TCSCannedMessage *cannedMessage) {
 
                    self.cannedMessage3 = cannedMessage;

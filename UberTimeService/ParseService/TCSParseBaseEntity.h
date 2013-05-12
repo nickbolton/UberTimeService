@@ -10,4 +10,6 @@
 
 @interface TCSParseBaseEntity : PFObject
 
+@property (nonatomic, getter = isSoftDeleted) BOOL softDeleted;
+
 @end

@@ -10,4 +10,6 @@
 
 @implementation TCSParseBaseEntity
 
+@dynamic softDeleted;
+
 @end

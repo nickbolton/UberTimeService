@@ -6,6 +6,78 @@
 
 @synthesize editing = _editing;
 
++ (void)createRemoteObject:(TCSTimer *)localEntity
+            remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
+                   success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (remoteProvider != nil) {
+
+        NSAssert([localEntity isKindOfClass:[TCSTimer class]],
+                 @"No a TCSTimer object");
+
+        [remoteProvider
+         createTimer:localEntity
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+        if (failureBlock != nil) {
+            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+        }
+    }
+}
+
++ (void)updateRemoteObject:(TCSTimer *)localEntity
+            remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
+                   success:(void(^)(NSManagedObjectID *objectID))successBlock
+                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (successBlock != nil) {
+
+        NSAssert([localEntity isKindOfClass:[TCSTimer class]],
+                 @"No a TCSTimer object");
+
+        [remoteProvider
+         updateTimer:localEntity
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+        if (failureBlock != nil) {
+            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+        }
+    }
+}
+
++ (void)deleteRemoteObject:(TCSTimer *)localEntity
+            remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
+                   success:(void(^)(void))successBlock
+                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    NSAssert([localEntity isKindOfClass:[TCSTimer class]],
+             @"No a TCSTimer object");
+
+    if (successBlock != nil) {
+
+        [remoteProvider
+         deleteTimer:localEntity
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+        if (failureBlock != nil) {
+            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+        }
+    }
+}
+
 + (NSTimeInterval)combinedTimeForStartTime:(NSDate *)startTime
                                    endTime:(NSDate *)endDate
                                 adjustment:(NSTimeInterval)adjustment {

@@ -5,9 +5,12 @@
 
 
 extern const struct TCSBaseEntityAttributes {
-	__unsafe_unretained NSString *dirty;
+	__unsafe_unretained NSString *entityVersion;
+	__unsafe_unretained NSString *pending;
+	__unsafe_unretained NSString *remoteDeleted;
 	__unsafe_unretained NSString *remoteId;
 	__unsafe_unretained NSString *remoteProvider;
+	__unsafe_unretained NSString *updateTime;
 } TCSBaseEntityAttributes;
 
 extern const struct TCSBaseEntityRelationships {
@@ -15,6 +18,9 @@ extern const struct TCSBaseEntityRelationships {
 
 extern const struct TCSBaseEntityFetchedProperties {
 } TCSBaseEntityFetchedProperties;
+
+
+
 
 
 
@@ -33,14 +39,38 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* dirty;
+@property (nonatomic, strong) NSNumber* entityVersion;
 
 
-@property BOOL dirtyValue;
-- (BOOL)dirtyValue;
-- (void)setDirtyValue:(BOOL)value_;
+@property int64_t entityVersionValue;
+- (int64_t)entityVersionValue;
+- (void)setEntityVersionValue:(int64_t)value_;
 
-//- (BOOL)validateDirty:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateEntityVersion:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSNumber* pending;
+
+
+@property BOOL pendingValue;
+- (BOOL)pendingValue;
+- (void)setPendingValue:(BOOL)value_;
+
+//- (BOOL)validatePending:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSNumber* remoteDeleted;
+
+
+@property BOOL remoteDeletedValue;
+- (BOOL)remoteDeletedValue;
+- (void)setRemoteDeletedValue:(BOOL)value_;
+
+//- (BOOL)validateRemoteDeleted:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -61,6 +91,14 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updateTime;
+
+
+//- (BOOL)validateUpdateTime:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 
 @end
@@ -72,11 +110,29 @@ extern const struct TCSBaseEntityFetchedProperties {
 @interface _TCSBaseEntity (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSNumber*)primitiveDirty;
-- (void)setPrimitiveDirty:(NSNumber*)value;
+- (NSNumber*)primitiveEntityVersion;
+- (void)setPrimitiveEntityVersion:(NSNumber*)value;
 
-- (BOOL)primitiveDirtyValue;
-- (void)setPrimitiveDirtyValue:(BOOL)value_;
+- (int64_t)primitiveEntityVersionValue;
+- (void)setPrimitiveEntityVersionValue:(int64_t)value_;
+
+
+
+
+- (NSNumber*)primitivePending;
+- (void)setPrimitivePending:(NSNumber*)value;
+
+- (BOOL)primitivePendingValue;
+- (void)setPrimitivePendingValue:(BOOL)value_;
+
+
+
+
+- (NSNumber*)primitiveRemoteDeleted;
+- (void)setPrimitiveRemoteDeleted:(NSNumber*)value;
+
+- (BOOL)primitiveRemoteDeletedValue;
+- (void)setPrimitiveRemoteDeletedValue:(BOOL)value_;
 
 
 
@@ -89,6 +145,12 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 - (NSString*)primitiveRemoteProvider;
 - (void)setPrimitiveRemoteProvider:(NSString*)value;
+
+
+
+
+- (NSDate*)primitiveUpdateTime;
+- (void)setPrimitiveUpdateTime:(NSDate*)value;
 
 
 

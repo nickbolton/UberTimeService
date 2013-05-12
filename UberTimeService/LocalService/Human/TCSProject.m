@@ -3,6 +3,78 @@
 
 @implementation TCSProject
 
++ (void)createRemoteObject:(TCSProject *)localEntity
+            remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
+                   success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (remoteProvider != nil) {
+
+        NSAssert([localEntity isKindOfClass:[TCSProject class]],
+                 @"No a TCSProject object");
+
+        [remoteProvider
+         createProject:localEntity
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+        if (failureBlock != nil) {
+            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+        }
+    }
+}
+
++ (void)updateRemoteObject:(TCSProject *)localEntity
+            remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
+                   success:(void(^)(NSManagedObjectID *objectID))successBlock
+                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if (successBlock != nil) {
+
+        NSAssert([localEntity isKindOfClass:[TCSProject class]],
+                 @"No a TCSProject object");
+
+        [remoteProvider
+         updateProject:localEntity
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+        if (failureBlock != nil) {
+            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+        }
+    }
+}
+
++ (void)deleteRemoteObject:(TCSProject *)localEntity
+            remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
+                   success:(void(^)(void))successBlock
+                   failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    NSAssert([localEntity isKindOfClass:[TCSProject class]],
+             @"No a TCSProject object");
+
+    if (successBlock != nil) {
+
+        [remoteProvider
+         deleteProject:localEntity
+         success:successBlock
+         failure:failureBlock];
+
+    } else {
+        if (failureBlock != nil) {
+            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+        }
+    }
+}
+
 - (BOOL)isActive {
     TCSProject *activeProject =
     [TCSService sharedInstance].activeTimer.project;

@@ -12,8 +12,12 @@
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
 #import "NSArray+PBFoundation.h"
+#import "NSNotification+PBFoundation.h"
+#import "TCSBaseEntity.h"
 
 @interface TCSLocalService()
+
+@property (nonatomic, strong) NSMutableSet *internallyEditedEntities;
 
 @end
 
@@ -37,6 +41,21 @@
          name:UIApplicationDidEnterBackgroundNotification
          object:nil];
 #endif
+
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(objectsDidChange:)
+         name:NSManagedObjectContextObjectsDidChangeNotification
+         object:self.defaultLocalManagedObjectContext];
+
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(didSave:)
+         name:NSManagedObjectContextDidSaveNotification
+         object:self.defaultLocalManagedObjectContext];
+
+        self.internallyEditedEntities = [NSMutableSet set];
+        
     }
     return self;
 }
@@ -390,7 +409,9 @@
 
     NSArray *projects =
     [TCSProject
-     MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+     MR_findByAttribute:@"remoteDeleted"
+     withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
 
     return projects;
 }
@@ -489,13 +510,15 @@
 - (NSArray *)allGroups {
     return
     [TCSGroup
-     MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+     MR_findByAttribute:@"remoteDeleted"
+     withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
 }
 
 - (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"parent = null"];
+    [NSPredicate predicateWithFormat:@"parent = null AND remoteDeleted = 0"];
 
     NSArray *entities =
     [TCSTimedEntity
@@ -540,6 +563,7 @@
         [groupTarget addChildrenObject:group];
 
         group.name = toProject.name;
+        group.remoteProvider = localToProject.remoteProvider;
 
         [self
          doMoveProject:localSourceProject
@@ -680,6 +704,7 @@
         timer = [TCSTimer MR_createInContext:localContext];
         timer.startTime = [NSDate date];
         timer.project = updatedProject;
+        timer.remoteProvider = updatedProject.remoteProvider;
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -734,6 +759,7 @@
         timer.endTime = [startTime dateByAddingSeconds:duration];
         timer.adjustment = @(0);
         timer.project = updatedProject;
+        timer.remoteProvider = updatedProject.remoteProvider;
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -1095,6 +1121,7 @@
     rolledTimer.endTime = finalEndTime;
     rolledTimer.project = project;
     rolledTimer.message = timer.message;
+    rolledTimer.remoteProvider = project.remoteProvider;
 
     [project addTimersObject:rolledTimer];
 
@@ -1274,7 +1301,7 @@
 
     NSPredicate * predicate =
     [NSPredicate predicateWithFormat:
-     @"((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
+     @"(remoteDeleted = 0) and ((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
      timedEntities, timedEntities, toDate, fromDate, toDate, now, fromDate];
 
     NSArray *timers =
@@ -1293,7 +1320,9 @@
 
     return
     [TCSTimer
-     MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+     MR_findByAttribute:@"remoteDeleted"
+     withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
 }
 
 - (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime {
@@ -1301,7 +1330,9 @@
     if (sortedByStartTime) {
         return
         [TCSTimer
-         MR_findAllSortedBy:@"startTime"
+         MR_findByAttribute:@"remoteDeleted"
+         withValue:@NO
+         andOrderBy:@"startTime"
          ascending:YES
          inContext:[self managedObjectContextForCurrentThread]];
     }
@@ -1315,7 +1346,15 @@
 }
 
 - (TCSTimer *)activeTimer {
-    NSArray *activeTimers = [TCSTimer MR_findByAttribute:@"endTime" withValue:nil];
+
+    NSPredicate *predicate =
+    [NSPredicate predicateWithFormat:@"endTime = nil AND remoteDeleted = 0"];
+
+    NSArray *activeTimers =
+    [TCSTimer
+     MR_findAllWithPredicate:predicate
+     inContext:[self managedObjectContextForCurrentThread]];
+
     NSAssert(activeTimers.count <= 1, @"More than one active timer!");
     return activeTimers.firstObject;
 }
@@ -1384,7 +1423,9 @@
 - (NSArray *)allCannedMessages {
     return
     [TCSCannedMessage
-     MR_findAllSortedBy:@"order"
+     MR_findByAttribute:@"remoteDeleted"
+     withValue:@NO
+     andOrderBy:@"order"
      ascending:YES
      inContext:[self managedObjectContextForCurrentThread]];
 }
@@ -1397,6 +1438,7 @@
 }
 
 - (void)createCannedMessage:(NSString *)message
+             remoteProvider:(NSString *)remoteProvider
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
@@ -1405,8 +1447,15 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
+        NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"remoteDeleted = 0"];
+
         TCSCannedMessage *lastCannedMessage =
-        [TCSCannedMessage MR_findFirstOrderedByAttribute:@"order" ascending:NO];
+        [TCSCannedMessage
+         MR_findFirstWithPredicate:predicate
+         sortedBy:@"order"
+         ascending:NO
+         inContext:localContext];
 
         NSInteger order = 0;
 
@@ -1418,6 +1467,7 @@
 
         cannedMessage.message = message;
         cannedMessage.orderValue = order;
+        cannedMessage.remoteProvider = remoteProvider;
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -1460,7 +1510,9 @@
 
         NSArray *orderedMessages =
         [TCSCannedMessage
-         MR_findAllSortedBy:@"order"
+         MR_findByAttribute:@"remoteDeleted"
+         withValue:@NO
+         andOrderBy:@"order"
          ascending:YES
          inContext:localContext];
 
@@ -1578,6 +1630,207 @@
             }
         }
     }];
+}
+
+#pragma mark - Remote Handling
+
+- (void)objectsDidChange:(NSNotification *)notification {
+
+    [[NSNotificationCenter defaultCenter]
+     removeObserver:self
+     name:NSManagedObjectContextObjectsDidChangeNotification
+     object:self.defaultLocalManagedObjectContext];
+
+    for (TCSBaseEntity *entity in notification.insertedManagedObjects) {
+
+        if ([_internallyEditedEntities containsObject:entity.objectID] == NO) {
+            [_internallyEditedEntities addObject:entity.objectID];
+            entity.entityVersionValue++;
+            entity.pendingValue =
+            [[TCSService sharedInstance] serviceProviderNamed:entity.remoteProvider] != nil;
+        }
+
+        [_internallyEditedEntities removeObject:entity.objectID];
+    }
+    for (TCSBaseEntity *entity in notification.updatedManagedObjects) {
+        if ([_internallyEditedEntities containsObject:entity.objectID] == NO) {
+            [_internallyEditedEntities addObject:entity.objectID];
+            entity.entityVersionValue++;
+            entity.pendingValue =
+            [[TCSService sharedInstance] serviceProviderNamed:entity.remoteProvider] != nil;
+        }
+        [_internallyEditedEntities removeObject:entity.objectID];
+    }
+    for (TCSBaseEntity *entity in notification.deletedManagedObjects) {
+        if ([_internallyEditedEntities containsObject:entity.objectID] == NO) {
+            [_internallyEditedEntities addObject:entity.objectID];
+            entity.pendingValue =
+            [[TCSService sharedInstance] serviceProviderNamed:entity.remoteProvider] != nil;
+        }
+        [_internallyEditedEntities removeObject:entity.objectID];
+    }
+
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(objectsDidChange:)
+     name:NSManagedObjectContextObjectsDidChangeNotification
+     object:self.defaultLocalManagedObjectContext];
+}
+
+- (void)didSave:(NSNotification *)notification {
+
+    NSTimeInterval delayInSeconds = .1f;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self handleDidSave:notification];
+    });
+}
+
+- (void)handleDidSave:(NSNotification *)notification {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    id <TCSServiceRemoteProvider> remoteProvider;
+
+    for (TCSBaseEntity *entity in notification.insertedManagedObjects) {
+
+        NSLog(@"saved inserted entity: %@", entity);
+
+        if (entity.pendingValue) {
+            remoteProvider =
+            [[TCSService sharedInstance]
+             serviceProviderNamed:entity.remoteProvider];
+
+            if (remoteProvider != nil) {
+                [entity.class
+                 createRemoteObject:entity
+                 remoteProvider:remoteProvider
+                 success:^(NSManagedObjectID *objectID, NSString *remoteID) {
+
+                     NSError *error = nil;
+
+                     TCSBaseEntity *updatedEntity = (id)
+                     [[self managedObjectContextForCurrentThread]
+                      existingObjectWithID:objectID
+                      error:&error];
+
+                     NSLog(@"createdEntity: %@", updatedEntity);
+
+                     if (objectID != nil) {
+                         [_internallyEditedEntities addObject:objectID];
+                         updatedEntity.pendingValue = NO;
+                     }
+
+                     if (error != nil) {
+                         NSLog(@"Error: %@", error);
+                     } else {
+
+                         [self
+                          updateEntities:@[updatedEntity]
+                          success:nil
+                          failure:^(NSError *error) {
+
+                              NSLog(@"Error: %@", error);
+                          }];
+                     }
+                     
+                 } failure:^(NSError *error) {
+                     
+                     NSLog(@"Error: %@", error);
+                 }];
+            }
+        }
+    }
+
+    for (TCSBaseEntity *entity in notification.updatedManagedObjects) {
+
+        NSLog(@"saved updated entity: %@", entity);
+
+        if (entity.pendingValue) {
+
+            remoteProvider =
+            [[TCSService sharedInstance]
+             serviceProviderNamed:entity.remoteProvider];
+
+            if (remoteProvider != nil) {
+
+                [entity.class
+                 updateRemoteObject:entity
+                 remoteProvider:remoteProvider
+                 success:^(NSManagedObjectID *objectID) {
+
+                     NSError *error = nil;
+
+                     TCSBaseEntity *updatedEntity = (id)
+                     [[self managedObjectContextForCurrentThread]
+                      existingObjectWithID:objectID
+                      error:&error];
+
+                     NSLog(@"updatedEntity: %@", updatedEntity);
+
+                     if (objectID != nil) {
+                         [_internallyEditedEntities addObject:objectID];
+                         updatedEntity.pendingValue = NO;
+                     }
+
+                     if (error != nil) {
+                         NSLog(@"Error: %@", error);
+                     } else {
+
+                         [self
+                          updateEntities:@[updatedEntity]
+                          success:nil
+                          failure:^(NSError *error) {
+                              
+                              NSLog(@"Error: %@", error);
+                          }];
+                     }
+                     
+                 } failure:^(NSError *error) {
+                     
+                     NSLog(@"Error: %@", error);
+                 }];
+            }
+        }
+    }
+
+    for (TCSBaseEntity *entity in notification.deletedManagedObjects) {
+
+        NSLog(@"saved deleted entity: %@", entity);
+
+        if (entity.pendingValue) {
+
+            remoteProvider =
+            [[TCSService sharedInstance]
+             serviceProviderNamed:entity.remoteProvider];
+
+            if (remoteProvider != nil) {
+
+                [entity.class
+                 deleteRemoteObject:entity
+                 remoteProvider:remoteProvider
+                 success:^{
+
+                     NSLog(@"successfully deleted entity: %@", entity);
+                     [_internallyEditedEntities addObject:entity.objectID];
+                     entity.pendingValue = NO;
+
+                     [self
+                      updateEntities:@[entity]
+                      success:nil
+                      failure:^(NSError *error) {
+
+                          NSLog(@"Error: %@", error);
+                      }];
+                     
+                 } failure:^(NSError *error) {
+                     
+                     NSLog(@"Error: %@", error);
+                 }];
+            }
+        }
+    }
+
 }
 
 #pragma mark - Singleton Methods
