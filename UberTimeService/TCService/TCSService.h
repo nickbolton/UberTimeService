@@ -10,6 +10,7 @@
 #import "TCSGroup.h"
 #import "TCSTimer.h"
 #import "TCSCannedMessage.h"
+#import "NSError+Utilities.h"
 
 extern NSString * const kTCSServiceDataResetNotification;
 
