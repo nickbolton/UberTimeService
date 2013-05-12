@@ -1,5 +1,6 @@
 #import "TCSCannedMessage.h"
 #import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @implementation TCSCannedMessage
 

@@ -1,6 +1,8 @@
 #import "TCSTimer.h"
 #import "TCSDateRange.h"
 #import "NSDate+Utilities.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @implementation TCSTimer
 

@@ -16,6 +16,8 @@
 #import "TCSParseProject.h"
 #import "TCSParseTimer.h"
 #import "TCSParseCannedMessage.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @interface TCSParseService()
 

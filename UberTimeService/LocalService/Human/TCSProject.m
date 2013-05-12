@@ -1,5 +1,7 @@
 #import "TCSProject.h"
 #import "TCSService.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @implementation TCSProject
 
