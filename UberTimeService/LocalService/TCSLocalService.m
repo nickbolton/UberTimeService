@@ -150,8 +150,8 @@
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
-        remoteProvider = _defaultRemoteProvider;
+    if (remoteProvider == nil) {
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
     }
 
     [self
@@ -171,8 +171,8 @@
                                    modifiers:(NSInteger)modifiers
                                    inContext:(NSManagedObjectContext *)context {
 
-    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
-        remoteProvider = _defaultRemoteProvider;
+    if (remoteProvider == nil) {
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
     }
 
     TCSProject *project =
@@ -195,8 +195,8 @@
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
-        remoteProvider = _defaultRemoteProvider;
+    if (remoteProvider == nil) {
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
     }
 
     __block TCSProject *project = nil;
@@ -1454,8 +1454,8 @@
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil && _defaultRemoteProvider != nil) {
-        remoteProvider = _defaultRemoteProvider;
+    if (remoteProvider == nil) {
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
     }
 
     __block TCSCannedMessage *cannedMessage = nil;

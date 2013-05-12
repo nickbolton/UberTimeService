@@ -37,9 +37,6 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (BOOL)isUserAuthenticated;
 
-- (void)deleteAllData:(void(^)(void))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
 // Project
 
 - (void)createProject:(TCSProject *)project
@@ -108,6 +105,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @property (nonatomic, readonly) TCSTimer *activeTimer;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
+@property (nonatomic, strong) NSString *defaultRemoteProvider;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

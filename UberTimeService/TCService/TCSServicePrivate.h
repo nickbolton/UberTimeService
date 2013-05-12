@@ -8,7 +8,6 @@
 
 @protocol TCSServiceLocalService <NSObject>
 
-@property (nonatomic, strong) id <TCSServiceRemoteProvider> removeProvider;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
 
 - (void)deleteAllData:(void(^)(void))successBlock

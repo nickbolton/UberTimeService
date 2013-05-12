@@ -11,8 +11,6 @@
 
 @interface TCSLocalService : TCSDefaultProvider <TCSServiceLocalService>
 
-@property (nonatomic, strong) NSString *defaultRemoteProvider;
-
 + (instancetype)sharedInstance;
 
 - (void)resetCoreDataStack;
