@@ -9,14 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "TCSParseBaseEntity.h"
 
-@class TCSParseGroup;
-
 @interface TCSParseTimedEntity : TCSParseBaseEntity
 
 @property (nonatomic, getter = isArchived) BOOL archived;
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSInteger color;
-
-@property (nonatomic) TCSParseGroup *parent;
+@property (nonatomic) NSString *parentID;
 
 @end

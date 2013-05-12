@@ -15,7 +15,7 @@
 @dynamic endTime;
 @dynamic message;
 @dynamic adjustment;
-@dynamic project;
+@dynamic projectID;
 
 + (NSString *)parseClassName {
     return NSStringFromClass([self class]);

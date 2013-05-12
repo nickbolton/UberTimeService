@@ -11,5 +11,6 @@
 @implementation TCSParseBaseEntity
 
 @dynamic softDeleted;
+@dynamic entityVersion;
 
 @end

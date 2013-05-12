@@ -48,7 +48,7 @@ extern NSString * const kTCSServiceDataResetNotification;
               failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
+              success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
 // Group
@@ -62,7 +62,7 @@ extern NSString * const kTCSServiceDataResetNotification;
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 // Timer
@@ -76,7 +76,7 @@ extern NSString * const kTCSServiceDataResetNotification;
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 // Canned Message
@@ -90,7 +90,7 @@ extern NSString * const kTCSServiceDataResetNotification;
             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
-            success:(void(^)(void))successBlock
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 @end

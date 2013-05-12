@@ -12,6 +12,4 @@
 
 + (NSString *)parseClassName;
 
-@property (nonatomic) NSArray *children;
-
 @end

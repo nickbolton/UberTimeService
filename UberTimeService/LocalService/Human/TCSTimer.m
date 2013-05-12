@@ -58,7 +58,7 @@
 
 + (void)deleteRemoteObject:(TCSTimer *)localEntity
             remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
-                   success:(void(^)(void))successBlock
+                   success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);

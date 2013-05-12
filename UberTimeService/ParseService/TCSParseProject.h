@@ -16,6 +16,5 @@
 @property (nonatomic) NSInteger keyCode;
 @property (nonatomic) NSInteger modifiers;
 @property (nonatomic) NSInteger order;
-@property (nonatomic) NSArray *timers;
 
 @end

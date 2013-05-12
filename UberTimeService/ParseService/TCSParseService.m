@@ -85,6 +85,10 @@
     }
 }
 
+- (id)safePropertyValue:(id)value {
+    return value != nil ? value : [NSNull null];
+}
+
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
@@ -239,13 +243,18 @@
 - (void)updateProjectProperties:(TCSParseProject *)parseProject
                         project:(TCSProject *)project {
 
-    parseProject.name = project.name;
+    parseProject.name = [self safePropertyValue:project.name];
     parseProject.filteredModifiers = project.filteredModifiersValue;
     parseProject.keyCode = project.keyCodeValue;
     parseProject.modifiers = project.modifiersValue;
     parseProject.color = project.colorValue;
     parseProject.archived = project.archivedValue;
     parseProject.order = project.orderValue;
+    parseProject.entityVersion = project.entityVersionValue;
+
+    NSString *stringID =
+    [TCSLocalService stringIDFromObjectID:project.parent.objectID];
+    parseProject.parentID = [self safePropertyValue:stringID];
 }
 
 - (void)createProject:(TCSProject *)project
@@ -316,7 +325,7 @@
 }
 
 - (void)deleteProject:(TCSProject *)project
-              success:(void(^)(void))successBlock
+              success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -338,6 +347,8 @@
     parseProject.softDeleted = YES;
     [self updateProjectProperties:parseProject project:project];
 
+    NSManagedObjectID *objectID = project.objectID;
+
     [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
@@ -348,7 +359,7 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+                successBlock(objectID);
             }
         }
     }];
@@ -358,9 +369,14 @@
 
 - (void)updateGroupProperties:(TCSParseGroup *)parseGroup
                       group:(TCSGroup *)group {
-    parseGroup.name = group.name;
+    parseGroup.name = [self safePropertyValue:group.name];
     parseGroup.color = group.colorValue;
     parseGroup.archived = group.archivedValue;
+    parseGroup.entityVersion = group.entityVersionValue;
+
+    NSString *stringID =
+    [TCSLocalService stringIDFromObjectID:group.parent.objectID];
+    parseGroup.parentID = [self safePropertyValue:stringID];
 }
 
 - (void)createGroup:(TCSGroup *)group
@@ -431,7 +447,7 @@
 }
 
 - (void)deleteGroup:(TCSGroup *)group
-            success:(void(^)(void))successBlock
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -453,6 +469,8 @@
     parseGroup.softDeleted = YES;
     [self updateGroupProperties:parseGroup group:group];
 
+    NSManagedObjectID *objectID = group.objectID;
+
     [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
@@ -463,7 +481,7 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+                successBlock(objectID);
             }
         }
     }];
@@ -473,10 +491,15 @@
 
 - (void)updateTimerProperties:(TCSParseTimer *)parseTimer
                         timer:(TCSTimer *)timer {
-    parseTimer.startTime = timer.startTime;
-    parseTimer.endTime = timer.endTime;
+    parseTimer.startTime = [self safePropertyValue:timer.startTime];
+    parseTimer.endTime = [self safePropertyValue:timer.endTime];
     parseTimer.adjustment = timer.adjustmentValue;
-    parseTimer.message = timer.message;
+    parseTimer.message = [self safePropertyValue:timer.message];
+    parseTimer.entityVersion = timer.entityVersionValue;
+
+    NSString *stringID =
+    [TCSLocalService stringIDFromObjectID:timer.project.objectID];
+    parseTimer.projectID = [self safePropertyValue:stringID];
 }
 
 - (void)createTimer:(TCSTimer *)timer
@@ -547,7 +570,7 @@
 }
 
 - (void)deleteTimer:(TCSTimer *)timer
-            success:(void(^)(void))successBlock
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -569,6 +592,8 @@
     parseTimer.softDeleted = YES;
     [self updateTimerProperties:parseTimer timer:timer];
 
+    NSManagedObjectID *objectID = timer.objectID;
+
     [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
@@ -579,7 +604,7 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+                successBlock(objectID);
             }
         }
     }];
@@ -589,8 +614,9 @@
 
 - (void)updateCannedMessageProperties:(TCSParseCannedMessage *)parseCannedMessage
                         cannedMessage:(TCSCannedMessage *)cannedMessage {
-    parseCannedMessage.message = cannedMessage.message;
+    parseCannedMessage.message = [self safePropertyValue:cannedMessage.message];
     parseCannedMessage.order = cannedMessage.orderValue;
+    parseCannedMessage.entityVersion = cannedMessage.entityVersionValue;
 }
 
 - (void)createCannedMessage:(TCSCannedMessage *)cannedMessage
@@ -661,7 +687,7 @@
 }
 
 - (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
-                    success:(void(^)(void))successBlock
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -683,6 +709,8 @@
     parseCannedMessage.softDeleted = YES;
     [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
+    NSManagedObjectID *objectID = cannedMessage.objectID;
+
     [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
@@ -693,7 +721,7 @@
         } else {
 
             if (successBlock != nil) {
-                successBlock();
+                successBlock(objectID);
             }
         }
     }];

@@ -11,8 +11,6 @@
 
 @implementation TCSParseGroup
 
-@dynamic children;
-
 + (NSString *)parseClassName {
     return NSStringFromClass([self class]);
 }

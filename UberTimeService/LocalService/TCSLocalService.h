@@ -13,6 +13,9 @@
 
 + (instancetype)sharedInstance;
 
++ (NSManagedObjectID *)objectIDFromStringID:(NSString *)stringID;
++ (NSString *)stringIDFromObjectID:(NSManagedObjectID *)objectID;
+
 - (void)resetCoreDataStack;
 
 @end

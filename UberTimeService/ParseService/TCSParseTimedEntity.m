@@ -13,6 +13,6 @@
 @dynamic archived;
 @dynamic name;
 @dynamic color;
-@dynamic parent;
+@dynamic parentID;
 
 @end

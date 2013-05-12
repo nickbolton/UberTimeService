@@ -15,7 +15,6 @@
 @dynamic keyCode;
 @dynamic modifiers;
 @dynamic order;
-@dynamic timers;
 
 + (NSString *)parseClassName {
     return NSStringFromClass([self class]);
