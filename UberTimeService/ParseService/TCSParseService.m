@@ -30,12 +30,17 @@
     self = [super init];
     if (self) {
 
-        [TCSParseGroup registerSubclass];
         [TCSParseProject registerSubclass];
+        [TCSParseGroup registerSubclass];
         [TCSParseTimer registerSubclass];
-        [Parse
-         setApplicationId:@"jF4VaTdB8FrBuFp52WFr9DzU70X9PPBeB9anwRga"
-         clientKey:@"4nNUdTExe0QhkOzNO1WYbplDAgYIjoCxinNmHlTO"];
+        [TCSParseCannedMessage registerSubclass];
+        [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
+
+        [Parse setApplicationId:@"jF4VaTdB8FrBuFp52WFr9DzU70X9PPBeB9anwRga"
+                      clientKey:@"4nNUdTExe0QhkOzNO1WYbplDAgYIjoCxinNmHlTO"];
+
+        [PFTwitterUtils initializeWithConsumerKey:nil  consumerSecret:nil];
+        [PFFacebookUtils initializeFacebook];
 
         self.reachability = [GCNetworkReachability reachabilityWithHostName:@"api.parse.com"];
 
