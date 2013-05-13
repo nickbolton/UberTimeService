@@ -19,10 +19,14 @@
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 
-@interface TCSParseService()
+@interface TCSParseService() {
+
+    BOOL _holdUpdates;
+}
 
 @property (nonatomic, strong) GCNetworkReachability *reachability;
 @property (nonatomic, getter = isConnected) BOOL connected;
+@property (nonatomic, strong) NSMutableDictionary *bufferedUpdates;
 
 @end
 
@@ -31,6 +35,8 @@
 - (id)init {
     self = [super init];
     if (self) {
+
+        self.bufferedUpdates = [NSMutableDictionary dictionary];
 
         [TCSParseProject registerSubclass];
         [TCSParseGroup registerSubclass];
@@ -238,6 +244,75 @@
     return YES;
 }
 
+- (void)holdUpdates {
+    _holdUpdates = YES;
+}
+
+- (BOOL)flushUpdates:(void(^)(NSDictionary *remoteIDMap))successBlock
+             failure:(void(^)(NSError *error))failureBlock {
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    @synchronized (self) {
+
+        if (_bufferedUpdates.count > 0) {
+
+            NSMutableArray *updates = [NSMutableArray array];
+
+            NSArray *objectIDs = _bufferedUpdates.allKeys;
+
+            for (NSManagedObjectID *objectID in objectIDs) {
+                [updates addObject:_bufferedUpdates[objectID]];
+            }
+
+            if (updates.count > 0) {
+
+                [PFObject
+                 saveAllInBackground:updates
+                 block:^(BOOL succeeded, NSError *error) {
+
+                     if (error != nil) {
+
+                         if (failureBlock != nil) {
+                             failureBlock(error);
+                         }
+
+                     } else {
+
+                         if (successBlock != nil) {
+
+                             NSMutableDictionary *result =
+                             [NSMutableDictionary dictionary];
+
+                             [objectIDs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                                 TCSParseBaseEntity *entity = updates[idx];
+                                 result[obj] = entity.objectId;
+                             }];
+
+                             successBlock(result);
+                         }
+                     }
+                 }];
+            }
+        }
+
+        [_bufferedUpdates removeAllObjects];
+    }
+    _holdUpdates = NO;
+
+    return YES;
+}
+
+- (void)bufferParseObject:(TCSBaseEntity *)entity
+                 objectID:(NSManagedObjectID *)objectID {
+
+    @synchronized (self) {
+        _bufferedUpdates[objectID] = entity;
+    }
+}
+
 // Project
 
 - (void)updateProjectProperties:(TCSParseProject *)parseProject
@@ -260,7 +335,7 @@
     }
 }
 
-- (void)createProject:(TCSProject *)project
+- (BOOL)createProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
@@ -270,6 +345,15 @@
     [self updateProjectProperties:parseProject project:project];
 
     NSManagedObjectID *objectID = project.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseProject objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -285,9 +369,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)updateProject:(TCSProject *)project
+- (BOOL)updateProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
@@ -302,7 +388,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseProject *parseProject = [TCSParseProject object];
@@ -310,6 +396,15 @@
     [self updateProjectProperties:parseProject project:project];
 
     NSManagedObjectID *objectID = project.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseProject objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -325,9 +420,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)deleteProject:(TCSProject *)project
+- (BOOL)deleteProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
@@ -342,7 +439,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseProject *parseProject = [TCSParseProject object];
@@ -351,6 +448,15 @@
     [self updateProjectProperties:parseProject project:project];
 
     NSManagedObjectID *objectID = project.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseProject objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -366,6 +472,8 @@
             }
         }
     }];
+
+    return YES;
 }
 
 // Group
@@ -385,7 +493,7 @@
     }
 }
 
-- (void)createGroup:(TCSGroup *)group
+- (BOOL)createGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
@@ -395,6 +503,15 @@
     [self updateGroupProperties:parseGroup group:group];
 
     NSManagedObjectID *objectID = group.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseGroup objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -410,9 +527,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)updateGroup:(TCSGroup *)group
+- (BOOL)updateGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
@@ -427,7 +546,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseGroup *parseGroup = [TCSParseGroup object];
@@ -435,6 +554,15 @@
     [self updateGroupProperties:parseGroup group:group];
 
     NSManagedObjectID *objectID = group.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseGroup objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -450,9 +578,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)deleteGroup:(TCSGroup *)group
+- (BOOL)deleteGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
@@ -467,7 +597,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseGroup *parseGroup = [TCSParseGroup object];
@@ -476,6 +606,15 @@
     [self updateGroupProperties:parseGroup group:group];
 
     NSManagedObjectID *objectID = group.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseGroup objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -491,6 +630,8 @@
             }
         }
     }];
+
+    return YES;
 }
 
 // Timer
@@ -507,7 +648,7 @@
     parseTimer.projectID = timer.project.remoteId;
 }
 
-- (void)createTimer:(TCSTimer *)timer
+- (BOOL)createTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
@@ -517,6 +658,15 @@
     [self updateTimerProperties:parseTimer timer:timer];
 
     NSManagedObjectID *objectID = timer.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseTimer objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -532,9 +682,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)updateTimer:(TCSTimer *)timer
+- (BOOL)updateTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
@@ -549,7 +701,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseTimer *parseTimer = [TCSParseTimer object];
@@ -557,6 +709,15 @@
     [self updateTimerProperties:parseTimer timer:timer];
 
     NSManagedObjectID *objectID = timer.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseTimer objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -572,9 +733,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)deleteTimer:(TCSTimer *)timer
+- (BOOL)deleteTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
@@ -589,7 +752,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseTimer *parseTimer = [TCSParseTimer object];
@@ -598,6 +761,15 @@
     [self updateTimerProperties:parseTimer timer:timer];
 
     NSManagedObjectID *objectID = timer.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseTimer objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -613,6 +785,8 @@
             }
         }
     }];
+
+    return YES;
 }
 
 // Canned Message
@@ -624,7 +798,7 @@
     parseCannedMessage.entityVersion = cannedMessage.entityVersionValue;
 }
 
-- (void)createCannedMessage:(TCSCannedMessage *)cannedMessage
+- (BOOL)createCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
@@ -634,6 +808,15 @@
     [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseCannedMessage objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -649,9 +832,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+- (BOOL)updateCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(NSManagedObjectID *objectID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
@@ -666,7 +851,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
@@ -674,6 +859,15 @@
     [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseCannedMessage objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -689,9 +883,11 @@
             }
         }
     }];
+
+    return YES;
 }
 
-- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+- (BOOL)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(NSManagedObjectID *objectID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
@@ -706,7 +902,7 @@
 
             failureBlock(error);
         }
-        return;
+        return NO;
     }
 
     TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
@@ -715,6 +911,15 @@
     [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:parseCannedMessage objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
 
     [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
@@ -730,6 +935,8 @@
             }
         }
     }];
+
+    return YES;
 }
 
 #pragma mark - Singleton Methods

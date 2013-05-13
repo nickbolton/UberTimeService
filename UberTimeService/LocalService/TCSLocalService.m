@@ -7,7 +7,7 @@
 //
 
 #import "TCSLocalService.h"
-#import "TCSLocalServiceHeaders.h"
+#import "TCSLocalServiceHeaders.h"s
 #import "CoreData+MagicalRecord.h"
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
@@ -17,7 +17,6 @@
 
 @interface TCSLocalService() {
 
-    NSInteger _remotePushCount;
     BOOL _savingUpdates;
 }
 
@@ -330,14 +329,21 @@
               success:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
+
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
         TCSProject *localProject = (id)
         (id)[localContext existingObjectWithID:project.objectID error:NULL];
 
         if (localProject != nil) {
-            [self markEntityAsDeleted:localProject];
-//            [localProject MR_deleteInContext:localContext];
+
+            @synchronized (self) {
+                [self markEntityAsDeleted:localProject];
+
+                for (TCSTimer *timer in localProject.timers) {
+                    [self markEntityAsDeleted:timer];
+                }
+            }
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -539,12 +545,17 @@
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
-        TCSProject *localGroup = (id)
+        TCSGroup *localGroup = (id)
         (id)[localContext existingObjectWithID:group.objectID error:NULL];
 
-        if (localGroup != nil) {
-            [self markEntityAsDeleted:localGroup];
-//            [localGroup MR_deleteInContext:localContext];
+        @synchronized (self) {
+            if (localGroup != nil) {
+                [self markEntityAsDeleted:localGroup];
+
+                for (TCSBaseEntity *entity in localGroup.children) {
+                    [self markEntityAsDeleted:entity];
+                }
+            }
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -1770,117 +1781,134 @@
     NSLog(@"updates: %@", updates);
 
     @synchronized (self) {
-        if (_savingUpdates || _remotePushCount > 0) {
+        if (_savingUpdates) {
             return;
-        }
-
-        for (TCSBaseEntity *entity in updates) {
-
-            if (entity.remoteProvider != nil) {
-                _remotePushCount++;
-            }
         }
     }
 
-    NSMutableDictionary *createdRemotedIDs = [NSMutableDictionary dictionary];
+    _savingUpdates = updates.count > 0;
+
     NSMutableSet *updatedObjectIDs = [NSMutableSet set];
-
-    void (^completion)(NSManagedObjectID *objectID, NSString *remoteID) =
-    ^(NSManagedObjectID *objectID, NSString *remoteID) {
-
-        @synchronized (self) {
-
-            if (objectID != nil) {
-
-                [updatedObjectIDs addObject:objectID];
-                
-                if (remoteID != nil) {
-                    createdRemotedIDs[objectID] = remoteID;
-                }
-            }
-
-            _remotePushCount--;
-
-            if (_remotePushCount == 0) {
-
-                _savingUpdates = YES;
-
-                [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-
-                    for (NSManagedObjectID *objectID in updatedObjectIDs) {
-
-                        NSError *error = nil;
-
-                        TCSBaseEntity *localEntity = (id)
-                        [localContext
-                         existingObjectWithID:objectID
-                         error:&error];
-
-                        if (error != nil) {
-                            NSLog(@"Error: %@", error);
-                        } else {
-                            localEntity.pendingValue = NO;
-
-                            NSString *remoteID = createdRemotedIDs[objectID];
-                            if (remoteID != nil) {
-                                localEntity.remoteId = remoteID;
-                            }
-                        }
-                    }
-
-                } completion:^(BOOL success, NSError *error) {
-
-                    _savingUpdates = NO;
-                }];                
-            }
-        }
-    };
+    NSMutableSet *remoteProviders = [NSMutableSet set];
 
     for (TCSBaseEntity *entity in updates) {
 
         if (entity.remoteProvider != nil) {
 
-            if (entity.remoteDeletedValue) {
+            id <TCSServiceRemoteProvider> remoteProvider =
+            [[TCSService sharedInstance]
+             serviceProviderNamed:entity.remoteProvider];
 
-                [self
-                 deleteRemoteEntity:entity
-                 success:^(NSManagedObjectID *objectID) {
+            if (remoteProvider != nil) {
 
-                     entity.pendingValue = NO;
-                     completion(objectID, nil);
+                [remoteProvider holdUpdates];
 
-                 } failure:^(NSError *error) {
-                     NSLog(@"Error: %@", error);
-                     completion(nil, nil);
-                 }];
+                [remoteProviders addObject:remoteProvider];
 
-            } else if (entity.remoteId == nil) {
+                if (entity.remoteDeletedValue) {
+
+                    [self
+                     deleteRemoteEntity:entity
+                     success:^(NSManagedObjectID *objectID) {
+
+                         NSAssert(NO, @"should not have saved yet");
+
+                     } failure:^(NSError *error) {
+                         NSLog(@"Error: %@", error);
+                     }];
+
+                } else if (entity.remoteId == nil) {
+
+                    [self
+                     createRemoteEntity:entity
+                     success:^(NSManagedObjectID *objectID, NSString *remoteID) {
+
+                         NSAssert(NO, @"should not have saved yet");
+
+                     } failure:^(NSError *error) {
+                         NSLog(@"Error: %@", error);
+                     }];
+
+                } else {
+
+                    [self
+                     updateRemoteEntity:entity
+                     success:^(NSManagedObjectID *objectID) {
+                         
+                         NSAssert(NO, @"should not have saved yet");
+
+                     } failure:^(NSError *error) {
+                         NSLog(@"Error: %@", error);
+                     }];
+                }
+            }
+        }
+    }
+
+    __block NSInteger asyncCount = remoteProviders.count;
+
+    for (id <TCSServiceRemoteProvider> remoteProvider in remoteProviders) {
+
+        BOOL requestSent =
+        [remoteProvider flushUpdates:^(NSDictionary *remoteIDMap) {
+
+            [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+                for (NSManagedObjectID *objectID in remoteIDMap) {
+
+                    NSError *error = nil;
+
+                    TCSBaseEntity *localEntity = (id)
+                    [localContext existingObjectWithID:objectID error:&error];
+
+                    if (error != nil) {
+                        NSLog(@"Error: %@", error);
+                    } else {
+
+                        localEntity.pendingValue = NO;
+                        localEntity.remoteId = remoteIDMap[objectID];
+                    }
+                }
                 
-                [self
-                 createRemoteEntity:entity
-                 success:^(NSManagedObjectID *objectID, NSString *remoteID) {
+            } completion:^(BOOL success, NSError *error) {
 
-                     entity.pendingValue = NO;
-                     completion(objectID, remoteID);
+                if (error != nil) {
+                    NSLog(@"Error: %@", error);
+                }
 
-                 } failure:^(NSError *error) {
-                     NSLog(@"Error: %@", error);
-                     completion(nil, nil);
-                 }];
-                
-            } else {
+                @synchronized (self) {
 
-                [self
-                 updateRemoteEntity:entity
-                 success:^(NSManagedObjectID *objectID) {
+                    asyncCount--;
 
-                     entity.pendingValue = NO;
-                     completion(objectID, nil);
+                    if (asyncCount == 0) {
+                        _savingUpdates = NO;
+                    }
+                }
+            }];
 
-                 } failure:^(NSError *error) {
-                     NSLog(@"Error: %@", error);
-                     completion(nil, nil);
-                 }];
+        } failure:^(NSError *error) {
+
+            @synchronized (self) {
+
+                asyncCount--;
+
+                if (asyncCount == 0) {
+                    _savingUpdates = NO;
+                }
+            }
+
+            NSLog(@"Error: %@", error);
+        }];
+
+        if (requestSent == NO) {
+
+            @synchronized (self) {
+
+                asyncCount--;
+
+                if (asyncCount == 0) {
+                    _savingUpdates = NO;
+                }
             }
         }
     }

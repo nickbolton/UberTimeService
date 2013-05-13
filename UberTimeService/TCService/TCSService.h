@@ -21,6 +21,9 @@ extern NSString * const kTCSServiceDataResetNotification;
 @property (nonatomic, readonly) NSString *name;
 
 - (void)clearCache;
+- (void)holdUpdates;
+- (BOOL)flushUpdates:(void(^)(NSDictionary *remoteIDMap))successBlock
+             failure:(void(^)(NSError *error))failureBlock;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
@@ -39,57 +42,57 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 // Project
 
-- (void)createProject:(TCSProject *)project
+- (BOOL)createProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
-- (void)updateProject:(TCSProject *)project
+- (BOOL)updateProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
-- (void)deleteProject:(TCSProject *)project
+- (BOOL)deleteProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
 // Group
 
-- (void)createGroup:(TCSGroup *)group
+- (BOOL)createGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)updateGroup:(TCSGroup *)group
+- (BOOL)updateGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)deleteGroup:(TCSGroup *)group
+- (BOOL)deleteGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 // Timer
 
-- (void)createTimer:(TCSTimer *)timer
+- (BOOL)createTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)updateTimer:(TCSTimer *)timer
+- (BOOL)updateTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)deleteTimer:(TCSTimer *)timer
+- (BOOL)deleteTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
 // Canned Message
 
-- (void)createCannedMessage:(TCSCannedMessage *)cannedMessage
+- (BOOL)createCannedMessage:(TCSCannedMessage *)cannedMessage
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)updateCannedMessage:(TCSCannedMessage *)cannedMessage
+- (BOOL)updateCannedMessage:(TCSCannedMessage *)cannedMessage
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
-- (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
+- (BOOL)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
