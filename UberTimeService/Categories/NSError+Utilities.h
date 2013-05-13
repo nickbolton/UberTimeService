@@ -10,6 +10,12 @@
 
 @interface NSError (Utilities)
 
+typedef NS_ENUM(NSInteger, TCErrorCode) {
+
+    TCErrorCodeUnknown = 0,
+    TCErrorCodePreviousOperationNotFinished,
+};
+
 + (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message;
 
 @end

@@ -252,9 +252,12 @@
     parseProject.order = project.orderValue;
     parseProject.entityVersion = project.entityVersionValue;
 
-    NSString *stringID =
-    [TCSLocalService stringIDFromObjectID:project.parent.objectID];
-    parseProject.parentID = [self safePropertyValue:stringID];
+    if (project.parent != nil) {
+        NSAssert(project.parent.remoteId != nil, @"No remoteId for project parent");
+        parseProject.parentID = project.parent.remoteId;
+    } else {
+        parseProject.parentID = [NSNull null];
+    }
 }
 
 - (void)createProject:(TCSProject *)project
@@ -374,9 +377,12 @@
     parseGroup.archived = group.archivedValue;
     parseGroup.entityVersion = group.entityVersionValue;
 
-    NSString *stringID =
-    [TCSLocalService stringIDFromObjectID:group.parent.objectID];
-    parseGroup.parentID = [self safePropertyValue:stringID];
+    if (group.parent != nil) {
+        NSAssert(group.parent.remoteId != nil, @"No remoteId for group parent");
+        parseGroup.parentID = group.parent.remoteId;
+    } else {
+        parseGroup.parentID = [NSNull null];
+    }
 }
 
 - (void)createGroup:(TCSGroup *)group
@@ -497,9 +503,8 @@
     parseTimer.message = [self safePropertyValue:timer.message];
     parseTimer.entityVersion = timer.entityVersionValue;
 
-    NSString *stringID =
-    [TCSLocalService stringIDFromObjectID:timer.project.objectID];
-    parseTimer.projectID = [self safePropertyValue:stringID];
+    NSAssert(timer.project.remoteId != nil, @"No remoteId for timer project");
+    parseTimer.projectID = timer.project.remoteId;
 }
 
 - (void)createTimer:(TCSTimer *)timer

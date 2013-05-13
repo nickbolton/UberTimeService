@@ -17,10 +17,24 @@
         NSAssert([localEntity isKindOfClass:[TCSGroup class]],
                  @"No a TCSGroup object");
 
-        [remoteProvider
-         createGroup:localEntity
-         success:successBlock
-         failure:failureBlock];
+        if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
+
+            [remoteProvider
+             createGroup:localEntity
+             success:successBlock
+             failure:failureBlock];
+
+        } else {
+            if (failureBlock != nil) {
+
+                NSError *error =
+                [NSError
+                 errorWithCode:TCErrorCodePreviousOperationNotFinished
+                 message:TCSLoc(@"timer.project.remoteId has yet to be retrieved")];
+
+                failureBlock(error);
+            }
+        }
         
     } else {
         if (failureBlock != nil) {
@@ -41,11 +55,25 @@
         NSAssert([localEntity isKindOfClass:[TCSGroup class]],
                  @"No a TCSGroup object");
 
-        [remoteProvider
-         updateGroup:localEntity
-         success:successBlock
-         failure:failureBlock];
-        
+        if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
+
+            [remoteProvider
+             updateGroup:localEntity
+             success:successBlock
+             failure:failureBlock];
+
+        } else {
+            if (failureBlock != nil) {
+
+                NSError *error =
+                [NSError
+                 errorWithCode:TCErrorCodePreviousOperationNotFinished
+                 message:TCSLoc(@"timer.project.remoteId has yet to be retrieved")];
+
+                failureBlock(error);
+            }
+        }
+
     } else {
         if (failureBlock != nil) {
             failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);

@@ -20,10 +20,22 @@
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
                  @"No a TCSTimer object");
 
-        [remoteProvider
-         createTimer:localEntity
-         success:successBlock
-         failure:failureBlock];
+        if (localEntity.project.remoteId != nil) {
+            [remoteProvider
+             createTimer:localEntity
+             success:successBlock
+             failure:failureBlock];
+        } else {
+            if (failureBlock != nil) {
+
+                NSError *error =
+                [NSError
+                 errorWithCode:TCErrorCodePreviousOperationNotFinished
+                 message:TCSLoc(@"timer.project.remoteId has yet to be retrieved")];
+                
+                failureBlock(error);
+            }
+        }
 
     } else {
         if (failureBlock != nil) {
@@ -44,11 +56,25 @@
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
                  @"No a TCSTimer object");
 
-        [remoteProvider
-         updateTimer:localEntity
-         success:successBlock
-         failure:failureBlock];
+        if (localEntity.project.remoteId != nil) {
 
+            [remoteProvider
+             updateTimer:localEntity
+             success:successBlock
+             failure:failureBlock];
+            
+        } else {
+            if (failureBlock != nil) {
+
+                NSError *error =
+                [NSError
+                 errorWithCode:TCErrorCodePreviousOperationNotFinished
+                 message:TCSLoc(@"timer.project.remoteId has yet to be retrieved")];
+
+                failureBlock(error);
+            }
+        }
+        
     } else {
         if (failureBlock != nil) {
             failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
