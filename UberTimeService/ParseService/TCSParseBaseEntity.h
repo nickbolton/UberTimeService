@@ -10,7 +10,7 @@
 
 @interface TCSParseBaseEntity : PFObject <TCSProvidedBaseEntity>
 
-@property (nonatomic, getter = isSoftDeleted) BOOL softDeleted;
+@property (nonatomic) BOOL softDeleted;
 @property (nonatomic) NSInteger entityVersion;
 
 @end

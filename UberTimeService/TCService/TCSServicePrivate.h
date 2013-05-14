@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
+extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
+
 @protocol TCSProvidedBaseEntity <NSObject>
 @property (nonatomic, readonly) NSString *utsRemoteID;
 @property (nonatomic, readonly) BOOL utsSoftDeleted;
@@ -44,9 +46,11 @@
 @property (nonatomic, readonly) NSInteger utsOrder;
 @end
 
+@protocol TCSServiceDelegate;
 @protocol TCSServiceLocalService <NSObject>
 
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
+@property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

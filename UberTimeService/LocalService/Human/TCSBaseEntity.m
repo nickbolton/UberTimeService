@@ -37,8 +37,8 @@
 
     self.entityVersionValue = entityVersion;
     self.remoteDeletedValue = remoteDeleted;
-    self.remoteId = remoteId;
-    self.updateTime = updateTime;
+    self.remoteId = [self nonNullValue:remoteId];
+    self.updateTime = [self nonNullValue:updateTime];
 
     if (markAsUpdated) {
         [self markEntityAsUpdated];
@@ -58,4 +58,10 @@
     [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
 }
 
+- (id)nonNullValue:(id)value {
+    if (value == [NSNull null]) {
+        return nil;
+    }
+    return value;
+}
 @end

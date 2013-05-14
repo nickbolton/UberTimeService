@@ -19,7 +19,7 @@
 }
 
 - (BOOL)utsSoftDeleted {
-    return self.isSoftDeleted;
+    return self.softDeleted;
 }
 
 - (NSInteger)utsEntityVersion {

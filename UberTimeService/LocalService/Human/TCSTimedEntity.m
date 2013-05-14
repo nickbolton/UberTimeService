@@ -208,7 +208,7 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
             updateTime:(NSDate *)updateTime
          markAsUpdated:(BOOL)markAsUpdated {
 
-    self.name = name;
+    self.name = [self nonNullValue:name];
     self.colorValue = color;
     self.archivedValue = archived;
 

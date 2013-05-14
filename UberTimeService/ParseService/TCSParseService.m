@@ -135,70 +135,90 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
     [groupQuery whereKey:@"user" equalTo:[PFUser currentUser]];
     groupQuery.cachePolicy = kPFCachePolicyNetworkOnly;
 
+    PFQuery *cannedMessageQuery = [TCSParseCannedMessage query];
+    [cannedMessageQuery whereKey:@"user" equalTo:[PFUser currentUser]];
+    cannedMessageQuery.cachePolicy = kPFCachePolicyNetworkOnly;
+
     [timerQuery findObjectsInBackgroundWithBlock:^(NSArray *timers, NSError *error) {
 
         [projectQuery findObjectsInBackgroundWithBlock:^(NSArray *projects, NSError *error) {
 
             [groupQuery findObjectsInBackgroundWithBlock:^(NSArray *groups, NSError *error) {
 
-                __block NSInteger asyncCount = timers.count + projects.count + groups.count;
-                __block NSError *firstError = nil;
+                [cannedMessageQuery findObjectsInBackgroundWithBlock:^(NSArray *cannedMessages, NSError *error) {
 
-                if (asyncCount == 0) {
-                    if (successBlock != nil) {
-                        successBlock();
+                    if (timers.count + projects.count + groups.count + cannedMessages.count == 0) {
+                        if (successBlock != nil) {
+                            successBlock();
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                void (^handleResposeBlock)(NSError *error) = ^(NSError *error) {
-                    if (error != nil && error.code != kPFErrorObjectNotFound) {
+                    __block NSError *firstError = nil;
 
-                        @synchronized (self) {
+                    dispatch_group_t group = dispatch_group_create();
+                    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
 
-                            if (firstError == nil) {
+                    for (TCSParseCannedMessage *cannedMessage in cannedMessages) {
+                        dispatch_group_async(group, queue, ^{
+
+                            NSError *error = nil;
+                            [cannedMessage delete:&error];
+
+                            if (error != nil && error.code != kPFErrorObjectNotFound && firstError == nil) {
                                 firstError = error;
                             }
+                        });
+                    }
 
-                            asyncCount--;
-                            if (asyncCount == 0) {
-                                if (failureBlock != nil) {
-                                    failureBlock(firstError);
-                                }
+                    for (TCSParseTimer *timer in timers) {
+                        dispatch_group_async(group, queue, ^{
+
+                            NSError *error = nil;
+                            [timer delete:&error];
+
+                            if (error != nil && error.code != kPFErrorObjectNotFound && firstError == nil) {
+                                firstError = error;
                             }
+                        });
+                    }
+
+                    for (TCSParseProject *project in projects) {
+                        dispatch_group_async(group, queue, ^{
+
+                            NSError *error = nil;
+                            [project delete:&error];
+
+                            if (error != nil && error.code != kPFErrorObjectNotFound && firstError == nil) {
+                                firstError = error;
+                            }
+                        });
+                    }
+
+                    for (TCSParseGroup *group in groups) {
+                        dispatch_group_async(group, queue, ^{
+
+                            NSError *error = nil;
+                            [group delete:&error];
+
+                            if (error != nil && error.code != kPFErrorObjectNotFound && firstError == nil) {
+                                firstError = error;
+                            }
+                        });
+                    }
+                    
+                    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+                    
+                    if (firstError != nil) {
+                        if (failureBlock != nil) {
+                            failureBlock(firstError);
                         }
-
                     } else {
-
-                        @synchronized (self) {
-
-                            asyncCount--;
-                            if (asyncCount == 0) {
-                                if (successBlock != nil) {
-                                    successBlock();
-                                }
-                            }
+                        if (successBlock != nil) {
+                            successBlock();
                         }
                     }
-                };
-
-                for (TCSParseTimer *timer in timers) {
-                    [timer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        handleResposeBlock(error);
-                    }];
-                }
-
-                for (TCSParseProject *project in projects) {
-                    [project deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        handleResposeBlock(error);
-                    }];
-                }
-
-                for (TCSParseGroup *group in groups) {
-                    [group deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        handleResposeBlock(error);
-                    }];
-                }
+                }];
             }];
         }];
     }];
@@ -260,11 +280,19 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
     _holdUpdates = YES;
 }
 
-- (BOOL)flushUpdates:(void(^)(NSDictionary *remoteIDMap))successBlock
-             failure:(void(^)(NSError *error))failureBlock {
+- (NSDictionary *)flushUpdates:(BOOL *)requestSent
+                         error:(NSError **)error {
 
-    if (_connected == NO) {
-        return NO;
+    // method needs to be synchronous because it's designed to be run in the background
+
+
+    NSDictionary *remoteIDMap = nil;
+
+    if (_connected == NO || [PFUser currentUser] == nil) {
+        if (requestSent != NULL) {
+            *requestSent = NO;
+        }
+        return nil;
     }
 
     @synchronized (self) {
@@ -281,32 +309,21 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
             if (updates.count > 0) {
 
-                [PFObject
-                 saveAllInBackground:updates
-                 block:^(BOOL succeeded, NSError *error) {
+                [PFObject saveAll:updates error:error];
 
-                     if (error != nil) {
+                if (*error == nil) {
 
-                         if (failureBlock != nil) {
-                             failureBlock(error);
-                         }
+                    NSMutableDictionary * result =
+                    [NSMutableDictionary dictionary];
 
-                     } else {
+                    NSInteger idx = 0;
+                    for (NSManagedObjectID *objectID in objectIDs) {
+                        TCSParseBaseEntity *entity = updates[idx++];
+                        result[objectID] = entity.objectId;
+                    };
 
-                         if (successBlock != nil) {
-
-                             NSMutableDictionary *result =
-                             [NSMutableDictionary dictionary];
-
-                             [objectIDs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                                 TCSParseBaseEntity *entity = updates[idx];
-                                 result[obj] = entity.objectId;
-                             }];
-
-                             successBlock(result);
-                         }
-                     }
-                 }];
+                    remoteIDMap = result;
+                }
             }
         }
 
@@ -314,7 +331,10 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
     }
     _holdUpdates = NO;
 
-    return YES;
+    if (requestSent != NULL) {
+        *requestSent = YES;
+    }
+    return remoteIDMap;
 }
 
 - (void)bufferParseObject:(TCSBaseEntity *)entity
@@ -353,7 +373,10 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
+    if ([PFUser currentUser] == nil) return NO;
+
     TCSParseProject *parseProject = [TCSParseProject object];
+    [parseProject setObject:[PFUser currentUser] forKey:@"user"];
     [self updateProjectProperties:parseProject project:project];
 
     NSManagedObjectID *objectID = project.objectID;
@@ -390,6 +413,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
               failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (project.remoteId.length == 0) {
 
@@ -441,6 +466,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
               failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (project.remoteId.length == 0) {
 
@@ -511,7 +538,10 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
+    if ([PFUser currentUser] == nil) return NO;
+
     TCSParseGroup *parseGroup = [TCSParseGroup object];
+    [parseGroup setObject:[PFUser currentUser] forKey:@"user"];
     [self updateGroupProperties:parseGroup group:group];
 
     NSManagedObjectID *objectID = group.objectID;
@@ -548,6 +578,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (group.remoteId.length == 0) {
 
@@ -599,6 +631,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (group.remoteId.length == 0) {
 
@@ -666,7 +700,10 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
+    if ([PFUser currentUser] == nil) return NO;
+
     TCSParseTimer *parseTimer = [TCSParseTimer object];
+    [parseTimer setObject:[PFUser currentUser] forKey:@"user"];
     [self updateTimerProperties:parseTimer timer:timer];
 
     NSManagedObjectID *objectID = timer.objectID;
@@ -703,6 +740,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (timer.remoteId.length == 0) {
 
@@ -754,6 +793,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (timer.remoteId.length == 0) {
 
@@ -816,7 +857,10 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
+    if ([PFUser currentUser] == nil) return NO;
+
     TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
+    [parseCannedMessage setObject:[PFUser currentUser] forKey:@"user"];
     [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
@@ -853,6 +897,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
                     failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (cannedMessage.remoteId.length == 0) {
 
@@ -904,6 +950,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
                     failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
 
     if (cannedMessage.remoteId.length == 0) {
 
@@ -964,21 +1012,46 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
         __block NSArray *projects = nil;
         __block NSArray *timers = nil;
         __block NSArray *cannedMessages = nil;
+        __block BOOL sentSyncStarting = NO;
 
         dispatch_group_async(group, queue, ^{
             groups = [self fetchUpdatedGroupObjects];
+            if (sentSyncStarting == NO && groups.count > 0) {
+                sentSyncStarting = YES;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate remoteSyncStarting];
+                });
+            }
         });
 
         dispatch_group_async(group, queue, ^{
-            projects = [self fetchUpdatedGroupObjects];
+            projects = [self fetchUpdatedProjectObjects];
+            if (sentSyncStarting == NO && projects.count > 0) {
+                sentSyncStarting = YES;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate remoteSyncStarting];
+                });
+            }
         });
 
         dispatch_group_async(group, queue, ^{
-            timers = [self fetchUpdatedGroupObjects];
+            timers = [self fetchUpdatedTimerObjects];
+            if (sentSyncStarting == NO && timers.count > 0) {
+                sentSyncStarting = YES;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate remoteSyncStarting];
+                });
+            }
         });
 
         dispatch_group_async(group, queue, ^{
-            cannedMessages = [self fetchUpdatedGroupObjects];
+            cannedMessages = [self fetchUpdatedCannedMessageObjects];
+            if (sentSyncStarting == NO && cannedMessages.count > 0) {
+                sentSyncStarting = YES;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate remoteSyncStarting];
+                });
+            }
         });
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
@@ -1001,11 +1074,35 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
             [updatedEntities addObjectsFromArray:cannedMessages];
         }
 
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
-         object:self
-         userInfo:@{kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities}];
+        if (updatedEntities.count > 0) {
+
+            for (TCSParseBaseEntity *entity in updatedEntities) {
+                if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+                    self.lastPollingDate = entity.utsUpdateTime;
+                }
+            }
+
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
+             object:self
+             userInfo:@{
+             kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
+             kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
+             }];
+
+            if (_lastPollingDate != nil) {
+                [[NSUserDefaults standardUserDefaults]
+                 setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }
     }
+
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
+        [self pollForUpdates];
+    });
 }
 
 - (NSArray *)fetchUpdatedGroupObjects {
@@ -1033,6 +1130,7 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
     if (_lastPollingDate != nil) {
         [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
     }
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
 
     NSError *error = nil;
     NSArray *results = [query findObjects:&error];

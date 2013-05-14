@@ -14,16 +14,26 @@
 
 extern NSString * const kTCSServiceDataResetNotification;
 
+@protocol TCSServiceDelegate <NSObject>
+
+- (void)remoteSyncStarting;
+- (void)remoteSyncCompleted;
+
+@end
+
 @protocol TCSServiceRemoteProvider <NSObject>
 
 + (id <TCSServiceRemoteProvider>)sharedInstance;
 
 @property (nonatomic, readonly) NSString *name;
+@property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (void)clearCache;
 - (void)holdUpdates;
-- (BOOL)flushUpdates:(void(^)(NSDictionary *remoteIDMap))successBlock
-             failure:(void(^)(NSError *error))failureBlock;
+
+// method needs to be synchronous because it's designed to be run in the background
+- (NSDictionary *)flushUpdates:(BOOL *)requestSent
+                         error:(NSError **)error;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
@@ -109,6 +119,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 @property (nonatomic, readonly) TCSTimer *activeTimer;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
 @property (nonatomic, strong) NSString *defaultRemoteProvider;
+@property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

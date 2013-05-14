@@ -206,10 +206,10 @@
                  updateTime:(NSDate *)updateTime
               markAsUpdated:(BOOL)markAsUpdated {
 
-    self.startTime = startTime;
-    self.endTime = endTime;
+    self.startTime = [self nonNullValue:startTime];
+    self.endTime = [self nonNullValue:endTime];
     self.adjustmentValue = adjustment;
-    self.message = message;
+    self.message = [self nonNullValue:message];
     
     [super
      updateWithEntityVersion:entityVersion

@@ -8,4 +8,6 @@
 
 @interface TCSDefaultProvider : NSObject
 
+@property (nonatomic, weak) id <TCSServiceDelegate> delegate;
+
 @end

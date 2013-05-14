@@ -11,7 +11,7 @@
 
 @interface TCSParseTimedEntity : TCSParseBaseEntity<TCSProvidedTimedEntity>
 
-@property (nonatomic, getter = isArchived) BOOL archived;
+@property (nonatomic) BOOL archived;
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSInteger color;
 @property (nonatomic) NSString *parentID;

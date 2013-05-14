@@ -84,7 +84,7 @@
                updateTime:(NSDate *)updateTime
             markAsUpdated:(BOOL)markAsUpdated {
 
-    self.message = message;
+    self.message = [self nonNullValue:message];
     self.orderValue = order;
     
     [super

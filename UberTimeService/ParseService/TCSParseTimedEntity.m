@@ -16,7 +16,7 @@
 @dynamic parentID;
 
 - (BOOL)utsArchived {
-    return self.isArchived;
+    return self.archived;
 }
 
 - (NSString *)utsName {

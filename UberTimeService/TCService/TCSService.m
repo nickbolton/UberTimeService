@@ -10,6 +10,8 @@
 #import "NSDate+Utilities.h"
 #import "TCSServicePrivate.h"
 
+NSString * const kTCSServicePrivateRemoteSyncCompletedNotification =
+@"kTCSServicePrivateRemoteSyncCompletedNotification";
 NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotification";
 
 @interface TCSService()
@@ -29,8 +31,23 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
         self.remoteServiceProviders = [NSMutableDictionary dictionary];
         self.localService = [TCSLocalService sharedInstance];
         [self updateActiveTimer];
+
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(remoteSyncCompleted:)
+         name:kTCSServicePrivateRemoteSyncCompletedNotification
+         object:nil];
     }
     return self;
+}
+
+- (void)setDelegate:(id<TCSServiceDelegate>)delegate {
+    _delegate = delegate;
+    _localService.delegate = delegate;
+
+    for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
+        remoteProvider.delegate = delegate;
+    }
 }
 
 - (NSManagedObjectContext *)defaultLocalManagedObjectContext {
@@ -57,6 +74,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
              @"Class must conform to TCSServiceRemoteProvider protocol");
 
     _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
+    serviceProvider.delegate = _delegate;
 }
 
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass {
@@ -81,6 +99,41 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
 - (void)updateActiveTimer {
     self.activeTimer = [_localService activeTimer];
+}
+
+- (void)remoteSyncCompleted:(NSNotification *)notification {
+
+    NSArray *insertedTimers =
+    [notification insertedManagedObjectsOfType:[TCSTimer class]];
+
+    for (TCSTimer *timer in insertedTimers) {
+        if (timer.endTime == nil) {
+            if (self.activeTimer == nil) {
+                self.activeTimer = timer;
+            } else {
+                if ([timer.updateTime isGreaterThan:self.activeTimer.updateTime]) {
+
+                    [self
+                     stopTimer:self.activeTimer
+                     success:^(TCSTimer *updatedTimer) {
+
+                         self.activeTimer = timer;
+
+                     } failure:^(NSError *error) {
+                         NSLog(@"Error: %@", error);
+                     }];
+                } else {
+
+                    [self
+                     stopTimer:timer
+                     success:^(TCSTimer *updatedTimer) {
+                     } failure:^(NSError *error) {
+                         NSLog(@"Error: %@", error);
+                     }];
+                }
+            }
+        }
+    }
 }
 
 #pragma mark - Project Methods

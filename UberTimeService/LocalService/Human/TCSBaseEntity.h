@@ -27,5 +27,6 @@
 
 - (void)markEntityAsUpdated;
 - (void)markEntityAsDeleted;
+- (id)nonNullValue:(id)value;
 
 @end
