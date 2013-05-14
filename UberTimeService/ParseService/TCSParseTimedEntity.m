@@ -15,4 +15,20 @@
 @dynamic color;
 @dynamic parentID;
 
+- (BOOL)utsArchived {
+    return self.isArchived;
+}
+
+- (NSString *)utsName {
+    return self.name;
+}
+
+- (NSInteger)utsColor {
+    return self.color;
+}
+
+- (NSString *)utsParentID {
+    return self.parentID;
+}
+
 @end

@@ -4,7 +4,7 @@
         <attribute name="entityVersion" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="pending" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="remoteDeleted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="remoteId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remoteId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="remoteProvider" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updateTime" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>

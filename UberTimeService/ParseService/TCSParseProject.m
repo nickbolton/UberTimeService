@@ -20,4 +20,24 @@
     return NSStringFromClass([self class]);
 }
 
+- (Class)utsLocalEntityType {
+    return [TCSProject class];
+}
+
+- (NSInteger)utsFilteredModifiers {
+    return self.filteredModifiers;
+}
+
+- (NSInteger)utsKeyCode {
+    return self.keyCode;
+}
+
+- (NSInteger)utsModifiers {
+    return self.modifiers;
+}
+
+- (NSInteger)utsOrder {
+    return self.order;
+}
+
 @end

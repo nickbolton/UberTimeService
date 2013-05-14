@@ -8,7 +8,7 @@
 
 #import "TCSParseTimedEntity.h"
 
-@interface TCSParseGroup : TCSParseTimedEntity<PFSubclassing>
+@interface TCSParseGroup : TCSParseTimedEntity<PFSubclassing, TCSProvidedGroup>
 
 + (NSString *)parseClassName;
 

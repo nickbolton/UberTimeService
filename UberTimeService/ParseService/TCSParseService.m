@@ -19,6 +19,8 @@
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 
+NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
+
 @interface TCSParseService() {
 
     BOOL _holdUpdates;
@@ -27,6 +29,7 @@
 @property (nonatomic, strong) GCNetworkReachability *reachability;
 @property (nonatomic, getter = isConnected) BOOL connected;
 @property (nonatomic, strong) NSMutableDictionary *bufferedUpdates;
+@property (nonatomic, strong) NSDate *lastPollingDate;
 
 @end
 
@@ -67,7 +70,16 @@
             }
         }];
 
+
+        self.lastPollingDate =
+        [[NSUserDefaults standardUserDefaults]
+         objectForKey:kTCSParseLastPollingDateKey];
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self pollForUpdates];
+        });
     }
+
     return self;
 }
 
@@ -331,7 +343,7 @@
         NSAssert(project.parent.remoteId != nil, @"No remoteId for project parent");
         parseProject.parentID = project.parent.remoteId;
     } else {
-        parseProject.parentID = [NSNull null];
+        parseProject.parentID = (id)[NSNull null];
     }
 }
 
@@ -347,7 +359,7 @@
     NSManagedObjectID *objectID = project.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseProject objectID:objectID];
+        [self bufferParseObject:(id)parseProject objectID:objectID];
         return NO;
     }
 
@@ -398,7 +410,7 @@
     NSManagedObjectID *objectID = project.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseProject objectID:objectID];
+        [self bufferParseObject:(id)parseProject objectID:objectID];
         return NO;
     }
 
@@ -450,7 +462,7 @@
     NSManagedObjectID *objectID = project.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseProject objectID:objectID];
+        [self bufferParseObject:(id)parseProject objectID:objectID];
         return NO;
     }
 
@@ -489,7 +501,7 @@
         NSAssert(group.parent.remoteId != nil, @"No remoteId for group parent");
         parseGroup.parentID = group.parent.remoteId;
     } else {
-        parseGroup.parentID = [NSNull null];
+        parseGroup.parentID = (id)[NSNull null];
     }
 }
 
@@ -505,7 +517,7 @@
     NSManagedObjectID *objectID = group.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseGroup objectID:objectID];
+        [self bufferParseObject:(id)parseGroup objectID:objectID];
         return NO;
     }
 
@@ -556,7 +568,7 @@
     NSManagedObjectID *objectID = group.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseGroup objectID:objectID];
+        [self bufferParseObject:(id)parseGroup objectID:objectID];
         return NO;
     }
 
@@ -608,7 +620,7 @@
     NSManagedObjectID *objectID = group.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseGroup objectID:objectID];
+        [self bufferParseObject:(id)parseGroup objectID:objectID];
         return NO;
     }
 
@@ -660,7 +672,7 @@
     NSManagedObjectID *objectID = timer.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseTimer objectID:objectID];
+        [self bufferParseObject:(id)parseTimer objectID:objectID];
         return NO;
     }
 
@@ -711,7 +723,7 @@
     NSManagedObjectID *objectID = timer.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseTimer objectID:objectID];
+        [self bufferParseObject:(id)parseTimer objectID:objectID];
         return NO;
     }
 
@@ -763,7 +775,7 @@
     NSManagedObjectID *objectID = timer.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseTimer objectID:objectID];
+        [self bufferParseObject:(id)parseTimer objectID:objectID];
         return NO;
     }
 
@@ -810,7 +822,7 @@
     NSManagedObjectID *objectID = cannedMessage.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseCannedMessage objectID:objectID];
+        [self bufferParseObject:(id)parseCannedMessage objectID:objectID];
         return NO;
     }
 
@@ -861,7 +873,7 @@
     NSManagedObjectID *objectID = cannedMessage.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseCannedMessage objectID:objectID];
+        [self bufferParseObject:(id)parseCannedMessage objectID:objectID];
         return NO;
     }
 
@@ -913,7 +925,7 @@
     NSManagedObjectID *objectID = cannedMessage.objectID;
 
     if (_holdUpdates) {
-        [self bufferParseObject:parseCannedMessage objectID:objectID];
+        [self bufferParseObject:(id)parseCannedMessage objectID:objectID];
         return NO;
     }
 
@@ -937,6 +949,135 @@
     }];
 
     return YES;
+}
+
+#pragma mark - Update Polling
+
+- (void)pollForUpdates {
+
+    if ([PFUser currentUser] != nil) {
+
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+
+        __block NSArray *groups = nil;
+        __block NSArray *projects = nil;
+        __block NSArray *timers = nil;
+        __block NSArray *cannedMessages = nil;
+
+        dispatch_group_async(group, queue, ^{
+            groups = [self fetchUpdatedGroupObjects];
+        });
+
+        dispatch_group_async(group, queue, ^{
+            projects = [self fetchUpdatedGroupObjects];
+        });
+
+        dispatch_group_async(group, queue, ^{
+            timers = [self fetchUpdatedGroupObjects];
+        });
+
+        dispatch_group_async(group, queue, ^{
+            cannedMessages = [self fetchUpdatedGroupObjects];
+        });
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+
+        NSMutableArray *updatedEntities = [NSMutableArray array];
+
+        if (groups.count > 0) {
+            [updatedEntities addObjectsFromArray:groups];
+        }
+
+        if (projects.count > 0) {
+            [updatedEntities addObjectsFromArray:projects];
+        }
+
+        if (timers.count > 0) {
+            [updatedEntities addObjectsFromArray:timers];
+        }
+
+        if (cannedMessages.count > 0) {
+            [updatedEntities addObjectsFromArray:cannedMessages];
+        }
+
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
+         object:self
+         userInfo:@{kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities}];
+    }
+}
+
+- (NSArray *)fetchUpdatedGroupObjects {
+
+    PFQuery *query = [TCSParseGroup query];
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    if (_lastPollingDate != nil) {
+        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
+    }
+
+    NSError *error = nil;
+    NSArray *results = [query findObjects:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    return results;
+}
+
+- (NSArray *)fetchUpdatedProjectObjects {
+
+    PFQuery *query = [TCSParseProject query];
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    if (_lastPollingDate != nil) {
+        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
+    }
+
+    NSError *error = nil;
+    NSArray *results = [query findObjects:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    return results;
+}
+
+- (NSArray *)fetchUpdatedTimerObjects {
+
+    PFQuery *query = [TCSParseTimer query];
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    if (_lastPollingDate != nil) {
+        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
+    }
+
+    NSError *error = nil;
+    NSArray *results = [query findObjects:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    return results;
+}
+
+- (NSArray *)fetchUpdatedCannedMessageObjects {
+
+    PFQuery *query = [TCSParseCannedMessage query];
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    if (_lastPollingDate != nil) {
+        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
+    }
+
+    NSError *error = nil;
+    NSArray *results = [query findObjects:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    return results;
 }
 
 #pragma mark - Singleton Methods

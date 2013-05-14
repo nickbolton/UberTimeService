@@ -13,4 +13,21 @@
 @dynamic softDeleted;
 @dynamic entityVersion;
 
+
+- (NSString *)utsRemoteID {
+    return self.objectId;
+}
+
+- (BOOL)utsSoftDeleted {
+    return self.isSoftDeleted;
+}
+
+- (NSInteger)utsEntityVersion {
+    return self.entityVersion;
+}
+
+- (NSDate *)utsUpdateTime {
+    return self.updatedAt;
+}
+
 @end

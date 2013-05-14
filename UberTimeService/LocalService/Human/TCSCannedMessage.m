@@ -76,5 +76,23 @@
     }
 }
 
+- (void)updateWithMessage:(NSString *)message
+                    order:(NSInteger)order
+            entityVersion:(int64_t)entityVersion
+            remoteDeleted:(BOOL)remoteDeleted
+                 remoteId:(NSString *)remoteId
+               updateTime:(NSDate *)updateTime
+            markAsUpdated:(BOOL)markAsUpdated {
+
+    self.message = message;
+    self.orderValue = order;
+    
+    [super
+     updateWithEntityVersion:entityVersion
+     remoteDeleted:remoteDeleted
+     remoteId:remoteId
+     updateTime:updateTime
+     markAsUpdated:markAsUpdated];
+}
 
 @end

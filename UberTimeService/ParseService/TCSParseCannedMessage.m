@@ -18,4 +18,16 @@
     return NSStringFromClass([self class]);
 }
 
+- (Class)utsLocalEntityType {
+    return [TCSCannedMessage class];
+}
+
+- (NSString *)utsMessage {
+    return self.message;
+}
+
+- (NSInteger)utsOrder {
+    return self.order;
+}
+
 @end

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TCSParseBaseEntity.h"
 
-@interface TCSParseTimedEntity : TCSParseBaseEntity
+@interface TCSParseTimedEntity : TCSParseBaseEntity<TCSProvidedTimedEntity>
 
 @property (nonatomic, getter = isArchived) BOOL archived;
 @property (nonatomic) NSString *name;

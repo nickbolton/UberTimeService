@@ -15,4 +15,8 @@
     return NSStringFromClass([self class]);
 }
 
+- (Class)utsLocalEntityType {
+    return [TCSGroup class];
+}
+
 @end

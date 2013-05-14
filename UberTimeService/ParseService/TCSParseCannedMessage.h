@@ -8,7 +8,7 @@
 
 #import "TCSParseBaseEntity.h"
 
-@interface TCSParseCannedMessage : TCSParseBaseEntity<PFSubclassing>
+@interface TCSParseCannedMessage : TCSParseBaseEntity<PFSubclassing, TCSProvidedCannedMessage>
 
 + (NSString *)parseClassName;
 

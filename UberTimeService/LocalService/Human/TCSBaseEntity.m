@@ -29,4 +29,33 @@
     }
 }
 
+- (void)updateWithEntityVersion:(int64_t)entityVersion
+                  remoteDeleted:(BOOL)remoteDeleted
+                       remoteId:(NSString *)remoteId
+                     updateTime:(NSDate *)updateTime
+                  markAsUpdated:(BOOL)markAsUpdated {
+
+    self.entityVersionValue = entityVersion;
+    self.remoteDeletedValue = remoteDeleted;
+    self.remoteId = remoteId;
+    self.updateTime = updateTime;
+
+    if (markAsUpdated) {
+        [self markEntityAsUpdated];
+    }
+}
+
+- (void)markEntityAsUpdated {
+    self.entityVersionValue++;
+    self.pendingValue =
+    [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
+}
+
+- (void)markEntityAsDeleted {
+    self.entityVersionValue++;
+    self.remoteDeletedValue = YES;
+    self.pendingValue =
+    [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
+}
+
 @end

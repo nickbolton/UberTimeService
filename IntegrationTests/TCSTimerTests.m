@@ -75,19 +75,17 @@
          TCSProject *project =
          [self.service projectWithID:self.project.objectID];
 
-         GHAssertTrue(project.timers.count == 1, @"project.timers.count != 1");
-
-         TCSTimer *projectTimer = project.timers.anyObject;
-
-         GHAssertTrue([projectTimer.objectID isEqual:timer.objectID],
-                      @"fetched project.timer != created timer");
-
          NSArray *timers =
-         [self.service
+         [[TCSService sharedInstance]
           timersForProjects:@[project]
           fromDate:nil
           toDate:nil
-          sortByStartTime:YES];
+          sortByStartTime:NO];
+
+         TCSTimer *projectTimer = timers.firstObject;
+
+         GHAssertTrue([projectTimer.objectID isEqual:timer.objectID],
+                      @"fetched project.timer != created timer");
 
          GHAssertTrue(timers.count <= 1, @"Multiple timers exist");
          GHAssertTrue(timers.count == 1, @"Timer doesn't exist after starting");
@@ -96,7 +94,8 @@
 
          GHAssertNotNil(fetchedTimer.objectID, @"fetchedTimer providerEntityID is nil");
          GHAssertTrue([timer.objectID isEqual:fetchedTimer.objectID],
-                      @"fetchedTimer entityID is not equal to entityID");
+                      @"fetchedTimer entityID (%@) is not equal to entityID (%@)",
+                      fetchedTimer.objectID, timer.objectID);
 
          GHAssertTrue([fetchedTimer.objectID isEqual:self.service.activeTimer.objectID],
                       @"activeTimer is not returned timer");
@@ -135,11 +134,18 @@
          TCSProject *project =
          [self.service projectWithID:self.project.objectID];
 
-         GHAssertTrue(project.timers.count == 2, @"project.timers.count != 2");
+         NSArray *timers =
+         [[TCSService sharedInstance]
+          timersForProjects:@[project]
+          fromDate:nil
+          toDate:nil
+          sortByStartTime:NO];
+
+         GHAssertTrue(timers.count == 2, @"project.timers.count != 2");
 
          BOOL foundTimer = NO;
 
-         for (TCSTimer *t in project.timers) {
+         for (TCSTimer *t in timers) {
              if ([t.objectID isEqual:timer.objectID]) {
                  foundTimer = YES;
                  break;
@@ -151,20 +157,20 @@
          GHAssertFalse([timer.objectID isEqual:self.timer.objectID],
                        @"second timer IS first timer");
 
-         NSArray *timers =
-         [self.service
-          timersForProjects:@[project]
-          fromDate:nil
-          toDate:nil
-          sortByStartTime:YES];
-
          GHAssertTrue(timers.count == 2, @"Timer doesn't exist after starting");
 
-         TCSTimer *fetchedTimer = timers[1];
+         TCSTimer *fetchedTimer = nil;
+
+         for (TCSTimer *t in timers) {
+             if ([t.objectID isEqual:timer.objectID]) {
+                 fetchedTimer = t;
+             }
+         }
 
          GHAssertNotNil(fetchedTimer.objectID, @"fetchedTimer providerEntityID is nil");
          GHAssertTrue([timer.objectID isEqual:fetchedTimer.objectID],
-                      @"fetchedTimer entityID is not equal to entityID");
+                      @"fetchedTimer entityID (%@) is not equal to entityID (%@)",
+                      fetchedTimer.objectID, timer.objectID);
 
          GHAssertTrue([fetchedTimer.objectID isEqual:self.service.activeTimer.objectID],
                       @"activeTimer is not returned timer");
@@ -283,11 +289,25 @@
          TCSTimer *movedTimer =
          [self.service timerWithID:self.timer.objectID];
 
-         GHAssertTrue(sourceProject.timers.count == 1,
-                      @"sourceProject.timers.count != 1");
-         GHAssertTrue(targetProject.timers.count == 1,
-                      @"targetProject.timers.count != 1");
-         TCSTimer *targetProjectTimer = targetProject.timers.anyObject;
+         NSArray *sourceTimers =
+         [[TCSService sharedInstance]
+          timersForProjects:@[sourceProject]
+          fromDate:nil
+          toDate:nil
+          sortByStartTime:NO];
+
+         NSArray *targetTimers =
+         [[TCSService sharedInstance]
+          timersForProjects:@[targetProject]
+          fromDate:nil
+          toDate:nil
+          sortByStartTime:NO];
+
+         GHAssertTrue(sourceTimers.count == 1,
+                      @"sourceTimers.count != 1");
+         GHAssertTrue(targetTimers.count == 1,
+                      @"targetTimers.count != 1");
+         TCSTimer *targetProjectTimer = targetTimers.firstObject;
 
          GHAssertTrue([movedTimer.objectID isEqual:targetProjectTimer.objectID],
                       @"movedTimer.objectID != targetProjectTimer.objectID");
@@ -355,9 +375,13 @@
     [self prepare];
 
     TCSProject *sourceProject = self.timer.project;
-    
+
     NSInteger timerCount =
-    [self.service projectWithID:sourceProject.objectID].timers.count;
+    [[TCSService sharedInstance]
+     timersForProjects:@[sourceProject]
+     fromDate:nil
+     toDate:nil
+     sortByStartTime:NO].count;
 
     [self.service
      deleteTimer:self.timer
@@ -366,7 +390,14 @@
          TCSProject *project =
          [self.service projectWithID:sourceProject.objectID];
 
-         GHAssertTrue(project.timers.count == timerCount-1,
+         NSInteger updatedTimerCount =
+         [[TCSService sharedInstance]
+          timersForProjects:@[project]
+          fromDate:nil
+          toDate:nil
+          sortByStartTime:NO].count;
+
+         GHAssertTrue(updatedTimerCount == timerCount-1,
                       @"timer still referenced in project");
 
          NSArray *timers =

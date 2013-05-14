@@ -196,4 +196,27 @@
     return hours;
 }
 
+- (void)updateWithStartTime:(NSDate *)startTime
+                    endTime:(NSDate *)endTime
+                 adjustment:(NSTimeInterval)adjustment
+                    message:(NSString *)message
+              entityVersion:(int64_t)entityVersion
+              remoteDeleted:(BOOL)remoteDeleted
+                   remoteId:(NSString *)remoteId
+                 updateTime:(NSDate *)updateTime
+              markAsUpdated:(BOOL)markAsUpdated {
+
+    self.startTime = startTime;
+    self.endTime = endTime;
+    self.adjustmentValue = adjustment;
+    self.message = message;
+    
+    [super
+     updateWithEntityVersion:entityVersion
+     remoteDeleted:remoteDeleted
+     remoteId:remoteId
+     updateTime:updateTime
+     markAsUpdated:markAsUpdated];
+}
+
 @end

@@ -199,4 +199,25 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
     
 }
 
+- (void)updateWithName:(NSString *)name
+                 color:(NSInteger)color
+              archived:(BOOL)archived
+         entityVersion:(int64_t)entityVersion
+         remoteDeleted:(BOOL)remoteDeleted
+              remoteId:(NSString *)remoteId
+            updateTime:(NSDate *)updateTime
+         markAsUpdated:(BOOL)markAsUpdated {
+
+    self.name = name;
+    self.colorValue = color;
+    self.archivedValue = archived;
+
+    [super
+     updateWithEntityVersion:entityVersion
+     remoteDeleted:remoteDeleted
+     remoteId:remoteId
+     updateTime:updateTime
+     markAsUpdated:markAsUpdated];
+}
+
 @end

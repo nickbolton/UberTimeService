@@ -19,4 +19,13 @@
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock;
 
+- (void)updateWithEntityVersion:(int64_t)entityVersion
+                  remoteDeleted:(BOOL)remoteDeleted
+                       remoteId:(NSString *)remoteId
+                     updateTime:(NSDate *)updateTime
+                  markAsUpdated:(BOOL)markAsUpdated;
+
+- (void)markEntityAsUpdated;
+- (void)markEntityAsDeleted;
+
 @end

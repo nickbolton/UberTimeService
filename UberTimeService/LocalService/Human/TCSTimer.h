@@ -16,4 +16,14 @@
                                    endTime:(NSDate *)endDate
                                 adjustment:(NSTimeInterval)adjustment;
 
+- (void)updateWithStartTime:(NSDate *)startTime
+                    endTime:(NSDate *)endTime
+                 adjustment:(NSTimeInterval)adjustment
+                    message:(NSString *)message
+              entityVersion:(int64_t)entityVersion
+              remoteDeleted:(BOOL)remoteDeleted
+                   remoteId:(NSString *)remoteId
+                 updateTime:(NSDate *)updateTime
+              markAsUpdated:(BOOL)markAsUpdated;
+
 @end

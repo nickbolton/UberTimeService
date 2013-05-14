@@ -6,6 +6,44 @@
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
+@protocol TCSProvidedBaseEntity <NSObject>
+@property (nonatomic, readonly) NSString *utsRemoteID;
+@property (nonatomic, readonly) BOOL utsSoftDeleted;
+@property (nonatomic, readonly) NSInteger utsEntityVersion;
+@property (nonatomic, readonly) Class utsLocalEntityType;
+@property (nonatomic, readonly) NSDate *utsUpdateTime;
+@end
+
+@protocol TCSProvidedTimedEntity <TCSProvidedBaseEntity>
+@property (nonatomic, readonly) BOOL utsArchived;
+@property (nonatomic, readonly) NSString *utsName;
+@property (nonatomic, readonly) NSInteger utsColor;
+@property (nonatomic, readonly) NSString *utsParentID;
+@end
+
+@protocol TCSProvidedGroup <TCSProvidedTimedEntity>
+@end
+
+@protocol TCSProvidedProject <TCSProvidedTimedEntity>
+@property (nonatomic, readonly) NSInteger utsFilteredModifiers;
+@property (nonatomic, readonly) NSInteger utsKeyCode;
+@property (nonatomic, readonly) NSInteger utsModifiers;
+@property (nonatomic, readonly) NSInteger utsOrder;
+@end
+
+@protocol TCSProvidedTimer <TCSProvidedBaseEntity>
+@property (nonatomic, readonly) NSDate *utsStartTime;
+@property (nonatomic, readonly) NSDate *utsEndTime;
+@property (nonatomic, readonly) NSString *utsMessage;
+@property (nonatomic, readonly) NSTimeInterval utsAdjustment;
+@property (nonatomic, readonly) NSString *utsProjectID;
+@end
+
+@protocol TCSProvidedCannedMessage <TCSProvidedBaseEntity>
+@property (nonatomic, readonly) NSString *utsMessage;
+@property (nonatomic, readonly) NSInteger utsOrder;
+@end
+
 @protocol TCSServiceLocalService <NSObject>
 
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;

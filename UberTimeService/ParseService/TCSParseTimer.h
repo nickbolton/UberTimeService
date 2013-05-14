@@ -10,7 +10,7 @@
 
 @class TCSParseProject;
 
-@interface TCSParseTimer : TCSParseBaseEntity<PFSubclassing>
+@interface TCSParseTimer : TCSParseBaseEntity<PFSubclassing, TCSProvidedTimer>
 
 + (NSString *)parseClassName;
 
