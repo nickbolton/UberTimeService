@@ -18,18 +18,22 @@
 #import "TCSParseCannedMessage.h"
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
+#import "TCSParseSystemTime.h"
 
 NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
+NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 @interface TCSParseService() {
 
     BOOL _holdUpdates;
+    NSTimeInterval _localTimeLastSystemTimeReceived;
 }
 
 @property (nonatomic, strong) GCNetworkReachability *reachability;
 @property (nonatomic, getter = isConnected) BOOL connected;
 @property (nonatomic, strong) NSMutableDictionary *bufferedUpdates;
 @property (nonatomic, strong) NSDate *lastPollingDate;
+@property (nonatomic, strong) NSDate *systemTime;
 
 @end
 
@@ -78,13 +82,43 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self pollForUpdates];
         });
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self updateSystemTime];
+        });
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self dumpSystemTime];
+	    });
     }
 
     return self;
 }
 
+- (void)dumpSystemTime {
+
+    NSLog(@"System Time: %@ - %@", [self systemTime], [[TCSService sharedInstance] systemTime]);
+
+    double delayInSeconds = 1.0f;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self dumpSystemTime];
+    });
+}
+
 - (NSString *)name {
     return NSLocalizedString(@"Parse", nil);
+}
+
+- (NSDate *)systemTime {
+    if (_systemTime != nil) {
+        NSTimeInterval timeSinceReceivedSystemTime =
+        [NSDate timeIntervalSinceReferenceDate] - _localTimeLastSystemTimeReceived;
+        
+        return [_systemTime dateByAddingTimeInterval:timeSinceReceivedSystemTime];
+    }
+
+    return [NSDate date];
 }
 
 - (void)clearCache {
@@ -1001,8 +1035,64 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
 #pragma mark - Update Polling
 
+- (void)updateSystemTime {
+
+    NSTimeInterval retryTime = 5.0f;
+    
+    if (_connected) {
+
+        TCSParseSystemTime *parseSystemTime = [TCSParseSystemTime object];
+
+        NSError *error = nil;
+
+        NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+        [parseSystemTime save:&error];
+
+        NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+        NSTimeInterval roundTripTime = now - startTime;
+
+        if (error != nil) {
+            NSLog(@"Error polling for system time: %@", error);
+
+            if (_systemTime == nil) {
+                retryTime = 10.0f;
+            } else {
+                retryTime = 30.0f;
+            }
+
+        } else {
+
+            _localTimeLastSystemTimeReceived = now;
+            self.systemTime = parseSystemTime.updatedAt;
+
+            NSLog(@"systemTime: %@", parseSystemTime.updatedAt);
+            NSLog(@"roundTripTime: %f", roundTripTime);
+
+            if (roundTripTime > 2.0f) {
+                retryTime = 1.0f;
+            } else {
+                retryTime = 3600.0f;
+            }
+
+            error = nil;
+            [parseSystemTime delete:&error];
+
+            if (error != nil) {
+                NSLog(@"Error deleting system time: %@", error);
+            }
+        }
+    }
+
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(retryTime * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
+        [self updateSystemTime];
+    });
+}
+
 - (void)pollForUpdates {
 
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
     if ([PFUser currentUser] != nil) {
 
         dispatch_group_t group = dispatch_group_create();
@@ -1078,7 +1168,8 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 
             for (TCSParseBaseEntity *entity in updatedEntities) {
                 if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-                    self.lastPollingDate = entity.utsUpdateTime;
+                    self.lastPollingDate =
+                    entity.utsUpdateTime;
                 }
             }
 
@@ -1098,7 +1189,7 @@ NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
         }
     }
 
-    double delayInSeconds = 1.0;
+    double delayInSeconds = 5.0f;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
         [self pollForUpdates];

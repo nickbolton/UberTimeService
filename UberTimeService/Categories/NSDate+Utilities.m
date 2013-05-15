@@ -8,6 +8,7 @@
 
 #import "NSDate+Utilities.h"
 #import "TCSCalendarManager.h"
+#import "TCSService.h"
 
 @implementation NSDate(Utilities)
 
@@ -62,7 +63,7 @@
 }
 
 + (TCSDateRange *)today {
-    NSDate *now = [NSDate date];
+    NSDate *now = [[TCSService sharedInstance] systemTime];
     
     return [TCSDateRange dateRangeWithStartDate:now
                                        endDate:now];
@@ -279,7 +280,7 @@
     NSDate *fromDate, *toDate;
     NSDateComponents *dateComponents;
     NSInteger year;
-    NSDate *now = [NSDate date];
+    NSDate *now = [[TCSService sharedInstance] systemTime];
 
     switch (timePeriod) {
         case TimePeriod_All:

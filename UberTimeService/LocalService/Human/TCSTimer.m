@@ -116,7 +116,7 @@
         timeInterval = [endDate timeIntervalSinceDate:startTime];
     } else {
 
-        NSDate *currentTime = [NSDate date];
+        NSDate *currentTime = [[TCSService sharedInstance] systemTime];
         timeInterval = [currentTime timeIntervalSinceDate:startTime];
     }
 
@@ -132,7 +132,7 @@
 		return [end timeIntervalSinceDate:start];
 	}
 
-    NSDate *currentTime = [NSDate date];
+    NSDate *currentTime = [[TCSService sharedInstance] systemTime];
     return [currentTime timeIntervalSinceDate:start];
 }
 
@@ -142,7 +142,7 @@
     NSDate *end = self.endTime;
 
     if (end == nil) {
-        end = [NSDate date];
+        end = [[TCSService sharedInstance] systemTime];
     }
 
     if ([start isLessThan:dateRange.startDate]) {
@@ -170,7 +170,7 @@
     NSDate *end = self.endTime;
 
     if (end == nil) {
-        end = [NSDate date];
+        end = [[TCSService sharedInstance] systemTime];
     }
 
     end = [end dateByAddingTimeInterval:self.adjustmentValue];

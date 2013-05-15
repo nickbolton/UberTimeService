@@ -90,6 +90,27 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     [_localService deleteAllData:successBlock failure:failureBlock];
 }
 
+- (NSDate *)systemTime {
+
+    id <TCSServiceRemoteProvider> remoteProvider = nil;
+
+    if (_defaultRemoteProvider != nil) {
+
+        remoteProvider =
+        [self serviceProviderNamed:_defaultRemoteProvider];
+    }
+
+    if (remoteProvider == nil) {
+        remoteProvider = _remoteServiceProviders.allValues.firstObject;
+    }
+
+    if (remoteProvider != nil) {
+        return [remoteProvider systemTime];
+    }
+
+    return [NSDate date];
+}
+
 - (TCSTimer *)activeTimer {
     if (_activeTimer != nil) {
         return [self timerWithID:_activeTimer.objectID];
@@ -105,6 +126,19 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     NSArray *insertedTimers =
     [notification insertedManagedObjectsOfType:[TCSTimer class]];
+
+    NSMutableArray *updatedTimers =
+    [[notification updatedManagedObjectsOfType:[TCSTimer class]] mutableCopy];
+
+    [updatedTimers addObjectsFromArray:
+     [notification deletedManagedObjectsOfType:[TCSTimer class]]];
+
+    for (TCSTimer *timer in updatedTimers) {
+
+        if ([timer.objectID isEqual:self.activeTimer.objectID] && timer.endTime != nil) {
+            self.activeTimer = nil;
+        }
+    }
 
     for (TCSTimer *timer in insertedTimers) {
         if (timer.endTime == nil) {

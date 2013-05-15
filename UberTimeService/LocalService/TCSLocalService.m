@@ -224,7 +224,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      entityVersion:0
      remoteDeleted:NO
      remoteId:nil
-     updateTime:[NSDate date]
+     updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:YES];
 
     return project;
@@ -295,7 +295,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      entityVersion:project.entityVersionValue
      remoteDeleted:project.remoteDeletedValue
      remoteId:project.remoteId
-     updateTime:[NSDate date]
+     updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:YES];
 
     return error;
@@ -497,7 +497,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      entityVersion:group.entityVersionValue
      remoteDeleted:group.remoteDeletedValue
      remoteId:group.remoteId
-     updateTime:[NSDate date]
+     updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:YES];
 
     return error;
@@ -792,14 +792,14 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         timer.project = updatedProject;
 
         [timer
-         updateWithStartTime:[NSDate date]
+         updateWithStartTime:[[TCSService sharedInstance] systemTime]
          endTime:nil
          adjustment:0.0f
          message:nil
          entityVersion:0
          remoteDeleted:NO
          remoteId:nil
-         updateTime:[NSDate date]
+         updateTime:[[TCSService sharedInstance] systemTime]
          markAsUpdated:YES];
 
     } completion:^(BOOL success, NSError *error) {
@@ -861,7 +861,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          entityVersion:0
          remoteDeleted:NO
          remoteId:nil
-         updateTime:[NSDate date]
+         updateTime:[[TCSService sharedInstance] systemTime]
          markAsUpdated:YES];
 
     } completion:^(BOOL success, NSError *error) {
@@ -898,7 +898,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
 - (void)doStopTimer:(TCSTimer *)timer {
     if (timer != nil) {
-        timer.endTime = [NSDate date];
+        timer.endTime = [[TCSService sharedInstance] systemTime];
         [timer markEntityAsUpdated];
     }
 }
@@ -1222,7 +1222,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     NSDate *finalEndTime = timer.endTime;
 
     if (endDate == nil || [endDate isLessThan:timer.startTime]) {
-        timer.endTime = [NSDate date];
+        timer.endTime = [[TCSService sharedInstance] systemTime];
     } else {
         timer.endTime = endDate;
     }
@@ -1240,7 +1240,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      entityVersion:0
      remoteDeleted:NO
      remoteId:nil
-     updateTime:[NSDate date]
+     updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:NO];
 
     [project addTimersObject:rolledTimer];
@@ -1259,7 +1259,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          existingObjectWithID:timer.objectID
          error:NULL];
 
-        NSDate *now = [NSDate date];
+        NSDate *now = [[TCSService sharedInstance] systemTime];
 
         NSDate *virtualEndTime =
         [localTimer.startTime dateByAddingSeconds:localTimer.combinedTime];
@@ -1387,7 +1387,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     fromDate = [fromDate midnight];
     toDate = [toDate endOfDay];
-    NSDate *now = [NSDate date];
+    NSDate *now = [[TCSService sharedInstance] systemTime];
 
     static NSArray *sortDescriptors = nil;
 
@@ -1612,7 +1612,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          entityVersion:0
          remoteDeleted:NO
          remoteId:nil
-         updateTime:[NSDate date]
+         updateTime:[[TCSService sharedInstance] systemTime]
          markAsUpdated:YES];
 
     } completion:^(BOOL success, NSError *error) {
@@ -1711,7 +1711,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      entityVersion:cannedMessage.entityVersionValue
      remoteDeleted:cannedMessage.remoteDeletedValue
      remoteId:cannedMessage.remoteId
-     updateTime:[NSDate date]
+     updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:YES];
 
     return error;
@@ -2204,7 +2204,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingGroup != nil) {
 
-        if (providedGroup.utsEntityVersion > existingGroup.entityVersionValue) {
+        if ([providedGroup.utsUpdateTime isGreaterThan:existingGroup.updateTime]) {
 
             if (providedGroup.utsSoftDeleted) {
 
@@ -2304,7 +2304,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingProject != nil) {
 
-        if (providedProject.utsEntityVersion > existingProject.entityVersionValue) {
+        if ([providedProject.utsUpdateTime isGreaterThan:existingProject.updateTime]) {
 
             if (providedProject.utsSoftDeleted) {
 
@@ -2419,7 +2419,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingTimer != nil) {
 
-        if (providedTimer.utsEntityVersion > existingTimer.entityVersionValue) {
+        if ([providedTimer.utsUpdateTime isGreaterThan:existingTimer.updateTime]) {
 
             if (providedTimer.utsSoftDeleted) {
 
@@ -2505,7 +2505,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingCannedMessage != nil) {
 
-        if (providedCannedMessage.utsEntityVersion > existingCannedMessage.entityVersionValue) {
+        if ([providedCannedMessage.utsUpdateTime isGreaterThan:existingCannedMessage.updateTime]) {
 
             if (providedCannedMessage.utsSoftDeleted) {
 

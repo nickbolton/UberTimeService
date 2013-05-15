@@ -62,7 +62,7 @@
 
     if (activeTimer != nil) {
 
-        NSDate *now = [NSDate date];
+        NSDate *now = [[TCSService sharedInstance] systemTime];
         TCSProject *activeProject = activeTimer.project;
 
         for (TCSProject *project in _projects) {
