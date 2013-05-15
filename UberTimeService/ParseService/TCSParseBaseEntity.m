@@ -12,7 +12,7 @@
 
 @dynamic softDeleted;
 @dynamic entityVersion;
-
+@dynamic user;
 
 - (NSString *)utsRemoteID {
     return self.objectId;

@@ -16,6 +16,7 @@
 #import "TCSParseProject.h"
 #import "TCSParseTimer.h"
 #import "TCSParseCannedMessage.h"
+#import "TCSParseAppConfig.h"
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 #import "TCSParseSystemTime.h"
@@ -49,6 +50,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [TCSParseGroup registerSubclass];
         [TCSParseTimer registerSubclass];
         [TCSParseCannedMessage registerSubclass];
+        [TCSParseAppConfig registerSubclass];
+        
         [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
 
         [Parse setApplicationId:@"jF4VaTdB8FrBuFp52WFr9DzU70X9PPBeB9anwRga"
@@ -119,6 +122,67 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     }
 
     return [NSDate date];
+}
+
+- (void)createAppConfig {
+
+    if ([PFUser currentUser] == nil) return;
+
+    NSString *version =
+    [[[NSBundle mainBundle] infoDictionary]
+     objectForKey:@"CFBundleShortVersionString"];
+    NSArray *components = [version componentsSeparatedByString:@"."];
+
+    TCSParseAppConfig *appConfig = [TCSParseAppConfig object];
+    appConfig.instanceID = [NSString applicationInstanceId];
+    appConfig.deviceID = [NSString deviceIdentifier];
+    appConfig.appStartCount = 1;
+    appConfig.majorVersion = components.count >= 1 ? [components[0] integerValue] : -1;
+    appConfig.minorVersion = components.count >= 2 ? [components[1] integerValue] : -1;
+    appConfig.buildVersion = components.count >= 3 ? [components[2] integerValue] : -1;
+    appConfig.user = [PFUser currentUser];
+
+    [appConfig saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
+        NSLog(@"Created AppConfig: %@", appConfig);
+    }];
+}
+
+- (void)updateAppConfig {
+
+    if ([PFUser currentUser] == nil) return;
+
+    PFQuery *query = [TCSParseAppConfig query];
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+
+        if (objects.count == 0) {
+            [self createAppConfig];
+            return;
+        }
+
+        if (objects.count > 1) {
+            NSLog(@"Warn: multiple app config objects exist for user: %@", [PFUser currentUser]);
+        }
+
+        NSString *version =
+        [[[NSBundle mainBundle] infoDictionary]
+         objectForKey:@"CFBundleShortVersionString"];
+        NSArray *components = [version componentsSeparatedByString:@"."];
+
+        TCSParseAppConfig *appConfig = objects.firstObject;
+
+        appConfig.appStartCount++;
+        appConfig.majorVersion = components.count >= 1 ? [components[0] integerValue] : -1;
+        appConfig.minorVersion = components.count >= 2 ? [components[1] integerValue] : -1;
+        appConfig.buildVersion = components.count >= 3 ? [components[2] integerValue] : -1;
+        appConfig.user = [PFUser currentUser];
+
+        [appConfig saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            NSLog(@"Updated AppConfig: %@", appConfig);
+        }];
+    }];
 }
 
 - (void)clearCache {
@@ -410,7 +474,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseProject *parseProject = [TCSParseProject object];
-    [parseProject setObject:[PFUser currentUser] forKey:@"user"];
+    parseProject.user = [PFUser currentUser];
     [self updateProjectProperties:parseProject project:project];
 
     NSManagedObjectID *objectID = project.objectID;
@@ -575,7 +639,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseGroup *parseGroup = [TCSParseGroup object];
-    [parseGroup setObject:[PFUser currentUser] forKey:@"user"];
+    parseGroup.user = [PFUser currentUser];
     [self updateGroupProperties:parseGroup group:group];
 
     NSManagedObjectID *objectID = group.objectID;
@@ -737,7 +801,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseTimer *parseTimer = [TCSParseTimer object];
-    [parseTimer setObject:[PFUser currentUser] forKey:@"user"];
+    parseTimer.user = [PFUser currentUser];
     [self updateTimerProperties:parseTimer timer:timer];
 
     NSManagedObjectID *objectID = timer.objectID;
@@ -894,7 +958,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
-    [parseCannedMessage setObject:[PFUser currentUser] forKey:@"user"];
+    parseCannedMessage.user = [PFUser currentUser];
     [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
     NSManagedObjectID *objectID = cannedMessage.objectID;

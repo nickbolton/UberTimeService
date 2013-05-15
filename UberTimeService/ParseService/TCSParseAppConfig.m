@@ -11,7 +11,10 @@
 
 @implementation TCSParseAppConfig
 
-@dynamic deviceIdentifier;
+@dynamic deviceID;
+@dynamic instanceID;
+@dynamic appStartCount;
+@dynamic user;
 @dynamic majorVersion;
 @dynamic minorVersion;
 @dynamic buildVersion;

@@ -12,9 +12,12 @@
 
 + (NSString *)parseClassName;
 
-@property (nonatomic) NSString *deviceIdentifier;
+@property (nonatomic) NSString *deviceID;
+@property (nonatomic) NSString *instanceID;
+@property (nonatomic) NSInteger appStartCount;
 @property (nonatomic) NSInteger majorVersion;
 @property (nonatomic) NSInteger minorVersion;
 @property (nonatomic) NSInteger buildVersion;
+@property (nonatomic) PFUser *user;
 
 @end

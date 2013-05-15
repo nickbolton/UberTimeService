@@ -31,6 +31,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (void)clearCache;
 - (void)holdUpdates;
 - (NSDate *)systemTime;
+- (void)updateAppConfig;
 
 // method needs to be synchronous because it's designed to be run in the background
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
@@ -123,6 +124,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (NSDate *)systemTime;
+- (void)updateAppConfig;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

@@ -12,5 +12,6 @@
 
 @property (nonatomic) BOOL softDeleted;
 @property (nonatomic) NSInteger entityVersion;
+@property (nonatomic) PFUser *user;
 
 @end

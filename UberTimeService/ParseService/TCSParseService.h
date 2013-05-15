@@ -12,4 +12,6 @@
 
 @interface TCSParseService : TCSDefaultProvider <TCSServiceRemoteProvider>
 
+- (void)updateAppConfig;
+
 @end

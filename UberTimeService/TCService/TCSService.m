@@ -90,7 +90,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     [_localService deleteAllData:successBlock failure:failureBlock];
 }
 
-- (NSDate *)systemTime {
+- (id <TCSServiceRemoteProvider>)defaultRemoteProvider {
 
     id <TCSServiceRemoteProvider> remoteProvider = nil;
 
@@ -103,6 +103,18 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     if (remoteProvider == nil) {
         remoteProvider = _remoteServiceProviders.allValues.firstObject;
     }
+
+    return remoteProvider;
+}
+
+- (void)updateAppConfig {
+    id <TCSServiceRemoteProvider> remoteProvider = [self defaultRemoteProvider];
+    [remoteProvider updateAppConfig];
+}
+
+- (NSDate *)systemTime {
+
+    id <TCSServiceRemoteProvider> remoteProvider = [self defaultRemoteProvider];
 
     if (remoteProvider != nil) {
         return [remoteProvider systemTime];
