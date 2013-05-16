@@ -184,7 +184,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                       failure:(void(^)(NSError *error))failureBlock {
 
     if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
     }
 
     [self
@@ -205,7 +205,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                                    inContext:(NSManagedObjectContext *)context {
 
     if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
     }
 
     TCSProject *project =
@@ -239,7 +239,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                       failure:(void(^)(NSError *error))failureBlock {
 
     if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
     }
 
     __block TCSProject *project = nil;
@@ -1579,7 +1579,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                     failure:(void(^)(NSError *error))failureBlock {
 
     if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProvider;
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
     }
 
     __block TCSCannedMessage *cannedMessage = nil;
@@ -1793,6 +1793,14 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self handlePullingFromRemoteProviders];
+    });
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSLog(@"ZZZZ timers:");
+        NSArray *timers = [TCSTimer MR_findAll];
+        for (TCSTimer *timer in timers) {
+            NSLog(@"ZZZZ timer: %@", timer);
+        }
     });
 }
 
@@ -2208,11 +2216,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             if (providedGroup.utsSoftDeleted) {
 
-                NSLog(@"SYNC: marking group as deleted: %@", existingGroup);
-
-                [existingGroup markEntityAsDeleted];
-
-                *deleted = existingGroup;
+                if (existingGroup.remoteDeletedValue == NO) {
+                    NSLog(@"SYNC: marking group as deleted: %@", existingGroup);
+                    [existingGroup markEntityAsDeleted];
+                    *deleted = existingGroup;
+                }
                 
             } else {
 
@@ -2308,10 +2316,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             if (providedProject.utsSoftDeleted) {
 
-                NSLog(@"SYNC: marking project as deleted: %@", existingProject);
-                [existingProject markEntityAsDeleted];
-
-                *deleted = existingProject;
+                if (existingProject.remoteDeletedValue == NO) {
+                    NSLog(@"SYNC: marking project as deleted: %@", existingProject);
+                    [existingProject markEntityAsDeleted];
+                    *deleted = existingProject;
+                }
 
             } else {
 
@@ -2423,10 +2432,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             if (providedTimer.utsSoftDeleted) {
 
-                NSLog(@"SYNC: marking timer as deleted: %@", existingTimer);
-                [existingTimer markEntityAsDeleted];
-
-                *deleted = existingTimer;
+                if (existingTimer.remoteDeletedValue == NO) {
+                    NSLog(@"SYNC: marking timer as deleted: %@", existingTimer);
+                    [existingTimer markEntityAsDeleted];
+                    *deleted = existingTimer;
+                }
                 
             } else {
 
@@ -2509,11 +2519,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             if (providedCannedMessage.utsSoftDeleted) {
 
-                NSLog(@"SYNC: marking cannedMessage as deleted: %@", existingCannedMessage);
-
-                [existingCannedMessage markEntityAsDeleted];
-
-                *deleted = existingCannedMessage;
+                if (existingCannedMessage.remoteDeletedValue == NO) {
+                    NSLog(@"SYNC: marking cannedMessage as deleted: %@", existingCannedMessage);
+                    [existingCannedMessage markEntityAsDeleted];
+                    *deleted = existingCannedMessage;
+                }
 
             } else {
 

@@ -80,8 +80,11 @@
     [self calculateTotalTimes];
 
     if (self.isTimePeriodActive) {
+
+        NSDate *now = [[TCSService sharedInstance] systemTime];
+
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - self.recalculatedTimestamp;
+        [now timeIntervalSinceReferenceDate] - self.recalculatedTimestamp;
 
         return _totalRawElapsedTime + timeSinceLastCalculated;
     }
@@ -93,8 +96,11 @@
     [self calculateTotalTimes];
 
     if (self.isTimePeriodActive) {
+
+        NSDate *now = [[TCSService sharedInstance] systemTime];
+
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - self.recalculatedTimestamp;
+        [now timeIntervalSinceReferenceDate] - self.recalculatedTimestamp;
 
         return _totalElapsedTime + timeSinceLastCalculated;
     }
@@ -106,8 +112,11 @@
     [self calculateTotalTimes];
 
     if (self.isTimePeriodActive) {
+
+        NSDate *now = [[TCSService sharedInstance] systemTime];
+
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - self.recalculatedTimestamp;
+        [now timeIntervalSinceReferenceDate] - self.recalculatedTimestamp;
 
         return _totalElapsedTimeInHours + (timeSinceLastCalculated / 3600.0f);
     }
@@ -132,7 +141,10 @@
         _totalRawElapsedTime < 0.0f) {
 
         @synchronized (self) {
-            self.recalculatedTimestamp = [NSDate timeIntervalSinceReferenceDate];
+
+            NSDate *now = [[TCSService sharedInstance] systemTime];
+
+            self.recalculatedTimestamp = [now timeIntervalSinceReferenceDate];
 
             _totalElapsedTime = 0.0f;
             _totalElapsedTimeInHours = 0.0f;
@@ -188,7 +200,9 @@
             self.updating = NO;
         }
 
-        self.recalculatedTimestamp = [NSDate timeIntervalSinceReferenceDate];
+        NSDate *now = [[TCSService sharedInstance] systemTime];
+
+        self.recalculatedTimestamp = [now timeIntervalSinceReferenceDate];
 
         if (completionBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{

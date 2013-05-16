@@ -168,8 +168,9 @@
     [self ensureTimeIsCalculated];
 
     if (self.isTimePeriodActive) {
+        NSDate *now = [[TCSService sharedInstance] systemTime];
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - _recalculatedTimestamp;
+        [now timeIntervalSinceReferenceDate] - _recalculatedTimestamp;
 
         return _elapsedTime + timeSinceLastCalculated;
     }
@@ -182,8 +183,11 @@
     [self ensureTimeIsCalculated];
 
     if (self.isTimePeriodActive) {
+
+        NSDate *now = [[TCSService sharedInstance] systemTime];
+
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - _recalculatedTimestamp;
+        [now timeIntervalSinceReferenceDate] - _recalculatedTimestamp;
 
         return _rawElapsedTime + timeSinceLastCalculated;
     }
@@ -208,7 +212,9 @@
 
     self.timers = nil;
 
-    _recalculatedTimestamp = [NSDate timeIntervalSinceReferenceDate];
+    NSDate *now = [[TCSService sharedInstance] systemTime];
+
+    _recalculatedTimestamp = [now timeIntervalSinceReferenceDate];
 
     NSMutableArray *mutableTimerList;
 

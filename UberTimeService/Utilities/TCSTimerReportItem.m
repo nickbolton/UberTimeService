@@ -49,7 +49,8 @@
         _activeTimestamp = -1.0f;
         
         if (self.isActive) {
-            _activeTimestamp = [NSDate timeIntervalSinceReferenceDate];
+            NSDate *now = [[TCSService sharedInstance] systemTime];
+            _activeTimestamp = [now timeIntervalSinceReferenceDate];
         }
     }
     return self;
@@ -100,8 +101,10 @@
 
         if (_activeTimestamp >= 0.0f) {
 
+            NSDate *now = [[TCSService sharedInstance] systemTime];
+
             NSTimeInterval timeSinceLastCalculated =
-            [NSDate timeIntervalSinceReferenceDate] - _activeTimestamp;
+            [now timeIntervalSinceReferenceDate] - _activeTimestamp;
 
             _elapsedTime += timeSinceLastCalculated;
         }
@@ -119,12 +122,14 @@
             [self updateTimestamp];
         }
 
+        NSDate *now = [[TCSService sharedInstance] systemTime];
+
         NSTimeInterval timeSinceLastCalculated =
-        [NSDate timeIntervalSinceReferenceDate] - _activeTimestamp;
+        [now timeIntervalSinceReferenceDate] - _activeTimestamp;
 
         _elapsedTime += timeSinceLastCalculated;
 
-        _activeTimestamp = [NSDate timeIntervalSinceReferenceDate];
+        _activeTimestamp = [now timeIntervalSinceReferenceDate];
     }
 
     return _elapsedTime;

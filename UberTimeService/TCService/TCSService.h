@@ -120,7 +120,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @property (nonatomic, readonly) TCSTimer *activeTimer;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
-@property (nonatomic, strong) NSString *defaultRemoteProvider;
+@property (nonatomic, readonly) NSString *defaultRemoteProviderName;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (NSDate *)systemTime;

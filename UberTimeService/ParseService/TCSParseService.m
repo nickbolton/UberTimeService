@@ -154,6 +154,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     PFQuery *query = [TCSParseAppConfig query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
 
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
 
@@ -186,19 +187,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 }
 
 - (void)clearCache {
-
-    if ([PFUser currentUser] != nil) {
-        PFQuery *timerQuery = [TCSParseTimer query];
-        [timerQuery whereKey:@"user" equalTo:[PFUser currentUser]];
-        PFQuery *projectQuery = [TCSParseProject query];
-        [projectQuery whereKey:@"user" equalTo:[PFUser currentUser]];
-        PFQuery *groupQuery = [TCSParseGroup query];
-        [groupQuery whereKey:@"user" equalTo:[PFUser currentUser]];
-
-        [timerQuery clearCachedResult];
-        [projectQuery clearCachedResult];
-        [groupQuery clearCachedResult];
-    }
 }
 
 - (id)safePropertyValue:(id)value {
@@ -455,6 +443,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseProject.color = project.colorValue;
     parseProject.archived = project.archivedValue;
     parseProject.order = project.orderValue;
+    parseProject.instanceID = [NSString applicationInstanceId];
     parseProject.entityVersion = project.entityVersionValue;
 
     if (project.parent != nil) {
@@ -620,6 +609,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseGroup.name = [self safePropertyValue:group.name];
     parseGroup.color = group.colorValue;
     parseGroup.archived = group.archivedValue;
+    parseGroup.instanceID = [NSString applicationInstanceId];
     parseGroup.entityVersion = group.entityVersionValue;
 
     if (group.parent != nil) {
@@ -786,6 +776,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseTimer.endTime = [self safePropertyValue:timer.endTime];
     parseTimer.adjustment = timer.adjustmentValue;
     parseTimer.message = [self safePropertyValue:timer.message];
+    parseTimer.instanceID = [NSString applicationInstanceId];
     parseTimer.entityVersion = timer.entityVersionValue;
 
     NSAssert(timer.project.remoteId != nil, @"No remoteId for timer project");
@@ -946,6 +937,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                         cannedMessage:(TCSCannedMessage *)cannedMessage {
     parseCannedMessage.message = [self safePropertyValue:cannedMessage.message];
     parseCannedMessage.order = cannedMessage.orderValue;
+    parseCannedMessage.instanceID = [NSString applicationInstanceId];
     parseCannedMessage.entityVersion = cannedMessage.entityVersionValue;
 }
 
@@ -1232,6 +1224,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
             for (TCSParseBaseEntity *entity in updatedEntities) {
                 if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+                    NSLog(@"updating lastPollingDate to: %@", entity.utsUpdateTime);
                     self.lastPollingDate =
                     entity.utsUpdateTime;
                 }
@@ -1264,6 +1257,9 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     PFQuery *query = [TCSParseGroup query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
+
     if (_lastPollingDate != nil) {
         [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
     }
@@ -1282,6 +1278,9 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     PFQuery *query = [TCSParseProject query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
+
     if (_lastPollingDate != nil) {
         [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
     }
@@ -1301,6 +1300,9 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     PFQuery *query = [TCSParseTimer query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
+
     if (_lastPollingDate != nil) {
         [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
     }
@@ -1308,6 +1310,10 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     NSError *error = nil;
     NSArray *results = [query findObjects:&error];
 
+    NSLog(@"query: %@", query);
+    NSLog(@"lastPollingDate: %@", _lastPollingDate);
+    NSLog(@"polling timers: %@", results);
+    
     if (error != nil) {
         NSLog(@"Error: %@", error);
     }
@@ -1319,6 +1325,9 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     PFQuery *query = [TCSParseCannedMessage query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
+
     if (_lastPollingDate != nil) {
         [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
     }

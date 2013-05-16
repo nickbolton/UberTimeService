@@ -19,6 +19,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 @property (nonatomic, strong) TCSLocalService *localService;
 @property (nonatomic, strong) NSMutableDictionary *remoteServiceProviders;
 @property (nonatomic, readwrite) TCSTimer *activeTimer;
+@property (nonatomic, readwrite) NSString *defaultRemoteProviderName;
 
 @end
 
@@ -73,6 +74,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     NSAssert([(NSObject *)serviceProvider conformsToProtocol:@protocol(TCSServiceRemoteProvider)],
              @"Class must conform to TCSServiceRemoteProvider protocol");
 
+    if (_defaultRemoteProviderName == nil) {
+        self.defaultRemoteProviderName = NSStringFromClass(providerClass);
+    }
+    
     _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
     serviceProvider.delegate = _delegate;
 }
@@ -94,10 +99,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     id <TCSServiceRemoteProvider> remoteProvider = nil;
 
-    if (_defaultRemoteProvider != nil) {
+    if (_defaultRemoteProviderName != nil) {
 
         remoteProvider =
-        [self serviceProviderNamed:_defaultRemoteProvider];
+        [self serviceProviderNamed:_defaultRemoteProviderName];
     }
 
     if (remoteProvider == nil) {
