@@ -14,16 +14,8 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
     return [TCSTimedEntity backgroundColorForTimerColor:self.color.integerValue];
 }
 
-- (UIColor *)backgroundBorderColor {
-    return [TCSTimedEntity backgroundBorderColorForTimerColor:self.color.integerValue];
-}
-
 - (UIColor *)backgroundEditColor {
     return [TCSTimedEntity backgroundEditColorForTimerColor:self.color.integerValue];
-}
-
-- (UIColor *)backgroundEditBorderColor {
-    return [TCSTimedEntity backgroundEditBorderColorForTimerColor:self.color.integerValue];
 }
 
 - (UIImage *)dragImage {
@@ -40,7 +32,7 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 
     switch (timerColor) {
         case TCSTimedEntityColorBlue:
-            rgbHexValue = 0x6dcff6;
+            rgbHexValue = 0x003CFF;
             break;
 
         case TCSTimedEntityColorGreen:
@@ -61,40 +53,6 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
     }
 
     return [UIColor colorWithRGBHex:rgbHexValue];
-}
-
-+ (UIColor *)backgroundBorderColorForTimerColor:(TCSTimedEntityColor)timerColor {
-
-    NSInteger rgbHexValue = 0;
-
-    if (timerColor > kTCSTimedEntityMaxColor) {
-        timerColor = kTCSTimedEntityDefaultColor;
-    }
-
-    switch (timerColor) {
-        case TCSTimedEntityColorBlue:
-            rgbHexValue = 0x519bb8;
-            break;
-
-        case TCSTimedEntityColorGreen:
-            rgbHexValue = 0x51b85d;
-            break;
-
-        case TCSTimedEntityColorYellow:
-            rgbHexValue = 0xdcde2c;
-            break;
-
-        case TCSTimedEntityColorOrange:
-            rgbHexValue = 0xde912c;
-            break;
-
-        case TCSTimedEntityColorPink:
-            rgbHexValue = 0xc72cde;
-            break;
-    }
-
-    return [UIColor colorWithRGBHex:rgbHexValue];
-
 }
 
 + (UIColor *)backgroundEditColorForTimerColor:(TCSTimedEntityColor)timerColor {
@@ -124,40 +82,6 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 
         case TCSTimedEntityColorPink:
             rgbHexValue = 0x791688;
-            break;
-    }
-
-    return [UIColor colorWithRGBHex:rgbHexValue];
-
-}
-
-+ (UIColor *)backgroundEditBorderColorForTimerColor:(TCSTimedEntityColor)timerColor {
-
-    NSInteger rgbHexValue = 0;
-
-    if (timerColor > kTCSTimedEntityMaxColor) {
-        timerColor = kTCSTimedEntityDefaultColor;
-    }
-
-    switch (timerColor) {
-        case TCSTimedEntityColorBlue:
-            rgbHexValue = 0x295566;
-            break;
-
-        case TCSTimedEntityColorGreen:
-            rgbHexValue = 0x0f4a1a;
-            break;
-
-        case TCSTimedEntityColorYellow:
-            rgbHexValue = 0xaca209;
-            break;
-
-        case TCSTimedEntityColorOrange:
-            rgbHexValue = 0x784f18;
-            break;
-
-        case TCSTimedEntityColorPink:
-            rgbHexValue = 0x51125a;
             break;
     }
 
