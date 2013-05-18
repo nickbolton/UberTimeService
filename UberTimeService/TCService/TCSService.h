@@ -12,6 +12,7 @@
 #import "TCSCannedMessage.h"
 #import "NSError+Utilities.h"
 
+extern NSString * const kTCSPushNotificationRemoteServiceProviderKey;
 extern NSString * const kTCSServiceDataResetNotification;
 
 @protocol TCSServiceDelegate <NSObject>
@@ -32,6 +33,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (void)holdUpdates;
 - (NSDate *)systemTime;
 - (void)updateAppConfig;
+- (void)pollForUpdates;
 
 // method needs to be synchronous because it's designed to be run in the background
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
@@ -130,6 +132,8 @@ extern NSString * const kTCSServiceDataResetNotification;
               failure:(void(^)(NSError *error))failureBlock;
 
 #pragma mark - Projects
+
+- (void)pollRemoteServiceForUpdates:(NSString *)providerName;
 
 - (NSArray *)registeredRemoteProviders;
 - (void)registerRemoteServiceProvider:(Class)providerClass;

@@ -10,6 +10,7 @@
 #import "NSDate+Utilities.h"
 #import "TCSServicePrivate.h"
 
+NSString * const kTCSPushNotificationRemoteServiceProviderKey = @"remoteProvider";
 NSString * const kTCSServicePrivateRemoteSyncCompletedNotification =
 @"kTCSServicePrivateRemoteSyncCompletedNotification";
 NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotification";
@@ -38,6 +39,13 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
          selector:@selector(remoteSyncCompleted:)
          name:kTCSServicePrivateRemoteSyncCompletedNotification
          object:nil];
+
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(applicationWillEnterForeground:)
+         name:UIApplicationWillEnterForegroundNotification
+         object:nil];
+
     }
     return self;
 }
@@ -88,6 +96,25 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName {
     return _remoteServiceProviders[providerName];
+}
+
+- (void)pollRemoteServiceForUpdates:(NSString *)providerName {
+
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [self serviceProviderNamed:providerName];
+
+    if (remoteProvider != nil) {
+        [remoteProvider pollForUpdates];
+    } else {
+        NSLog(@"WARN: no provider named: %@", providerName);
+    }
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+
+    for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
+        [remoteProvider pollForUpdates];
+    }
 }
 
 - (void)deleteAllData:(void(^)(void))successBlock

@@ -1791,17 +1791,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [self handlePushingToRemoteProviders];
     });
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [self handlePullingFromRemoteProviders];
-    });
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSLog(@"ZZZZ timers:");
-        NSArray *timers = [TCSTimer MR_findAll];
-        for (TCSTimer *timer in timers) {
-            NSLog(@"ZZZZ timer: %@", timer);
-        }
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+//        NSLog(@"ZZZZ timers:");
+//        NSArray *timers = [TCSTimer MR_findAll];
+//        for (TCSTimer *timer in timers) {
+//            NSLog(@"ZZZZ timer: %@", timer);
+//        }
+//    });
 }
 
 - (void)handlePushingToRemoteProviders {
@@ -1814,7 +1810,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 
-    NSLog(@"updates: %@", updates);
+    if (updates.count > 0) {
+        NSLog(@"updates: %@", updates);
+    }
 
     @synchronized (self) {
         if (_savingUpdates) {

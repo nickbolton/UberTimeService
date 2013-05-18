@@ -82,17 +82,17 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [[NSUserDefaults standardUserDefaults]
          objectForKey:kTCSParseLastPollingDateKey];
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            [self pollForUpdates];
-        });
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+//            [self pollForUpdates];
+//        });
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self updateSystemTime];
         });
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            [self dumpSystemTime];
-	    });
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+//            [self dumpSystemTime];
+//	    });
     }
 
     return self;
@@ -146,6 +146,16 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
         NSLog(@"Created AppConfig: %@", appConfig);
     }];
+
+    // Saving the device's owner
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    [installation setObject:[PFUser currentUser] forKey:@"owner"];
+    [installation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
+        if (error != nil) {
+            NSLog(@"Error bind current user to installation: %@", error);
+        }
+    }];
 }
 
 - (void)updateAppConfig {
@@ -183,6 +193,16 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [appConfig saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             NSLog(@"Updated AppConfig: %@", appConfig);
         }];
+    }];
+
+    // Saving the device's owner
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    [installation setObject:[PFUser currentUser] forKey:@"owner"];
+    [installation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
+        if (error != nil) {
+            NSLog(@"Error bind current user to installation: %@", error);
+        }
     }];
 }
 
@@ -409,6 +429,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                     };
 
                     remoteIDMap = result;
+
+                    [self sendPushNotification];
                 }
             }
         }
@@ -429,6 +451,30 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     @synchronized (self) {
         _bufferedUpdates[objectID] = entity;
     }
+}
+
+- (void)sendPushNotification {
+
+    if ([PFUser currentUser] == nil || [PFInstallation currentInstallation].deviceToken == nil) return;
+
+    PFQuery *pushQuery = [PFInstallation query];
+//    [pushQuery
+//     whereKey:@"user"
+//     equalTo:[PFUser currentUser]];
+    [pushQuery
+     whereKey:@"deviceToken"
+     notEqualTo:[PFInstallation currentInstallation].deviceToken];
+
+    PFPush *push = [[PFPush alloc] init];
+    [push setQuery:pushQuery];
+    [push setData:
+     @{
+     @"alert" : @"Launch to sync data",
+     @"sound" : @"",
+     kTCSPushNotificationRemoteServiceProviderKey : NSStringFromClass([self class]),
+     }];
+    
+    [push sendPushInBackground];
 }
 
 // Project
@@ -489,6 +535,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID, parseProject.objectId);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -542,6 +590,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -596,6 +646,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -655,6 +707,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID, parseGroup.objectId);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -708,6 +762,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -762,6 +818,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -818,6 +876,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID, parseTimer.objectId);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -871,6 +931,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -925,6 +987,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -976,6 +1040,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID, parseCannedMessage.objectId);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -1029,6 +1095,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -1083,6 +1151,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
+
+            [self sendPushNotification];
         }
     }];
 
@@ -1246,11 +1316,11 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         }
     }
 
-    double delayInSeconds = 5.0f;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
-        [self pollForUpdates];
-    });
+//    double delayInSeconds = 5.0f;
+//    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
+//        [self pollForUpdates];
+//    });
 }
 
 - (NSArray *)fetchUpdatedGroupObjects {
@@ -1310,10 +1380,10 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     NSError *error = nil;
     NSArray *results = [query findObjects:&error];
 
-    NSLog(@"query: %@", query);
-    NSLog(@"lastPollingDate: %@", _lastPollingDate);
-    NSLog(@"polling timers: %@", results);
-    
+//    NSLog(@"query: %@", query);
+//    NSLog(@"lastPollingDate: %@", _lastPollingDate);
+//    NSLog(@"polling timers: %@", results);
+
     if (error != nil) {
         NSLog(@"Error: %@", error);
     }
