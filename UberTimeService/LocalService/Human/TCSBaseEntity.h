@@ -25,6 +25,7 @@
                   markAsUpdated:(BOOL)markAsUpdated;
 
 - (void)markEntityAsUpdated;
+- (void)markEntityAsDeleted;
 - (id)nonNullValue:(id)value;
 
 @end

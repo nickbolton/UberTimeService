@@ -49,6 +49,13 @@
     [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
 }
 
+- (void)markEntityAsDeleted {
+    self.entityVersionValue++;
+    self.pendingRemoteDeleteValue = YES;
+    self.pendingValue =
+    [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
+}
+
 - (id)nonNullValue:(id)value {
     if (value == [NSNull null]) {
         return nil;

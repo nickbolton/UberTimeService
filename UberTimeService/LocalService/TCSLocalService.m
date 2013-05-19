@@ -487,7 +487,16 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSProject *localProject = (id)
         (id)[localContext existingObjectWithID:project.objectID error:NULL];
 
-        [localProject MR_deleteInContext:localContext];
+        if (localProject != nil) {
+
+            @synchronized (self) {
+                [localProject markEntityAsDeleted];
+
+                for (TCSTimer *timer in localProject.timers) {
+                    [timer markEntityAsDeleted];
+                }
+            }
+        }
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -510,6 +519,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [[self managedObjectContextForCurrentThread]
      existingObjectWithID:entityID
      error:NULL];
+
+    if (project.pendingRemoteDeleteValue) {
+        project = nil;
+    }
 
     return project;
 }
@@ -599,7 +612,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSArray *projects =
     [TCSProject
-     MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+     MR_findByAttribute:@"pendingRemoteDelete"
+     withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
 
     return projects;
 }
@@ -672,7 +687,15 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSGroup *localGroup = (id)
         (id)[localContext existingObjectWithID:group.objectID error:NULL];
 
-        [localGroup MR_deleteInContext:localContext];
+        @synchronized (self) {
+            if (localGroup != nil) {
+                [localGroup markEntityAsDeleted];
+
+                for (TCSBaseEntity *entity in localGroup.children) {
+                    [entity markEntityAsDeleted];
+                }
+            }
+        }
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -695,19 +718,25 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      existingObjectWithID:entityID
      error:NULL];
 
+    if (group.pendingRemoteDeleteValue) {
+        group = nil;
+    }
+
     return group;
 }
 
 - (NSArray *)allGroups {
     return
     [TCSGroup
-     MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+     MR_findByAttribute:@"pendingRemoteDelete"
+     withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
 }
 
 - (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"parent = null"];
+    [NSPredicate predicateWithFormat:@"parent = null AND pendingRemoteDelete = 0"];
 
     NSArray *entities =
     [TCSTimedEntity
@@ -760,7 +789,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          toGroup:group
          inContext:localContext];
 
-        [localToProject MR_deleteInContext:localContext];
+        [localToProject markEntityAsDeleted];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -875,7 +904,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [parent.parent addChildrenObject:demotedProject];
         [parent.parent removeChildrenObject:parent];
 
-        [parent MR_deleteInContext:context];
+        [parent markEntityAsDeleted];
 
     } else {
         [parent markEntityAsUpdated];
@@ -1009,10 +1038,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         timer.endTime = [[TCSService sharedInstance] systemTime];
 
         if (timer.combinedTime < 5.0f) {
-            [timer MR_deleteInContext:timer.managedObjectContext];
-        } else {
-            [timer markEntityAsUpdated];
+            timer.pendingRemoteDeleteValue = YES;
         }
+        [timer markEntityAsUpdated];
     }
 }
 
@@ -1421,7 +1449,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSTimer *localTimer = (id)
         (id)[localContext existingObjectWithID:timer.objectID error:NULL];
 
-        [localTimer MR_deleteInContext:localContext];
+        if (localTimer != nil) {
+            [localTimer markEntityAsDeleted];
+        }
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -1448,7 +1478,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             TCSTimer *localTimer = (id)
             (id)[localContext existingObjectWithID:timer.objectID error:NULL];
 
-            [localTimer MR_deleteInContext:localContext];
+            if (localTimer != nil) {
+                [localTimer markEntityAsDeleted];
+            }
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -1472,6 +1504,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [[self managedObjectContextForCurrentThread]
      existingObjectWithID:entityID
      error:NULL];
+
+    if (timer.pendingRemoteDeleteValue) {
+        timer = nil;
+    }
 
     return timer;
 }
@@ -1532,7 +1568,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSPredicate * predicate =
     [NSPredicate predicateWithFormat:
-     @"((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
+     @"(pendingRemoteDelete = 0) and ((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
      timedEntities, timedEntities, toDate, fromDate, toDate, now, fromDate];
 
     NSArray *timers =
@@ -1551,7 +1587,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     return
     [TCSTimer
-     MR_findAllInContext:[self managedObjectContextForCurrentThread]];
+     MR_findByAttribute:@"pendingRemoteDelete"
+     withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
 }
 
 - (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime {
@@ -1559,7 +1597,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     if (sortedByStartTime) {
         return
         [TCSTimer
-         MR_findAllSortedBy:@"startTime"
+         MR_findByAttribute:@"pendingRemoteDelete"
+         withValue:@NO
+         andOrderBy:@"startTime"
          ascending:YES
          inContext:[self managedObjectContextForCurrentThread]];
     }
@@ -1575,7 +1615,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 - (TCSTimer *)activeTimer {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"endTime = nil"];
+    [NSPredicate predicateWithFormat:@"endTime = nil AND pendingRemoteDelete = 0"];
 
     NSArray *activeTimers =
     [TCSTimer
@@ -1663,7 +1703,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 - (NSArray *)allCannedMessages {
     return
     [TCSCannedMessage
-     MR_findAllSortedBy:@"order"
+     MR_findByAttribute:@"pendingRemoteDelete"
+     withValue:@NO
+     andOrderBy:@"order"
      ascending:YES
      inContext:[self managedObjectContextForCurrentThread]];
 }
@@ -1673,6 +1715,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [[self managedObjectContextForCurrentThread]
      existingObjectWithID:objectID
      error:NULL];
+
+    if (cannedMessage.pendingRemoteDeleteValue) {
+        cannedMessage = nil;
+    }
 
     return cannedMessage;
 }
@@ -1691,9 +1737,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
+        NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"pendingRemoteDelete = 0"];
+
         TCSCannedMessage *lastCannedMessage =
         [TCSCannedMessage
-         MR_findFirstOrderedByAttribute:@"order"
+         MR_findFirstWithPredicate:predicate
+         sortedBy:@"order"
          ascending:NO
          inContext:localContext];
 
@@ -1755,7 +1805,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         NSArray *orderedMessages =
         [TCSCannedMessage
-         MR_findAllSortedBy:@"order"
+         MR_findByAttribute:@"pendingRemoteDelete"
+         withValue:@NO
+         andOrderBy:@"order"
          ascending:YES
          inContext:localContext];
 
@@ -1860,7 +1912,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSCannedMessage *localCannedMessage = (id)
         (id)[localContext existingObjectWithID:cannedMessage.objectID error:NULL];
 
-        [localCannedMessage MR_deleteInContext:localContext];
+        if (localCannedMessage != nil) {
+            [localCannedMessage markEntityAsDeleted];
+        }
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -1892,26 +1946,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 //            NSLog(@"ZZZZ timer: %@", timer);
 //        }
 //    });
-}
-
-- (void)contextDidSave:(NSNotification *)notification {
-
-    NSSet *deletes = notification.userInfo[NSDeletedObjectsKey];
-
-    if (deletes.count > 0) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-
-            for (TCSBaseEntity *entity in deletes) {
-
-                [self
-                 deleteRemoteEntity:entity
-                 success:nil
-                 failure:^(NSError *error) {
-                     NSLog(@"Error: %@", error);
-                 }];
-            }
-        });
-    }
 }
 
 - (void)handlePushingToRemoteProviders {
@@ -1972,6 +2006,33 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                          NSLog(@"Error: %@", error);
                      }];
 
+                } else if (entity.pendingRemoteDeleteValue) {
+
+                    if (entity.remoteId != nil) {
+                        [self
+                         deleteRemoteEntity:entity
+                         success:^(NSManagedObjectID *objectID) {
+
+                             [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+
+                                 NSError *error = nil;
+
+                                 TCSBaseEntity *localEntity = (id)
+                                 [localContext existingObjectWithID:objectID error:&error];
+
+                                 if (error != nil) {
+                                     NSLog(@"Error: %@", error);
+                                 } else {
+
+                                     [localEntity MR_deleteInContext:localContext];
+                                 }
+                             }];
+                             
+                         } failure:^(NSError *error) {
+                             NSLog(@"Error: %@", error);
+                         }];
+                    }
+
                 } else {
 
                     [self
@@ -2022,7 +2083,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                                     NSLog(@"Error: %@", error);
                                 } else {
 
-                                    if ([createdEntities containsObject:localEntity.objectID] == NO) {
+                                    if (localEntity.pendingRemoteDeleteValue == NO ||
+                                        [createdEntities containsObject:localEntity.objectID] == NO) {
                                         localEntity.pendingValue = NO;
                                     }
                                     
@@ -2102,7 +2164,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
          [self
           sendDeleteObjectCommand:entity.remoteId
-          withProvider:remoteProvider
+          withProvider:entity.remoteProvider
           success:^{
 
               if (successBlock != nil) {

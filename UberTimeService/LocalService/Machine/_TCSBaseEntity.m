@@ -6,6 +6,7 @@
 const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
 	.entityVersion = @"entityVersion",
 	.pending = @"pending",
+	.pendingRemoteDelete = @"pendingRemoteDelete",
 	.remoteId = @"remoteId",
 	.remoteProvider = @"remoteProvider",
 	.updateTime = @"updateTime",
@@ -49,6 +50,10 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 	}
 	if ([key isEqualToString:@"pendingValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"pending"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
+	if ([key isEqualToString:@"pendingRemoteDeleteValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"pendingRemoteDelete"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 	}
 
@@ -104,6 +109,32 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 - (void)setPrimitivePendingValue:(BOOL)value_ {
 	[self setPrimitivePending:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+@dynamic pendingRemoteDelete;
+
+
+
+- (BOOL)pendingRemoteDeleteValue {
+	NSNumber *result = [self pendingRemoteDelete];
+	return [result boolValue];
+}
+
+- (void)setPendingRemoteDeleteValue:(BOOL)value_ {
+	[self setPendingRemoteDelete:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitivePendingRemoteDeleteValue {
+	NSNumber *result = [self primitivePendingRemoteDelete];
+	return [result boolValue];
+}
+
+- (void)setPrimitivePendingRemoteDeleteValue:(BOOL)value_ {
+	[self setPrimitivePendingRemoteDelete:[NSNumber numberWithBool:value_]];
 }
 
 

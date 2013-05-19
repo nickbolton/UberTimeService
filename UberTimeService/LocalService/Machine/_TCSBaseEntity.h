@@ -7,6 +7,7 @@
 extern const struct TCSBaseEntityAttributes {
 	__unsafe_unretained NSString *entityVersion;
 	__unsafe_unretained NSString *pending;
+	__unsafe_unretained NSString *pendingRemoteDelete;
 	__unsafe_unretained NSString *remoteId;
 	__unsafe_unretained NSString *remoteProvider;
 	__unsafe_unretained NSString *updateTime;
@@ -17,6 +18,7 @@ extern const struct TCSBaseEntityRelationships {
 
 extern const struct TCSBaseEntityFetchedProperties {
 } TCSBaseEntityFetchedProperties;
+
 
 
 
@@ -57,6 +59,18 @@ extern const struct TCSBaseEntityFetchedProperties {
 - (void)setPendingValue:(BOOL)value_;
 
 //- (BOOL)validatePending:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSNumber* pendingRemoteDelete;
+
+
+@property BOOL pendingRemoteDeleteValue;
+- (BOOL)pendingRemoteDeleteValue;
+- (void)setPendingRemoteDeleteValue:(BOOL)value_;
+
+//- (BOOL)validatePendingRemoteDelete:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -110,6 +124,15 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 - (BOOL)primitivePendingValue;
 - (void)setPrimitivePendingValue:(BOOL)value_;
+
+
+
+
+- (NSNumber*)primitivePendingRemoteDelete;
+- (void)setPrimitivePendingRemoteDelete:(NSNumber*)value;
+
+- (BOOL)primitivePendingRemoteDeleteValue;
+- (void)setPrimitivePendingRemoteDeleteValue:(BOOL)value_;
 
 
 
