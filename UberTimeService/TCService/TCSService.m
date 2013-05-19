@@ -107,7 +107,15 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
 - (void)pollRemoteServicesForUpdates {
 
-    [_delegate remoteSyncStarting];
+    BOOL anyProviderLoggedIn = NO;
+
+    for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
+        anyProviderLoggedIn |= [remoteProvider isUserAuthenticated];
+    }
+
+    if (anyProviderLoggedIn) {
+        [_delegate remoteSyncStarting];
+    }
 
     BOOL isPolling = NO;
 
@@ -115,7 +123,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
         isPolling |= [remoteProvider pollForUpdates];
     }
 
-    if (isPolling == NO) {
+    if (isPolling == NO && anyProviderLoggedIn) {
         [_delegate remoteSyncCompleted];
     }
 }

@@ -365,7 +365,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 }
 
 - (BOOL)isUserAuthenticated {
-    return YES;
+    return [PFUser currentUser] != nil;
 }
 
 - (void)holdUpdates {
