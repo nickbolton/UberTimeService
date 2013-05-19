@@ -29,7 +29,6 @@ extern TCSTimedEntityColor const kTCSTimedEntityMaxColor;
                  color:(NSInteger)color
               archived:(BOOL)archived
          entityVersion:(int64_t)entityVersion
-         remoteDeleted:(BOOL)remoteDeleted
               remoteId:(NSString *)remoteId
             updateTime:(NSDate *)updateTime
          markAsUpdated:(BOOL)markAsUpdated;

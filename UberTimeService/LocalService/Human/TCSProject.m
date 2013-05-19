@@ -15,7 +15,7 @@
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProject class]],
-                 @"No a TCSProject object");
+                 @"Not aTCSProject object");
 
         if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
 
@@ -53,7 +53,7 @@
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProject class]],
-                 @"No a TCSProject object");
+                 @"Not aTCSProject object");
 
         if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
 
@@ -89,7 +89,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSProject class]],
-             @"No a TCSProject object");
+             @"Not aTCSProject object");
 
     if (successBlock != nil) {
 
@@ -113,7 +113,6 @@
              modifiers:(NSInteger)modifiers
                  order:(NSInteger)order
          entityVersion:(int64_t)entityVersion
-         remoteDeleted:(BOOL)remoteDeleted
               remoteId:(NSString *)remoteId
             updateTime:(NSDate *)updateTime
          markAsUpdated:(BOOL)markAsUpdated {
@@ -128,7 +127,6 @@
      color:color
      archived:archived
      entityVersion:entityVersion
-     remoteDeleted:remoteDeleted
      remoteId:remoteId
      updateTime:updateTime
      markAsUpdated:markAsUpdated];

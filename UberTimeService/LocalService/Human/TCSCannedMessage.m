@@ -14,7 +14,7 @@
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-                 @"No a TCSCannedMessage object");
+                 @"Not aTCSCannedMessage object");
 
         [remoteProvider
          createCannedMessage:localEntity
@@ -38,7 +38,7 @@
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-                 @"No a TCSCannedMessage object");
+                 @"Not aTCSCannedMessage object");
 
         [remoteProvider
          updateCannedMessage:localEntity
@@ -60,7 +60,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-             @"No a TCSCannedMessage object");
+             @"Not aTCSCannedMessage object");
 
     if (successBlock != nil) {
 
@@ -79,7 +79,6 @@
 - (void)updateWithMessage:(NSString *)message
                     order:(NSInteger)order
             entityVersion:(int64_t)entityVersion
-            remoteDeleted:(BOOL)remoteDeleted
                  remoteId:(NSString *)remoteId
                updateTime:(NSDate *)updateTime
             markAsUpdated:(BOOL)markAsUpdated {
@@ -89,7 +88,6 @@
     
     [super
      updateWithEntityVersion:entityVersion
-     remoteDeleted:remoteDeleted
      remoteId:remoteId
      updateTime:updateTime
      markAsUpdated:markAsUpdated];

@@ -10,17 +10,12 @@
 
 @implementation TCSParseBaseEntity
 
-@dynamic softDeleted;
 @dynamic entityVersion;
 @dynamic instanceID;
 @dynamic user;
 
 - (NSString *)utsRemoteID {
     return self.objectId;
-}
-
-- (BOOL)utsSoftDeleted {
-    return self.softDeleted;
 }
 
 - (NSInteger)utsEntityVersion {

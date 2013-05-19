@@ -10,7 +10,6 @@
 
 @interface TCSParseBaseEntity : PFObject <TCSProvidedBaseEntity>
 
-@property (nonatomic) BOOL softDeleted;
 @property (nonatomic) NSInteger entityVersion;
 @property (nonatomic) NSString *instanceID;
 @property (nonatomic) PFUser *user;

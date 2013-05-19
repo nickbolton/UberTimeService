@@ -220,7 +220,7 @@
          [self notify:kGHUnitWaitStatusFailure forSelector:selector];
      }];
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:5.0f];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:60.0f];
 
 }
 

@@ -21,7 +21,6 @@
                  adjustment:(NSTimeInterval)adjustment
                     message:(NSString *)message
               entityVersion:(int64_t)entityVersion
-              remoteDeleted:(BOOL)remoteDeleted
                    remoteId:(NSString *)remoteId
                  updateTime:(NSDate *)updateTime
               markAsUpdated:(BOOL)markAsUpdated;

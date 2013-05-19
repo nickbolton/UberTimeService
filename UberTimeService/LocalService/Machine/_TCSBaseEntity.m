@@ -6,7 +6,6 @@
 const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
 	.entityVersion = @"entityVersion",
 	.pending = @"pending",
-	.remoteDeleted = @"remoteDeleted",
 	.remoteId = @"remoteId",
 	.remoteProvider = @"remoteProvider",
 	.updateTime = @"updateTime",
@@ -50,10 +49,6 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 	}
 	if ([key isEqualToString:@"pendingValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"pending"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
-	if ([key isEqualToString:@"remoteDeletedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"remoteDeleted"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 	}
 
@@ -109,32 +104,6 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 - (void)setPrimitivePendingValue:(BOOL)value_ {
 	[self setPrimitivePending:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic remoteDeleted;
-
-
-
-- (BOOL)remoteDeletedValue {
-	NSNumber *result = [self remoteDeleted];
-	return [result boolValue];
-}
-
-- (void)setRemoteDeletedValue:(BOOL)value_ {
-	[self setRemoteDeleted:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveRemoteDeletedValue {
-	NSNumber *result = [self primitiveRemoteDeleted];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveRemoteDeletedValue:(BOOL)value_ {
-	[self setPrimitiveRemoteDeleted:[NSNumber numberWithBool:value_]];
 }
 
 

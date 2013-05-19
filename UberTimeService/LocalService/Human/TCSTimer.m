@@ -18,7 +18,7 @@
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
-                 @"No a TCSTimer object");
+                 @"Not aTCSTimer object");
 
         if (localEntity.project.remoteId != nil) {
             [remoteProvider
@@ -54,7 +54,7 @@
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
-                 @"No a TCSTimer object");
+                 @"Not aTCSTimer object");
 
         if (localEntity.project.remoteId != nil) {
 
@@ -90,7 +90,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSTimer class]],
-             @"No a TCSTimer object");
+             @"Not aTCSTimer object");
 
     if (successBlock != nil) {
 
@@ -201,7 +201,6 @@
                  adjustment:(NSTimeInterval)adjustment
                     message:(NSString *)message
               entityVersion:(int64_t)entityVersion
-              remoteDeleted:(BOOL)remoteDeleted
                    remoteId:(NSString *)remoteId
                  updateTime:(NSDate *)updateTime
               markAsUpdated:(BOOL)markAsUpdated {
@@ -213,7 +212,6 @@
     
     [super
      updateWithEntityVersion:entityVersion
-     remoteDeleted:remoteDeleted
      remoteId:remoteId
      updateTime:updateTime
      markAsUpdated:markAsUpdated];

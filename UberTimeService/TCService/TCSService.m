@@ -95,7 +95,14 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName {
-    return _remoteServiceProviders[providerName];
+    NSObject <TCSServiceRemoteProvider> *remoteProvider =
+    _remoteServiceProviders[providerName];
+
+    if (remoteProvider == nil) {
+        NSLog(@"WARN: no provider named: %@", providerName);
+    }
+
+    return remoteProvider;
 }
 
 - (void)pollRemoteServiceForUpdates:(NSString *)providerName {
@@ -103,11 +110,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     id <TCSServiceRemoteProvider> remoteProvider =
     [self serviceProviderNamed:providerName];
 
-    if (remoteProvider != nil) {
-        [remoteProvider pollForUpdates];
-    } else {
-        NSLog(@"WARN: no provider named: %@", providerName);
-    }
+    [remoteProvider pollForUpdates];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
@@ -115,6 +118,28 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
         [remoteProvider pollForUpdates];
     }
+}
+
+- (void)sendRemoteMessage:(NSString *)message
+             withProvider:(NSString *)remoteProvider
+                  success:(void(^)(void))successBlock
+                  failure:(void(^)(NSError *error))failureBlock {
+
+    [_localService
+     sendRemoteMessage:message
+     withProvider:remoteProvider
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)resetRemoteDataWithProvider:(NSString *)remoteProvider
+                            success:(void(^)(void))successBlock
+                            failure:(void(^)(NSError *error))failureBlock {
+
+    [_localService
+     resetRemoteDataWithProvider:remoteProvider
+     success:successBlock
+     failure:failureBlock];
 }
 
 - (void)deleteAllData:(void(^)(void))successBlock

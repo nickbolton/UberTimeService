@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		7155735B2001481DA0734471 /* libPods-BasePods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB51A264C2846AD9D3F2A50 /* libPods-BasePods.a */; };
 		79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A161D6FDF95340609138410D /* libPods-IntegrationTests.a */; };
+		FE3D1A641748FA2A000A4788 /* TCSRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A631748FA2A000A4788 /* TCSRemoteCommand.m */; };
+		FE3D1A651748FA2A000A4788 /* TCSRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A631748FA2A000A4788 /* TCSRemoteCommand.m */; };
+		FE3D1A681748FA32000A4788 /* _TCSRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A671748FA32000A4788 /* _TCSRemoteCommand.m */; };
+		FE3D1A691748FA32000A4788 /* _TCSRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A671748FA32000A4788 /* _TCSRemoteCommand.m */; };
+		FE3D1A6A174911E9000A4788 /* TCSParseAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316771743A8BB00A6F16D /* TCSParseAppConfig.m */; };
+		FE3D1A6D1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */; };
+		FE3D1A6E1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */; };
 		FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
 		FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
 		FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
@@ -144,6 +151,12 @@
 		A161D6FDF95340609138410D /* libPods-IntegrationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IntegrationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CAE1762EAA41928F4E4B0A /* Pods-OCTests-IntegrationTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCTests-IntegrationTests.xcconfig"; path = "Pods/Pods-OCTests-IntegrationTests.xcconfig"; sourceTree = SOURCE_ROOT; };
 		E999345D174A464E853C247E /* Pods-BasePods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods.xcconfig"; path = "Pods/Pods-BasePods.xcconfig"; sourceTree = SOURCE_ROOT; };
+		FE3D1A621748FA2A000A4788 /* TCSRemoteCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSRemoteCommand.h; sourceTree = "<group>"; };
+		FE3D1A631748FA2A000A4788 /* TCSRemoteCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSRemoteCommand.m; sourceTree = "<group>"; };
+		FE3D1A661748FA32000A4788 /* _TCSRemoteCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSRemoteCommand.h; sourceTree = "<group>"; };
+		FE3D1A671748FA32000A4788 /* _TCSRemoteCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSRemoteCommand.m; sourceTree = "<group>"; };
+		FE3D1A6B1749120E000A4788 /* TCSParseRemoteCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseRemoteCommand.h; sourceTree = "<group>"; };
+		FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseRemoteCommand.m; sourceTree = "<group>"; };
 		FE7F8BE517372D9D008EE46E /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
 		FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
 		FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseEntity.h; sourceTree = "<group>"; };
@@ -552,6 +565,8 @@
 				FEBD02FC17354D0F00DAB99D /* TCSParseTimer.m */,
 				FE9C8007173F1D4200005FD8 /* TCSParseCannedMessage.h */,
 				FE9C8008173F1D4200005FD8 /* TCSParseCannedMessage.m */,
+				FE3D1A6B1749120E000A4788 /* TCSParseRemoteCommand.h */,
+				FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */,
 				FEBD03281735735800DAB99D /* TCSParseBaseEntity.h */,
 				FEBD03291735735900DAB99D /* TCSParseBaseEntity.m */,
 				FEB316731743A7ED00A6F16D /* TCSParseSystemTime.h */,
@@ -577,6 +592,8 @@
 				FE837DF71736C5BC00CBD853 /* TCSTimer.m */,
 				FE7F8CB2173731DE008EE46E /* TCSCannedMessage.h */,
 				FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */,
+				FE3D1A621748FA2A000A4788 /* TCSRemoteCommand.h */,
+				FE3D1A631748FA2A000A4788 /* TCSRemoteCommand.m */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -596,6 +613,8 @@
 				FE837E071736C5C400CBD853 /* _TCSTimer.m */,
 				FE7F8CB5173731E6008EE46E /* _TCSCannedMessage.h */,
 				FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */,
+				FE3D1A661748FA32000A4788 /* _TCSRemoteCommand.h */,
+				FE3D1A671748FA32000A4788 /* _TCSRemoteCommand.m */,
 			);
 			path = Machine;
 			sourceTree = "<group>";
@@ -794,6 +813,10 @@
 				FE9C800A173F1D4300005FD8 /* TCSParseCannedMessage.m in Sources */,
 				FE9C800B173F22FD00005FD8 /* TCSCommon.m in Sources */,
 				FEB316791743AA3800A6F16D /* TCSParseSystemTime.m in Sources */,
+				FE3D1A651748FA2A000A4788 /* TCSRemoteCommand.m in Sources */,
+				FE3D1A691748FA32000A4788 /* _TCSRemoteCommand.m in Sources */,
+				FE3D1A6A174911E9000A4788 /* TCSParseAppConfig.m in Sources */,
+				FE3D1A6E1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,6 +865,9 @@
 				FE9C8009173F1D4300005FD8 /* TCSParseCannedMessage.m in Sources */,
 				FEB316751743A7ED00A6F16D /* TCSParseSystemTime.m in Sources */,
 				FEB316781743A8BB00A6F16D /* TCSParseAppConfig.m in Sources */,
+				FE3D1A641748FA2A000A4788 /* TCSRemoteCommand.m in Sources */,
+				FE3D1A681748FA32000A4788 /* _TCSRemoteCommand.m in Sources */,
+				FE3D1A6D1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

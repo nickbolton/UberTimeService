@@ -10,6 +10,7 @@
 #import "TCSGroup.h"
 #import "TCSTimer.h"
 #import "TCSCannedMessage.h"
+#import "TCSRemoteCommand.h"
 #import "NSError+Utilities.h"
 
 extern NSString * const kTCSPushNotificationRemoteServiceProviderKey;
@@ -53,6 +54,12 @@ extern NSString * const kTCSServiceDataResetNotification;
            failure:(void(^)(NSError *error))failureBlock;
 
 - (BOOL)isUserAuthenticated;
+
+// Remote Command
+
+- (BOOL)createRemoteCommand:(TCSRemoteCommand *)remoteCommand
+              success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+              failure:(void(^)(NSError *error))failureBlock;
 
 // Project
 
@@ -130,6 +137,20 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
+
+- (void)sendRemoteMessage:(NSString *)message
+             withProvider:(NSString *)remoteProvider
+                  success:(void(^)(void))successBlock
+                  failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteRemoteObject:(NSString *)remoteObjectID
+              withProvider:(NSString *)remoteProvider
+                   success:(void(^)(void))successBlock
+                   failure:(void(^)(NSError *error))failureBlock;
+
+- (void)resetRemoteDataWithProvider:(NSString *)remoteProvider
+                            success:(void(^)(void))successBlock
+                            failure:(void(^)(NSError *error))failureBlock;
 
 #pragma mark - Projects
 

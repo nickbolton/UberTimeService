@@ -2,5 +2,6 @@
 #import "TCSCannedMessage.h"
 #import "TCSGroup.h"
 #import "TCSProject.h"
+#import "TCSRemoteCommand.h"
 #import "TCSTimedEntity.h"
 #import "TCSTimer.h"

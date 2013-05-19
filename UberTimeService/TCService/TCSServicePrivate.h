@@ -10,7 +10,6 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 
 @protocol TCSProvidedBaseEntity <NSObject>
 @property (nonatomic, readonly) NSString *utsRemoteID;
-@property (nonatomic, readonly) BOOL utsSoftDeleted;
 @property (nonatomic, readonly) NSInteger utsEntityVersion;
 @property (nonatomic, readonly) Class utsLocalEntityType;
 @property (nonatomic, readonly) NSDate *utsUpdateTime;
@@ -46,6 +45,11 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSInteger utsOrder;
 @end
 
+@protocol TCSProvidedRemoteCommand <TCSProvidedBaseEntity>
+@property (nonatomic, readonly) NSData *utsPayloadData;
+@property (nonatomic, readonly) NSInteger utsType;
+@end
+
 @protocol TCSServiceDelegate;
 @protocol TCSServiceLocalService <NSObject>
 
@@ -54,6 +58,15 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
+
+- (void)sendRemoteMessage:(NSString *)message
+             withProvider:(NSString *)remoteProvider
+                  success:(void(^)(void))successBlock
+                  failure:(void(^)(NSError *error))failureBlock;
+
+- (void)resetRemoteDataWithProvider:(NSString *)remoteProvider
+                            success:(void(^)(void))successBlock
+                            failure:(void(^)(NSError *error))failureBlock;
 
 - (void)createProjectWithName:(NSString *)name
                remoteProvider:(NSString *)remoteProvider

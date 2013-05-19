@@ -16,6 +16,7 @@
 #import "TCSParseProject.h"
 #import "TCSParseTimer.h"
 #import "TCSParseCannedMessage.h"
+#import "TCSParseRemoteCommand.h"
 #import "TCSParseAppConfig.h"
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
@@ -475,7 +476,61 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     [push sendPushInBackground];
 }
 
-// Project
+#pragma mark - Remote Command
+
+- (void)updateRemoteCommandProperties:(TCSParseRemoteCommand *)parseRemoteCommand
+                        remoteCommand:(TCSRemoteCommand *)remoteCommand {
+
+    parseRemoteCommand.user = [PFUser currentUser];
+    parseRemoteCommand.payload = remoteCommand.payload;
+    parseRemoteCommand.type = remoteCommand.typeValue;
+    parseRemoteCommand.instanceID = [NSString applicationInstanceId];
+    parseRemoteCommand.entityVersion = remoteCommand.entityVersionValue;
+}
+
+- (BOOL)createRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    TCSParseRemoteCommand *parseRemoteCommand = [TCSParseRemoteCommand object];
+    [self updateRemoteCommandProperties:parseRemoteCommand remoteCommand:remoteCommand];
+
+    NSManagedObjectID *objectID = remoteCommand.objectID;
+
+    if (_holdUpdates) {
+        [self bufferParseObject:(id)parseRemoteCommand objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseRemoteCommand saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseRemoteCommand.objectId);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
+
+#pragma mark - Project
 
 - (void)updateProjectProperties:(TCSParseProject *)parseProject
                         project:(TCSProject *)project {
@@ -618,21 +673,15 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     TCSParseProject *parseProject = [TCSParseProject object];
     parseProject.objectId = project.remoteId;
-    parseProject.softDeleted = YES;
-    [self updateProjectProperties:parseProject project:project];
 
     NSManagedObjectID *objectID = project.objectID;
-
-    if (_holdUpdates) {
-        [self bufferParseObject:(id)parseProject objectID:objectID];
-        return NO;
-    }
 
     if (_connected == NO) {
         return NO;
     }
 
-    [parseProject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [parseProject deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -644,15 +693,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
-
-            [self sendPushNotification];
         }
     }];
 
     return YES;
 }
 
-// Group
+#pragma mark - Group
 
 - (void)updateGroupProperties:(TCSParseGroup *)parseGroup
                       group:(TCSGroup *)group {
@@ -790,21 +837,14 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     TCSParseGroup *parseGroup = [TCSParseGroup object];
     parseGroup.objectId = group.remoteId;
-    parseGroup.softDeleted = YES;
-    [self updateGroupProperties:parseGroup group:group];
 
     NSManagedObjectID *objectID = group.objectID;
-
-    if (_holdUpdates) {
-        [self bufferParseObject:(id)parseGroup objectID:objectID];
-        return NO;
-    }
 
     if (_connected == NO) {
         return NO;
     }
 
-    [parseGroup saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [parseGroup deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -816,15 +856,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
-
-            [self sendPushNotification];
         }
     }];
 
     return YES;
 }
 
-// Timer
+#pragma mark - Timer
 
 - (void)updateTimerProperties:(TCSParseTimer *)parseTimer
                         timer:(TCSTimer *)timer {
@@ -959,21 +997,14 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     TCSParseTimer *parseTimer = [TCSParseTimer object];
     parseTimer.objectId = timer.remoteId;
-    parseTimer.softDeleted = YES;
-    [self updateTimerProperties:parseTimer timer:timer];
 
     NSManagedObjectID *objectID = timer.objectID;
-
-    if (_holdUpdates) {
-        [self bufferParseObject:(id)parseTimer objectID:objectID];
-        return NO;
-    }
 
     if (_connected == NO) {
         return NO;
     }
 
-    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [parseTimer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
@@ -985,15 +1016,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             if (successBlock != nil) {
                 successBlock(objectID);
             }
-
-            [self sendPushNotification];
         }
     }];
 
     return YES;
 }
 
-// Canned Message
+#pragma mark - Canned Message
 
 - (void)updateCannedMessageProperties:(TCSParseCannedMessage *)parseCannedMessage
                         cannedMessage:(TCSCannedMessage *)cannedMessage {
@@ -1123,21 +1152,14 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
     parseCannedMessage.objectId = cannedMessage.remoteId;
-    parseCannedMessage.softDeleted = YES;
-    [self updateCannedMessageProperties:parseCannedMessage cannedMessage:cannedMessage];
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
-
-    if (_holdUpdates) {
-        [self bufferParseObject:(id)parseCannedMessage objectID:objectID];
-        return NO;
-    }
 
     if (_connected == NO) {
         return NO;
     }
 
-    [parseCannedMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [parseCannedMessage deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error != nil) {
 
             if (failureBlock != nil) {
