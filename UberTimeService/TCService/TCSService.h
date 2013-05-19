@@ -34,7 +34,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (void)holdUpdates;
 - (NSDate *)systemTime;
 - (void)updateAppConfig;
-- (void)pollForUpdates;
+- (BOOL)pollForUpdates;
 
 // method needs to be synchronous because it's designed to be run in the background
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
@@ -158,6 +158,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 #pragma mark - Projects
 
+- (void)pollRemoteServicesForUpdates;
 - (void)pollRemoteServiceForUpdates:(NSString *)providerName;
 
 - (NSArray *)registeredRemoteProviders;

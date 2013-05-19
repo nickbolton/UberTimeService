@@ -28,6 +28,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 @interface TCSParseService() {
 
     BOOL _holdUpdates;
+    BOOL _pollingForUpdates;
+    
     NSTimeInterval _localTimeLastSystemTimeReceived;
 }
 
@@ -84,31 +86,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [[NSUserDefaults standardUserDefaults]
          objectForKey:kTCSParseLastPollingDateKey];
 
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-//            [self pollForUpdates];
-//        });
-
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self updateSystemTime];
         });
 
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-//            [self dumpSystemTime];
-//	    });
     }
 
     return self;
-}
-
-- (void)dumpSystemTime {
-
-    NSLog(@"System Time: %@ - %@", [self systemTime], [[TCSService sharedInstance] systemTime]);
-
-    double delayInSeconds = 1.0f;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self dumpSystemTime];
-    });
 }
 
 - (NSString *)name {
@@ -1250,127 +1234,136 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     });
 }
 
-- (void)pollForUpdates {
+- (BOOL)pollForUpdates {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    if (_pollingForUpdates) return NO;
     
     if ([PFUser currentUser] != nil) {
 
-        dispatch_group_t group = dispatch_group_create();
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+        _pollingForUpdates = YES;
 
-        __block NSArray *remoteCommands = nil;
-        __block NSArray *groups = nil;
-        __block NSArray *projects = nil;
-        __block NSArray *timers = nil;
-        __block NSArray *cannedMessages = nil;
-        __block BOOL sentSyncStarting = NO;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
-        dispatch_group_async(group, queue, ^{
-            remoteCommands = [self fetchUpdatedRemoteCommandObjects];
-            if (sentSyncStarting == NO && remoteCommands.count > 0) {
-                sentSyncStarting = YES;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate remoteSyncStarting];
-                });
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+
+            __block NSArray *remoteCommands = nil;
+            __block NSArray *groups = nil;
+            __block NSArray *projects = nil;
+            __block NSArray *timers = nil;
+            __block NSArray *cannedMessages = nil;
+            __block BOOL sentSyncStarting = NO;
+
+            dispatch_group_async(group, queue, ^{
+                remoteCommands = [self fetchUpdatedRemoteCommandObjects];
+                if (sentSyncStarting == NO && remoteCommands.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                groups = [self fetchUpdatedGroupObjects];
+                if (sentSyncStarting == NO && groups.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                projects = [self fetchUpdatedProjectObjects];
+                if (sentSyncStarting == NO && projects.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                timers = [self fetchUpdatedTimerObjects];
+                if (sentSyncStarting == NO && timers.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                cannedMessages = [self fetchUpdatedCannedMessageObjects];
+                if (sentSyncStarting == NO && cannedMessages.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+
+            NSMutableArray *updatedEntities = [NSMutableArray array];
+
+            if (remoteCommands.count > 0) {
+                [updatedEntities addObjectsFromArray:remoteCommands];
             }
-        });
 
-        dispatch_group_async(group, queue, ^{
-            groups = [self fetchUpdatedGroupObjects];
-            if (sentSyncStarting == NO && groups.count > 0) {
-                sentSyncStarting = YES;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate remoteSyncStarting];
-                });
+            if (groups.count > 0) {
+                [updatedEntities addObjectsFromArray:groups];
             }
-        });
 
-        dispatch_group_async(group, queue, ^{
-            projects = [self fetchUpdatedProjectObjects];
-            if (sentSyncStarting == NO && projects.count > 0) {
-                sentSyncStarting = YES;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate remoteSyncStarting];
-                });
+            if (projects.count > 0) {
+                [updatedEntities addObjectsFromArray:projects];
             }
-        });
 
-        dispatch_group_async(group, queue, ^{
-            timers = [self fetchUpdatedTimerObjects];
-            if (sentSyncStarting == NO && timers.count > 0) {
-                sentSyncStarting = YES;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate remoteSyncStarting];
-                });
+            if (timers.count > 0) {
+                [updatedEntities addObjectsFromArray:timers];
             }
-        });
 
-        dispatch_group_async(group, queue, ^{
-            cannedMessages = [self fetchUpdatedCannedMessageObjects];
-            if (sentSyncStarting == NO && cannedMessages.count > 0) {
-                sentSyncStarting = YES;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate remoteSyncStarting];
-                });
+            if (cannedMessages.count > 0) {
+                [updatedEntities addObjectsFromArray:cannedMessages];
             }
-        });
 
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+            if (updatedEntities.count > 0) {
 
-        NSMutableArray *updatedEntities = [NSMutableArray array];
+                for (TCSParseBaseEntity *entity in updatedEntities) {
+                    if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+                        NSLog(@"updating lastPollingDate to: %@", entity.utsUpdateTime);
+                        self.lastPollingDate =
+                        entity.utsUpdateTime;
+                    }
+                }
 
-        if (remoteCommands.count > 0) {
-            [updatedEntities addObjectsFromArray:remoteCommands];
-        }
-
-        if (groups.count > 0) {
-            [updatedEntities addObjectsFromArray:groups];
-        }
-
-        if (projects.count > 0) {
-            [updatedEntities addObjectsFromArray:projects];
-        }
-
-        if (timers.count > 0) {
-            [updatedEntities addObjectsFromArray:timers];
-        }
-
-        if (cannedMessages.count > 0) {
-            [updatedEntities addObjectsFromArray:cannedMessages];
-        }
-
-        if (updatedEntities.count > 0) {
-
-            for (TCSParseBaseEntity *entity in updatedEntities) {
-                if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-                    NSLog(@"updating lastPollingDate to: %@", entity.utsUpdateTime);
-                    self.lastPollingDate =
-                    entity.utsUpdateTime;
+                if (_lastPollingDate != nil) {
+                    [[NSUserDefaults standardUserDefaults]
+                     setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
                 }
             }
 
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
-             object:self
-             userInfo:@{
-             kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
-             kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
-             }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter]
+                 postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
+                 object:self
+                 userInfo:@{
+                 kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
+                 kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
+                 }];
+            });
 
-            if (_lastPollingDate != nil) {
-                [[NSUserDefaults standardUserDefaults]
-                 setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-        }
+            _pollingForUpdates = NO;
+        });
     }
 
-//    double delayInSeconds = 5.0f;
-//    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-//    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
-//        [self pollForUpdates];
-//    });
+    if (_pollingForUpdates) {
+        NSLog(@"%s", __PRETTY_FUNCTION__);
+    }
+
+    return _pollingForUpdates;
 }
 
 - (NSArray *)fetchUpdatedRemoteCommandObjects {

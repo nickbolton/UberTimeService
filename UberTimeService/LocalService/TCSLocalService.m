@@ -2210,6 +2210,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     NSArray *updatedEntities =
     notification.userInfo[kTCSLocalServiceUpdatedRemoteEntitiesKey];
 
+    if (updatedEntities.count == 0) {
+        [self.delegate remoteSyncCompleted];
+        return;
+    }
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
         __block NSMutableDictionary *updates =
