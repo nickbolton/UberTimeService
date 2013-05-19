@@ -179,6 +179,25 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
 #pragma mark - Remote Commands
 
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock {
+
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [[TCSService sharedInstance]
+     serviceProviderNamed:remoteCommand.remoteProvider];
+
+    if (remoteProvider == nil) {
+        NSLog(@"WARN : no remote provider named: %@", remoteCommand.remoteProvider);
+        return;
+    }
+
+    [remoteProvider
+     executedRemoteCommand:remoteCommand
+     success:successBlock
+     failure:failureBlock];
+}
+
 - (void)sendRemoteMessage:(NSString *)message
              withProvider:(NSString *)remoteProvider
                   success:(void(^)(void))successBlock
@@ -2378,7 +2397,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             break;
     }
 
-    NSLog(@"SYNC: created new remote command: %@", remoteCommand);
+    NSLog(@"SYNC: executed new remote command: %@", remoteCommand);
 
     return deletedEntities;
 }
@@ -2398,9 +2417,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     for (NSManagedObject *entity in entities) {
         [entity MR_deleteInContext:context];
+        remoteCommand.executedValue = YES;
     }
 
-    remoteCommand.executedValue = YES;
     return entities;
 }
 

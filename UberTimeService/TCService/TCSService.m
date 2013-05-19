@@ -239,6 +239,18 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     }
 }
 
+#pragma mark - Remote Command
+
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock {
+    [_localService
+     executedRemoteCommand:remoteCommand
+     success:successBlock
+     failure:failureBlock];
+}
+
+
 #pragma mark - Project Methods
 
 - (void)createProjectWithName:(NSString *)name

@@ -14,5 +14,6 @@
 
 @property (nonatomic) NSData *payload;
 @property (nonatomic) NSInteger type;
+@property (nonatomic) NSArray *executedInstallations;
 
 @end

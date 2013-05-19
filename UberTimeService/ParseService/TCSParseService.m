@@ -531,6 +531,11 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     return YES;
 }
 
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock {
+}
+
 #pragma mark - Project
 
 - (void)updateProjectProperties:(TCSParseProject *)parseProject

@@ -13,6 +13,7 @@
 
 @dynamic payload;
 @dynamic type;
+@dynamic executedInstallations;
 
 + (NSString *)parseClassName {
     return NSStringFromClass([self class]);

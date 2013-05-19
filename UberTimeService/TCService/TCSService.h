@@ -61,6 +61,10 @@ extern NSString * const kTCSServiceDataResetNotification;
               success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
 // Project
 
 - (BOOL)createProject:(TCSProject *)project
@@ -160,6 +164,10 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (void)registerRemoteServiceProvider:(Class)providerClass;
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass;
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName;
+
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
 
 - (void)createProjectWithName:(NSString *)name
                remoteProvider:(NSString *)remoteProvider

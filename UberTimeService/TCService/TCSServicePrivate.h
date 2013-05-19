@@ -68,6 +68,10 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
                             success:(void(^)(void))successBlock
                             failure:(void(^)(NSError *error))failureBlock;
 
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
 - (void)createProjectWithName:(NSString *)name
                remoteProvider:(NSString *)remoteProvider
                       success:(void(^)(TCSProject *project))successBlock
