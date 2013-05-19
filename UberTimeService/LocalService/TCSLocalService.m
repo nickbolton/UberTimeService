@@ -899,6 +899,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 - (void)doStopTimer:(TCSTimer *)timer {
     if (timer != nil) {
         timer.endTime = [[TCSService sharedInstance] systemTime];
+
+        if (timer.combinedTime < 5.0f) {
+            timer.remoteDeletedValue = YES;
+        }
         [timer markEntityAsUpdated];
     }
 }
@@ -1482,7 +1486,17 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 
-    NSAssert(activeTimers.count <= 1, @"More than one active timer!");
+    if (activeTimers.count > 1) {
+        NSLog(@"More than one active timer!");
+    }
+
+    NSInteger idx = 0;
+    for (TCSTimer *timer in activeTimers) {
+        if (idx > 0) {
+            [self stopTimer:timer success:nil failure:nil];
+        }
+        idx++;
+    }
     return activeTimers.firstObject;
 }
 
@@ -1820,6 +1834,14 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         }
     }
 
+    NSMutableArray *createdEntities = [NSMutableArray array];
+
+    for (TCSBaseEntity *entity in updates) {
+        if (entity.remoteId == nil) {
+            [createdEntities addObject:entity.objectID];
+        }
+    }
+
     _savingUpdates = updates.count > 0;
 
     NSMutableSet *remoteProviders = [NSMutableSet set];
@@ -1838,11 +1860,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
                 [remoteProviders addObject:remoteProvider];
 
-                if (entity.remoteDeletedValue) {
+                if (entity.remoteId == nil) {
 
                     [self
-                     deleteRemoteEntity:entity
-                     success:^(NSManagedObjectID *objectID) {
+                     createRemoteEntity:entity
+                     success:^(NSManagedObjectID *objectID, NSString *remoteID) {
 
                          NSAssert(NO, @"should not have saved yet");
 
@@ -1850,11 +1872,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                          NSLog(@"Error: %@", error);
                      }];
 
-                } else if (entity.remoteId == nil) {
+                } else if (entity.remoteDeletedValue) {
 
                     [self
-                     createRemoteEntity:entity
-                     success:^(NSManagedObjectID *objectID, NSString *remoteID) {
+                     deleteRemoteEntity:entity
+                     success:^(NSManagedObjectID *objectID) {
 
                          NSAssert(NO, @"should not have saved yet");
 
@@ -1912,7 +1934,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                                     NSLog(@"Error: %@", error);
                                 } else {
 
-                                    localEntity.pendingValue = NO;
+                                    if (localEntity.remoteDeletedValue == NO ||
+                                        [createdEntities containsObject:localEntity.objectID] == NO) {
+                                        localEntity.pendingValue = NO;
+                                    }
+                                    
                                     localEntity.remoteId = remoteIDMap[objectID];
                                 }
                             }
