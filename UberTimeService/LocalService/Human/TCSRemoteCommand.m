@@ -1,5 +1,7 @@
 #import "TCSRemoteCommand.h"
 #import "CoreData+MagicalRecord.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 NSString * const kTCSRemoteCommandMessageNotification = @"kTCSRemoteCommandMessageNotification";
 NSString * const kTCSRemoteCommandMessageKey = @"remote-message";

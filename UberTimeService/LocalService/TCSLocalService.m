@@ -229,6 +229,51 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     }];
 }
 
+- (void)sendDeleteObjectCommand:(NSString *)remoteObjectID
+             withProvider:(NSString *)remoteProvider
+                  success:(void(^)(void))successBlock
+                  failure:(void(^)(NSError *error))failureBlock {
+
+    if (remoteProvider == nil) {
+        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    }
+
+    if (remoteProvider == nil) {
+        NSLog(@"WARN : No remote provider specified");
+        return;
+    }
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSRemoteCommand *remoteCommand =
+        [TCSRemoteCommand
+         deleteObjectRemoteCommand:remoteObjectID
+         remoteProvider:remoteProvider
+         inContext:localContext];
+
+        [remoteCommand
+         updateWithEntityVersion:0
+         remoteId:nil
+         updateTime:[[TCSService sharedInstance] systemTime]
+         markAsUpdated:YES];
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
 - (void)resetRemoteDataWithProvider:(NSString *)remoteProvider
                             success:(void(^)(void))successBlock
                             failure:(void(^)(NSError *error))failureBlock {
@@ -1851,21 +1896,22 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
 - (void)contextDidSave:(NSNotification *)notification {
 
-    NSArray *deletes = notification.userInfo[NSDeletedObjectsKey];
+    NSSet *deletes = notification.userInfo[NSDeletedObjectsKey];
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    if (deletes.count > 0) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
-        for (TCSBaseEntity *entity in deletes) {
+            for (TCSBaseEntity *entity in deletes) {
 
-            [self
-             deleteRemoteEntity:entity
-             success:nil
-             failure:^(NSError *error) {
-                 NSLog(@"Error: %@", error);
-             }];
-        }
-    });
-
+                [self
+                 deleteRemoteEntity:entity
+                 success:nil
+                 failure:^(NSError *error) {
+                     NSLog(@"Error: %@", error);
+                 }];
+            }
+        });
+    }
 }
 
 - (void)handlePushingToRemoteProviders {
@@ -2054,9 +2100,16 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
          NSLog(@"deletedEntity: %@", entity);
 
-         if (successBlock != nil) {
-             successBlock(objectID);
-         }
+         [self
+          sendDeleteObjectCommand:entity.remoteId
+          withProvider:remoteProvider
+          success:^{
+
+              if (successBlock != nil) {
+                  successBlock(objectID);
+              }
+
+          } failure:failureBlock];
 
      } failure:failureBlock];
 }
