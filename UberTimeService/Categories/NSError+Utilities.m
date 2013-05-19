@@ -8,12 +8,14 @@
 
 #import "NSError+Utilities.h"
 
+NSString * const kTCErrorDomain = @"TCSDomain";
+
 @implementation NSError (Utilities)
 
 + (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message {
     return
     [NSError
-     errorWithDomain:@"timecop"
+     errorWithDomain:kTCErrorDomain
      code:code
      userInfo:@{NSLocalizedDescriptionKey : message}];
 }

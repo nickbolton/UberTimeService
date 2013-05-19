@@ -52,6 +52,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [TCSParseTimer registerSubclass];
         [TCSParseCannedMessage registerSubclass];
         [TCSParseAppConfig registerSubclass];
+        [TCSParseRemoteCommand registerSubclass];
         
         [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
 
@@ -685,6 +686,15 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
+
+                if ([error.domain isEqualToString:@"Parse"]) {
+                    if (error.code == kPFErrorObjectNotFound) {
+                        error =
+                        [NSError
+                         errorWithCode:TCErrorCodeRemoteObjectNotFound
+                         message:error.localizedDescription];
+                    }
+                }
                 failureBlock(error);
             }
 
@@ -1244,11 +1254,22 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         dispatch_group_t group = dispatch_group_create();
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
 
+        __block NSArray *remoteCommands = nil;
         __block NSArray *groups = nil;
         __block NSArray *projects = nil;
         __block NSArray *timers = nil;
         __block NSArray *cannedMessages = nil;
         __block BOOL sentSyncStarting = NO;
+
+        dispatch_group_async(group, queue, ^{
+            remoteCommands = [self fetchUpdatedRemoteCommandObjects];
+            if (sentSyncStarting == NO && remoteCommands.count > 0) {
+                sentSyncStarting = YES;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate remoteSyncStarting];
+                });
+            }
+        });
 
         dispatch_group_async(group, queue, ^{
             groups = [self fetchUpdatedGroupObjects];
@@ -1293,6 +1314,10 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
         NSMutableArray *updatedEntities = [NSMutableArray array];
+
+        if (remoteCommands.count > 0) {
+            [updatedEntities addObjectsFromArray:remoteCommands];
+        }
 
         if (groups.count > 0) {
             [updatedEntities addObjectsFromArray:groups];
@@ -1341,6 +1366,27 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 //    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
 //        [self pollForUpdates];
 //    });
+}
+
+- (NSArray *)fetchUpdatedRemoteCommandObjects {
+
+    PFQuery *query = [TCSParseRemoteCommand query];
+    [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
+    query.cachePolicy = kPFCachePolicyNetworkOnly;
+
+    if (_lastPollingDate != nil) {
+        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
+    }
+
+    NSError *error = nil;
+    NSArray *results = [query findObjects:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    return results;
 }
 
 - (NSArray *)fetchUpdatedGroupObjects {

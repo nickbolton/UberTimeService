@@ -67,11 +67,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          userInfo:nil
          repeats:YES];
 
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(contextDidSave:)
-         name:NSManagedObjectContextDidSaveNotification
-         object:[self defaultLocalManagedObjectContext]];
     }
     return self;
 }
@@ -2009,27 +2004,37 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                 } else if (entity.pendingRemoteDeleteValue) {
 
                     if (entity.remoteId != nil) {
+
+                        void (^executionBlock)(void) = ^{
+                            [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+
+                                NSError *error = nil;
+
+                                TCSBaseEntity *localEntity = (id)
+                                [localContext existingObjectWithID:entity.objectID error:&error];
+
+                                if (error != nil) {
+                                    NSLog(@"Error: %@", error);
+                                } else {
+                                    [localEntity MR_deleteInContext:localContext];
+                                }
+                            }];
+                        };
+                        
                         [self
                          deleteRemoteEntity:entity
                          success:^(NSManagedObjectID *objectID) {
 
-                             [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+                             executionBlock();
 
-                                 NSError *error = nil;
-
-                                 TCSBaseEntity *localEntity = (id)
-                                 [localContext existingObjectWithID:objectID error:&error];
-
-                                 if (error != nil) {
-                                     NSLog(@"Error: %@", error);
-                                 } else {
-
-                                     [localEntity MR_deleteInContext:localContext];
-                                 }
-                             }];
-                             
                          } failure:^(NSError *error) {
                              NSLog(@"Error: %@", error);
+
+                             if ([error.domain isEqualToString:kTCErrorDomain]) {
+                                 if (error.code == TCErrorCodeRemoteObjectNotFound) {
+                                     executionBlock();
+                                 }
+                             }
                          }];
                     }
 
@@ -2318,30 +2323,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                         updates[NSUpdatedObjectsKey] = updatedUpdatedObjects;
                     }
 
-
-                    NSArray *deletedObjects = updates[NSDeletedObjectsKey];
-                    if (deletedObjects.count > 0) {
-                        NSMutableArray *updatedDeletedObjects =
-                        [NSMutableArray arrayWithCapacity:deletedObjects.count];
-
-                        for (TCSBaseEntity *entity in deletedObjects) {
-
-                            NSError *error = nil;
-
-                            TCSBaseEntity *updatedEntity = (id)
-                            [[NSManagedObjectContext MR_contextForCurrentThread]
-                             existingObjectWithID:entity.objectID
-                             error:&error];
-
-                            if (error != nil) {
-                                NSLog(@"Error: %@", error);
-                            } else {
-                                [updatedDeletedObjects addObject:updatedEntity];
-                            }
-                        }
-                        updates[NSDeletedObjectsKey] = updatedDeletedObjects;
-                    }
-
                     [[NSNotificationCenter defaultCenter]
                      postNotificationName:kTCSServicePrivateRemoteSyncCompletedNotification
                      object:self
@@ -2410,7 +2391,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     NSString *remoteObjectId = payload[kTCSRemoteCommandObjectIdKey];
     
     NSArray *entities =
-    [NSManagedObject
+    [TCSBaseEntity
      MR_findByAttribute:@"remoteId"
      withValue:remoteObjectId
      inContext:context];

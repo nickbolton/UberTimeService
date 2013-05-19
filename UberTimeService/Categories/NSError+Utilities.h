@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const kTCErrorDomain;
+
 @interface NSError (Utilities)
 
 typedef NS_ENUM(NSInteger, TCErrorCode) {
 
     TCErrorCodeUnknown = 0,
     TCErrorCodePreviousOperationNotFinished,
+    TCErrorCodeRemoteObjectNotFound,
 };
 
 + (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message;
