@@ -30,17 +30,6 @@ static TCSUtilities *sharedInstance_ = nil;
 
 #endif
 
-+ (void)executeBlockOnMainThread:(void (^)(void))block async:(BOOL)async {
-
-    if ([NSThread isMainThread]) {
-        block();
-    } else if (async) {
-        dispatch_async(dispatch_get_main_queue(), block);
-    } else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
 + (void)executeBlockOnBackground:(void (^)(void))block
            withCompletionOnMain:(void(^)(void))completionBlock {
 
@@ -57,28 +46,6 @@ static TCSUtilities *sharedInstance_ = nil;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),
                    executionBlock);
-}
-
-+ (void)executeBlock:(void (^)(void))block
-             onQueue:(dispatch_queue_t)queue
-withCompletionOnMain:(void(^)(void))completionBlock {
-
-    void (^executionBlock)(void) = ^{
-
-        if (block) {
-            block();
-        }
-
-        if (completionBlock) {
-            dispatch_async(dispatch_get_main_queue(), completionBlock);
-        }
-    };
-
-    if (queue == dispatch_get_current_queue()) {
-        executionBlock();
-    } else {
-        dispatch_async(queue, executionBlock);
-    }
 }
 
 + (id)sharedInstance {
