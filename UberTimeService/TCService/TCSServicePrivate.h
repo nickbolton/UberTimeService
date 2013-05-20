@@ -51,10 +51,12 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @end
 
 @protocol TCSServiceDelegate;
+@protocol TCSServiceSyncingRemoteProvider;
 @protocol TCSServiceLocalService <NSObject>
 
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
+@property (nonatomic, strong) id <TCSServiceSyncingRemoteProvider> syncingRemoteProvider;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

@@ -18,6 +18,8 @@ extern NSString * const kTCSLocalServiceRemoteProviderNameKey;
 
 + (instancetype)sharedInstance;
 
+@property (nonatomic, strong) id <TCSServiceSyncingRemoteProvider> syncingRemoteProvider;
+
 + (NSManagedObjectID *)objectIDFromStringID:(NSString *)stringID;
 + (NSString *)stringIDFromObjectID:(NSManagedObjectID *)objectID;
 

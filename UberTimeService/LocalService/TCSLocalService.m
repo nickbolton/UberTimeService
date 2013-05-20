@@ -209,8 +209,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     if (remoteProvider == nil) {
@@ -254,8 +254,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     if (remoteProvider == nil) {
@@ -298,8 +298,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                             success:(void(^)(void))successBlock
                             failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     if (remoteProvider == nil) {
@@ -344,8 +344,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     [self
@@ -365,8 +365,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                                    modifiers:(NSInteger)modifiers
                                    inContext:(NSManagedObjectContext *)context {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     TCSProject *project =
@@ -398,8 +398,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     __block TCSProject *project = nil;
@@ -1748,8 +1748,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil) {
-        remoteProvider = [TCSService sharedInstance].defaultRemoteProviderName;
+    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
+        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
 
     __block TCSCannedMessage *cannedMessage = nil;

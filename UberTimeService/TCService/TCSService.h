@@ -25,15 +25,13 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @protocol TCSServiceRemoteProvider <NSObject>
 
-+ (id <TCSServiceRemoteProvider>)sharedInstance;
++ (instancetype)sharedInstance;
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (void)clearCache;
 - (void)holdUpdates;
-- (NSDate *)systemTime;
-- (void)updateAppConfig;
 - (BOOL)pollForUpdates;
 
 // method needs to be synchronous because it's designed to be run in the background
@@ -123,6 +121,13 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @end
 
+@protocol TCSServiceSyncingRemoteProvider <TCSServiceRemoteProvider>
+
+- (NSDate *)systemTime;
+- (void)updateAppConfig;
+
+@end
+
 // import depends on protocol being defined already
 #import "TCSDefaultProvider.h"
 #import "TCSLocalService.h"
@@ -133,7 +138,6 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @property (nonatomic, readonly) TCSTimer *activeTimer;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
-@property (nonatomic, readonly) NSString *defaultRemoteProviderName;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (NSDate *)systemTime;
@@ -147,11 +151,6 @@ extern NSString * const kTCSServiceDataResetNotification;
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock;
 
-- (void)deleteRemoteObject:(NSString *)remoteObjectID
-              withProvider:(NSString *)remoteProvider
-                   success:(void(^)(void))successBlock
-                   failure:(void(^)(NSError *error))failureBlock;
-
 - (void)resetRemoteDataWithProvider:(NSString *)remoteProvider
                             success:(void(^)(void))successBlock
                             failure:(void(^)(NSError *error))failureBlock;
@@ -163,6 +162,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (NSArray *)registeredRemoteProviders;
 - (void)registerRemoteServiceProvider:(Class)providerClass;
+- (void)registerSyncingRemoteServiceProvider:(Class)providerClass;
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass;
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName;
 

@@ -20,7 +20,6 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 @property (nonatomic, strong) TCSLocalService *localService;
 @property (nonatomic, strong) NSMutableDictionary *remoteServiceProviders;
 @property (nonatomic, readwrite) TCSTimer *activeTimer;
-@property (nonatomic, readwrite) NSString *defaultRemoteProviderName;
 
 @end
 
@@ -75,16 +74,25 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     [_remoteServiceProviders.allValues sortedArrayUsingDescriptors:sortDescriptors];
 }
 
+- (void)registerSyncingRemoteServiceProvider:(Class)providerClass {
+
+    id <TCSServiceSyncingRemoteProvider> serviceProvider =
+    (id <TCSServiceSyncingRemoteProvider>)[providerClass sharedInstance];
+
+    NSAssert([(NSObject *)serviceProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
+             @"Class must conform to TCSServiceSyncingRemoteProvider protocol");
+
+    _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
+    _localService.syncingRemoteProvider = serviceProvider;
+    serviceProvider.delegate = _delegate;
+}
+
 - (void)registerRemoteServiceProvider:(Class)providerClass {
     id <TCSServiceRemoteProvider> serviceProvider =
     (id <TCSServiceRemoteProvider>)[providerClass sharedInstance];
 
     NSAssert([(NSObject *)serviceProvider conformsToProtocol:@protocol(TCSServiceRemoteProvider)],
              @"Class must conform to TCSServiceRemoteProvider protocol");
-
-    if (_defaultRemoteProviderName == nil) {
-        self.defaultRemoteProviderName = NSStringFromClass(providerClass);
-    }
     
     _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
     serviceProvider.delegate = _delegate;
@@ -167,34 +175,14 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     [_localService deleteAllData:successBlock failure:failureBlock];
 }
 
-- (id <TCSServiceRemoteProvider>)defaultRemoteProvider {
-
-    id <TCSServiceRemoteProvider> remoteProvider = nil;
-
-    if (_defaultRemoteProviderName != nil) {
-
-        remoteProvider =
-        [self serviceProviderNamed:_defaultRemoteProviderName];
-    }
-
-    if (remoteProvider == nil) {
-        remoteProvider = _remoteServiceProviders.allValues.firstObject;
-    }
-
-    return remoteProvider;
-}
-
 - (void)updateAppConfig {
-    id <TCSServiceRemoteProvider> remoteProvider = [self defaultRemoteProvider];
-    [remoteProvider updateAppConfig];
+    [_localService.syncingRemoteProvider updateAppConfig];
 }
 
 - (NSDate *)systemTime {
 
-    id <TCSServiceRemoteProvider> remoteProvider = [self defaultRemoteProvider];
-
-    if (remoteProvider != nil) {
-        return [remoteProvider systemTime];
+    if (_localService.syncingRemoteProvider != nil) {
+        return [_localService.syncingRemoteProvider systemTime];
     }
 
     return [NSDate date];
