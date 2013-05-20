@@ -15,6 +15,7 @@
 #import "NSNotification+PBFoundation.h"
 #import "TCSBaseEntity.h"
 #import "TCSServicePrivate.h"
+#import "TCSCommon.h"
 
 NSString * const kTCSLocalServiceUpdatedRemoteEntitiesNotification =
 @"kTCSLocalServiceUpdatedRemoteEntitiesNotification";
@@ -172,6 +173,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
               failure:(void(^)(NSError *error))failureBlock {
 
     [self resetCoreDataStack];
+
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kTCSPreferencesDataResetNotification
+     object:nil];
+    
     if (successBlock != nil) {
         successBlock();
     }
