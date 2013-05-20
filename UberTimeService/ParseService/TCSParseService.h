@@ -10,7 +10,7 @@
 #import "TCSService.h"
 #import "TCSServicePrivate.h"
 
-@interface TCSParseService : TCSDefaultProvider <TCSServiceRemoteProvider>
+@interface TCSParseService : TCSDefaultProvider <TCSServiceSyncingRemoteProvider>
 
 - (void)updateAppConfig;
 
