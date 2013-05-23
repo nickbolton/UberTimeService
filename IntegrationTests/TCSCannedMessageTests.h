@@ -17,8 +17,8 @@
 - (void)createCannedMessages:(SEL)selector;
 - (void)updateCannedMessage:(SEL)selector;
 - (void)reorderCannedMessage1:(SEL)selector;
-- (void)reorderCannedMessage2:(SEL)selector;
-- (void)reorderCannedMessage3:(SEL)selector;
+//- (void)reorderCannedMessage2:(SEL)selector;
+//- (void)reorderCannedMessage3:(SEL)selector;
 - (void)deleteCannedMessage:(SEL)selector;
 
 @end

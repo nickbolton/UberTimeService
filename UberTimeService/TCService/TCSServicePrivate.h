@@ -8,6 +8,38 @@
 
 extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 
+@protocol TCSServiceSyncingRemoteProvider <TCSServiceRemoteProvider>
+
+- (NSDate *)systemTime;
+- (void)updateAppConfig;
+
+// Remote Command
+
+- (BOOL)createRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
+                      success:(void(^)(void))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
+
+// Provider Instance
+
+- (BOOL)createProviderInstance:(TCSProviderInstance *)providerInstance
+                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (BOOL)updateProviderInstance:(TCSProviderInstance *)providerInstance
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (BOOL)deleteProviderInstance:(TCSProviderInstance *)providerInstance
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+
+@end
+
 @protocol TCSProvidedBaseEntity <NSObject>
 @property (nonatomic, readonly) NSString *utsRemoteID;
 @property (nonatomic, readonly) NSInteger utsEntityVersion;
@@ -50,6 +82,14 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSInteger utsType;
 @end
 
+@protocol TCSProvidedProviderInstance <TCSProvidedBaseEntity>
+@property (nonatomic, readonly) NSString *utsBaseURL;
+@property (nonatomic, readonly) NSString *utsName;
+@property (nonatomic, readonly) NSString *utsPassword;
+@property (nonatomic, readonly) NSString *utsType;
+@property (nonatomic, readonly) NSString *utsUsername;
+@end
+
 @protocol TCSServiceDelegate;
 @protocol TCSServiceSyncingRemoteProvider;
 @protocol TCSServiceLocalService <NSObject>
@@ -62,7 +102,6 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
               failure:(void(^)(NSError *error))failureBlock;
 
 - (void)sendRemoteMessage:(NSString *)message
-             withProvider:(NSString *)remoteProvider
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock;
 
@@ -208,5 +247,25 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 - (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(void))successBlock
                     failure:(void(^)(NSError *error))failureBlock;
+
+- (NSArray *)allProviderInstances;
+
+- (TCSProviderInstance *)providerInstanceWithID:(NSManagedObjectID *)objectID;
+
+- (void)createProviderInstance:(NSString *)name
+                       baseURL:(NSString *)baseURL
+                          type:(NSString *)type
+                      username:(NSString *)username
+                      password:(NSString *)password
+                       success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                       failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateProviderInstance:(TCSProviderInstance *)providerInstance
+                       success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                       failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteProviderInstance:(TCSProviderInstance *)providerInstance
+                       success:(void(^)(void))successBlock
+                       failure:(void(^)(NSError *error))failureBlock;
 
 @end

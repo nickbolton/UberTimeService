@@ -113,6 +113,23 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     return remoteProvider;
 }
 
+- (NSDictionary *)providerInstanceMap {
+    NSMutableDictionary *providerInstanceMap = [NSMutableDictionary dictionary];
+
+    for (TCSProviderInstance *providerInstance in [self allProviderInstances]) {
+
+        NSMutableArray *list = providerInstanceMap[providerInstance.type];
+
+        if (list == nil) {
+            list = [NSMutableArray array];
+            providerInstanceMap[providerInstance.type] = list;
+        }
+
+        [list addObject:providerInstance];
+    }
+    return providerInstanceMap;
+}
+
 - (void)pollRemoteServicesForUpdates {
 
     BOOL anyProviderLoggedIn = NO;
@@ -127,8 +144,21 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     BOOL isPolling = NO;
 
+
+    NSDictionary *providerInstanceMap = [self providerInstanceMap];
+
     for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
-        isPolling |= [remoteProvider pollForUpdates];
+
+        NSArray *providerInstances = nil;
+
+        if (remoteProvider != _localService.syncingRemoteProvider) {
+
+            providerInstances =
+            providerInstanceMap[NSStringFromClass([remoteProvider class])];
+        }
+
+        isPolling |= [remoteProvider pollForUpdates:providerInstances];
+
     }
 
     if (isPolling == NO && anyProviderLoggedIn) {
@@ -141,7 +171,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     id <TCSServiceRemoteProvider> remoteProvider =
     [self serviceProviderNamed:providerName];
 
-    [remoteProvider pollForUpdates];
+    NSDictionary *providerInstanceMap = [self providerInstanceMap];
+    NSArray *providerInstances =
+    providerInstanceMap[NSStringFromClass([remoteProvider class])];
+    [remoteProvider pollForUpdates:providerInstances];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
@@ -149,13 +182,11 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (void)sendRemoteMessage:(NSString *)message
-             withProvider:(NSString *)remoteProvider
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock {
 
     [_localService
      sendRemoteMessage:message
-     withProvider:remoteProvider
      success:successBlock
      failure:failureBlock];
 }
@@ -630,6 +661,53 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
                     failure:(void(^)(NSError *error))failureBlock {
     [_localService
      deleteCannedMessage:cannedMessage
+     success:successBlock
+     failure:failureBlock];
+}
+
+#pragma mark - Remote Providers
+
+- (NSArray *)allProviderInstances {
+    return [_localService allProviderInstances];
+}
+
+- (TCSProviderInstance *)providerInstanceWithID:(NSManagedObjectID *)objectID {
+    return [_localService providerInstanceWithID:objectID];
+}
+
+- (void)createProviderInstance:(NSString *)name
+                     baseURL:(NSString *)baseURL
+                        type:(NSString *)type
+                    username:(NSString *)username
+                    password:(NSString *)password
+                     success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                     failure:(void(^)(NSError *error))failureBlock {
+    [_localService
+     createProviderInstance:name
+     baseURL:baseURL
+     type:type
+     username:username
+     password:password
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)updateProviderInstance:(TCSProviderInstance *)providerInstance
+                     success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                     failure:(void(^)(NSError *error))failureBlock {
+
+    [_localService
+     updateProviderInstance:providerInstance
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)deleteProviderInstance:(TCSProviderInstance *)providerInstance
+                     success:(void(^)(void))successBlock
+                     failure:(void(^)(NSError *error))failureBlock {
+
+    [_localService
+     deleteProviderInstance:providerInstance
      success:successBlock
      failure:failureBlock];
 }

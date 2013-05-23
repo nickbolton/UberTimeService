@@ -15,6 +15,7 @@
 #import "TCSParseGroup.h"
 #import "TCSParseProject.h"
 #import "TCSParseTimer.h"
+#import "TCSParseProviderInstance.h"
 #import "TCSParseCannedMessage.h"
 #import "TCSParseRemoteCommand.h"
 #import "TCSParseAppConfig.h"
@@ -27,7 +28,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 @interface TCSParseService() {
 
-    BOOL _holdUpdates;
     BOOL _pollingForUpdates;
     
     NSTimeInterval _localTimeLastSystemTimeReceived;
@@ -97,6 +97,10 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 - (NSString *)name {
     return NSLocalizedString(@"Parse", nil);
+}
+
+- (BOOL)canCreateEntities {
+    return YES;
 }
 
 - (NSDate *)systemTime {
@@ -287,11 +291,11 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                         });
                     }
 
-                    for (TCSParseGroup *group in groups) {
+                    for (TCSParseGroup *parseGroup in groups) {
                         dispatch_group_async(group, queue, ^{
 
                             NSError *error = nil;
-                            [group delete:&error];
+                            [parseGroup delete:&error];
 
                             if (error != nil && error.code != kPFErrorObjectNotFound && firstError == nil) {
                                 firstError = error;
@@ -368,10 +372,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     return [PFUser currentUser] != nil;
 }
 
-- (void)holdUpdates {
-    _holdUpdates = YES;
-}
-
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
                          error:(NSError **)error {
 
@@ -423,7 +423,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
         [_bufferedUpdates removeAllObjects];
     }
-    _holdUpdates = NO;
+    self.holdingUpdates = NO;
 
     if (requestSent != NULL) {
         *requestSent = YES;
@@ -486,7 +486,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = remoteCommand.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseRemoteCommand objectID:objectID];
         return NO;
     }
@@ -557,7 +557,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = project.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseProject objectID:objectID];
         return NO;
     }
@@ -612,7 +612,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = project.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseProject objectID:objectID];
         return NO;
     }
@@ -730,7 +730,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = group.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseGroup objectID:objectID];
         return NO;
     }
@@ -785,7 +785,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = group.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseGroup objectID:objectID];
         return NO;
     }
@@ -890,7 +890,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = timer.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseTimer objectID:objectID];
         return NO;
     }
@@ -945,7 +945,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = timer.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseTimer objectID:objectID];
         return NO;
     }
@@ -1045,7 +1045,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseCannedMessage objectID:objectID];
         return NO;
     }
@@ -1100,7 +1100,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     NSManagedObjectID *objectID = cannedMessage.objectID;
 
-    if (_holdUpdates) {
+    if (self.isHoldingUpdates) {
         [self bufferParseObject:(id)parseCannedMessage objectID:objectID];
         return NO;
     }
@@ -1178,6 +1178,168 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     return YES;
 }
 
+#pragma mark - Remote Provider
+
+- (void)updateProviderInstanceProperties:(TCSParseProviderInstance *)parseProviderInstance
+                        providerInstance:(TCSProviderInstance *)providerInstance {
+    parseProviderInstance.baseURL = [self safePropertyValue:providerInstance.baseURL];
+    parseProviderInstance.name = [self safePropertyValue:providerInstance.name];
+    parseProviderInstance.password = [self safePropertyValue:providerInstance.password];
+    parseProviderInstance.type = [self safePropertyValue:providerInstance.type];
+    parseProviderInstance.username = [self safePropertyValue:providerInstance.username];
+}
+
+- (BOOL)createProviderInstance:(TCSProviderInstance *)providerInstance
+                     success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                     failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    TCSParseProviderInstance *parseProviderInstance = [TCSParseProviderInstance object];
+    parseProviderInstance.user = [PFUser currentUser];
+    [self
+     updateProviderInstanceProperties:parseProviderInstance
+     providerInstance:providerInstance];
+
+    NSManagedObjectID *objectID = providerInstance.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseProviderInstance objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseProviderInstance saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseProviderInstance.objectId);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+
+    return YES;
+}
+
+- (BOOL)updateProviderInstance:(TCSProviderInstance *)providerInstance
+                       success:(void(^)(NSManagedObjectID *objectID))successBlock
+                       failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (providerInstance.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for providerInstance update")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseProviderInstance *parseProviderInstance = [TCSParseProviderInstance object];
+    parseProviderInstance.objectId = providerInstance.remoteId;
+    [self
+     updateProviderInstanceProperties:parseProviderInstance
+     providerInstance:providerInstance];
+
+    NSManagedObjectID *objectID = providerInstance.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseProviderInstance objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseProviderInstance saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+
+    return YES;
+}
+
+- (BOOL)deleteProviderInstance:(TCSProviderInstance *)providerInstance
+                       success:(void(^)(NSManagedObjectID *objectID))successBlock
+                       failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (providerInstance.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for providerInstance delete")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseProviderInstance *parseProviderInstance = [TCSParseProviderInstance object];
+    parseProviderInstance.objectId = providerInstance.remoteId;
+
+    NSManagedObjectID *objectID = providerInstance.objectID;
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseProviderInstance deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+            
+        } else {
+            
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+            
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
+
 #pragma mark - Update Polling
 
 - (void)updateSystemTime {
@@ -1234,7 +1396,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     });
 }
 
-- (BOOL)pollForUpdates {
+- (BOOL)pollForUpdates:(NSArray *)providerInstances {
 
     if (_pollingForUpdates) return NO;
     

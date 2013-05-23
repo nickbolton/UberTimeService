@@ -16,6 +16,10 @@
 		FE3D1A6A174911E9000A4788 /* TCSParseAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316771743A8BB00A6F16D /* TCSParseAppConfig.m */; };
 		FE3D1A6D1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */; };
 		FE3D1A6E1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */; };
+		FE55454C174B9B5B0076C48B /* TCSJsonServiceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454B174B9B5A0076C48B /* TCSJsonServiceProvider.m */; };
+		FE55454D174B9B5B0076C48B /* TCSJsonServiceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454B174B9B5A0076C48B /* TCSJsonServiceProvider.m */; };
+		FE554550174BA6B70076C48B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454F174BA6B70076C48B /* NSData+Base64.m */; };
+		FE554551174BA6B70076C48B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454F174BA6B70076C48B /* NSData+Base64.m */; };
 		FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
 		FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
 		FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
@@ -61,6 +65,12 @@
 		FE9C8009173F1D4300005FD8 /* TCSParseCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C8008173F1D4200005FD8 /* TCSParseCannedMessage.m */; };
 		FE9C800A173F1D4300005FD8 /* TCSParseCannedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C8008173F1D4200005FD8 /* TCSParseCannedMessage.m */; };
 		FE9C800B173F22FD00005FD8 /* TCSCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8CB9173733A2008EE46E /* TCSCommon.m */; };
+		FE9E7716174E2C610035EABE /* TCSParseProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E7715174E2C600035EABE /* TCSParseProviderInstance.m */; };
+		FE9E7717174E2C610035EABE /* TCSParseProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E7715174E2C600035EABE /* TCSParseProviderInstance.m */; };
+		FE9E771A174E37B20035EABE /* TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E7719174E37B00035EABE /* TCSProviderInstance.m */; };
+		FE9E771B174E37B20035EABE /* TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E7719174E37B00035EABE /* TCSProviderInstance.m */; };
+		FE9E771E174E37BB0035EABE /* _TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */; };
+		FE9E771F174E37BB0035EABE /* _TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */; };
 		FEB316751743A7ED00A6F16D /* TCSParseSystemTime.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */; };
 		FEB316781743A8BB00A6F16D /* TCSParseAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316771743A8BB00A6F16D /* TCSParseAppConfig.m */; };
 		FEB316791743AA3800A6F16D /* TCSParseSystemTime.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */; };
@@ -157,6 +167,10 @@
 		FE3D1A671748FA32000A4788 /* _TCSRemoteCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSRemoteCommand.m; sourceTree = "<group>"; };
 		FE3D1A6B1749120E000A4788 /* TCSParseRemoteCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseRemoteCommand.h; sourceTree = "<group>"; };
 		FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseRemoteCommand.m; sourceTree = "<group>"; };
+		FE55454A174B9B5A0076C48B /* TCSJsonServiceProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSJsonServiceProvider.h; sourceTree = "<group>"; };
+		FE55454B174B9B5A0076C48B /* TCSJsonServiceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSJsonServiceProvider.m; sourceTree = "<group>"; };
+		FE55454E174BA6B70076C48B /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "UberTimeService/Utilities/NSData+Base64.h"; sourceTree = SOURCE_ROOT; };
+		FE55454F174BA6B70076C48B /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "UberTimeService/Utilities/NSData+Base64.m"; sourceTree = SOURCE_ROOT; };
 		FE7F8BE517372D9D008EE46E /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
 		FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
 		FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseEntity.h; sourceTree = "<group>"; };
@@ -201,6 +215,12 @@
 		FE9C8002173F07F400005FD8 /* NSError+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+Utilities.m"; sourceTree = "<group>"; };
 		FE9C8007173F1D4200005FD8 /* TCSParseCannedMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseCannedMessage.h; sourceTree = "<group>"; };
 		FE9C8008173F1D4200005FD8 /* TCSParseCannedMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseCannedMessage.m; sourceTree = "<group>"; };
+		FE9E7714174E2C600035EABE /* TCSParseProviderInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseProviderInstance.h; sourceTree = "<group>"; };
+		FE9E7715174E2C600035EABE /* TCSParseProviderInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseProviderInstance.m; sourceTree = "<group>"; };
+		FE9E7718174E37AF0035EABE /* TCSProviderInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSProviderInstance.h; sourceTree = "<group>"; };
+		FE9E7719174E37B00035EABE /* TCSProviderInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSProviderInstance.m; sourceTree = "<group>"; };
+		FE9E771C174E37BA0035EABE /* _TCSProviderInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSProviderInstance.h; sourceTree = "<group>"; };
+		FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSProviderInstance.m; sourceTree = "<group>"; };
 		FEB316731743A7ED00A6F16D /* TCSParseSystemTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseSystemTime.h; sourceTree = "<group>"; };
 		FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseSystemTime.m; sourceTree = "<group>"; };
 		FEB316761743A8BB00A6F16D /* TCSParseAppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseAppConfig.h; sourceTree = "<group>"; };
@@ -395,6 +415,8 @@
 				FEBD02901734853E00DAB99D /* NSDate+Utilities.m */,
 				FE9C8001173F07F400005FD8 /* NSError+Utilities.h */,
 				FE9C8002173F07F400005FD8 /* NSError+Utilities.m */,
+				FE55454E174BA6B70076C48B /* NSData+Base64.h */,
+				FE55454F174BA6B70076C48B /* NSData+Base64.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -404,6 +426,8 @@
 			children = (
 				FEBD029A173487AD00DAB99D /* TCSDefaultProvider.h */,
 				FEBD029B173487AD00DAB99D /* TCSDefaultProvider.m */,
+				FE55454A174B9B5A0076C48B /* TCSJsonServiceProvider.h */,
+				FE55454B174B9B5A0076C48B /* TCSJsonServiceProvider.m */,
 				FEBD0308173550DC00DAB99D /* TCSServicePrivate.h */,
 				FEBD02A0173487AD00DAB99D /* TCSService.h */,
 				FEBD02A1173487AD00DAB99D /* TCSService.m */,
@@ -567,6 +591,8 @@
 				FE9C8008173F1D4200005FD8 /* TCSParseCannedMessage.m */,
 				FE3D1A6B1749120E000A4788 /* TCSParseRemoteCommand.h */,
 				FE3D1A6C1749120F000A4788 /* TCSParseRemoteCommand.m */,
+				FE9E7714174E2C600035EABE /* TCSParseProviderInstance.h */,
+				FE9E7715174E2C600035EABE /* TCSParseProviderInstance.m */,
 				FEBD03281735735800DAB99D /* TCSParseBaseEntity.h */,
 				FEBD03291735735900DAB99D /* TCSParseBaseEntity.m */,
 				FEB316731743A7ED00A6F16D /* TCSParseSystemTime.h */,
@@ -594,6 +620,8 @@
 				FE7F8CB3173731DE008EE46E /* TCSCannedMessage.m */,
 				FE3D1A621748FA2A000A4788 /* TCSRemoteCommand.h */,
 				FE3D1A631748FA2A000A4788 /* TCSRemoteCommand.m */,
+				FE9E7718174E37AF0035EABE /* TCSProviderInstance.h */,
+				FE9E7719174E37B00035EABE /* TCSProviderInstance.m */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -615,6 +643,8 @@
 				FE7F8CB6173731E6008EE46E /* _TCSCannedMessage.m */,
 				FE3D1A661748FA32000A4788 /* _TCSRemoteCommand.h */,
 				FE3D1A671748FA32000A4788 /* _TCSRemoteCommand.m */,
+				FE9E771C174E37BA0035EABE /* _TCSProviderInstance.h */,
+				FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */,
 			);
 			path = Machine;
 			sourceTree = "<group>";
@@ -817,6 +847,11 @@
 				FE3D1A691748FA32000A4788 /* _TCSRemoteCommand.m in Sources */,
 				FE3D1A6A174911E9000A4788 /* TCSParseAppConfig.m in Sources */,
 				FE3D1A6E1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */,
+				FE55454D174B9B5B0076C48B /* TCSJsonServiceProvider.m in Sources */,
+				FE554551174BA6B70076C48B /* NSData+Base64.m in Sources */,
+				FE9E7717174E2C610035EABE /* TCSParseProviderInstance.m in Sources */,
+				FE9E771B174E37B20035EABE /* TCSProviderInstance.m in Sources */,
+				FE9E771F174E37BB0035EABE /* _TCSProviderInstance.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -868,6 +903,11 @@
 				FE3D1A641748FA2A000A4788 /* TCSRemoteCommand.m in Sources */,
 				FE3D1A681748FA32000A4788 /* _TCSRemoteCommand.m in Sources */,
 				FE3D1A6D1749120F000A4788 /* TCSParseRemoteCommand.m in Sources */,
+				FE55454C174B9B5B0076C48B /* TCSJsonServiceProvider.m in Sources */,
+				FE554550174BA6B70076C48B /* NSData+Base64.m in Sources */,
+				FE9E7716174E2C610035EABE /* TCSParseProviderInstance.m in Sources */,
+				FE9E771A174E37B20035EABE /* TCSProviderInstance.m in Sources */,
+				FE9E771E174E37BB0035EABE /* _TCSProviderInstance.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

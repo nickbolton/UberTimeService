@@ -26,4 +26,8 @@
     return self.updatedAt;
 }
 
+- (Class)utsLocalEntityType {
+    return nil;
+}
+
 @end

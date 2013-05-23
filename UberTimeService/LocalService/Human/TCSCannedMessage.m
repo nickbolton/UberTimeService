@@ -14,7 +14,7 @@
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-                 @"Not aTCSCannedMessage object");
+                 @"Not a TCSCannedMessage object");
 
         [remoteProvider
          createCannedMessage:localEntity
@@ -38,7 +38,7 @@
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-                 @"Not aTCSCannedMessage object");
+                 @"Not a TCSCannedMessage object");
 
         [remoteProvider
          updateCannedMessage:localEntity
@@ -60,7 +60,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-             @"Not aTCSCannedMessage object");
+             @"Not a TCSCannedMessage object");
 
     if (successBlock != nil) {
 

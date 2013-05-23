@@ -18,7 +18,7 @@
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
-                 @"Not aTCSTimer object");
+                 @"Not a TCSTimer object");
 
         if (localEntity.project.remoteId != nil) {
             [remoteProvider
@@ -54,7 +54,7 @@
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
-                 @"Not aTCSTimer object");
+                 @"Not a TCSTimer object");
 
         if (localEntity.project.remoteId != nil) {
 
@@ -90,7 +90,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSTimer class]],
-             @"Not aTCSTimer object");
+             @"Not a TCSTimer object");
 
     if (successBlock != nil) {
 

@@ -11,6 +11,7 @@
 #import "TCSTimer.h"
 #import "TCSCannedMessage.h"
 #import "TCSRemoteCommand.h"
+#import "TCSProviderInstance.h"
 #import "NSError+Utilities.h"
 
 extern NSString * const kTCSPushNotificationRemoteServiceProviderKey;
@@ -28,11 +29,12 @@ extern NSString * const kTCSServiceDataResetNotification;
 + (instancetype)sharedInstance;
 
 @property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) BOOL canCreateEntities;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (void)clearCache;
 - (void)holdUpdates;
-- (BOOL)pollForUpdates;
+- (BOOL)pollForUpdates:(NSArray *)providerInstances;
 
 // method needs to be synchronous because it's designed to be run in the background
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
@@ -52,16 +54,6 @@ extern NSString * const kTCSServiceDataResetNotification;
            failure:(void(^)(NSError *error))failureBlock;
 
 - (BOOL)isUserAuthenticated;
-
-// Remote Command
-
-- (BOOL)createRemoteCommand:(TCSRemoteCommand *)remoteCommand
-              success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-- (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
-                      success:(void(^)(void))successBlock
-                      failure:(void(^)(NSError *error))failureBlock;
 
 // Project
 
@@ -121,13 +113,6 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @end
 
-@protocol TCSServiceSyncingRemoteProvider <TCSServiceRemoteProvider>
-
-- (NSDate *)systemTime;
-- (void)updateAppConfig;
-
-@end
-
 // import depends on protocol being defined already
 #import "TCSDefaultProvider.h"
 #import "TCSLocalService.h"
@@ -147,7 +132,6 @@ extern NSString * const kTCSServiceDataResetNotification;
               failure:(void(^)(NSError *error))failureBlock;
 
 - (void)sendRemoteMessage:(NSString *)message
-             withProvider:(NSString *)remoteProvider
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock;
 
@@ -307,5 +291,27 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (void)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(void))successBlock
                     failure:(void(^)(NSError *error))failureBlock;
+
+#pragma mark - Provider Instance
+
+- (NSArray *)allProviderInstances;
+
+- (TCSProviderInstance *)providerInstanceWithID:(NSManagedObjectID *)objectID;
+
+- (void)createProviderInstance:(NSString *)name
+                       baseURL:(NSString *)baseURL
+                          type:(NSString *)type
+                      username:(NSString *)username
+                      password:(NSString *)password
+                       success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                       failure:(void(^)(NSError *error))failureBlock;
+
+- (void)updateProviderInstance:(TCSProviderInstance *)providerInstance
+                     success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
+
+- (void)deleteProviderInstance:(TCSProviderInstance *)providerInstance
+                     success:(void(^)(void))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
 
 @end

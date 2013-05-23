@@ -1,0 +1,169 @@
+//
+//  TCSJsonServiceProvider.m
+//  UberTimeService
+//
+//  Created by Nick Bolton on 5/21/13.
+//  Copyright (c) 2013 Pixelbleed. All rights reserved.
+//
+
+#import "TCSJsonServiceProvider.h"
+#import "NSError+Utilities.h"
+#import "AFJSONRequestOperation.h"
+
+@implementation TCSJsonServiceProvider
+
+- (void)executeJSONRequestWithRequest:(NSURLRequest *)request
+                          userContext:(id)userContext
+                              success:(void(^)(NSDictionary *json, id userContext))successBlock
+                              failure:(void(^)(NSError *error, id userContext))failureBlock {
+
+    AFJSONRequestOperation *operation =
+    [AFJSONRequestOperation
+     JSONRequestOperationWithRequest:request
+     success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+
+         NSInteger statusCode = response.statusCode;
+
+         if (statusCode >= 200 && statusCode < 300) {
+
+             successBlock(JSON, userContext);
+
+         } else {
+
+             if (failureBlock != nil) {
+
+                 TCErrorCode errorCode;
+                 NSString *message;
+
+                 if (statusCode == 404) {
+                     errorCode = TCErrorRequestMissingResource;
+                     message = TCSLoc(@"Resource no longer exists.");
+                 } else if (statusCode >= 500) {
+                     errorCode = TCErrorRequestServerError;
+                     message = TCSLoc(@"Server failed.");
+                 } else {
+                     errorCode = TCErrorRequestUnknownError;
+                     message = TCSLoc(@"Unknown request error.");
+                 }
+
+                 NSError *error =
+                 [NSError errorWithCode:errorCode message:message];
+
+                 failureBlock(error, userContext);
+
+             }
+         }
+
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+
+         if (failureBlock != nil) {
+             failureBlock(error, userContext);
+         }
+     }];
+    
+    [operation start];
+}
+
+- (void)requestWithURL:(NSURL *)url
+                method:(NSString *)method
+               headers:(NSDictionary *)headers
+           userContext:(id)userContext
+               success:(void(^)(NSDictionary *json, id userContext))successBlock
+               failure:(void(^)(NSError *error, id userContext))failureBlock {
+
+    if (successBlock == nil) {
+        NSLog(@"WARN : no successBlock. aborting json request.");
+        return;
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest/?method=flickr.groups.browse&api_key=b6300e17ad3c506e706cb0072175d047&cat_id=34427469792%40N01&format=rest"]];
+    request.HTTPMethod = method;
+
+    for (NSString *key in headers) {
+        [request setValue:headers[key] forHTTPHeaderField:key];
+    }
+
+    NSLog(@"url: %@", request.URL);
+    NSLog(@"headers: %@", request.allHTTPHeaderFields);
+
+    [self
+     executeJSONRequestWithRequest:request
+     userContext:userContext
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)putWithURL:(NSURL *)url
+           headers:(NSDictionary *)headers
+          postData:(NSDictionary *)postData
+       userContext:(id)userContext
+           success:(void(^)(NSDictionary *json, id userContext))successBlock
+           failure:(void(^)(NSError *error, id userContext))failureBlock {
+
+    [self
+     requestWithURL:url
+     method:@"PUT"
+     headers:headers
+     postData:postData
+     userContext:userContext
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)postWithURL:(NSURL *)url
+            headers:(NSDictionary *)headers
+           postData:(NSDictionary *)postData
+        userContext:(id)userContext
+            success:(void(^)(NSDictionary *json, id userContext))successBlock
+            failure:(void(^)(NSError *error, id userContext))failureBlock {
+
+    [self
+     requestWithURL:url
+     method:@"POST"
+     headers:headers
+     postData:postData
+     userContext:userContext
+     success:successBlock
+     failure:failureBlock];
+}
+
+- (void)requestWithURL:(NSURL *)url
+                method:(NSString *)method
+               headers:(NSDictionary *)headers
+              postData:(NSDictionary *)postData
+           userContext:(id)userContext
+               success:(void(^)(NSDictionary *json, id userContext))successBlock
+               failure:(void(^)(NSError *error, id userContext))failureBlock {
+
+    if (successBlock == nil) {
+        NSLog(@"WARN : no successBlock. aborting json request.");
+        return;
+    }
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest/?method=flickr.groups.browse&api_key=b6300e17ad3c506e706cb0072175d047&cat_id=34427469792%40N01&format=rest"]];
+    request.HTTPMethod = method;
+
+    for (NSString *key in headers) {
+        [request setValue:headers[key] forHTTPHeaderField:key];
+    }
+
+    NSString *postDataString = [postData description];
+    NSData *requestData =
+    [NSData
+     dataWithBytes:postDataString.UTF8String
+     length:postDataString.length];
+
+    request.HTTPBody = requestData;
+
+    NSLog(@"url: %@", request.URL);
+    NSLog(@"headers: %@", request.allHTTPHeaderFields);
+    NSLog(@"postBody: %@", postDataString);
+
+    [self
+     executeJSONRequestWithRequest:request
+     userContext:userContext
+     success:successBlock
+     failure:failureBlock];    
+}
+
+@end

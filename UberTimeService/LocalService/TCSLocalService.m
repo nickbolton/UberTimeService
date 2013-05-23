@@ -189,32 +189,23 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                       success:(void(^)(void))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
-    id <TCSServiceRemoteProvider> remoteProvider =
-    [[TCSService sharedInstance]
-     serviceProviderNamed:remoteCommand.remoteProvider];
-
-    if (remoteProvider == nil) {
-        NSLog(@"WARN : no remote provider named: %@", remoteCommand.remoteProvider);
+    if (_syncingRemoteProvider == nil) {
+        NSLog(@"WARN : no sync remote provider registered");
         return;
     }
 
-    [remoteProvider
+    [_syncingRemoteProvider
      executedRemoteCommand:remoteCommand
      success:successBlock
      failure:failureBlock];
 }
 
 - (void)sendRemoteMessage:(NSString *)message
-             withProvider:(NSString *)remoteProvider
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
-        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
-    }
-
-    if (remoteProvider == nil) {
-        NSLog(@"WARN : No remote provider specified");
+    if (_syncingRemoteProvider == nil) {
+        NSLog(@"WARN : no sync remote provider registered");
         return;
     }
 
@@ -223,7 +214,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSRemoteCommand *remoteCommand =
         [TCSRemoteCommand
          messageRemoteCommand:message
-         remoteProvider:remoteProvider
+         remoteProvider:NSStringFromClass(_syncingRemoteProvider.class)
          inContext:localContext];
 
         [remoteCommand
@@ -1951,6 +1942,181 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     }];
 }
 
+#pragma mark - Remote Providers
+
+- (NSArray *)allProviderInstances {
+    return
+    [TCSProviderInstance
+     MR_findByAttribute:@"pendingRemoteDelete"
+     withValue:@NO
+     andOrderBy:@"order"
+     ascending:YES
+     inContext:[self managedObjectContextForCurrentThread]];
+}
+
+- (TCSProviderInstance *)providerInstanceWithID:(NSManagedObjectID *)objectID {
+    TCSProviderInstance *remoteProvider = (id)
+    [[self managedObjectContextForCurrentThread]
+     existingObjectWithID:objectID
+     error:NULL];
+
+    if (remoteProvider.pendingRemoteDeleteValue) {
+        remoteProvider = nil;
+    }
+
+    return remoteProvider;
+}
+
+- (void)createProviderInstance:(NSString *)name
+                       baseURL:(NSString *)baseURL
+                          type:(NSString *)type
+                      username:(NSString *)username
+                      password:(NSString *)password
+                       success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                       failure:(void(^)(NSError *error))failureBlock {
+
+    if (_syncingRemoteProvider == nil) {
+        NSLog(@"WARN : no syncing provider specified");
+        return;
+
+    }
+    NSString *syncingProvider = NSStringFromClass(_syncingRemoteProvider.class);
+
+    __block TCSProviderInstance *providerInstance = nil;
+    __block NSError *localError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        providerInstance = [TCSProviderInstance MR_createInContext:localContext];
+        providerInstance.remoteProvider = syncingProvider;
+
+        [providerInstance
+         updateWithName:name
+         baseURL:baseURL
+         type:type
+         username:username
+         password:password
+         entityVersion:0
+         remoteId:nil
+         updateTime:[[TCSService sharedInstance] systemTime]
+         markAsUpdated:YES];
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+
+                TCSProviderInstance *updatedRemoteProvider = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:providerInstance.objectID];
+                
+                successBlock(updatedRemoteProvider);
+            }
+        }
+    }];
+}
+
+- (NSError *)doUpdateProviderInstance:(TCSProviderInstance *)providerInstance
+                            inContext:(NSManagedObjectContext *)context {
+
+    NSError *error = nil;
+
+    TCSProviderInstance *localProviderInstance = (id)
+    (id)[context existingObjectWithID:providerInstance.objectID error:&error];
+
+    [localProviderInstance
+     updateWithName:providerInstance.name
+     baseURL:providerInstance.baseURL
+     type:providerInstance.type
+     username:providerInstance.username
+     password:providerInstance.password
+     entityVersion:providerInstance.entityVersionValue
+     remoteId:providerInstance.remoteId
+     updateTime:[[TCSService sharedInstance] systemTime]
+     markAsUpdated:YES];
+
+    return error;
+}
+
+- (void)updateProviderInstance:(TCSProviderInstance *)providerInstance
+                       success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                       failure:(void(^)(NSError *error))failureBlock {
+
+    __block NSError *localError = nil;
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        [self doUpdateProviderInstance:providerInstance inContext:localContext];
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (localError != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(localError);
+            }
+
+        } else if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+
+                TCSProviderInstance *updatedProviderInstance = (id)
+                [[self managedObjectContextForCurrentThread]
+                 objectWithID:providerInstance.objectID];
+
+                successBlock(updatedProviderInstance);
+            }
+        }
+    }];
+}
+
+- (void)deleteProviderInstance:(TCSProviderInstance *)providerInstance
+                       success:(void(^)(void))successBlock
+                       failure:(void(^)(NSError *error))failureBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        TCSProviderInstance *localProviderInstance = (id)
+        (id)[localContext existingObjectWithID:providerInstance.objectID error:NULL];
+
+        if (localProviderInstance != nil) {
+            [localProviderInstance markEntityAsDeleted];
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+        } else {
+            if (successBlock != nil) {
+                successBlock();
+            }
+        }
+    }];
+}
+
 #pragma mark - Remote Handling
 
 - (void)handleRemoteProviderSyncing:(NSTimer *)timer {
@@ -2245,6 +2411,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                      handleRemoteCommand:(id)obj
                      providerName:providerName
                      inContext:localContext];
+                } else if (localType == [TCSProviderInstance class] && [obj conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
+                    [self
+                     handleProviderInstanceUpdate:(id)obj
+                     providerName:providerName
+                     inserted:&inserted
+                     updated:&updated
+                     inContext:localContext];
                 } else if (localType == [TCSGroup class] && [obj conformsToProtocol:@protocol(TCSProvidedGroup)]) {
                     [self
                      handleGroupUpdate:(id)obj
@@ -2503,7 +2676,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         *inserted = group;
 
-        NSLog(@"SYNC: created new group: %@", existingGroup);
+        NSLog(@"SYNC: created new group: %@", group);
     }
 }
 
@@ -2760,8 +2933,79 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          markAsUpdated:NO];
 
         *inserted = cannedMessage;
+        
+        NSLog(@"SYNC: created new canned message: %@", cannedMessage);
+    }
+}
 
-        NSLog(@"SYNC: created new canned message: %@", existingCannedMessage);
+- (void)handleProviderInstanceUpdate:(id <TCSProvidedProviderInstance>)providedProviderInstance
+                        providerName:(NSString *)providerName
+                            inserted:(TCSBaseEntity **)inserted
+                             updated:(TCSBaseEntity **)updated
+                           inContext:(NSManagedObjectContext *)context {
+
+    NSAssert(providedProviderInstance.utsRemoteID != nil, @"remoteProvider remoteID is nil");
+
+    NSArray *entities =
+    [TCSProviderInstance
+     MR_findByAttribute:@"remoteId"
+     withValue:providedProviderInstance.utsRemoteID
+     inContext:context];
+
+    if (entities.count > 1) {
+        NSLog(@"SYNC: Warn: multiple remoteProvider objects exist with remoteID: %@",
+              providedProviderInstance.utsRemoteID);
+    }
+
+    *inserted = nil;
+    *updated = nil;
+
+    TCSProviderInstance *existingProviderInstance = entities.firstObject;
+
+    if (existingProviderInstance != nil) {
+
+        if ([providedProviderInstance.utsUpdateTime isGreaterThan:existingProviderInstance.updateTime]) {
+
+            [existingProviderInstance
+             updateWithName:providedProviderInstance.utsName
+             baseURL:providedProviderInstance.utsBaseURL
+             type:providedProviderInstance.utsType
+             username:providedProviderInstance.utsUsername
+             password:providedProviderInstance.utsPassword
+             entityVersion:providedProviderInstance.utsEntityVersion
+             remoteId:providedProviderInstance.utsRemoteID
+             updateTime:providedProviderInstance.utsUpdateTime
+             markAsUpdated:NO];
+
+            *updated = existingProviderInstance;
+
+            NSLog(@"SYNC: updated existing remoteProvider: %@", existingProviderInstance);
+
+        } else {
+            NSLog(@"SYNC: cannedMessage not updated because it has a entityVersion greater than or equal to (%d): %@",
+                  providedProviderInstance.utsEntityVersion, existingProviderInstance);
+        }
+
+    } else {
+
+        TCSProviderInstance *providerInstance =
+        [TCSProviderInstance MR_createInContext:context];
+        providerInstance.remoteProvider = providerName;
+
+        [providerInstance
+         updateWithName:providedProviderInstance.utsName
+         baseURL:providedProviderInstance.utsBaseURL
+         type:providedProviderInstance.utsType
+         username:providedProviderInstance.utsUsername
+         password:providedProviderInstance.utsPassword
+         entityVersion:providedProviderInstance.utsEntityVersion
+         remoteId:providedProviderInstance.utsRemoteID
+         updateTime:providedProviderInstance.utsUpdateTime
+         markAsUpdated:NO];
+
+        *inserted = providerInstance;
+        
+        NSLog(@"SYNC: created new remoteProvider: %@", providerInstance);
     }
 }
 

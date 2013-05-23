@@ -36,7 +36,7 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
         NSAssert([localEntity isKindOfClass:[TCSRemoteCommand class]],
                  @"Not a TCSRemoteCommand object");
 
-        [remoteProvider
+        [(id <TCSServiceSyncingRemoteProvider>)remoteProvider
          createRemoteCommand:localEntity
          success:successBlock
          failure:failureBlock];

@@ -15,7 +15,7 @@
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProject class]],
-                 @"Not aTCSProject object");
+                 @"Not a TCSProject object");
 
         if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
 
@@ -53,7 +53,7 @@
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProject class]],
-                 @"Not aTCSProject object");
+                 @"Not a TCSProject object");
 
         if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
 
@@ -89,7 +89,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSProject class]],
-             @"Not aTCSProject object");
+             @"Not a TCSProject object");
 
     if (successBlock != nil) {
 

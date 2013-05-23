@@ -22,6 +22,13 @@
         <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="timers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TCSTimer" inverseName="project" inverseEntity="TCSTimer" syncable="YES"/>
     </entity>
+    <entity name="TCSProviderInstance" representedClassName="TCSProviderInstance" parentEntity="TCSBaseEntity" syncable="YES">
+        <attribute name="baseURL" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="password" attributeType="String" syncable="YES"/>
+        <attribute name="type" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="username" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="TCSRemoteCommand" representedClassName="TCSRemoteCommand" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="executed" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
         <attribute name="payload" optional="YES" attributeType="Transformable" syncable="YES"/>
@@ -48,5 +55,6 @@
         <element name="TCSRemoteCommand" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimedEntity" positionX="160" positionY="192" width="128" height="105"/>
         <element name="TCSTimer" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="TCSProviderInstance" positionX="160" positionY="192" width="128" height="120"/>
     </elements>
 </model>
