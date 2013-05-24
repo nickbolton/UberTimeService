@@ -42,7 +42,7 @@
         <attribute name="keyCode" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="modifiers" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="order" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="timedEntities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TCSTimedEntity" inverseName="metadata" inverseEntity="TCSTimedEntity" syncable="YES"/>
+        <relationship name="timedEntities" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntity" inverseName="metadata" inverseEntity="TCSTimedEntity" syncable="YES"/>
     </entity>
     <entity name="TCSTimer" representedClassName="TCSTimer" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>

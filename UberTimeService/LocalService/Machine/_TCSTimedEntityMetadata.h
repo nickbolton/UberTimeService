@@ -114,9 +114,9 @@ extern const struct TCSTimedEntityMetadataFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet* timedEntities;
+@property (nonatomic, strong) TCSTimedEntity* timedEntities;
 
-- (NSMutableSet*)timedEntitiesSet;
+//- (BOOL)validateTimedEntities:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -125,11 +125,6 @@ extern const struct TCSTimedEntityMetadataFetchedProperties {
 @end
 
 @interface _TCSTimedEntityMetadata (CoreDataGeneratedAccessors)
-
-- (void)addTimedEntities:(NSSet*)value_;
-- (void)removeTimedEntities:(NSSet*)value_;
-- (void)addTimedEntitiesObject:(TCSTimedEntity*)value_;
-- (void)removeTimedEntitiesObject:(TCSTimedEntity*)value_;
 
 @end
 
@@ -191,8 +186,8 @@ extern const struct TCSTimedEntityMetadataFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveTimedEntities;
-- (void)setPrimitiveTimedEntities:(NSMutableSet*)value;
+- (TCSTimedEntity*)primitiveTimedEntities;
+- (void)setPrimitiveTimedEntities:(TCSTimedEntity*)value;
 
 
 @end

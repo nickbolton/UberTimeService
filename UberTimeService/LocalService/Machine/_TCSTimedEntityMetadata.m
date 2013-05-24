@@ -235,15 +235,6 @@ const struct TCSTimedEntityMetadataFetchedProperties TCSTimedEntityMetadataFetch
 @dynamic timedEntities;
 
 	
-- (NSMutableSet*)timedEntitiesSet {
-	[self willAccessValueForKey:@"timedEntities"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"timedEntities"];
-  
-	[self didAccessValueForKey:@"timedEntities"];
-	return result;
-}
-	
 
 
 
