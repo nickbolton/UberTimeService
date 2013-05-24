@@ -17,6 +17,7 @@
 #import "TCSParseTimer.h"
 #import "TCSParseProviderInstance.h"
 #import "TCSParseCannedMessage.h"
+#import "TCSParseTimedEntityMetadata.h"
 #import "TCSParseRemoteCommand.h"
 #import "TCSParseAppConfig.h"
 #import "NSError+Utilities.h"
@@ -56,6 +57,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [TCSParseAppConfig registerSubclass];
         [TCSParseRemoteCommand registerSubclass];
         [TCSParseProviderInstance registerSubclass];
+        [TCSParseTimedEntityMetadata registerSubclass];
 
         [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
 
@@ -527,12 +529,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                         project:(TCSProject *)project {
 
     parseProject.name = [self safePropertyValue:project.name];
-    parseProject.filteredModifiers = project.filteredModifiersValue;
-    parseProject.keyCode = project.keyCodeValue;
-    parseProject.modifiers = project.modifiersValue;
-    parseProject.color = project.colorValue;
-    parseProject.archived = project.archivedValue;
-    parseProject.order = project.orderValue;
     parseProject.instanceID = [NSString applicationInstanceId];
     parseProject.entityVersion = project.entityVersionValue;
 
@@ -704,8 +700,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (void)updateGroupProperties:(TCSParseGroup *)parseGroup
                       group:(TCSGroup *)group {
     parseGroup.name = [self safePropertyValue:group.name];
-    parseGroup.color = group.colorValue;
-    parseGroup.archived = group.archivedValue;
     parseGroup.instanceID = [NSString applicationInstanceId];
     parseGroup.entityVersion = group.entityVersionValue;
 
@@ -1340,6 +1334,176 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     
     return YES;
 }
+
+#pragma mark - Timed Entity Metadata
+
+- (void)updateTimedEntityMetadata:(TCSParseTimedEntityMetadata *)parseTimedEntityMetadata
+              timedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata {
+
+    parseTimedEntityMetadata.filteredModifiers = timedEntityMetadata.filteredModifiersValue;
+    parseTimedEntityMetadata.keyCode = timedEntityMetadata.keyCodeValue;
+    parseTimedEntityMetadata.modifiers = timedEntityMetadata.modifiersValue;
+    parseTimedEntityMetadata.order = timedEntityMetadata.orderValue;
+    parseTimedEntityMetadata.archived = timedEntityMetadata.archivedValue;
+    parseTimedEntityMetadata.color = timedEntityMetadata.colorValue;
+}
+
+- (BOOL)createTimedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata
+                          success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                          failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    TCSParseTimedEntityMetadata *parseTimedEntityMetadata =
+    [TCSParseTimedEntityMetadata object];
+    parseTimedEntityMetadata.user = [PFUser currentUser];
+
+    [self
+     updateTimedEntityMetadata:parseTimedEntityMetadata
+     timedEntityMetadata:timedEntityMetadata];
+
+    NSManagedObjectID *objectID = timedEntityMetadata.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseTimedEntityMetadata objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimedEntityMetadata saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseTimedEntityMetadata.objectId);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
+
+- (BOOL)updateTimedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata
+                          success:(void(^)(NSManagedObjectID *objectID))successBlock
+                          failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (timedEntityMetadata.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timedEntityMetadata update")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseTimedEntityMetadata *parseTimedEntityMetadata =
+    [TCSParseTimedEntityMetadata object];
+    parseTimedEntityMetadata.objectId = timedEntityMetadata.remoteId;
+
+    [self
+     updateTimedEntityMetadata:parseTimedEntityMetadata
+     timedEntityMetadata:timedEntityMetadata];
+
+    NSManagedObjectID *objectID = timedEntityMetadata.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseTimedEntityMetadata objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimedEntityMetadata saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+            
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
+
+- (BOOL)deleteTimedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata
+                          success:(void(^)(NSManagedObjectID *objectID))successBlock
+                          failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (timedEntityMetadata.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timedEntityMetadata delete")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseTimedEntityMetadata *parseTimedEntityMetadata =
+    [TCSParseTimedEntityMetadata object];
+    parseTimedEntityMetadata.objectId = timedEntityMetadata.remoteId;
+
+    NSManagedObjectID *objectID = timedEntityMetadata.objectID;
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimedEntityMetadata deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
+
 
 #pragma mark - Update Polling
 

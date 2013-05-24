@@ -5,4 +5,5 @@
 #import "TCSProviderInstance.h"
 #import "TCSRemoteCommand.h"
 #import "TCSTimedEntity.h"
+#import "TCSTimedEntityMetadata.h"
 #import "TCSTimer.h"

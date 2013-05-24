@@ -669,7 +669,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
      failure:failureBlock];
 }
 
-#pragma mark - Remote Providers
+#pragma mark - Provider Instance
 
 - (NSArray *)allProviderInstances {
     return [_localService allProviderInstances];

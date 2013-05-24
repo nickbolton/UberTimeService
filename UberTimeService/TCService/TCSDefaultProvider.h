@@ -20,6 +20,5 @@
 @interface TCSDefaultProviderBase : NSObject <TCSProvidedBaseEntity>
 @end
 
-@interface TCSDefaultProviderGroup : TCSDefaultProviderBase<TCSProvidedGr
-
+@interface TCSDefaultProviderGroup : TCSDefaultProviderBase<TCSProvidedGroup>
 @end

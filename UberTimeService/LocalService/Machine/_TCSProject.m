@@ -4,10 +4,6 @@
 #import "_TCSProject.h"
 
 const struct TCSProjectAttributes TCSProjectAttributes = {
-	.filteredModifiers = @"filteredModifiers",
-	.keyCode = @"keyCode",
-	.modifiers = @"modifiers",
-	.order = @"order",
 };
 
 const struct TCSProjectRelationships TCSProjectRelationships = {
@@ -43,129 +39,9 @@ const struct TCSProjectFetchedProperties TCSProjectFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"filteredModifiersValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"filteredModifiers"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
-	if ([key isEqualToString:@"keyCodeValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"keyCode"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
-	if ([key isEqualToString:@"modifiersValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"modifiers"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
-	if ([key isEqualToString:@"orderValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"order"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic filteredModifiers;
-
-
-
-- (int32_t)filteredModifiersValue {
-	NSNumber *result = [self filteredModifiers];
-	return [result intValue];
-}
-
-- (void)setFilteredModifiersValue:(int32_t)value_ {
-	[self setFilteredModifiers:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveFilteredModifiersValue {
-	NSNumber *result = [self primitiveFilteredModifiers];
-	return [result intValue];
-}
-
-- (void)setPrimitiveFilteredModifiersValue:(int32_t)value_ {
-	[self setPrimitiveFilteredModifiers:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
-@dynamic keyCode;
-
-
-
-- (int32_t)keyCodeValue {
-	NSNumber *result = [self keyCode];
-	return [result intValue];
-}
-
-- (void)setKeyCodeValue:(int32_t)value_ {
-	[self setKeyCode:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveKeyCodeValue {
-	NSNumber *result = [self primitiveKeyCode];
-	return [result intValue];
-}
-
-- (void)setPrimitiveKeyCodeValue:(int32_t)value_ {
-	[self setPrimitiveKeyCode:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
-@dynamic modifiers;
-
-
-
-- (int32_t)modifiersValue {
-	NSNumber *result = [self modifiers];
-	return [result intValue];
-}
-
-- (void)setModifiersValue:(int32_t)value_ {
-	[self setModifiers:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveModifiersValue {
-	NSNumber *result = [self primitiveModifiers];
-	return [result intValue];
-}
-
-- (void)setPrimitiveModifiersValue:(int32_t)value_ {
-	[self setPrimitiveModifiers:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
-@dynamic order;
-
-
-
-- (int32_t)orderValue {
-	NSNumber *result = [self order];
-	return [result intValue];
-}
-
-- (void)setOrderValue:(int32_t)value_ {
-	[self setOrder:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveOrderValue {
-	NSNumber *result = [self primitiveOrder];
-	return [result intValue];
-}
-
-- (void)setPrimitiveOrderValue:(int32_t)value_ {
-	[self setPrimitiveOrder:[NSNumber numberWithInt:value_]];
-}
-
 
 
 

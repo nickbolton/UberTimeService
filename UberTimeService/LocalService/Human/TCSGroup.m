@@ -52,31 +52,34 @@
 
     if (successBlock != nil) {
 
-        NSAssert([localEntity isKindOfClass:[TCSGroup class]],
-                 @"Not a TCSGroup object");
+        if (remoteProvider != nil) {
 
-        if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
+            NSAssert([localEntity isKindOfClass:[TCSGroup class]],
+                     @"Not a TCSGroup object");
 
-            [remoteProvider
-             updateGroup:localEntity
-             success:successBlock
-             failure:failureBlock];
+            if (localEntity.parent == nil || localEntity.parent.remoteId != nil) {
 
+                [remoteProvider
+                 updateGroup:localEntity
+                 success:successBlock
+                 failure:failureBlock];
+
+            } else {
+                if (failureBlock != nil) {
+
+                    NSError *error =
+                    [NSError
+                     errorWithCode:TCErrorCodePreviousOperationNotFinished
+                     message:TCSLoc(@"timer.project.remoteId has yet to be retrieved")];
+
+                    failureBlock(error);
+                }
+            }
+            
         } else {
             if (failureBlock != nil) {
-
-                NSError *error =
-                [NSError
-                 errorWithCode:TCErrorCodePreviousOperationNotFinished
-                 message:TCSLoc(@"timer.project.remoteId has yet to be retrieved")];
-
-                failureBlock(error);
+                failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
             }
-        }
-
-    } else {
-        if (failureBlock != nil) {
-            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
         }
     }
 }
@@ -93,14 +96,17 @@
 
     if (successBlock != nil) {
 
-        [remoteProvider
-         deleteGroup:localEntity
-         success:successBlock
-         failure:failureBlock];
+        if (remoteProvider != nil) {
 
-    } else {
-        if (failureBlock != nil) {
-            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+            [remoteProvider
+             deleteGroup:localEntity
+             success:successBlock
+             failure:failureBlock];
+
+        } else {
+            if (failureBlock != nil) {
+                failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+            }
         }
     }
 }

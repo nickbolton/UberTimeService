@@ -209,21 +209,21 @@
     NSString *name = @"bababooey group";
     NSInteger color = 50;
 
-    self.group.archivedValue = archived;
     self.group.name = name;
-    self.group.colorValue = color;
+    self.group.metadata.archivedValue = archived;
+    self.group.metadata.colorValue = color;
 
     [self.service
      updateGroup:self.group
      success:^(TCSGroup *updatedGroup){
 
-         GHAssertTrue(updatedGroup.archivedValue == archived,
+         GHAssertTrue(updatedGroup.metadata.archivedValue == archived,
                       @"group.archived (%d) != archived (%d)",
-                      updatedGroup.archived, archived);
+                      updatedGroup.metadata.archivedValue, archived);
 
-         GHAssertTrue(updatedGroup.colorValue == color,
+         GHAssertTrue(updatedGroup.metadata.colorValue == color,
                       @"group.color (%d) != color (%d)",
-                      updatedGroup.color, color);
+                      updatedGroup.metadata.colorValue, color);
 
          GHAssertTrue([updatedGroup.name isEqualToString:name],
                       @"group.name (%@) != name (%@)",

@@ -83,47 +83,47 @@
     NSString *name = @"bababooey";
     NSInteger color = 50;
 
-    self.project.filteredModifiersValue = filteredModifiers;
-    self.project.keyCodeValue = keyCode;
-    self.project.modifiersValue = modifiers;
-    self.project.orderValue = order;
-    self.project.archivedValue = archived;
     self.project.name = name;
-    self.project.colorValue = color;
+    self.project.metadata.filteredModifiersValue = filteredModifiers;
+    self.project.metadata.keyCodeValue = keyCode;
+    self.project.metadata.modifiersValue = modifiers;
+    self.project.metadata.orderValue = order;
+    self.project.metadata.archivedValue = archived;
+    self.project.metadata.colorValue = color;
 
     [self.service
      updateProject:self.project
      success:^(TCSProject *updatedProject){
 
          GHAssertNotNil(updatedProject, @"project not found");
-         
-         GHAssertTrue(updatedProject.filteredModifiersValue == filteredModifiers,
-                      @"project.filteredModifiers (%d) != filteredModifiers (%d)",
-                      updatedProject.filteredModifiersValue, filteredModifiers);
-
-         GHAssertTrue(updatedProject.keyCodeValue == keyCode,
-                      @"project.keyCode (%d) != keyCode (%d)",
-                      updatedProject.keyCodeValue, keyCode);
-
-         GHAssertTrue(updatedProject.modifiersValue == modifiers,
-                      @"project.modifiers (%d) != modifiers (%d)",
-                      updatedProject.modifiersValue, modifiers);
-
-         GHAssertTrue(updatedProject.orderValue == order,
-                      @"project.order (%d) != order (%d)",
-                      updatedProject.orderValue, order);
-
-         GHAssertTrue(updatedProject.archivedValue == archived,
-                      @"project.archived (%d) != archived (%d)",
-                      updatedProject.archivedValue, archived);
-
-         GHAssertTrue(updatedProject.colorValue == color,
-                      @"project.color (%d) != color (%d)",
-                      updatedProject.colorValue, color);
 
          GHAssertTrue([updatedProject.name isEqualToString:name],
                       @"projectName (%@) != name (%@)",
                       updatedProject.name, name);
+
+         GHAssertTrue(updatedProject.metadata.filteredModifiersValue == filteredModifiers,
+                      @"project.filteredModifiers (%d) != filteredModifiers (%d)",
+                      updatedProject.metadata.filteredModifiersValue, filteredModifiers);
+
+         GHAssertTrue(updatedProject.metadata.keyCodeValue == keyCode,
+                      @"project.keyCode (%d) != keyCode (%d)",
+                      updatedProject.metadata.keyCodeValue, keyCode);
+
+         GHAssertTrue(updatedProject.metadata.modifiersValue == modifiers,
+                      @"project.modifiers (%d) != modifiers (%d)",
+                      updatedProject.metadata.modifiersValue, modifiers);
+
+         GHAssertTrue(updatedProject.metadata.orderValue == order,
+                      @"project.order (%d) != order (%d)",
+                      updatedProject.metadata.orderValue, order);
+
+         GHAssertTrue(updatedProject.metadata.archivedValue == archived,
+                      @"project.archived (%d) != archived (%d)",
+                      updatedProject.metadata.archivedValue, archived);
+
+         GHAssertTrue(updatedProject.metadata.colorValue == color,
+                      @"project.color (%d) != color (%d)",
+                      updatedProject.metadata.colorValue, color);
 
          [self notify:kGHUnitWaitStatusSuccess forSelector:selector];
 

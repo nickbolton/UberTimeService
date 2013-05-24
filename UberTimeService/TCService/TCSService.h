@@ -12,6 +12,7 @@
 #import "TCSCannedMessage.h"
 #import "TCSRemoteCommand.h"
 #import "TCSProviderInstance.h"
+#import "TCSTimedEntityMetadata.h"
 #import "NSError+Utilities.h"
 
 extern NSString * const kTCSPushNotificationRemoteServiceProviderKey;

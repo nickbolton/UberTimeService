@@ -37,17 +37,20 @@
 
     if (successBlock != nil) {
 
-        NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-                 @"Not a TCSCannedMessage object");
+        if (remoteProvider != nil) {
 
-        [remoteProvider
-         updateCannedMessage:localEntity
-         success:successBlock
-         failure:failureBlock];
+            NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
+                     @"Not a TCSCannedMessage object");
 
-    } else {
-        if (failureBlock != nil) {
-            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+            [remoteProvider
+             updateCannedMessage:localEntity
+             success:successBlock
+             failure:failureBlock];
+
+        } else {
+            if (failureBlock != nil) {
+                failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+            }
         }
     }
 }
@@ -64,14 +67,17 @@
 
     if (successBlock != nil) {
 
-        [remoteProvider
-         deleteCannedMessage:localEntity
-         success:successBlock
-         failure:failureBlock];
+        if (remoteProvider != nil) {
 
-    } else {
-        if (failureBlock != nil) {
-            failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+            [remoteProvider
+             deleteCannedMessage:localEntity
+             success:successBlock
+             failure:failureBlock];
+
+        } else {
+            if (failureBlock != nil) {
+                failureBlock([NSError errorWithCode:0 message:TCSLoc(@"No remote provider")]);
+            }
         }
     }
 }

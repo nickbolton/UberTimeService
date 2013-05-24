@@ -1,26 +1,21 @@
-#import "TCSProviderInstance.h"
-#import "NSError+Utilities.h"
-#import "TCSCommon.h"
+#import "TCSTimedEntityMetadata.h"
 
-@implementation TCSProviderInstance
+@implementation TCSTimedEntityMetadata
 
-+ (void)createRemoteObject:(TCSProviderInstance *)localEntity
++ (void)createRemoteObject:(TCSTimedEntityMetadata *)localEntity
             remoteProvider:(NSObject <TCSServiceSyncingRemoteProvider> *)syncingProvider
                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert([syncingProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
-             @"syncingProvider does not conform to TCSServiceSyncingRemoteProvider");
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if (syncingProvider != nil) {
 
-        NSAssert([localEntity isKindOfClass:[TCSProviderInstance class]],
-                 @"Not a TCSRemoteProvider object");
+        NSAssert([localEntity isKindOfClass:[TCSTimedEntityMetadata class]],
+                 @"Not a TCSTimedEntityMetadata object");
 
         [syncingProvider
-         createProviderInstance:localEntity
+         createTimedEntityMetadata:localEntity
          success:successBlock
          failure:failureBlock];
 
@@ -31,13 +26,10 @@
     }
 }
 
-+ (void)updateRemoteObject:(TCSProviderInstance *)localEntity
++ (void)updateRemoteObject:(TCSTimedEntityMetadata *)localEntity
             remoteProvider:(NSObject <TCSServiceSyncingRemoteProvider> *)syncingProvider
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
-
-    NSAssert([syncingProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
-             @"syncingProvider does not conform to TCSServiceSyncingRemoteProvider");
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
@@ -45,11 +37,11 @@
 
         if (syncingProvider != nil) {
 
-            NSAssert([localEntity isKindOfClass:[TCSProviderInstance class]],
-                     @"Not a TCSCannedMessage object");
-
+            NSAssert([localEntity isKindOfClass:[TCSTimedEntityMetadata class]],
+                     @"Not a TCSTimedEntityMetadata object");
+            
             [syncingProvider
-             updateProviderInstance:localEntity
+             updateTimedEntityMetadata:localEntity
              success:successBlock
              failure:failureBlock];
 
@@ -61,17 +53,14 @@
     }
 }
 
-+ (void)deleteRemoteObject:(TCSProviderInstance *)localEntity
++ (void)deleteRemoteObject:(TCSTimedEntityMetadata *)localEntity
             remoteProvider:(NSObject <TCSServiceSyncingRemoteProvider> *)syncingProvider
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
 
-    NSAssert([syncingProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
-             @"syncingProvider does not conform to TCSServiceSyncingRemoteProvider");
-
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    NSAssert([localEntity isKindOfClass:[TCSProviderInstance class]],
+    NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
              @"Not a TCSCannedMessage object");
 
     if (successBlock != nil) {
@@ -79,7 +68,7 @@
         if (syncingProvider != nil) {
 
             [syncingProvider
-             deleteProviderInstance:localEntity
+             deleteTimedEntityMetadata:localEntity
              success:successBlock
              failure:failureBlock];
 
@@ -91,28 +80,29 @@
     }
 }
 
-- (void)updateWithName:(NSString *)name
-               baseURL:(NSString *)baseURL
-                  type:(NSString *)type
-              username:(NSString *)username
-              password:(NSString *)password
-         entityVersion:(int64_t)entityVersion
-              remoteId:(NSString *)remoteId
-            updateTime:(NSDate *)updateTime
-         markAsUpdated:(BOOL)markAsUpdated {
+- (void)updateWithColor:(NSInteger)color
+               archived:(BOOL)archived
+      filteredModifiers:(NSInteger)filteredModifiers
+                keyCode:(NSInteger)keyCode
+              modifiers:(NSInteger)modifiers
+                  order:(NSInteger)order
+          entityVersion:(int64_t)entityVersion
+               remoteId:(NSString *)remoteId
+             updateTime:(NSDate *)updateTime
+          markAsUpdated:(BOOL)markAsUpdated {
 
-    self.name = [self nonNullValue:name];
-    self.baseURL = [self nonNullValue:baseURL];
-    self.type = [self nonNullValue:type];
-    self.username = [self nonNullValue:username];
-    self.password = [self nonNullValue:password];
+    self.colorValue = color;
+    self.archivedValue = archived;
+    self.filteredModifiersValue = filteredModifiers;
+    self.keyCodeValue = keyCode;
+    self.modifiersValue = modifiers;
+    self.orderValue = order;
 
     [super
      updateWithEntityVersion:entityVersion
      remoteId:remoteId
      updateTime:updateTime
      markAsUpdated:markAsUpdated];
-    
 }
 
 @end

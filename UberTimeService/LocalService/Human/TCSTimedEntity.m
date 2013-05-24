@@ -11,15 +11,15 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 }
 
 - (UIColor *)backgroundColor {
-    return [TCSTimedEntity backgroundColorForTimerColor:self.color.integerValue];
+    return [TCSTimedEntity backgroundColorForTimerColor:self.metadata.colorValue];
 }
 
 - (UIColor *)backgroundEditColor {
-    return [TCSTimedEntity backgroundEditColorForTimerColor:self.color.integerValue];
+    return [TCSTimedEntity backgroundEditColorForTimerColor:self.metadata.colorValue];
 }
 
 - (UIImage *)dragImage {
-    return [TCSTimedEntity dragImageForTimerColor:self.color.integerValue];
+    return [TCSTimedEntity dragImageForTimerColor:self.metadata.colorValue];
 }
 
 + (UIColor *)backgroundColorForTimerColor:(TCSTimedEntityColor)timerColor {
@@ -124,17 +124,13 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 }
 
 - (void)updateWithName:(NSString *)name
-                 color:(NSInteger)color
-              archived:(BOOL)archived
          entityVersion:(int64_t)entityVersion
               remoteId:(NSString *)remoteId
             updateTime:(NSDate *)updateTime
          markAsUpdated:(BOOL)markAsUpdated {
 
     self.name = [self nonNullValue:name];
-    self.colorValue = color;
-    self.archivedValue = archived;
-
+    
     [super
      updateWithEntityVersion:entityVersion
      remoteId:remoteId

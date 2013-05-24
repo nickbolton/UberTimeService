@@ -105,34 +105,6 @@
     }
 }
 
-- (void)updateWithName:(NSString *)name
-                 color:(NSInteger)color
-              archived:(BOOL)archived
-     filteredModifiers:(NSInteger)filteredModifiers
-               keyCode:(NSInteger)keyCode
-             modifiers:(NSInteger)modifiers
-                 order:(NSInteger)order
-         entityVersion:(int64_t)entityVersion
-              remoteId:(NSString *)remoteId
-            updateTime:(NSDate *)updateTime
-         markAsUpdated:(BOOL)markAsUpdated {
-
-    self.filteredModifiersValue = filteredModifiers;
-    self.keyCodeValue = keyCode;
-    self.modifiersValue = modifiers;
-    self.orderValue = order;
-
-    [super
-     updateWithName:name
-     color:color
-     archived:archived
-     entityVersion:entityVersion
-     remoteId:remoteId
-     updateTime:updateTime
-     markAsUpdated:markAsUpdated];
-
-}
-
 - (BOOL)isActive {
     TCSProject *activeProject =
     [TCSService sharedInstance].activeTimer.project;

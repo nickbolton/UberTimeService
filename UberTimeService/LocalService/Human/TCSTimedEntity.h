@@ -26,8 +26,6 @@ extern TCSTimedEntityColor const kTCSTimedEntityMaxColor;
 + (UIImage *)dragImageForTimerColor:(TCSTimedEntityColor)timerColor;
 
 - (void)updateWithName:(NSString *)name
-                 color:(NSInteger)color
-              archived:(BOOL)archived
          entityVersion:(int64_t)entityVersion
               remoteId:(NSString *)remoteId
             updateTime:(NSDate *)updateTime

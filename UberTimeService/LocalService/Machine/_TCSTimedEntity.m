@@ -4,12 +4,11 @@
 #import "_TCSTimedEntity.h"
 
 const struct TCSTimedEntityAttributes TCSTimedEntityAttributes = {
-	.archived = @"archived",
-	.color = @"color",
 	.name = @"name",
 };
 
 const struct TCSTimedEntityRelationships TCSTimedEntityRelationships = {
+	.metadata = @"metadata",
 	.parent = @"parent",
 };
 
@@ -42,69 +41,9 @@ const struct TCSTimedEntityFetchedProperties TCSTimedEntityFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"archivedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"archived"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
-	if ([key isEqualToString:@"colorValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"color"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic archived;
-
-
-
-- (BOOL)archivedValue {
-	NSNumber *result = [self archived];
-	return [result boolValue];
-}
-
-- (void)setArchivedValue:(BOOL)value_ {
-	[self setArchived:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveArchivedValue {
-	NSNumber *result = [self primitiveArchived];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveArchivedValue:(BOOL)value_ {
-	[self setPrimitiveArchived:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic color;
-
-
-
-- (int32_t)colorValue {
-	NSNumber *result = [self color];
-	return [result intValue];
-}
-
-- (void)setColorValue:(int32_t)value_ {
-	[self setColor:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveColorValue {
-	NSNumber *result = [self primitiveColor];
-	return [result intValue];
-}
-
-- (void)setPrimitiveColorValue:(int32_t)value_ {
-	[self setPrimitiveColor:[NSNumber numberWithInt:value_]];
-}
-
 
 
 
@@ -115,6 +54,10 @@ const struct TCSTimedEntityFetchedProperties TCSTimedEntityFetchedProperties = {
 
 
 
+
+@dynamic metadata;
+
+	
 
 @dynamic parent;
 
