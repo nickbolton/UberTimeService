@@ -7,6 +7,7 @@
                   type:(NSString *)type
               username:(NSString *)username
               password:(NSString *)password
+                userID:(NSString *)userID
          entityVersion:(int64_t)entityVersion
               remoteId:(NSString *)remoteId
             updateTime:(NSDate *)updateTime

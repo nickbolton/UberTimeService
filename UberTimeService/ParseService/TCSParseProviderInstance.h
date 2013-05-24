@@ -17,5 +17,6 @@
 @property (nonatomic) NSString *password;
 @property (nonatomic) NSString *type;
 @property (nonatomic) NSString *username;
+@property (nonatomic) NSString *userID;
 
 @end

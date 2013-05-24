@@ -16,6 +16,7 @@
 @dynamic password;
 @dynamic type;
 @dynamic username;
+@dynamic userID;
 
 + (NSString *)parseClassName {
     return NSStringFromClass([self class]);
@@ -39,6 +40,10 @@
 
 - (NSString *)utsUsername {
     return self.username;
+}
+
+- (NSString *)utsUserID {
+    return self.userID;
 }
 
 @end

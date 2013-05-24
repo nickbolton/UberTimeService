@@ -51,6 +51,10 @@ extern NSString * const kTCSServiceDataResetNotification;
                  success:(void(^)(void))successBlock
                  failure:(void(^)(NSError *error))failureBlock;
 
+- (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
+                                     success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                                     failure:(void(^)(NSError *error))failureBlock;
+
 - (void)logoutUser:(void(^)(void))successBlock
            failure:(void(^)(NSError *error))failureBlock;
 

@@ -52,6 +52,11 @@
     self.holdingUpdates = YES;
 }
 
+- (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
+                                     success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                                     failure:(void(^)(NSError *error))failureBlock {
+}
+
 // Project
 
 - (BOOL)createProject:(TCSProject *)project

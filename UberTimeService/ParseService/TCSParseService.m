@@ -1182,6 +1182,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseProviderInstance.password = [self safePropertyValue:providerInstance.password];
     parseProviderInstance.type = [self safePropertyValue:providerInstance.type];
     parseProviderInstance.username = [self safePropertyValue:providerInstance.username];
+    parseProviderInstance.userID = [self safePropertyValue:providerInstance.userID];
 }
 
 - (BOOL)createProviderInstance:(TCSProviderInstance *)providerInstance

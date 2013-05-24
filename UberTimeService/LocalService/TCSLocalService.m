@@ -2035,6 +2035,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          type:type
          username:username
          password:password
+         userID:nil
          entityVersion:0
          remoteId:nil
          updateTime:[[TCSService sharedInstance] systemTime]
@@ -2058,14 +2059,50 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             if (successBlock != nil) {
 
-                TCSProviderInstance *updatedRemoteProvider = (id)
+                TCSProviderInstance *updatedProviderInstance = (id)
                 [[self managedObjectContextForCurrentThread]
                  objectWithID:providerInstance.objectID];
                 
-                successBlock(updatedRemoteProvider);
+                successBlock(updatedProviderInstance);
+
+                [self updateProviderInstanceUserIdIfNeeded:updatedProviderInstance];
             }
         }
     }];
+}
+
+- (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance {
+
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [[TCSService sharedInstance] serviceProviderNamed:providerInstance.remoteProvider];
+
+    if (remoteProvider != nil) {
+        [remoteProvider
+         updateProviderInstanceUserIdIfNeeded:providerInstance
+         success:^(TCSProviderInstance *providerInstance) {
+
+             if (providerInstance.userID != nil) {
+                 [self
+                  updateProviderInstance:providerInstance
+                  success:nil
+                  failure:^(NSError *error) {
+
+                      if (error != nil) {
+                          NSLog(@"Error: %@", error);
+                      }
+                  }];
+             }
+
+         } failure:^(NSError *error) {
+
+             if (error != nil) {
+                 NSLog(@"Error: %@", error);
+             }
+         }];
+
+    } else {
+        NSLog(@"WARN : no remote provider");
+    }
 }
 
 - (NSError *)doUpdateProviderInstance:(TCSProviderInstance *)providerInstance
@@ -2082,6 +2119,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      type:providerInstance.type
      username:providerInstance.username
      password:providerInstance.password
+     userID:providerInstance.userID
      entityVersion:providerInstance.entityVersionValue
      remoteId:providerInstance.remoteId
      updateTime:[[TCSService sharedInstance] systemTime]
@@ -3075,6 +3113,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
              type:providedProviderInstance.utsType
              username:providedProviderInstance.utsUsername
              password:providedProviderInstance.utsPassword
+             userID:providedProviderInstance.utsUserID
              entityVersion:providedProviderInstance.utsEntityVersion
              remoteId:providedProviderInstance.utsRemoteID
              updateTime:providedProviderInstance.utsUpdateTime
@@ -3101,6 +3140,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          type:providedProviderInstance.utsType
          username:providedProviderInstance.utsUsername
          password:providedProviderInstance.utsPassword
+         userID:providedProviderInstance.utsUserID
          entityVersion:providedProviderInstance.utsEntityVersion
          remoteId:providedProviderInstance.utsRemoteID
          updateTime:providedProviderInstance.utsUpdateTime

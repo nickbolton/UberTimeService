@@ -57,12 +57,45 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 }
 
+- (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
+                                     success:(void(^)(TCSProviderInstance *providerInstance))successBlock
+                                     failure:(void(^)(NSError *error))failureBlock {
+
+    [self
+     primAuthenticateUser:providerInstance.username
+     password:providerInstance.password
+     success:^(NSString *userID) {
+
+         if (userID != nil) {
+             providerInstance.userID = userID;
+         }
+
+     } failure:failureBlock];
+}
+
 // Authentication
 
 - (void)authenticateUser:(NSString *)username
                 password:(NSString *)password
                  success:(void(^)(void))successBlock
                  failure:(void(^)(NSError *error))failureBlock {
+
+    [self
+     primAuthenticateUser:username
+     password:password
+     success:^(NSString *userID) {
+
+         if (successBlock) {
+             successBlock();
+         }
+         
+     } failure:failureBlock];
+}
+
+- (void)primAuthenticateUser:(NSString *)username
+                    password:(NSString *)password
+                     success:(void (^)(NSString *userID))successBlock
+                     failure:(void (^)(NSError *))failureBlock {
 
     NSString *authString = [NSString stringWithFormat:@"%@:%@", username, password];
     NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
@@ -96,8 +129,9 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
          if (userid != nil) {
              if (successBlock != nil) {
-                 successBlock();
+                 successBlock([userid description]);
              }
+             
          } else {
              if (failureBlock != nil) {
 
@@ -146,25 +180,27 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
         for (TCSProviderInstance *providerInstance in providerInstances) {
 
-            dispatch_group_async(group, queue, ^{
-                groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
-                if (sentSyncStarting == NO && groupsAndProjects.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
-            });
+            if (providerInstance.userID != nil) {
+                dispatch_group_async(group, queue, ^{
+                    groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
+                    if (sentSyncStarting == NO && groupsAndProjects.count > 0) {
+                        sentSyncStarting = YES;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.delegate remoteSyncStarting];
+                        });
+                    }
+                });
 
-            dispatch_group_async(group, queue, ^{
-                timers = [self fetchUpdatedTimerObjects:providerInstance];
-                if (sentSyncStarting == NO && timers.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
-            });
+                dispatch_group_async(group, queue, ^{
+                    timers = [self fetchUpdatedTimerObjects:providerInstance];
+                    if (sentSyncStarting == NO && timers.count > 0) {
+                        sentSyncStarting = YES;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.delegate remoteSyncStarting];
+                        });
+                    }
+                });
+            }
         }
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
