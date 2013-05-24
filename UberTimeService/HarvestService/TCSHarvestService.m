@@ -32,6 +32,18 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     return NSLocalizedString(@"Harvest", nil);
 }
 
+- (NSDateFormatter *)systemTimeFormatter {
+
+    static NSDateFormatter *dateFormatter = nil;
+
+    if (dateFormatter == nil) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+    }
+
+    return dateFormatter;
+}
+
 - (void)clearCache {
 }
 
@@ -128,16 +140,15 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         dispatch_group_t group = dispatch_group_create();
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
 
-        __block NSArray *groups = nil;
-        __block NSArray *projects = nil;
+        __block NSArray *groupsAndProjects = nil;
         __block NSArray *timers = nil;
         __block BOOL sentSyncStarting = NO;
 
         for (TCSProviderInstance *providerInstance in providerInstances) {
 
             dispatch_group_async(group, queue, ^{
-                groups = [self fetchUpdatedGroupObjects];
-                if (sentSyncStarting == NO && groups.count > 0) {
+                groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
+                if (sentSyncStarting == NO && groupsAndProjects.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.delegate remoteSyncStarting];
@@ -146,17 +157,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             });
 
             dispatch_group_async(group, queue, ^{
-                projects = [self fetchUpdatedProjectObjects:providerInstance];
-                if (sentSyncStarting == NO && projects.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
-            });
-
-            dispatch_group_async(group, queue, ^{
-                timers = [self fetchUpdatedTimerObjects];
+                timers = [self fetchUpdatedTimerObjects:providerInstance];
                 if (sentSyncStarting == NO && timers.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -170,12 +171,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
         NSMutableArray *updatedEntities = [NSMutableArray array];
 
-        if (groups.count > 0) {
-            [updatedEntities addObjectsFromArray:groups];
-        }
-
-        if (projects.count > 0) {
-            [updatedEntities addObjectsFromArray:projects];
+        if (groupsAndProjects.count > 0) {
+            [updatedEntities addObjectsFromArray:groupsAndProjects];
         }
 
         if (timers.count > 0) {
@@ -184,12 +181,12 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
         if (updatedEntities.count > 0) {
 
-//            for (TCSParseBaseEntity *entity in updatedEntities) {
-//                if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-//                    self.lastPollingDate =
-//                    entity.utsUpdateTime;
-//                }
-//            }
+            for (TCSDefaultProviderBase *entity in updatedEntities) {
+                if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+                    self.lastPollingDate =
+                    entity.utsUpdateTime;
+                }
+            }
 
             if (_lastPollingDate != nil) {
                 [[NSUserDefaults standardUserDefaults]
@@ -253,11 +250,116 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"JSON: %@", json);
 
-    return nil;
+    NSMutableArray *normalizedGroups = [NSMutableArray array];
+    NSMutableArray *normalizedProjects = [NSMutableArray array];
+
+    NSArray *groups = json[@"projects"];
+    NSArray *projects;
+    NSDate *updateTime = json[kTCSJsonServiceProviderSystemTimeKey];
+
+    for (NSDictionary *groupDict in groups) {
+
+        TCSDefaultProviderGroup *group = [[TCSDefaultProviderGroup alloc] init];
+        group.utsRemoteID = groupDict[@"id"];
+        group.utsName = groupDict[@"name"];
+        group.utsUpdateTime = updateTime;
+
+        [normalizedGroups addObject:group];
+
+        projects = groupDict[@"tasks"];
+
+        for (NSDictionary *projectDict in projects) {
+
+            TCSDefaultProviderProject *project =
+            [[TCSDefaultProviderProject alloc] init];
+
+            project.utsRemoteID = projectDict[@"id"];
+            project.utsName = projectDict[@"name"];
+            project.utsParentID = group.utsRemoteID;
+            group.utsUpdateTime = updateTime;
+
+            [normalizedProjects addObject:project];
+        }
+    }
+
+    [normalizedGroups addObjectsFromArray:normalizedProjects];
+
+    return normalizedGroups;
 }
 
-- (NSArray *)fetchUpdatedTimerObjects {
-    return nil;
+- (NSArray *)fetchUpdatedTimerObjects:(TCSProviderInstance *)providerInstance {
+
+    NSString *authString =
+    [NSString
+     stringWithFormat:@"%@:%@",
+     providerInstance.username, providerInstance.password];
+
+    NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *auth = [authData base64EncodedString];
+
+    NSDictionary *headers =
+    @{
+      @"Accept" : @"application/json",
+      @"Content-Type" : @"application/json",
+      @"Authorization" : [NSString stringWithFormat:@"Basic %@", auth],
+      };
+
+    NSDictionary *metadata =
+    @{
+      @"url" : [NSString stringWithFormat:@"%@/people/%d/entries?from=00000101&to=99991231", providerInstance.baseURL],
+      @"method" : @"GET",
+      @"headers" : headers,
+      };
+
+    NSError *error = nil;
+
+    NSDictionary *json =
+    [self fetchRecordsWithMetadata:metadata error:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    NSLog(@"JSON: %@", json);
+
+    NSMutableArray *normalizedTimers = [NSMutableArray array];
+
+    NSArray *timers = json[kTCSJsonServiceEntriesKey];
+    NSArray *projects;
+    NSDate *updateTime = json[kTCSJsonServiceProviderSystemTimeKey];
+
+    NSDateFormatter *timestampFormatter = [[NSDateFormatter alloc] init];
+    timestampFormatter.dateFormat = @"yyyy-MM-dd HH:mmaa";
+
+    for (NSDictionary *dayEntry in timers) {
+
+        NSDictionary *timerDict = dayEntry[@"day_entry"];
+
+        if (timerDict != nil) {
+
+            TCSDefaultProviderTimer *timer = [[TCSDefaultProviderTimer alloc] init];
+            timer.utsRemoteID = timerDict[@"id"];
+            
+            NSString *hoursString = timerDict[@"hours"];
+            NSTimeInterval duration = [hoursString floatValue] * 3600.0f;
+            
+            NSString *spentAt = timerDict[@"spent_at"];
+            NSString *startedAt = timerDict[@"started_at"];
+            NSString *startDateString =
+            [NSString stringWithFormat:@"%@ %@", spentAt, startedAt];
+
+            timer.utsStartTime =
+            [timestampFormatter dateFromString:startDateString];
+            timer.utsEndTime = [timer.utsStartTime dateByAddingTimeInterval:duration];
+            timer.utsMessage = timerDict[@"notes"];
+            timer.utsProjectID = [NSString stringWithFormat:@"%@-%@", timerDict[@"project_id"], timerDict[@"task_id"]];
+            timer.utsUpdateTime = updateTime;
+
+            [normalizedTimers addObject:timer];
+        }
+    }
+    
+    return normalizedTimers;
 }
 
 #pragma mark - Singleton Methods

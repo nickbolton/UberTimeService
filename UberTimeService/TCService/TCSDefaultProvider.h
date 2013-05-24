@@ -18,7 +18,28 @@
 @end
 
 @interface TCSDefaultProviderBase : NSObject <TCSProvidedBaseEntity>
+@property (nonatomic, strong) NSString *utsRemoteID;
+@property (nonatomic) NSInteger utsEntityVersion;
+@property (nonatomic) Class utsLocalEntityType;
+@property (nonatomic, strong) NSDate *utsUpdateTime;
 @end
 
-@interface TCSDefaultProviderGroup : TCSDefaultProviderBase<TCSProvidedGroup>
+@interface TCSDefaultProviderTimedEntity : TCSDefaultProviderBase <TCSProvidedTimedEntity>
+@property (nonatomic, strong) NSString *utsName;
+@property (nonatomic, strong) NSString *utsParentID;
 @end
+
+@interface TCSDefaultProviderGroup : TCSDefaultProviderTimedEntity<TCSProvidedGroup>
+@end
+
+@interface TCSDefaultProviderProject : TCSDefaultProviderTimedEntity<TCSProvidedGroup>
+@end
+
+@interface TCSDefaultProviderTimer : TCSDefaultProviderBase <TCSProvidedTimer>
+@property (nonatomic, strong) NSDate *utsStartTime;
+@property (nonatomic, strong) NSDate *utsEndTime;
+@property (nonatomic, strong) NSString *utsMessage;
+@property (nonatomic) NSTimeInterval utsAdjustment;
+@property (nonatomic, strong) NSString *utsProjectID;
+@end
+

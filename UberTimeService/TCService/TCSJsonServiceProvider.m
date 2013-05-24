@@ -12,7 +12,14 @@
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 
+NSString * const kTCSJsonServiceProviderSystemTimeKey = @"tcs-json-system-time";
+NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
+
 @implementation TCSJsonServiceProvider
+
+- (NSDateFormatter *)systemTimeFormatter {
+    return nil;
+}
 
 - (NSDictionary *)fetchRecordsWithMetadata:(NSDictionary *)metadata
                                      error:(NSError **)error {
@@ -38,6 +45,39 @@
     return result;
 }
 
+- (NSDictionary *)appendSystemTime:(NSDictionary *)json
+                          response:(NSHTTPURLResponse *)response {
+
+    NSDateFormatter *systemTimeFormatter = self.systemTimeFormatter;
+
+    if (systemTimeFormatter != nil) {
+        NSString *dateValue = response.allHeaderFields[@"Date"];
+
+        NSDate *systemTime =
+        [systemTimeFormatter dateFromString:dateValue];
+
+        if (systemTime != nil) {
+
+            NSMutableDictionary *mutableJson;
+
+            if ([json isKindOfClass:[NSDictionary class]]) {
+
+                mutableJson = [json mutableCopy];
+
+            } else if ([json isKindOfClass:[NSArray class]]) {
+
+                mutableJson = [NSMutableDictionary dictionary];
+                mutableJson[kTCSJsonServiceEntriesKey] = json;
+            }
+
+            mutableJson[kTCSJsonServiceProviderSystemTimeKey] = systemTime;
+            json = mutableJson;
+        }
+    }
+
+    return json;
+}
+
 - (NSDictionary *)executeJSONRequestWithRequest:(NSURLRequest *)request
                                     userContext:(id)userContext
                                    asynchronous:(BOOL)asynchronous
@@ -55,7 +95,9 @@
 
          if (statusCode >= 200 && statusCode < 300) {
 
-             if (asynchronous) {
+             JSON = [self appendSystemTime:JSON response:response];
+
+             if (asynchronous) {                 
                  successBlock(JSON, userContext);
              } else {
                  result = JSON;

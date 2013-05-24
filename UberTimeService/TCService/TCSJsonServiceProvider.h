@@ -8,7 +8,12 @@
 
 #import "TCSDefaultProvider.h"
 
+extern NSString * const kTCSJsonServiceProviderSystemTimeKey;
+extern NSString * const kTCSJsonServiceEntriesKey;
+
 @interface TCSJsonServiceProvider : TCSDefaultProvider
+
+@property (nonatomic, strong) NSDateFormatter *systemTimeFormatter;
 
 - (NSDictionary *)fetchRecordsWithMetadata:(NSDictionary *)metadata
                                      error:(NSError **)error;

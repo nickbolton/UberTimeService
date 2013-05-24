@@ -144,3 +144,43 @@
 }
 
 @end
+
+@implementation TCSDefaultProviderBase
+
+- (Class)utsLocalEntityType {
+    return [TCSBaseEntity class];
+}
+
+@end
+
+@implementation TCSDefaultProviderTimedEntity
+
+- (Class)utsLocalEntityType {
+    return [TCSTimedEntity class];
+}
+
+@end
+
+@implementation TCSDefaultProviderGroup
+
+- (Class)utsLocalEntityType {
+    return [TCSGroup class];
+}
+
+@end
+
+@implementation TCSDefaultProviderProject
+
+- (Class)utsLocalEntityType {
+    return [TCSProject class];
+}
+
+@end
+
+@implementation TCSDefaultProviderTimer
+
+- (Class)utsLocalEntityType {
+    return [TCSTimer class];
+}
+
+@end
