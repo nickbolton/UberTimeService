@@ -9,6 +9,7 @@ extern const struct TCSProviderInstanceAttributes {
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *password;
 	__unsafe_unretained NSString *type;
+	__unsafe_unretained NSString *userID;
 	__unsafe_unretained NSString *username;
 } TCSProviderInstanceAttributes;
 
@@ -17,6 +18,7 @@ extern const struct TCSProviderInstanceRelationships {
 
 extern const struct TCSProviderInstanceFetchedProperties {
 } TCSProviderInstanceFetchedProperties;
+
 
 
 
@@ -69,6 +71,14 @@ extern const struct TCSProviderInstanceFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* userID;
+
+
+//- (BOOL)validateUserID:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSString* username;
 
 
@@ -108,6 +118,12 @@ extern const struct TCSProviderInstanceFetchedProperties {
 
 - (NSString*)primitiveType;
 - (void)setPrimitiveType:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveUserID;
+- (void)setPrimitiveUserID:(NSString*)value;
 
 
 
