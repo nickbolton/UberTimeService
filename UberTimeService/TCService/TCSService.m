@@ -343,12 +343,16 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     return [_localService projectWithID:objectID];
 }
 
-- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder {
-    return [_localService projectsSortedByName:ignoreOrder];
+- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder archived:(BOOL)archived {
+    return [_localService projectsSortedByName:ignoreOrder archived:archived];
 }
 
-- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder {
-    return [_localService projectsSortedByGroupAndName:ignoreOrder];
+- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder
+                                 archived:(BOOL)archived {
+    return
+    [_localService
+     projectsSortedByGroupAndName:ignoreOrder
+     archived:archived];
 }
 
 #pragma mark - Group Methods

@@ -128,9 +128,12 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 
 - (NSArray *)allProjects;
 
-- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder;
+- (NSArray *)allProjectsWithArchived:(BOOL)archived;
 
-- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder;
+- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder archived:(BOOL)archived;
+
+- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder
+                                 archived:(BOOL)archived;
 
 - (TCSProject *)projectWithID:(NSManagedObjectID *)objectID;
 

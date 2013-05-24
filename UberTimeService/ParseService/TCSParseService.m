@@ -55,7 +55,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [TCSParseCannedMessage registerSubclass];
         [TCSParseAppConfig registerSubclass];
         [TCSParseRemoteCommand registerSubclass];
-        
+        [TCSParseProviderInstance registerSubclass];
+
         [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
 
         [Parse setApplicationId:@"jF4VaTdB8FrBuFp52WFr9DzU70X9PPBeB9anwRga"
@@ -1494,7 +1495,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
                 for (TCSParseBaseEntity *entity in updatedEntities) {
                     if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-                        NSLog(@"updating lastPollingDate to: %@", entity.utsUpdateTime);
                         self.lastPollingDate =
                         entity.utsUpdateTime;
                     }
@@ -1519,10 +1519,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
             _pollingForUpdates = NO;
         });
-    }
-
-    if (_pollingForUpdates) {
-        NSLog(@"%s", __PRETTY_FUNCTION__);
     }
 
     return _pollingForUpdates;

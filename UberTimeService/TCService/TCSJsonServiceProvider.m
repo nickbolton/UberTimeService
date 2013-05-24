@@ -9,14 +9,43 @@
 #import "TCSJsonServiceProvider.h"
 #import "NSError+Utilities.h"
 #import "AFJSONRequestOperation.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @implementation TCSJsonServiceProvider
 
-- (void)executeJSONRequestWithRequest:(NSURLRequest *)request
-                          userContext:(id)userContext
-                              success:(void(^)(NSDictionary *json, id userContext))successBlock
-                              failure:(void(^)(NSError *error, id userContext))failureBlock {
+- (NSDictionary *)fetchRecordsWithMetadata:(NSDictionary *)metadata
+                                     error:(NSError **)error {
 
+    __block NSError *localError = nil;
+
+    NSDictionary *result =
+    [self
+     requestWithURL:[NSURL URLWithString:metadata[@"url"]]
+     method:metadata[@"method"]
+     headers:metadata[@"headers"]
+     userContext:nil
+     asynchronous:NO
+     success:nil
+     failure:^(NSError *error, id userContext) {
+         localError = error;
+     }];
+
+    if (*error != nil) {
+        *error = localError;
+    }
+    
+    return result;
+}
+
+- (NSDictionary *)executeJSONRequestWithRequest:(NSURLRequest *)request
+                                    userContext:(id)userContext
+                                   asynchronous:(BOOL)asynchronous
+                                        success:(void(^)(NSDictionary *json, id userContext))successBlock
+                                        failure:(void(^)(NSError *error, id userContext))failureBlock {
+
+    __block NSDictionary *result = nil;
+    
     AFJSONRequestOperation *operation =
     [AFJSONRequestOperation
      JSONRequestOperationWithRequest:request
@@ -26,7 +55,11 @@
 
          if (statusCode >= 200 && statusCode < 300) {
 
-             successBlock(JSON, userContext);
+             if (asynchronous) {
+                 successBlock(JSON, userContext);
+             } else {
+                 result = JSON;
+             }
 
          } else {
 
@@ -60,23 +93,30 @@
              failureBlock(error, userContext);
          }
      }];
-    
+
     [operation start];
+
+    if (asynchronous == NO) {
+        [operation waitUntilFinished];
+    }
+
+    return result;
 }
 
-- (void)requestWithURL:(NSURL *)url
-                method:(NSString *)method
-               headers:(NSDictionary *)headers
-           userContext:(id)userContext
-               success:(void(^)(NSDictionary *json, id userContext))successBlock
-               failure:(void(^)(NSError *error, id userContext))failureBlock {
+- (NSDictionary *)requestWithURL:(NSURL *)url
+                          method:(NSString *)method
+                         headers:(NSDictionary *)headers
+                     userContext:(id)userContext
+                    asynchronous:(BOOL)asynchronous
+                         success:(void(^)(NSDictionary *json, id userContext))successBlock
+                         failure:(void(^)(NSError *error, id userContext))failureBlock {
 
-    if (successBlock == nil) {
+    if (successBlock == nil && asynchronous) {
         NSLog(@"WARN : no successBlock. aborting json request.");
-        return;
+        return nil;
     }
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest/?method=flickr.groups.browse&api_key=b6300e17ad3c506e706cb0072175d047&cat_id=34427469792%40N01&format=rest"]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = method;
 
     for (NSString *key in headers) {
@@ -86,9 +126,11 @@
     NSLog(@"url: %@", request.URL);
     NSLog(@"headers: %@", request.allHTTPHeaderFields);
 
+    return
     [self
      executeJSONRequestWithRequest:request
      userContext:userContext
+     asynchronous:asynchronous
      success:successBlock
      failure:failureBlock];
 }
@@ -162,6 +204,7 @@
     [self
      executeJSONRequestWithRequest:request
      userContext:userContext
+     asynchronous:YES
      success:successBlock
      failure:failureBlock];    
 }

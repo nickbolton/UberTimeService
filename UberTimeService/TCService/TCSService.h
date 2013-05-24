@@ -177,11 +177,14 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (NSArray *)allProjects;
 
+- (NSArray *)allProjectsWithArchived:(BOOL)archived;
+
 - (TCSProject *)projectWithID:(NSManagedObjectID *)objectID;
 
-- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder;
+- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder archived:(BOOL)archived;
 
-- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder;
+- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder
+                                 archived:(BOOL)archived;
 
 #pragma mark - Groups
 

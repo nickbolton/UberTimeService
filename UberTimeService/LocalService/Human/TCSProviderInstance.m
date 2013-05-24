@@ -1,4 +1,6 @@
 #import "TCSProviderInstance.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @implementation TCSProviderInstance
 

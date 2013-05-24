@@ -8,13 +8,20 @@
 
 #import "TCSHarvestService.h"
 #import "NSData+Base64.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
+#import "NSDate+Utilities.h"
 
 static NSString * const kTCSHarvestBaseURL = @"";
+
+NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 @interface TCSHarvestService() {
 
     BOOL _pollingForUpdates;
 }
+
+@property (nonatomic, strong) NSDate *lastPollingDate;
 
 @end
 
@@ -49,11 +56,12 @@ static NSString * const kTCSHarvestBaseURL = @"";
     NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
     NSString *auth = [authData base64EncodedString];
 
-    NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:
-                             @"application/json", @"Accept",
-                             @"application/json", @"Content-Type",
-                             [NSString stringWithFormat:@"Basic %@", auth], @"Authorization",
-                             nil];
+    NSDictionary *headers =
+    @{
+      @"Accept" : @"application/json",
+      @"Content-Type" : @"application/json",
+      @"Authorization" : [NSString stringWithFormat:@"Basic %@", auth],
+    };
 
     NSDictionary *metadata =
     @{
@@ -67,6 +75,7 @@ static NSString * const kTCSHarvestBaseURL = @"";
      method:metadata[@"method"]
      headers:metadata[@"headers"]
      userContext:nil
+     asynchronous:YES
      success:^(NSDictionary *json, id userContext) {
 
          NSDictionary *user = json[@"user"];
@@ -112,132 +121,143 @@ static NSString * const kTCSHarvestBaseURL = @"";
 
     if (_pollingForUpdates) return NO;
 
-//    if ([PFUser currentUser] != nil) {
-//
-//        _pollingForUpdates = YES;
-//
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-//
-//            dispatch_group_t group = dispatch_group_create();
-//            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-//
-//            __block NSArray *remoteCommands = nil;
-//            __block NSArray *groups = nil;
-//            __block NSArray *projects = nil;
-//            __block NSArray *timers = nil;
-//            __block NSArray *cannedMessages = nil;
-//            __block BOOL sentSyncStarting = NO;
-//
-//            dispatch_group_async(group, queue, ^{
-//                remoteCommands = [self fetchUpdatedRemoteCommandObjects];
-//                if (sentSyncStarting == NO && remoteCommands.count > 0) {
-//                    sentSyncStarting = YES;
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [self.delegate remoteSyncStarting];
-//                    });
-//                }
-//            });
-//
-//            dispatch_group_async(group, queue, ^{
-//                groups = [self fetchUpdatedGroupObjects];
-//                if (sentSyncStarting == NO && groups.count > 0) {
-//                    sentSyncStarting = YES;
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [self.delegate remoteSyncStarting];
-//                    });
-//                }
-//            });
-//
-//            dispatch_group_async(group, queue, ^{
-//                projects = [self fetchUpdatedProjectObjects];
-//                if (sentSyncStarting == NO && projects.count > 0) {
-//                    sentSyncStarting = YES;
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [self.delegate remoteSyncStarting];
-//                    });
-//                }
-//            });
-//
-//            dispatch_group_async(group, queue, ^{
-//                timers = [self fetchUpdatedTimerObjects];
-//                if (sentSyncStarting == NO && timers.count > 0) {
-//                    sentSyncStarting = YES;
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [self.delegate remoteSyncStarting];
-//                    });
-//                }
-//            });
-//
-//            dispatch_group_async(group, queue, ^{
-//                cannedMessages = [self fetchUpdatedCannedMessageObjects];
-//                if (sentSyncStarting == NO && cannedMessages.count > 0) {
-//                    sentSyncStarting = YES;
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [self.delegate remoteSyncStarting];
-//                    });
-//                }
-//            });
-//
-//            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-//
-//            NSMutableArray *updatedEntities = [NSMutableArray array];
-//
-//            if (remoteCommands.count > 0) {
-//                [updatedEntities addObjectsFromArray:remoteCommands];
-//            }
-//
-//            if (groups.count > 0) {
-//                [updatedEntities addObjectsFromArray:groups];
-//            }
-//
-//            if (projects.count > 0) {
-//                [updatedEntities addObjectsFromArray:projects];
-//            }
-//
-//            if (timers.count > 0) {
-//                [updatedEntities addObjectsFromArray:timers];
-//            }
-//
-//            if (cannedMessages.count > 0) {
-//                [updatedEntities addObjectsFromArray:cannedMessages];
-//            }
-//
-//            if (updatedEntities.count > 0) {
-//
-//                for (TCSParseBaseEntity *entity in updatedEntities) {
-//                    if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-//                        NSLog(@"updating lastPollingDate to: %@", entity.utsUpdateTime);
-//                        self.lastPollingDate =
-//                        entity.utsUpdateTime;
-//                    }
-//                }
-//
-//                if (_lastPollingDate != nil) {
-//                    [[NSUserDefaults standardUserDefaults]
-//                     setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
-//                    [[NSUserDefaults standardUserDefaults] synchronize];
-//                }
-//            }
-//
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [[NSNotificationCenter defaultCenter]
-//                 postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
-//                 object:self
-//                 userInfo:@{
-//                 kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
-//                 kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
-//                 }];
-//            });
-//            
-//            _pollingForUpdates = NO;
-//        });
-//    }
+    _pollingForUpdates = YES;
 
-    if (_pollingForUpdates) {
-        NSLog(@"%s", __PRETTY_FUNCTION__);
-    }
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+
+        __block NSArray *groups = nil;
+        __block NSArray *projects = nil;
+        __block NSArray *timers = nil;
+        __block BOOL sentSyncStarting = NO;
+
+        for (TCSProviderInstance *providerInstance in providerInstances) {
+
+            dispatch_group_async(group, queue, ^{
+                groups = [self fetchUpdatedGroupObjects];
+                if (sentSyncStarting == NO && groups.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                projects = [self fetchUpdatedProjectObjects:providerInstance];
+                if (sentSyncStarting == NO && projects.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                timers = [self fetchUpdatedTimerObjects];
+                if (sentSyncStarting == NO && timers.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+        }
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+
+        NSMutableArray *updatedEntities = [NSMutableArray array];
+
+        if (groups.count > 0) {
+            [updatedEntities addObjectsFromArray:groups];
+        }
+
+        if (projects.count > 0) {
+            [updatedEntities addObjectsFromArray:projects];
+        }
+
+        if (timers.count > 0) {
+            [updatedEntities addObjectsFromArray:timers];
+        }
+
+        if (updatedEntities.count > 0) {
+
+//            for (TCSParseBaseEntity *entity in updatedEntities) {
+//                if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+//                    self.lastPollingDate =
+//                    entity.utsUpdateTime;
+//                }
+//            }
+
+            if (_lastPollingDate != nil) {
+                [[NSUserDefaults standardUserDefaults]
+                 setObject:_lastPollingDate forKey:kTCSHarvestLastPollingDateKey];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
+             object:self
+             userInfo:@{
+             kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
+             kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
+             }];
+        });
+
+        _pollingForUpdates = NO;
+    });
+
     return _pollingForUpdates;
+}
+
+- (NSArray *)fetchUpdatedGroupObjects {
+    return nil;
+}
+
+- (NSArray *)fetchUpdatedProjectObjects:(TCSProviderInstance *)providerInstance {
+
+    NSString *authString =
+    [NSString
+     stringWithFormat:@"%@:%@",
+     providerInstance.username, providerInstance.password];
+    
+    NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *auth = [authData base64EncodedString];
+
+    NSDictionary *headers =
+    @{
+      @"Accept" : @"application/json",
+      @"Content-Type" : @"application/json",
+      @"Authorization" : [NSString stringWithFormat:@"Basic %@", auth],
+      };
+
+    NSDictionary *metadata =
+    @{
+      @"url" : [NSString stringWithFormat:@"%@/daily", providerInstance.baseURL],
+      @"method" : @"GET",
+      @"headers" : headers,
+      };
+
+    NSError *error = nil;
+
+    NSDictionary *json =
+    [self fetchRecordsWithMetadata:metadata error:&error];
+
+    if (error != nil) {
+        NSLog(@"Error: %@", error);
+    }
+
+    NSLog(@"JSON: %@", json);
+
+    return nil;
+}
+
+- (NSArray *)fetchUpdatedTimerObjects {
+    return nil;
 }
 
 #pragma mark - Singleton Methods

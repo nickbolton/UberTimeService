@@ -538,7 +538,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     return project;
 }
 
-- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder {
+- (NSArray *)projectsSortedByName:(BOOL)ignoreOrder archived:(BOOL)archived {
 
     NSComparator nameComparator = ^NSComparisonResult(id obj1, id obj2) {
         TCSTimedEntity *timedEntity1 = obj1;
@@ -568,12 +568,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         return [timedEntity1.name.lowercaseString compare:timedEntity2.name.lowercaseString];
     };
 
-    NSArray *projects = [self allProjects];
+    NSArray *projects = [self allProjectsWithArchived:archived];
 
     return [projects sortedArrayUsingComparator:nameComparator];
 }
 
-- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder {
+- (NSArray *)projectsSortedByGroupAndName:(BOOL)ignoreOrder
+                                 archived:(BOOL)archived {
 
     NSComparator nameComparator = ^NSComparisonResult(id obj1, id obj2) {
         TCSTimedEntity *timedEntity1 = obj1;
@@ -614,7 +615,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         return [timedEntity1.name.lowercaseString compare:timedEntity2.name.lowercaseString];
     };
 
-    NSArray *projects = [self allProjects];
+    NSArray *projects = [self allProjectsWithArchived:archived];
 
     return [projects sortedArrayUsingComparator:nameComparator];
 }
@@ -625,6 +626,21 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [TCSProject
      MR_findByAttribute:@"pendingRemoteDelete"
      withValue:@NO
+     inContext:[self managedObjectContextForCurrentThread]];
+
+    return projects;
+}
+
+- (NSArray *)allProjectsWithArchived:(BOOL)archived {
+
+    NSPredicate *predicate =
+    [NSPredicate
+     predicateWithFormat:@"pendingRemoteDelete = 0 and archived = %d",
+     archived];
+
+    NSArray *projects =
+    [TCSProject
+     MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 
     return projects;
@@ -1949,7 +1965,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [TCSProviderInstance
      MR_findByAttribute:@"pendingRemoteDelete"
      withValue:@NO
-     andOrderBy:@"order"
+     andOrderBy:@"name"
      ascending:YES
      inContext:[self managedObjectContextForCurrentThread]];
 }

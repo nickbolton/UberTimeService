@@ -10,12 +10,16 @@
 
 @interface TCSJsonServiceProvider : TCSDefaultProvider
 
-- (void)requestWithURL:(NSURL *)url
-                method:(NSString *)method
-               headers:(NSDictionary *)headers
-           userContext:(id)userContext
-               success:(void(^)(NSDictionary *json, id userContext))successBlock
-               failure:(void(^)(NSError *error, id userContext))failureBlock;
+- (NSDictionary *)fetchRecordsWithMetadata:(NSDictionary *)metadata
+                                     error:(NSError **)error;
+
+- (NSDictionary *)requestWithURL:(NSURL *)url
+                          method:(NSString *)method
+                         headers:(NSDictionary *)headers
+                     userContext:(id)userContext
+                    asynchronous:(BOOL)asynchronous
+                         success:(void(^)(NSDictionary *json, id userContext))successBlock
+                         failure:(void(^)(NSError *error, id userContext))failureBlock;
 
 - (void)putWithURL:(NSURL *)url
            headers:(NSDictionary *)headers
