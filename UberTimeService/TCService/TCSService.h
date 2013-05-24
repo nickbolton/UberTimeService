@@ -31,6 +31,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) BOOL canCreateEntities;
+@property (nonatomic, readonly) BOOL importProjectsAsArchived;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 
 - (void)clearCache;

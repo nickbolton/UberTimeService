@@ -17,6 +17,15 @@
 
 @implementation TCSDefaultProvider
 
+- (NSString *)safeRemoteID:(id)remoteID {
+    if ([remoteID isKindOfClass:[NSNumber class]]) {
+        remoteID = [(NSNumber *)remoteID stringValue];
+    } else if ([remoteID isKindOfClass:[NSString class]] == NO) {
+        remoteID = [remoteID description];
+    }
+    return remoteID;
+}
+
 #pragma mark - User Authentication
 
 - (void)authenticateUser:(NSString *)username
@@ -45,6 +54,10 @@
 }
 
 - (BOOL)isUserAuthenticated {
+    return NO;
+}
+
+- (BOOL)importProjectsAsArchived {
     return NO;
 }
 
@@ -156,12 +169,29 @@
     return [TCSBaseEntity class];
 }
 
+- (void)setUtsRemoteID:(NSString *)utsRemoteID {
+    _utsRemoteID = [self safeRemoteID:utsRemoteID];
+}
+
+- (NSString *)safeRemoteID:(id)remoteID {
+    if ([remoteID isKindOfClass:[NSNumber class]]) {
+        remoteID = [(NSNumber *)remoteID stringValue];
+    } else if ([remoteID isKindOfClass:[NSString class]] == NO) {
+        remoteID = [remoteID description];
+    }
+    return remoteID;
+}
+
 @end
 
 @implementation TCSDefaultProviderTimedEntity
 
 - (Class)utsLocalEntityType {
     return [TCSTimedEntity class];
+}
+
+- (void)setUtsParentID:(NSString *)utsParentID {
+    _utsParentID = [self safeRemoteID:utsParentID];
 }
 
 @end
@@ -186,6 +216,10 @@
 
 - (Class)utsLocalEntityType {
     return [TCSTimer class];
+}
+
+- (void)setUtsProjectID:(NSString *)utsProjectID {
+    _utsProjectID = [self safeRemoteID:utsProjectID];
 }
 
 @end

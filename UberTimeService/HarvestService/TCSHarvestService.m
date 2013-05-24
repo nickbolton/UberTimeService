@@ -47,6 +47,10 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 - (void)clearCache {
 }
 
+- (BOOL)importProjectsAsArchived {
+    return YES;
+}
+
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
                          error:(NSError **)error {
     return nil;
@@ -61,16 +65,21 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
                                      success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                                      failure:(void(^)(NSError *error))failureBlock {
 
-    [self
-     primAuthenticateUser:providerInstance.username
-     password:providerInstance.password
-     success:^(NSString *userID) {
+    if (providerInstance.userID == nil) {
+        [self
+         primAuthenticateUser:providerInstance.username
+         password:providerInstance.password
+         success:^(NSString *userID) {
 
-         if (userID != nil) {
-             providerInstance.userID = userID;
-         }
-
-     } failure:failureBlock];
+             if (userID != nil) {
+                 providerInstance.userID = userID;
+                 if (successBlock != nil) {
+                     successBlock(providerInstance);
+                 }
+             }
+             
+         } failure:failureBlock];
+    }
 }
 
 // Authentication
@@ -91,6 +100,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
          
      } failure:failureBlock];
 }
+
 
 - (void)primAuthenticateUser:(NSString *)username
                     password:(NSString *)password
@@ -125,11 +135,12 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
          NSDictionary *user = json[@"user"];
          
-         id userid = user[@"id"];
+         NSString *userid = [self safeRemoteID:user[@"id"]];
 
          if (userid != nil) {
+
              if (successBlock != nil) {
-                 successBlock([userid description]);
+                 successBlock(userid);
              }
              
          } else {
@@ -247,10 +258,6 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     return _pollingForUpdates;
 }
 
-- (NSArray *)fetchUpdatedGroupObjects {
-    return nil;
-}
-
 - (NSArray *)fetchUpdatedProjectObjects:(TCSProviderInstance *)providerInstance {
 
     NSString *authString =
@@ -342,7 +349,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSDictionary *metadata =
     @{
-      @"url" : [NSString stringWithFormat:@"%@/people/%d/entries?from=00000101&to=99991231", providerInstance.baseURL],
+      @"url" : [NSString stringWithFormat:@"%@/people/%@/entries?from=00000101&to=99991231",
+                providerInstance.baseURL, providerInstance.userID],
       @"method" : @"GET",
       @"headers" : headers,
       };

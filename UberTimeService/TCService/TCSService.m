@@ -159,10 +159,42 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
         isPolling |= [remoteProvider pollForUpdates:providerInstances];
 
+        [self
+         updateProviderInstancesIfNeeded:providerInstances
+         remoteProvider:remoteProvider];
     }
 
     if (isPolling == NO && anyProviderLoggedIn) {
         [_delegate remoteSyncCompleted];
+    }
+}
+
+- (void)updateProviderInstancesIfNeeded:(NSArray *)providerInstances
+                         remoteProvider:(id <TCSServiceRemoteProvider>)remoteProvider {
+
+    for (TCSProviderInstance *providerInstance in providerInstances) {
+        [remoteProvider
+         updateProviderInstanceUserIdIfNeeded:providerInstance
+         success:^(TCSProviderInstance *providerInstance) {
+
+             if (providerInstance.userID != nil) {
+                 [self
+                  updateProviderInstance:providerInstance
+                  success:nil
+                  failure:^(NSError *error) {
+
+                      if (error != nil) {
+                          NSLog(@"Error: %@", error);
+                      }
+                  }];
+             }
+
+         } failure:^(NSError *error) {
+
+             if (error != nil) {
+                 NSLog(@"Error: %@", error);
+             }
+         }];
     }
 }
 
@@ -175,6 +207,10 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     NSArray *providerInstances =
     providerInstanceMap[NSStringFromClass([remoteProvider class])];
     [remoteProvider pollForUpdates:providerInstances];
+
+    [self
+     updateProviderInstancesIfNeeded:providerInstances
+     remoteProvider:remoteProvider];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {

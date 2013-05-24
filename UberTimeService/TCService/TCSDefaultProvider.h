@@ -15,6 +15,8 @@
 @property (nonatomic, getter = isHoldingUpdates) BOOL holdingUpdates;
 @property (nonatomic, getter = isPollingForUpdates) BOOL pollingForUpdates;
 
+- (NSString *)safeRemoteID:(id)remoteID;
+
 @end
 
 @interface TCSDefaultProviderBase : NSObject <TCSProvidedBaseEntity>
@@ -32,7 +34,7 @@
 @interface TCSDefaultProviderGroup : TCSDefaultProviderTimedEntity<TCSProvidedGroup>
 @end
 
-@interface TCSDefaultProviderProject : TCSDefaultProviderTimedEntity<TCSProvidedGroup>
+@interface TCSDefaultProviderProject : TCSDefaultProviderTimedEntity<TCSProvidedProject>
 @end
 
 @interface TCSDefaultProviderTimer : TCSDefaultProviderBase <TCSProvidedTimer>

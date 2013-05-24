@@ -85,6 +85,8 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
                                         failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     __block NSDictionary *result = nil;
+
+    NSLog(@"hello1");
     
     AFJSONRequestOperation *operation =
     [AFJSONRequestOperation
@@ -92,6 +94,10 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
      success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
 
          NSInteger statusCode = response.statusCode;
+
+         NSLog(@"sc: %d, async: %d", statusCode, asynchronous);
+         
+         NSLog(@"JSONNNNN: %@", JSON);
 
          if (statusCode >= 200 && statusCode < 300) {
 
@@ -141,6 +147,8 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
     if (asynchronous == NO) {
         [operation waitUntilFinished];
     }
+
+    NSLog(@"hello2");
 
     return result;
 }

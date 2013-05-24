@@ -829,6 +829,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         group.metadata = [TCSTimedEntityMetadata MR_createInContext:localContext];
         group.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+        [group.metadata markEntityAsUpdated];
 
         [group markEntityAsUpdated];
 
@@ -2723,7 +2724,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingGroup != nil) {
 
-        if ([providedGroup.utsUpdateTime isGreaterThan:existingGroup.updateTime]) {
+        if (providedGroup.utsUpdateTime == nil ||
+            existingGroup.updateTime == nil ||
+            [providedGroup.utsUpdateTime isGreaterThan:existingGroup.updateTime]) {
 
             [existingGroup
              updateWithName:providedGroup.utsName
@@ -2746,6 +2749,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSGroup *group =
         [TCSGroup MR_createInContext:context];
         group.remoteProvider = providerName;
+
+        group.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
+        group.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+        [group.metadata markEntityAsUpdated];
 
         [group
          updateWithName:providedGroup.utsName
@@ -2804,7 +2811,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingProject != nil) {
 
-        if ([providedProject.utsUpdateTime isGreaterThan:existingProject.updateTime]) {
+        if (providedProject.utsUpdateTime == nil ||
+            existingProject.updateTime == nil ||
+            [providedProject.utsUpdateTime isGreaterThan:existingProject.updateTime]) {
 
             [existingProject
              updateWithName:providedProject.utsName
@@ -2826,9 +2835,17 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     } else {
 
+        id <TCSServiceRemoteProvider> remoteProvider =
+        [[TCSService sharedInstance] serviceProviderNamed:providerName];
+
         TCSProject *project =
         [TCSProject MR_createInContext:context];
         project.remoteProvider = providerName;
+
+        project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
+        project.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+        project.metadata.archivedValue = remoteProvider.importProjectsAsArchived;
+        [project.metadata markEntityAsUpdated];
 
         [project
          updateWithName:providedProject.utsName
@@ -2894,7 +2911,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingTimer != nil) {
 
-        if ([providedTimer.utsUpdateTime isGreaterThan:existingTimer.updateTime]) {
+        if (providedTimer.utsUpdateTime == nil ||
+            existingTimer.updateTime == nil ||
+            [providedTimer.utsUpdateTime isGreaterThan:existingTimer.updateTime]) {
 
             [existingTimer
              updateWithStartTime:providedTimer.utsStartTime
@@ -2967,7 +2986,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingCannedMessage != nil) {
 
-        if ([providedCannedMessage.utsUpdateTime isGreaterThan:existingCannedMessage.updateTime]) {
+        if (providedCannedMessage.utsUpdateTime == nil ||
+            existingCannedMessage.updateTime == nil ||
+            [providedCannedMessage.utsUpdateTime isGreaterThan:existingCannedMessage.updateTime]) {
 
             [existingCannedMessage
              updateWithMessage:providedCannedMessage.utsMessage
@@ -3032,7 +3053,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingTimedEntityMetadata != nil) {
 
-        if ([providedTimedEntityMetadata.utsUpdateTime isGreaterThan:existingTimedEntityMetadata.updateTime]) {
+        if (providedTimedEntityMetadata.utsUpdateTime == nil ||
+            existingTimedEntityMetadata.updateTime == nil ||
+            [providedTimedEntityMetadata.utsUpdateTime isGreaterThan:existingTimedEntityMetadata.updateTime]) {
 
             [existingTimedEntityMetadata
              updateWithColor:providedTimedEntityMetadata.utsColor
@@ -3105,7 +3128,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingProviderInstance != nil) {
 
-        if ([providedProviderInstance.utsUpdateTime isGreaterThan:existingProviderInstance.updateTime]) {
+        if (providedProviderInstance.utsUpdateTime == nil ||
+            existingProviderInstance.updateTime == nil ||
+            [providedProviderInstance.utsUpdateTime isGreaterThan:existingProviderInstance.updateTime]) {
 
             [existingProviderInstance
              updateWithName:providedProviderInstance.utsName
