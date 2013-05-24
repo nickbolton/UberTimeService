@@ -367,6 +367,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
     project.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+    [project.metadata markEntityAsUpdated];
 
     [project
      updateWithName:name
@@ -639,7 +640,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSPredicate *predicate =
     [NSPredicate
-     predicateWithFormat:@"pendingRemoteDelete = 0 and archived = %d",
+     predicateWithFormat:@"pendingRemoteDelete = 0 and metadata.archived = %d",
      archived];
 
     NSArray *projects =

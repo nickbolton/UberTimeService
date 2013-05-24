@@ -1,4 +1,6 @@
 #import "TCSTimedEntityMetadata.h"
+#import "NSError+Utilities.h"
+#import "TCSCommon.h"
 
 @implementation TCSTimedEntityMetadata
 
@@ -60,8 +62,8 @@
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    NSAssert([localEntity isKindOfClass:[TCSCannedMessage class]],
-             @"Not a TCSCannedMessage object");
+    NSAssert([localEntity isKindOfClass:[TCSTimedEntityMetadata class]],
+             @"Not a TCSTimedEntityMetadata object");
 
     if (successBlock != nil) {
 
