@@ -14,7 +14,7 @@ extern const struct TCSTimedEntityMetadataAttributes {
 } TCSTimedEntityMetadataAttributes;
 
 extern const struct TCSTimedEntityMetadataRelationships {
-	__unsafe_unretained NSString *timedEntities;
+	__unsafe_unretained NSString *timedEntity;
 } TCSTimedEntityMetadataRelationships;
 
 extern const struct TCSTimedEntityMetadataFetchedProperties {
@@ -114,9 +114,9 @@ extern const struct TCSTimedEntityMetadataFetchedProperties {
 
 
 
-@property (nonatomic, strong) TCSTimedEntity* timedEntities;
+@property (nonatomic, strong) TCSTimedEntity* timedEntity;
 
-//- (BOOL)validateTimedEntities:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateTimedEntity:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -186,8 +186,8 @@ extern const struct TCSTimedEntityMetadataFetchedProperties {
 
 
 
-- (TCSTimedEntity*)primitiveTimedEntities;
-- (void)setPrimitiveTimedEntities:(TCSTimedEntity*)value;
+- (TCSTimedEntity*)primitiveTimedEntity;
+- (void)setPrimitiveTimedEntity:(TCSTimedEntity*)value;
 
 
 @end

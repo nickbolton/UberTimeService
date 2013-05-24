@@ -32,7 +32,7 @@
     </entity>
     <entity name="TCSTimedEntity" representedClassName="TCSTimedEntity" isAbstract="YES" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="metadata" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntityMetadata" inverseName="timedEntities" inverseEntity="TCSTimedEntityMetadata" syncable="YES"/>
+        <relationship name="metadata" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntityMetadata" inverseName="timedEntity" inverseEntity="TCSTimedEntityMetadata" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSGroup" inverseName="children" inverseEntity="TCSGroup" syncable="YES"/>
     </entity>
     <entity name="TCSTimedEntityMetadata" representedClassName="TCSTimedEntityMetadata" parentEntity="TCSBaseEntity" syncable="YES">
@@ -42,7 +42,7 @@
         <attribute name="keyCode" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="modifiers" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="order" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="timedEntities" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntity" inverseName="metadata" inverseEntity="TCSTimedEntity" syncable="YES"/>
+        <relationship name="timedEntity" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntity" inverseName="metadata" inverseEntity="TCSTimedEntity" syncable="YES"/>
     </entity>
     <entity name="TCSTimer" representedClassName="TCSTimer" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>

@@ -13,7 +13,7 @@ const struct TCSTimedEntityMetadataAttributes TCSTimedEntityMetadataAttributes =
 };
 
 const struct TCSTimedEntityMetadataRelationships TCSTimedEntityMetadataRelationships = {
-	.timedEntities = @"timedEntities",
+	.timedEntity = @"timedEntity",
 };
 
 const struct TCSTimedEntityMetadataFetchedProperties TCSTimedEntityMetadataFetchedProperties = {
@@ -232,7 +232,7 @@ const struct TCSTimedEntityMetadataFetchedProperties TCSTimedEntityMetadataFetch
 
 
 
-@dynamic timedEntities;
+@dynamic timedEntity;
 
 	
 
