@@ -7,6 +7,7 @@ const struct TCSProviderInstanceAttributes TCSProviderInstanceAttributes = {
 	.baseURL = @"baseURL",
 	.name = @"name",
 	.password = @"password",
+	.remoteProvider = @"remoteProvider",
 	.type = @"type",
 	.userID = @"userID",
 	.username = @"username",
@@ -67,6 +68,13 @@ const struct TCSProviderInstanceFetchedProperties TCSProviderInstanceFetchedProp
 
 
 @dynamic password;
+
+
+
+
+
+
+@dynamic remoteProvider;
 
 
 

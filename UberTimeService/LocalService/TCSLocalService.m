@@ -331,17 +331,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 #pragma mark - Project Methods
 
 - (void)createProjectWithName:(NSString *)name
-               remoteProvider:(NSString *)remoteProvider
+             providerInstance:(TCSProviderInstance *)providerInstance
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
 
-    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
-        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
-    }
-
     [self
      createProjectWithName:name
-     remoteProvider:remoteProvider
+     providerInstance:providerInstance
      filteredModifiers:0
      keyCode:0
      modifiers:0
@@ -350,12 +346,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (TCSProject *)doCreateProjectWithName:(NSString *)name
-                              remoteProvider:(NSString *)remoteProvider
-                           filteredModifiers:(NSInteger)filteredModifiers
-                                     keyCode:(NSInteger)keyCode
-                                   modifiers:(NSInteger)modifiers
-                                   inContext:(NSManagedObjectContext *)context {
+                       providerInstance:(TCSProviderInstance *)providerInstance
+                      filteredModifiers:(NSInteger)filteredModifiers
+                                keyCode:(NSInteger)keyCode
+                              modifiers:(NSInteger)modifiers
+                              inContext:(NSManagedObjectContext *)context {
 
+    NSString *remoteProvider = 
     if (remoteProvider == nil && _syncingRemoteProvider != nil) {
         remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }

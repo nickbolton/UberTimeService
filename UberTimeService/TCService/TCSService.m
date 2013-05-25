@@ -329,18 +329,18 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 #pragma mark - Project Methods
 
 - (void)createProjectWithName:(NSString *)name
-               remoteProvider:(NSString *)remoteProvider
+             providerInstance:(TCSProviderInstance *)providerInstance
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
     [_localService
      createProjectWithName:name
-     remoteProvider:remoteProvider
+     providerInstance:providerInstance
      success:successBlock
      failure:failureBlock];
 }
 
 - (void)createProjectWithName:(NSString *)name
-               remoteProvider:(NSString *)remoteProvider
+             providerInstance:(TCSProviderInstance *)providerInstance
             filteredModifiers:(NSInteger)filteredModifiers
                       keyCode:(NSInteger)keyCode
                     modifiers:(NSInteger)modifiers
@@ -349,7 +349,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     [_localService
      createProjectWithName:name
-     remoteProvider:remoteProvider
+     providerInstance:providerInstance
      filteredModifiers:filteredModifiers
      keyCode:keyCode
      modifiers:modifiers
@@ -676,12 +676,12 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (void)createCannedMessage:(NSString *)message
-             remoteProvider:(NSString *)remoteProvider
+           providerInstance:(TCSProviderInstance *)providerInstance
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
     [_localService
      createCannedMessage:message
-     remoteProvider:remoteProvider
+     providerInstance:providerInstance
      success:successBlock
      failure:failureBlock];
 }

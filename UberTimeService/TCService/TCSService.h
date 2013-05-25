@@ -162,12 +162,12 @@ extern NSString * const kTCSServiceDataResetNotification;
                       failure:(void(^)(NSError *error))failureBlock;
 
 - (void)createProjectWithName:(NSString *)name
-               remoteProvider:(NSString *)remoteProvider
+             providerInstance:(TCSProviderInstance *)providerInstance
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock;
 
 - (void)createProjectWithName:(NSString *)name
-               remoteProvider:(NSString *)remoteProvider
+             providerInstance:(TCSProviderInstance *)providerInstance
             filteredModifiers:(NSInteger)filteredModifiers
                       keyCode:(NSInteger)keyCode
                     modifiers:(NSInteger)modifiers
@@ -285,7 +285,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 - (TCSCannedMessage *)cannedMessageWithID:(NSManagedObjectID *)objectID;
 
 - (void)createCannedMessage:(NSString *)message
-             remoteProvider:(NSString *)remoteProvider
+           providerInstance:(TCSProviderInstance *)providerInstance
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock;
 

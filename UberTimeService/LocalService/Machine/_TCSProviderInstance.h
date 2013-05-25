@@ -8,6 +8,7 @@ extern const struct TCSProviderInstanceAttributes {
 	__unsafe_unretained NSString *baseURL;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *password;
+	__unsafe_unretained NSString *remoteProvider;
 	__unsafe_unretained NSString *type;
 	__unsafe_unretained NSString *userID;
 	__unsafe_unretained NSString *username;
@@ -21,6 +22,7 @@ extern const struct TCSProviderInstanceFetchedProperties {
 } TCSProviderInstanceFetchedProperties;
 
 @class TCSBaseEntity;
+
 
 
 
@@ -61,6 +63,14 @@ extern const struct TCSProviderInstanceFetchedProperties {
 
 
 //- (BOOL)validatePassword:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSString* remoteProvider;
+
+
+//- (BOOL)validateRemoteProvider:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -126,6 +136,12 @@ extern const struct TCSProviderInstanceFetchedProperties {
 
 - (NSString*)primitivePassword;
 - (void)setPrimitivePassword:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveRemoteProvider;
+- (void)setPrimitiveRemoteProvider:(NSString*)value;
 
 
 

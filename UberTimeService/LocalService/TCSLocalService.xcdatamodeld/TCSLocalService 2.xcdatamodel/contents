@@ -23,6 +23,7 @@
         <attribute name="baseURL" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="password" attributeType="String" syncable="YES"/>
+        <attribute name="remoteProvider" attributeType="String" syncable="YES"/>
         <attribute name="type" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="userID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" attributeType="String" syncable="YES"/>
@@ -59,7 +60,7 @@
         <element name="TCSCannedMessage" positionX="160" positionY="192" width="128" height="75"/>
         <element name="TCSGroup" positionX="160" positionY="192" width="128" height="60"/>
         <element name="TCSProject" positionX="160" positionY="192" width="128" height="60"/>
-        <element name="TCSProviderInstance" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="TCSProviderInstance" positionX="160" positionY="192" width="128" height="165"/>
         <element name="TCSRemoteCommand" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimedEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimedEntityMetadata" positionX="160" positionY="192" width="128" height="150"/>
