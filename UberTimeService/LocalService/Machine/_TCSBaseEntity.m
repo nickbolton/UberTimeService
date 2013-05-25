@@ -13,6 +13,7 @@ const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
 };
 
 const struct TCSBaseEntityRelationships TCSBaseEntityRelationships = {
+	.providerInstance = @"providerInstance",
 };
 
 const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
@@ -161,6 +162,10 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 
 
+
+@dynamic providerInstance;
+
+	
 
 
 

@@ -13,6 +13,7 @@ const struct TCSProviderInstanceAttributes TCSProviderInstanceAttributes = {
 };
 
 const struct TCSProviderInstanceRelationships TCSProviderInstanceRelationships = {
+	.entities = @"entities",
 };
 
 const struct TCSProviderInstanceFetchedProperties TCSProviderInstanceFetchedProperties = {
@@ -92,6 +93,19 @@ const struct TCSProviderInstanceFetchedProperties TCSProviderInstanceFetchedProp
 
 
 
+
+@dynamic entities;
+
+	
+- (NSMutableSet*)entitiesSet {
+	[self willAccessValueForKey:@"entities"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"entities"];
+  
+	[self didAccessValueForKey:@"entities"];
+	return result;
+}
+	
 
 
 

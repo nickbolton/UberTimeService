@@ -14,11 +14,13 @@ extern const struct TCSBaseEntityAttributes {
 } TCSBaseEntityAttributes;
 
 extern const struct TCSBaseEntityRelationships {
+	__unsafe_unretained NSString *providerInstance;
 } TCSBaseEntityRelationships;
 
 extern const struct TCSBaseEntityFetchedProperties {
 } TCSBaseEntityFetchedProperties;
 
+@class TCSProviderInstance;
 
 
 
@@ -100,6 +102,13 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 
 
+@property (nonatomic, strong) TCSProviderInstance* providerInstance;
+
+//- (BOOL)validateProviderInstance:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -153,6 +162,11 @@ extern const struct TCSBaseEntityFetchedProperties {
 - (void)setPrimitiveUpdateTime:(NSDate*)value;
 
 
+
+
+
+- (TCSProviderInstance*)primitiveProviderInstance;
+- (void)setPrimitiveProviderInstance:(TCSProviderInstance*)value;
 
 
 @end

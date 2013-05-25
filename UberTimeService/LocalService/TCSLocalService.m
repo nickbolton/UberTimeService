@@ -1653,12 +1653,15 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (NSArray *)allTimers {
+    return [self allTimersInContext:[self managedObjectContextForCurrentThread]];
+}
 
+- (NSArray *)allTimersInContext:(NSManagedObjectContext *)context {
     return
     [TCSTimer
      MR_findByAttribute:@"pendingRemoteDelete"
      withValue:@NO
-     inContext:[self managedObjectContextForCurrentThread]];
+     inContext:context];
 }
 
 - (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime {
@@ -2635,6 +2638,23 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                                 updates[NSDeletedObjectsKey] = deletedObjects;
                             }
                             [deletedObjects addObject:project];
+                        }
+                    }
+                }
+
+                for (TCSTimer *timer in [self allTimersInContext:localContext]) {
+
+                    if ([providerName isEqual:timer.remoteProvider]) {
+
+                        if ([remainingEntityIDs containsObject:timer.objectID] == NO) {
+                            [timer MR_deleteInContext:localContext];
+
+                            NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                            if (deletedObjects == nil) {
+                                deletedObjects = [NSMutableArray array];
+                                updates[NSDeletedObjectsKey] = deletedObjects;
+                            }
+                            [deletedObjects addObject:timer];
                         }
                     }
                 }

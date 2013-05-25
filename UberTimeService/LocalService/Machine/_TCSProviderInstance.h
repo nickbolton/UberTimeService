@@ -14,11 +14,13 @@ extern const struct TCSProviderInstanceAttributes {
 } TCSProviderInstanceAttributes;
 
 extern const struct TCSProviderInstanceRelationships {
+	__unsafe_unretained NSString *entities;
 } TCSProviderInstanceRelationships;
 
 extern const struct TCSProviderInstanceFetchedProperties {
 } TCSProviderInstanceFetchedProperties;
 
+@class TCSBaseEntity;
 
 
 
@@ -88,10 +90,22 @@ extern const struct TCSProviderInstanceFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet* entities;
+
+- (NSMutableSet*)entitiesSet;
+
+
+
+
 
 @end
 
 @interface _TCSProviderInstance (CoreDataGeneratedAccessors)
+
+- (void)addEntities:(NSSet*)value_;
+- (void)removeEntities:(NSSet*)value_;
+- (void)addEntitiesObject:(TCSBaseEntity*)value_;
+- (void)removeEntitiesObject:(TCSBaseEntity*)value_;
 
 @end
 
@@ -132,6 +146,11 @@ extern const struct TCSProviderInstanceFetchedProperties {
 - (void)setPrimitiveUsername:(NSString*)value;
 
 
+
+
+
+- (NSMutableSet*)primitiveEntities;
+- (void)setPrimitiveEntities:(NSMutableSet*)value;
 
 
 @end

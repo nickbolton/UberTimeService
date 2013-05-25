@@ -177,6 +177,171 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     return NO;
 }
 
+#pragma mark - Timer
+
+//- (void)updateTimerProperties:(TCSParseTimer *)parseTimer
+//                        timer:(TCSTimer *)timer {
+//    parseTimer.startTime = [self safePropertyValue:timer.startTime];
+//    parseTimer.endTime = [self safePropertyValue:timer.endTime];
+//    parseTimer.adjustment = timer.adjustmentValue;
+//    parseTimer.message = [self safePropertyValue:timer.message];
+//    parseTimer.instanceID = [NSString applicationInstanceId];
+//    parseTimer.entityVersion = timer.entityVersionValue;
+//
+//    NSAssert(timer.project.remoteId != nil, @"No remoteId for timer project");
+//    parseTimer.projectID = timer.project.remoteId;
+//}
+
+- (BOOL)createTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([NSStringFromClass([self class]) isEqualToString:timer.remoteProvider] == NO) {
+        return NO;
+    }
+
+    
+    if ([PFUser currentUser] == nil) return NO;
+
+    TCSParseTimer *parseTimer = [TCSParseTimer object];
+    parseTimer.user = [PFUser currentUser];
+    [self updateTimerProperties:parseTimer timer:timer];
+
+    NSManagedObjectID *objectID = timer.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseTimer objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseTimer.objectId);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+
+    return YES;
+}
+
+- (BOOL)updateTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (timer.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer update")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseTimer *parseTimer = [TCSParseTimer object];
+    parseTimer.objectId = timer.remoteId;
+    [self updateTimerProperties:parseTimer timer:timer];
+
+    NSManagedObjectID *objectID = timer.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseTimer objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+
+    return YES;
+}
+
+- (BOOL)deleteTimer:(TCSTimer *)timer
+            success:(void(^)(NSManagedObjectID *objectID))successBlock
+            failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (timer.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer delete")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseTimer *parseTimer = [TCSParseTimer object];
+    parseTimer.objectId = timer.remoteId;
+
+    NSManagedObjectID *objectID = timer.objectID;
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+            
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+            
+        } else {
+            
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+        }
+    }];
+    
+    return YES;
+}
+
 #pragma mark - Update Polling
 
 - (BOOL)pollForUpdates:(NSArray *)providerInstances {
