@@ -8,7 +8,6 @@ const struct TCSProviderInstanceAttributes TCSProviderInstanceAttributes = {
 	.name = @"name",
 	.password = @"password",
 	.remoteProvider = @"remoteProvider",
-	.type = @"type",
 	.userID = @"userID",
 	.username = @"username",
 };
@@ -75,13 +74,6 @@ const struct TCSProviderInstanceFetchedProperties TCSProviderInstanceFetchedProp
 
 
 @dynamic remoteProvider;
-
-
-
-
-
-
-@dynamic type;
 
 
 

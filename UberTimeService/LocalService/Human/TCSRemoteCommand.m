@@ -74,7 +74,7 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
     [TCSRemoteCommand MR_createInContext:managedObjectContext];
 
     remoteCommand.typeValue = TCSRemoteCommandTypeMessage;
-    remoteCommand.remoteProvider = remoteProvider;
+    remoteCommand.providerInstance = nil;
     remoteCommand.payload =
     [self
      payloadDataFromDictionary:@{
@@ -92,7 +92,7 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
     [TCSRemoteCommand MR_createInContext:managedObjectContext];
 
     remoteCommand.typeValue = TCSRemoteCommandTypeDeleteObject;
-    remoteCommand.remoteProvider = remoteProvider;
+    remoteCommand.providerInstance = nil;
     remoteCommand.payload =
     [self
      payloadDataFromDictionary:@{
@@ -109,7 +109,7 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
     [TCSRemoteCommand MR_createInContext:managedObjectContext];
 
     remoteCommand.typeValue = TCSRemoteCommandTypeResetData;
-    remoteCommand.remoteProvider = remoteProvider;
+    remoteCommand.providerInstance = nil;
 
     return remoteCommand;
 }

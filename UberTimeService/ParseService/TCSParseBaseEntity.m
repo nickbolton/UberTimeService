@@ -30,4 +30,8 @@
     return nil;
 }
 
+- (NSManagedObjectID *)utsProviderInstanceID {
+    return nil;
+}
+
 @end

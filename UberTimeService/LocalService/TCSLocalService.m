@@ -81,6 +81,22 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
 }
 
+- (NSString *)providerNameForInstance:(TCSProviderInstance *)providerInstance {
+
+    NSString *providerName = providerInstance.remoteProvider;
+
+    if (providerName == nil) {
+        providerName = _syncingRemoteProvider;
+    }
+
+    return providerName;
+}
+
+- (id <TCSServiceRemoteProvider>)remoteProviderForInstance:(TCSProviderInstance *)providerInstance {
+    NSString *providerName = [self providerNameForInstance:providerInstance];
+    return [[TCSService sharedInstance] serviceProviderNamed:providerName];
+}
+
 + (NSManagedObjectID *)objectIDFromStringID:(NSString *)stringID {
 
     NSManagedObjectContext *context =
@@ -352,20 +368,13 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                               modifiers:(NSInteger)modifiers
                               inContext:(NSManagedObjectContext *)context {
 
-    NSString *remoteProvider = providerInstance.remoteProvider;
-
-    if (
-    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
-        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
-    }
-
     TCSProject *project =
     [TCSProject MR_createInContext:context];
 
-    project.remoteProvider = remoteProvider;
+    project.providerInstance = providerInstance;
 
     project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-    project.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+    project.metadata.providerInstance = nil;
     [project.metadata markEntityAsUpdated];
 
     [project
@@ -379,16 +388,12 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)createProjectWithName:(NSString *)name
-                     remoteProvider:(NSString *)remoteProvider
+             providerInstance:(TCSProviderInstance *)providerInstance
             filteredModifiers:(NSInteger)filteredModifiers
                       keyCode:(NSInteger)keyCode
                     modifiers:(NSInteger)modifiers
                       success:(void(^)(TCSProject *project))successBlock
                       failure:(void(^)(NSError *error))failureBlock {
-
-    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
-        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
-    }
 
     __block TCSProject *project = nil;
 
@@ -397,7 +402,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         project =
         [self
          doCreateProjectWithName:name
-         remoteProvider:remoteProvider
+         providerInstance:providerInstance
          filteredModifiers:filteredModifiers
          keyCode:keyCode
          modifiers:modifiers
@@ -842,10 +847,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [groupTarget addChildrenObject:group];
 
         group.name = toProject.name;
-        group.remoteProvider = localToProject.remoteProvider;
+        group.providerInstance = localToProject.providerInstance;
 
         group.metadata = [TCSTimedEntityMetadata MR_createInContext:localContext];
-        group.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+        group.metadata.providerInstance = nil;
         [group.metadata markEntityAsUpdated];
 
         [group markEntityAsUpdated];
@@ -961,7 +966,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSProject *demotedProject =
         [self
          doCreateProjectWithName:parent.name
-         remoteProvider:parent.remoteProvider
+         providerInstance:parent.providerInstance
          filteredModifiers:0
          keyCode:0
          modifiers:0
@@ -995,7 +1000,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [localContext existingObjectWithID:project.objectID error:&projectError];
 
         timer = [TCSTimer MR_createInContext:localContext];
-        timer.remoteProvider = updatedProject.remoteProvider;
+        timer.providerInstance = updatedProject.providerInstance;
         timer.project = updatedProject;
 
         [timer
@@ -1057,7 +1062,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         timer = [TCSTimer MR_createInContext:localContext];
         timer.project = updatedProject;
-        timer.remoteProvider = updatedProject.remoteProvider;
+        timer.providerInstance = updatedProject.providerInstance;
 
         [timer
          updateWithStartTime:startTime
@@ -1439,7 +1444,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     TCSTimer *rolledTimer =
     [TCSTimer MR_createInContext:project.managedObjectContext];
     rolledTimer.project = project;
-    rolledTimer.remoteProvider = project.remoteProvider;
+    rolledTimer.providerInstance = project.providerInstance;
 
     [rolledTimer
      updateWithStartTime:timer.endTime
@@ -1795,13 +1800,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)createCannedMessage:(NSString *)message
-             remoteProvider:(NSString *)remoteProvider
+           providerInstance:(TCSProviderInstance *)providerInstance
                     success:(void(^)(TCSCannedMessage *cannedMessage))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
-
-    if (remoteProvider == nil && _syncingRemoteProvider != nil) {
-        remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
-    }
 
     __block TCSCannedMessage *cannedMessage = nil;
     __block NSError *localError = nil;
@@ -1825,7 +1826,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         }
 
         cannedMessage = [TCSCannedMessage MR_createInContext:localContext];
-        cannedMessage.remoteProvider = remoteProvider;
+        cannedMessage.providerInstance = providerInstance;
 
         [cannedMessage
          updateWithMessage:message
@@ -2097,7 +2098,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 - (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance {
 
     id <TCSServiceRemoteProvider> remoteProvider =
-    [[TCSService sharedInstance] serviceProviderNamed:providerInstance.remoteProvider];
+    [self remoteProviderForInstance:providerInstance];
 
     if (remoteProvider != nil) {
         [remoteProvider
@@ -2269,79 +2270,75 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     for (TCSBaseEntity *entity in updates) {
 
-        if (entity.remoteProvider != nil) {
+        id <TCSServiceRemoteProvider> remoteProvider =
+        [self providerNameForInstance:entity.providerInstance];
 
-            id <TCSServiceRemoteProvider> remoteProvider =
-            [[TCSService sharedInstance]
-             serviceProviderNamed:entity.remoteProvider];
+        if (remoteProvider != nil) {
 
-            if (remoteProvider != nil) {
+            [remoteProvider holdUpdates];
 
-                [remoteProvider holdUpdates];
+            [remoteProviders addObject:remoteProvider];
 
-                [remoteProviders addObject:remoteProvider];
+            if (entity.remoteId == nil) {
 
-                if (entity.remoteId == nil) {
+                [self
+                 createRemoteEntity:entity
+                 success:^(NSManagedObjectID *objectID, NSString *remoteID) {
 
-                    [self
-                     createRemoteEntity:entity
-                     success:^(NSManagedObjectID *objectID, NSString *remoteID) {
+                     NSAssert(NO, @"should not have saved yet");
 
-                         NSAssert(NO, @"should not have saved yet");
+                 } failure:^(NSError *error) {
+                     NSLog(@"Error: %@", error);
+                 }];
 
-                     } failure:^(NSError *error) {
-                         NSLog(@"Error: %@", error);
-                     }];
+            } else if (entity.pendingRemoteDeleteValue) {
 
-                } else if (entity.pendingRemoteDeleteValue) {
+                if (entity.remoteId != nil) {
 
-                    if (entity.remoteId != nil) {
+                    void (^executionBlock)(void) = ^{
+                        [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
 
-                        void (^executionBlock)(void) = ^{
-                            [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+                            NSError *error = nil;
 
-                                NSError *error = nil;
+                            TCSBaseEntity *localEntity = (id)
+                            [localContext existingObjectWithID:entity.objectID error:&error];
 
-                                TCSBaseEntity *localEntity = (id)
-                                [localContext existingObjectWithID:entity.objectID error:&error];
-
-                                if (error != nil) {
-                                    NSLog(@"Error: %@", error);
-                                } else {
-                                    [localEntity MR_deleteInContext:localContext];
-                                }
-                            }];
-                        };
-                        
-                        [self
-                         deleteRemoteEntity:entity
-                         success:^(NSManagedObjectID *objectID) {
-
-                             executionBlock();
-
-                         } failure:^(NSError *error) {
-                             NSLog(@"Error: %@", error);
-
-                             if ([error.domain isEqualToString:kTCErrorDomain]) {
-                                 if (error.code == TCErrorCodeRemoteObjectNotFound) {
-                                     executionBlock();
-                                 }
-                             }
-                         }];
-                    }
-
-                } else {
+                            if (error != nil) {
+                                NSLog(@"Error: %@", error);
+                            } else {
+                                [localEntity MR_deleteInContext:localContext];
+                            }
+                        }];
+                    };
 
                     [self
-                     updateRemoteEntity:entity
+                     deleteRemoteEntity:entity
                      success:^(NSManagedObjectID *objectID) {
-                         
-                         NSAssert(NO, @"should not have saved yet");
+
+                         executionBlock();
 
                      } failure:^(NSError *error) {
                          NSLog(@"Error: %@", error);
+
+                         if ([error.domain isEqualToString:kTCErrorDomain]) {
+                             if (error.code == TCErrorCodeRemoteObjectNotFound) {
+                                 executionBlock();
+                             }
+                         }
                      }];
                 }
+
+            } else {
+
+                [self
+                 updateRemoteEntity:entity
+                 success:^(NSManagedObjectID *objectID) {
+
+                     NSAssert(NO, @"should not have saved yet");
+                     
+                 } failure:^(NSError *error) {
+                     NSLog(@"Error: %@", error);
+                 }];
             }
         }
     }
@@ -2405,8 +2402,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                    failure:(void(^)(NSError *error))failureBlock {
 
     id <TCSServiceRemoteProvider> remoteProvider =
-    [[TCSService sharedInstance]
-     serviceProviderNamed:entity.remoteProvider];
+    [self remoteProviderForInstance:entity.providerInstance];
 
     [entity.class
      createRemoteObject:entity
@@ -2427,8 +2423,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                    failure:(void(^)(NSError *error))failureBlock {
 
     id <TCSServiceRemoteProvider> remoteProvider =
-    [[TCSService sharedInstance]
-     serviceProviderNamed:entity.remoteProvider];
+    [self remoteProviderForInstance:entity.providerInstance];
 
     [entity.class
      updateRemoteObject:entity
@@ -2449,8 +2444,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                    failure:(void(^)(NSError *error))failureBlock {
 
     id <TCSServiceRemoteProvider> remoteProvider =
-    [[TCSService sharedInstance]
-     serviceProviderNamed:entity.remoteProvider];
+    [self remoteProviderForInstance:entity.providerInstance];
 
     [entity.class
      deleteRemoteObject:entity
@@ -2461,7 +2455,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
          [self
           sendDeleteObjectCommand:entity.remoteId
-          withProvider:entity.remoteProvider
+          withProvider:entity.providerInstance
           success:^{
 
               if (successBlock != nil) {
@@ -2526,6 +2520,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                 TCSBaseEntity *inserted = nil;
                 TCSBaseEntity *updated = nil;
                 NSArray *deleted = nil;
+                TCSProviderInstance *providerInstance =
+                [self providerInstanceWithID:obj.utsProviderInstanceID];
 
                 if (localType == [TCSRemoteCommand class] && [obj conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
                     deleted =
@@ -2536,42 +2532,40 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                 } else if (localType == [TCSProviderInstance class] && [obj conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
                     [self
                      handleProviderInstanceUpdate:(id)obj
-                     providerName:providerName
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
                 } else if (localType == [TCSGroup class] && [obj conformsToProtocol:@protocol(TCSProvidedGroup)]) {
                     [self
                      handleGroupUpdate:(id)obj
-                     providerName:providerName
+                     providerInstance:providerInstance
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
                 } else if (localType == [TCSProject class] && [obj conformsToProtocol:@protocol(TCSProvidedProject)]) {
                     [self
                      handleProjectUpdate:(id)obj
-                     providerName:providerName
+                     providerInstance:providerInstance
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
                 } else if (localType == [TCSTimer class] && [obj conformsToProtocol:@protocol(TCSProvidedTimer)]) {
                     [self
                      handlTimerUpdate:(id)obj
-                     providerName:providerName
+                     providerInstance:providerInstance
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
                 } else if (localType == [TCSCannedMessage class] && [obj conformsToProtocol:@protocol(TCSProvidedCannedMessage)]) {
                     [self
                      handleCannedMessageUpdate:(id)obj
-                     providerName:providerName
+                     providerInstance:providerInstance
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
                 } else if (localType == [TCSTimedEntityMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)]) {
                     [self
                      handleTimedEntityMetadataUpdate:(id)obj
-                     providerName:providerName
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
@@ -2612,7 +2606,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
                 for (TCSGroup *group in [self allGroupsInContext:localContext]) {
 
-                    if ([providerName isEqual:group.remoteProvider]) {
+                    if ([providerName isEqual:group.providerInstance.remoteProvider]) {
 
                         if ([remainingEntityIDs containsObject:group.objectID] == NO) {
                             [group MR_deleteInContext:localContext];
@@ -2629,7 +2623,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
                 for (TCSProject *project in [self allProjectsInContext:localContext]) {
 
-                    if ([providerName isEqual:project.remoteProvider]) {
+                    if ([providerName isEqual:project.providerInstance.remoteProvider]) {
 
                         if ([remainingEntityIDs containsObject:project.objectID] == NO) {
                             [project MR_deleteInContext:localContext];
@@ -2646,7 +2640,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
                 for (TCSTimer *timer in [self allTimersInContext:localContext]) {
 
-                    if ([providerName isEqual:timer.remoteProvider]) {
+                    if ([providerName isEqual:timer.providerInstance.remoteProvider]) {
 
                         if ([remainingEntityIDs containsObject:timer.objectID] == NO) {
                             [timer MR_deleteInContext:localContext];
@@ -2803,7 +2797,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handleGroupUpdate:(id <TCSProvidedGroup>)providedGroup
-             providerName:(NSString *)providerName
+         providerInstance:(TCSProviderInstance *)providerInstance
                  inserted:(TCSBaseEntity **)inserted
                   updated:(TCSBaseEntity **)updated
                 inContext:(NSManagedObjectContext *)context {
@@ -2852,10 +2846,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         TCSGroup *group =
         [TCSGroup MR_createInContext:context];
-        group.remoteProvider = providerName;
+        group.providerInstance = providerInstance;
 
         group.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-        group.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+        group.metadata.providerInstance = nil;
         [group.metadata markEntityAsUpdated];
 
         [group
@@ -2872,7 +2866,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handleProjectUpdate:(id <TCSProvidedProject>)providedProject
-               providerName:(NSString *)providerName
+           providerInstance:(TCSProviderInstance *)providerInstance
                    inserted:(TCSBaseEntity **)inserted
                     updated:(TCSBaseEntity **)updated
                   inContext:(NSManagedObjectContext *)context {
@@ -2940,14 +2934,14 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     } else {
 
         id <TCSServiceRemoteProvider> remoteProvider =
-        [[TCSService sharedInstance] serviceProviderNamed:providerName];
+        [self remoteProviderForInstance:providerInstance];
 
         TCSProject *project =
         [TCSProject MR_createInContext:context];
-        project.remoteProvider = providerName;
+        project.providerInstance = providerInstance;
 
         project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-        project.metadata.remoteProvider = NSStringFromClass([_syncingRemoteProvider class]);
+        project.metadata.providerInstance = nil;
         project.metadata.archivedValue = remoteProvider.importProjectsAsArchived;
         [project.metadata markEntityAsUpdated];
 
@@ -2967,7 +2961,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handlTimerUpdate:(id <TCSProvidedTimer>)providedTimer
-            providerName:(NSString *)providerName
+        providerInstance:(TCSProviderInstance *)providerInstance
                 inserted:(TCSBaseEntity **)inserted
                  updated:(TCSBaseEntity **)updated
                inContext:(NSManagedObjectContext *)context {
@@ -3000,8 +2994,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     if (providedTimer.utsProjectID != nil) {
 
         id <TCSServiceRemoteProvider> remoteProvider =
-        [[TCSService sharedInstance]
-         serviceProviderNamed:providerName];
+        [self remoteProviderForInstance:providerInstance];
 
         NSString *projectIDSeparator = [remoteProvider timerProjectIDSeparator];
 
@@ -3084,7 +3077,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         TCSTimer *timer =
         [TCSTimer MR_createInContext:context];
-        timer.remoteProvider = providerName;
+        timer.providerInstance = providerInstance;
 
         [timer
          updateWithStartTime:providedTimer.utsStartTime
@@ -3105,7 +3098,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handleCannedMessageUpdate:(id <TCSProvidedCannedMessage>)providedCannedMessage
-                     providerName:(NSString *)providerName
+                 providerInstance:(TCSProviderInstance *)providerInstance
                          inserted:(TCSBaseEntity **)inserted
                           updated:(TCSBaseEntity **)updated
                         inContext:(NSManagedObjectContext *)context {
@@ -3155,7 +3148,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         TCSCannedMessage *cannedMessage =
         [TCSCannedMessage MR_createInContext:context];
-        cannedMessage.remoteProvider = providerName;
+        cannedMessage.providerInstance = providerInstance;
 
         [cannedMessage
          updateWithMessage:providedCannedMessage.utsMessage
@@ -3172,7 +3165,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handleTimedEntityMetadataUpdate:(id <TCSProvidedTimedEntityMetadata>)providedTimedEntityMetadata
-                           providerName:(NSString *)providerName
                                inserted:(TCSBaseEntity **)inserted
                                 updated:(TCSBaseEntity **)updated
                               inContext:(NSManagedObjectContext *)context {
@@ -3226,7 +3218,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         TCSTimedEntityMetadata *timedEntityMetadata =
         [TCSTimedEntityMetadata MR_createInContext:context];
-        timedEntityMetadata.remoteProvider = providerName;
+        timedEntityMetadata.providerInstance = nil;
 
         [timedEntityMetadata
          updateWithColor:providedTimedEntityMetadata.utsColor
@@ -3247,7 +3239,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handleProviderInstanceUpdate:(id <TCSProvidedProviderInstance>)providedProviderInstance
-                        providerName:(NSString *)providerName
                             inserted:(TCSBaseEntity **)inserted
                              updated:(TCSBaseEntity **)updated
                            inContext:(NSManagedObjectContext *)context {
@@ -3302,7 +3293,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         TCSProviderInstance *providerInstance =
         [TCSProviderInstance MR_createInContext:context];
-        providerInstance.remoteProvider = providerName;
+        providerInstance.providerInstance = nil;
 
         [providerInstance
          updateWithName:providedProviderInstance.utsName

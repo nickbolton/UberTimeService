@@ -46,14 +46,14 @@
 - (void)markEntityAsUpdated {
     self.entityVersionValue++;
     self.pendingValue =
-    [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
+    [[TCSService sharedInstance] serviceProviderNamed:self.providerInstance.remoteProvider] != nil;
 }
 
 - (void)markEntityAsDeleted {
     self.entityVersionValue++;
     self.pendingRemoteDeleteValue = YES;
     self.pendingValue =
-    [[TCSService sharedInstance] serviceProviderNamed:self.remoteProvider] != nil;
+    [[TCSService sharedInstance] serviceProviderNamed:self.providerInstance.remoteProvider] != nil;
 }
 
 - (id)nonNullValue:(id)value {

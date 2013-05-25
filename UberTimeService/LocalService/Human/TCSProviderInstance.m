@@ -110,6 +110,7 @@
     self.password = [self nonNullValue:password];
     self.userID = [self nonNullValue:userID];
     self.remoteProvider = [self nonNullValue:remoteProvider];
+    self.providerInstance = nil;
 
     [super
      updateWithEntityVersion:entityVersion

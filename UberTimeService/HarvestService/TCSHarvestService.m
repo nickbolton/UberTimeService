@@ -198,44 +198,44 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    if ([NSStringFromClass([self class]) isEqualToString:timer.remoteProvider] == NO) {
-        return NO;
-    }
-
-    
-    if ([PFUser currentUser] == nil) return NO;
-
-    TCSParseTimer *parseTimer = [TCSParseTimer object];
-    parseTimer.user = [PFUser currentUser];
-    [self updateTimerProperties:parseTimer timer:timer];
-
-    NSManagedObjectID *objectID = timer.objectID;
-
-    if (self.isHoldingUpdates) {
-        [self bufferParseObject:(id)parseTimer objectID:objectID];
-        return NO;
-    }
-
-    if (_connected == NO) {
-        return NO;
-    }
-
-    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error != nil) {
-
-            if (failureBlock != nil) {
-                failureBlock(error);
-            }
-
-        } else {
-
-            if (successBlock != nil) {
-                successBlock(objectID, parseTimer.objectId);
-            }
-
-            [self sendPushNotification];
-        }
-    }];
+//    if ([NSStringFromClass([self class]) isEqualToString:timer.remoteProvider] == NO) {
+//        return NO;
+//    }
+//
+//    
+//    if ([PFUser currentUser] == nil) return NO;
+//
+//    TCSParseTimer *parseTimer = [TCSParseTimer object];
+//    parseTimer.user = [PFUser currentUser];
+//    [self updateTimerProperties:parseTimer timer:timer];
+//
+//    NSManagedObjectID *objectID = timer.objectID;
+//
+//    if (self.isHoldingUpdates) {
+//        [self bufferParseObject:(id)parseTimer objectID:objectID];
+//        return NO;
+//    }
+//
+//    if (_connected == NO) {
+//        return NO;
+//    }
+//
+//    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (error != nil) {
+//
+//            if (failureBlock != nil) {
+//                failureBlock(error);
+//            }
+//
+//        } else {
+//
+//            if (successBlock != nil) {
+//                successBlock(objectID, parseTimer.objectId);
+//            }
+//
+//            [self sendPushNotification];
+//        }
+//    }];
 
     return YES;
 }
@@ -246,52 +246,52 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    if ([PFUser currentUser] == nil) return NO;
-
-    if (timer.remoteId.length == 0) {
-
-        if (failureBlock != nil) {
-
-            NSError *error =
-            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer update")];
-
-            failureBlock(error);
-        }
-        return NO;
-    }
-
-    TCSParseTimer *parseTimer = [TCSParseTimer object];
-    parseTimer.objectId = timer.remoteId;
-    [self updateTimerProperties:parseTimer timer:timer];
-
-    NSManagedObjectID *objectID = timer.objectID;
-
-    if (self.isHoldingUpdates) {
-        [self bufferParseObject:(id)parseTimer objectID:objectID];
-        return NO;
-    }
-
-    if (_connected == NO) {
-        return NO;
-    }
-
-    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error != nil) {
-
-            if (failureBlock != nil) {
-                failureBlock(error);
-            }
-
-        } else {
-
-            if (successBlock != nil) {
-                successBlock(objectID);
-            }
-
-            [self sendPushNotification];
-        }
-    }];
-
+//    if ([PFUser currentUser] == nil) return NO;
+//
+//    if (timer.remoteId.length == 0) {
+//
+//        if (failureBlock != nil) {
+//
+//            NSError *error =
+//            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer update")];
+//
+//            failureBlock(error);
+//        }
+//        return NO;
+//    }
+//
+//    TCSParseTimer *parseTimer = [TCSParseTimer object];
+//    parseTimer.objectId = timer.remoteId;
+//    [self updateTimerProperties:parseTimer timer:timer];
+//
+//    NSManagedObjectID *objectID = timer.objectID;
+//
+//    if (self.isHoldingUpdates) {
+//        [self bufferParseObject:(id)parseTimer objectID:objectID];
+//        return NO;
+//    }
+//
+//    if (_connected == NO) {
+//        return NO;
+//    }
+//
+//    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (error != nil) {
+//
+//            if (failureBlock != nil) {
+//                failureBlock(error);
+//            }
+//
+//        } else {
+//
+//            if (successBlock != nil) {
+//                successBlock(objectID);
+//            }
+//
+//            [self sendPushNotification];
+//        }
+//    }];
+//
     return YES;
 }
 
@@ -301,44 +301,44 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    if ([PFUser currentUser] == nil) return NO;
-
-    if (timer.remoteId.length == 0) {
-
-        if (failureBlock != nil) {
-
-            NSError *error =
-            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer delete")];
-
-            failureBlock(error);
-        }
-        return NO;
-    }
-
-    TCSParseTimer *parseTimer = [TCSParseTimer object];
-    parseTimer.objectId = timer.remoteId;
-
-    NSManagedObjectID *objectID = timer.objectID;
-
-    if (_connected == NO) {
-        return NO;
-    }
-
-    [parseTimer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error != nil) {
-            
-            if (failureBlock != nil) {
-                failureBlock(error);
-            }
-            
-        } else {
-            
-            if (successBlock != nil) {
-                successBlock(objectID);
-            }
-        }
-    }];
-    
+//    if ([PFUser currentUser] == nil) return NO;
+//
+//    if (timer.remoteId.length == 0) {
+//
+//        if (failureBlock != nil) {
+//
+//            NSError *error =
+//            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer delete")];
+//
+//            failureBlock(error);
+//        }
+//        return NO;
+//    }
+//
+//    TCSParseTimer *parseTimer = [TCSParseTimer object];
+//    parseTimer.objectId = timer.remoteId;
+//
+//    NSManagedObjectID *objectID = timer.objectID;
+//
+//    if (_connected == NO) {
+//        return NO;
+//    }
+//
+//    [parseTimer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (error != nil) {
+//            
+//            if (failureBlock != nil) {
+//                failureBlock(error);
+//            }
+//            
+//        } else {
+//            
+//            if (successBlock != nil) {
+//                successBlock(objectID);
+//            }
+//        }
+//    }];
+//    
     return YES;
 }
 
@@ -476,6 +476,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         group.utsRemoteID = groupDict[@"id"];
         group.utsName = groupDict[@"name"];
         group.utsUpdateTime = updateTime;
+        group.utsProviderInstanceID = providerInstance.objectID;
 
         [normalizedGroups addObject:group];
 
@@ -489,7 +490,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             project.utsRemoteID = projectDict[@"id"];
             project.utsName = projectDict[@"name"];
             project.utsParentID = group.utsRemoteID;
-            group.utsUpdateTime = updateTime;
+            project.utsProviderInstanceID = providerInstance.objectID;
+            project.utsUpdateTime = updateTime;
 
             [normalizedProjects addObject:project];
         }
@@ -578,6 +580,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             [timestampFormatter dateFromString:startDateString];
             timer.utsEndTime = [timer.utsStartTime dateByAddingTimeInterval:duration];
             timer.utsMessage = timerDict[@"notes"];
+            timer.utsProviderInstanceID = providerInstance.objectID;
 
             timer.utsProjectID =
             [NSString stringWithFormat:@"%@%@%@",

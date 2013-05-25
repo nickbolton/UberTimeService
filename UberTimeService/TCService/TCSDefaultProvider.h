@@ -24,6 +24,7 @@
 @property (nonatomic) NSInteger utsEntityVersion;
 @property (nonatomic) Class utsLocalEntityType;
 @property (nonatomic, strong) NSDate *utsUpdateTime;
+@property (nonatomic, strong) NSManagedObjectID *utsProviderInstanceID;
 @end
 
 @interface TCSDefaultProviderTimedEntity : TCSDefaultProviderBase <TCSProvidedTimedEntity>
