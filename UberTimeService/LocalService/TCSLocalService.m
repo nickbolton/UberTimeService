@@ -352,7 +352,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                               modifiers:(NSInteger)modifiers
                               inContext:(NSManagedObjectContext *)context {
 
-    NSString *remoteProvider = 
+    NSString *remoteProvider = providerInstance.remoteProvider;
+
+    if (
     if (remoteProvider == nil && _syncingRemoteProvider != nil) {
         remoteProvider = NSStringFromClass(_syncingRemoteProvider.class);
     }
@@ -2030,6 +2032,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                           type:(NSString *)type
                       username:(NSString *)username
                       password:(NSString *)password
+                remoteProvider:(NSString *)remoteProvider
                        success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                        failure:(void(^)(NSError *error))failureBlock {
 
@@ -2054,6 +2057,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          type:type
          username:username
          password:password
+         remoteProvider:remoteProvider
          userID:nil
          entityVersion:0
          remoteId:nil
@@ -2138,6 +2142,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      type:providerInstance.type
      username:providerInstance.username
      password:providerInstance.password
+     remoteProvider:providerInstance.remoteProvider
      userID:providerInstance.userID
      entityVersion:providerInstance.entityVersionValue
      remoteId:providerInstance.remoteId
@@ -3277,6 +3282,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
              type:providedProviderInstance.utsType
              username:providedProviderInstance.utsUsername
              password:providedProviderInstance.utsPassword
+             remoteProvider:providedProviderInstance.utsRemoteProvider
              userID:providedProviderInstance.utsUserID
              entityVersion:providedProviderInstance.utsEntityVersion
              remoteId:providedProviderInstance.utsRemoteID
@@ -3304,6 +3310,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          type:providedProviderInstance.utsType
          username:providedProviderInstance.utsUsername
          password:providedProviderInstance.utsPassword
+         remoteProvider:providedProviderInstance.utsRemoteProvider
          userID:providedProviderInstance.utsUserID
          entityVersion:providedProviderInstance.utsEntityVersion
          remoteId:providedProviderInstance.utsRemoteID

@@ -730,6 +730,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
                         type:(NSString *)type
                     username:(NSString *)username
                     password:(NSString *)password
+                remoteProvider:(NSString *)remoteProvider
                      success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                      failure:(void(^)(NSError *error))failureBlock {
     [_localService

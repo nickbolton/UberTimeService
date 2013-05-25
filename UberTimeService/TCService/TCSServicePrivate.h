@@ -96,6 +96,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSString *utsType;
 @property (nonatomic, readonly) NSString *utsUsername;
 @property (nonatomic, readonly) NSString *utsUserID;
+@property (nonatomic, readonly) NSString *utsRemoteProvider;
 @end
 
 @protocol TCSProvidedTimedEntityMetadata <TCSProvidedBaseEntity>
@@ -279,6 +280,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
                           type:(NSString *)type
                       username:(NSString *)username
                       password:(NSString *)password
+                remoteProvider:(NSString *)remoteProvider
                        success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                        failure:(void(^)(NSError *error))failureBlock;
 

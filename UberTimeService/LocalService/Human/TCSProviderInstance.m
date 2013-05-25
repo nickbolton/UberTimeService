@@ -96,6 +96,7 @@
                   type:(NSString *)type
               username:(NSString *)username
               password:(NSString *)password
+        remoteProvider:(NSString *)remoteProvider
                 userID:(NSString *)userID
          entityVersion:(int64_t)entityVersion
               remoteId:(NSString *)remoteId
@@ -108,6 +109,7 @@
     self.username = [self nonNullValue:username];
     self.password = [self nonNullValue:password];
     self.userID = [self nonNullValue:userID];
+    self.remoteProvider = [self nonNullValue:remoteProvider];
 
     [super
      updateWithEntityVersion:entityVersion

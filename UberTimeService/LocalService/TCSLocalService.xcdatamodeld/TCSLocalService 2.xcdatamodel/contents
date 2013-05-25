@@ -5,7 +5,6 @@
         <attribute name="pending" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="pendingRemoteDelete" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="remoteId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="remoteProvider" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updateTime" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="providerInstance" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProviderInstance" inverseName="entities" inverseEntity="TCSProviderInstance" syncable="YES"/>
     </entity>
@@ -56,7 +55,7 @@
         <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProject" inverseName="timers" inverseEntity="TCSProject" syncable="YES"/>
     </entity>
     <elements>
-        <element name="TCSBaseEntity" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="TCSBaseEntity" positionX="160" positionY="192" width="128" height="135"/>
         <element name="TCSCannedMessage" positionX="160" positionY="192" width="128" height="75"/>
         <element name="TCSGroup" positionX="160" positionY="192" width="128" height="60"/>
         <element name="TCSProject" positionX="160" positionY="192" width="128" height="60"/>

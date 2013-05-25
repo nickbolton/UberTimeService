@@ -8,7 +8,6 @@ const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
 	.pending = @"pending",
 	.pendingRemoteDelete = @"pendingRemoteDelete",
 	.remoteId = @"remoteId",
-	.remoteProvider = @"remoteProvider",
 	.updateTime = @"updateTime",
 };
 
@@ -143,13 +142,6 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 
 @dynamic remoteId;
-
-
-
-
-
-
-@dynamic remoteProvider;
 
 
 

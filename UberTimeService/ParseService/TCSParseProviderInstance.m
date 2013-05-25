@@ -17,6 +17,7 @@
 @dynamic type;
 @dynamic username;
 @dynamic userID;
+@dynamic remoteProvider;
 
 + (NSString *)parseClassName {
     return NSStringFromClass([self class]);
@@ -44,6 +45,10 @@
 
 - (NSString *)utsUserID {
     return self.userID;
+}
+
+- (NSString *)utsRemoteProvider {
+    return self.remoteProvider;
 }
 
 @end

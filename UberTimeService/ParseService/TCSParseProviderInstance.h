@@ -18,5 +18,6 @@
 @property (nonatomic) NSString *type;
 @property (nonatomic) NSString *username;
 @property (nonatomic) NSString *userID;
+@property (nonatomic) NSString *remoteProvider;
 
 @end
