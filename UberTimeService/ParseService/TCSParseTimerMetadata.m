@@ -19,6 +19,10 @@
     return NSStringFromClass([self class]);
 }
 
+- (Class)utsLocalEntityType {
+    return [TCSTimerMetadata class];
+}
+
 - (NSDate *)utsStartTime {
     return self.startTime;
 }

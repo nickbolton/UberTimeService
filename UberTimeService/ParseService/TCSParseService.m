@@ -25,6 +25,18 @@
 #import "TCSCommon.h"
 #import "TCSParseSystemTime.h"
 
+static inline NSError * TCSParseServiceWrapObjectNotFoundError(NSError *error) {
+    if ([error.domain isEqualToString:@"Parse"]) {
+        if (error.code == kPFErrorObjectNotFound) {
+            error =
+            [NSError
+             errorWithCode:TCErrorCodeRemoteObjectNotFound
+             message:error.localizedDescription];
+        }
+    }
+    return error;
+}
+
 NSString * const kTCSParseLastPollingDateKey = @"parse-last-polling-date";
 NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
@@ -674,16 +686,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-
-                if ([error.domain isEqualToString:@"Parse"]) {
-                    if (error.code == kPFErrorObjectNotFound) {
-                        error =
-                        [NSError
-                         errorWithCode:TCErrorCodeRemoteObjectNotFound
-                         message:error.localizedDescription];
-                    }
-                }
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
 
         } else {
@@ -844,7 +847,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
 
         } else {
@@ -1001,7 +1004,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
 
         } else {
@@ -1156,7 +1159,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
 
         } else {
@@ -1319,7 +1322,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
             
         } else {
@@ -1488,7 +1491,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
 
         } else {
@@ -1655,7 +1658,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         if (error != nil) {
 
             if (failureBlock != nil) {
-                failureBlock(error);
+                failureBlock(TCSParseServiceWrapObjectNotFoundError(error));
             }
 
         } else {
@@ -1869,7 +1872,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     NSArray *results = [query findObjects:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return results;
@@ -1890,7 +1893,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     NSArray *results = [query findObjects:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return results;
@@ -1912,7 +1915,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     NSArray *results = [query findObjects:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return results;
@@ -1937,7 +1940,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 //    NSLog(@"polling timers: %@", results);
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return results;
@@ -1958,7 +1961,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     NSArray *results = [query findObjects:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return results;

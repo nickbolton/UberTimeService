@@ -64,7 +64,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     
     if (format == nil) {
         format =
-        @"{notes:'%@',hours:%f,project_id:%@,task_id:%@,spent_at:'%@'}";
+        @"{\"notes\":\"%@\",\"hours\":\"%f\",\"project_id\":\"%@\",\"task_id\":\"%@\",\"spent_at\":\"%@\"}";//,\"started_at\":\"8:00am\",\"ended_at\":\"10:55am\"}";
     }
     return format;
 }
@@ -269,10 +269,39 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
      headers:headers
      postData:postData
      userContext:nil
-     success:^(id json, id userContext) {
+     success:^(NSDictionary *json, id userContext) {
 
-         if (successBlock != nil) {
-             successBlock(timer.objectID, nil);
+         if ([json isKindOfClass:[NSDictionary class]]) {
+
+             NSString *remoteId = [self safeRemoteID:json[@"id"]];
+
+             if (remoteId != nil) {
+
+                 if (successBlock != nil) {
+                     successBlock(timer.objectID, remoteId);
+                 }
+                 
+             } else {
+
+                 if (failureBlock != nil) {
+                     NSError *error =
+                     [NSError
+                      errorWithCode:TCErrorRequestServerError
+                      message:TCSLoc(@"Invalid create timer reply. No remote ID.")];
+
+                     failureBlock(error);
+                 }
+             }
+         } else {
+
+             if (failureBlock != nil) {
+                 NSError *error =
+                 [NSError
+                  errorWithCode:TCErrorRequestServerError
+                  message:TCSLoc(@"Invalid create timer reply. Not a dictionary.")];
+
+                 failureBlock(error);
+             }
          }
          
      } failure:^(NSError *error, id userContext) {
@@ -291,52 +320,103 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-//    if ([PFUser currentUser] == nil) return NO;
-//
-//    if (timer.remoteId.length == 0) {
-//
-//        if (failureBlock != nil) {
-//
-//            NSError *error =
-//            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer update")];
-//
-//            failureBlock(error);
-//        }
-//        return NO;
-//    }
-//
-//    TCSParseTimer *parseTimer = [TCSParseTimer object];
-//    parseTimer.objectId = timer.remoteId;
-//    [self updateTimerProperties:parseTimer timer:timer];
-//
-//    NSManagedObjectID *objectID = timer.objectID;
-//
-//    if (self.isHoldingUpdates) {
-//        [self bufferParseObject:(id)parseTimer objectID:objectID];
-//        return NO;
-//    }
-//
-//    if (_connected == NO) {
-//        return NO;
-//    }
-//
-//    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        if (error != nil) {
-//
-//            if (failureBlock != nil) {
-//                failureBlock(error);
-//            }
-//
-//        } else {
-//
-//            if (successBlock != nil) {
-//                successBlock(objectID);
-//            }
-//
-//            [self sendPushNotification];
-//        }
-//    }];
-//
+    if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
+        NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
+        return NO;
+    }
+
+    if (timer.providerInstance.userID == nil) {
+        NSLog(@"%s WARN : provider to harvest: %@", timer.providerInstance.remoteProvider);
+
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification
+         object:self
+         userInfo:@{
+         kTCSServiceRemoteProviderInstanceKey : timer.providerInstance,
+         }];
+        return NO;
+    }
+
+    if (timer.remoteId == nil) {
+        NSLog(@"%s WARN : no timer remoteID: %@", timer);
+        return NO;
+    }
+
+    NSString *authString = [NSString stringWithFormat:@"%@:%@",
+                            timer.providerInstance.username,
+                            timer.providerInstance.password];
+
+    NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *auth = [authData base64EncodedString];
+
+    NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"application/json", @"Accept",
+                             @"application/json", @"Content-Type",
+                             [NSString stringWithFormat:@"Basic %@", auth], @"Authorization",
+                             nil];
+
+    NSDateFormatter *dateFormatter = [self timerEntryFormatter];
+
+    NSString *postData = [NSString stringWithFormat:[self addTimerPostFormat],
+                          timer.message != nil ? timer.message : @"",
+                          MAX(0.01666666666667f, [timer elapsedTimeInHours]),
+                          timer.project.parent.remoteId,
+                          timer.project.remoteId,
+                          [dateFormatter stringFromDate:timer.metadata.startTime]];
+
+    NSURL *url =
+    [NSURL
+     URLWithString:
+     [NSString stringWithFormat:@"%@/daily/update/%@",
+      timer.providerInstance.baseURL, timer.remoteId]];
+
+    [self
+     postWithURL:url
+     headers:headers
+     postData:postData
+     userContext:nil
+     success:^(NSDictionary *json, id userContext) {
+
+         if ([json isKindOfClass:[NSDictionary class]]) {
+
+             NSString *remoteId = [self safeRemoteID:json[@"id"]];
+
+             if (remoteId != nil) {
+
+                 if (successBlock != nil) {
+                     successBlock(timer.objectID);
+                 }
+
+             } else {
+
+                 if (failureBlock != nil) {
+                     NSError *error =
+                     [NSError
+                      errorWithCode:TCErrorRequestServerError
+                      message:TCSLoc(@"Invalid create timer reply. No remote ID.")];
+
+                     failureBlock(error);
+                 }
+             }
+         } else {
+
+             if (failureBlock != nil) {
+                 NSError *error =
+                 [NSError
+                  errorWithCode:TCErrorRequestServerError
+                  message:TCSLoc(@"Invalid create timer reply. Not a dictionary.")];
+
+                 failureBlock(error);
+             }
+         }
+
+     } failure:^(NSError *error, id userContext) {
+         
+         if (failureBlock != nil) {
+             failureBlock(error);
+         }
+     }];
+    
     return YES;
 }
 
@@ -346,44 +426,65 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-//    if ([PFUser currentUser] == nil) return NO;
-//
-//    if (timer.remoteId.length == 0) {
-//
-//        if (failureBlock != nil) {
-//
-//            NSError *error =
-//            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timer delete")];
-//
-//            failureBlock(error);
-//        }
-//        return NO;
-//    }
-//
-//    TCSParseTimer *parseTimer = [TCSParseTimer object];
-//    parseTimer.objectId = timer.remoteId;
-//
-//    NSManagedObjectID *objectID = timer.objectID;
-//
-//    if (_connected == NO) {
-//        return NO;
-//    }
-//
-//    [parseTimer deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        if (error != nil) {
-//            
-//            if (failureBlock != nil) {
-//                failureBlock(error);
-//            }
-//            
-//        } else {
-//            
-//            if (successBlock != nil) {
-//                successBlock(objectID);
-//            }
-//        }
-//    }];
-//    
+    if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
+        NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
+        return NO;
+    }
+
+    if (timer.providerInstance.userID == nil) {
+        NSLog(@"%s WARN : provider to harvest: %@", timer.providerInstance.remoteProvider);
+
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification
+         object:self
+         userInfo:@{
+         kTCSServiceRemoteProviderInstanceKey : timer.providerInstance,
+         }];
+        return NO;
+    }
+
+    if (timer.remoteId == nil) {
+        NSLog(@"%s WARN : no timer remoteID: %@", timer);
+        return NO;
+    }
+
+    NSString *authString = [NSString stringWithFormat:@"%@:%@",
+                            timer.providerInstance.username,
+                            timer.providerInstance.password];
+
+    NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *auth = [authData base64EncodedString];
+
+    NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"application/json", @"Accept",
+                             @"application/json", @"Content-Type",
+                             [NSString stringWithFormat:@"Basic %@", auth], @"Authorization",
+                             nil];
+
+    NSURL *url =
+    [NSURL
+     URLWithString:
+     [NSString stringWithFormat:@"%@/daily/delete/%@",
+      timer.providerInstance.baseURL, timer.remoteId]];
+
+    [self
+     deleteWithURL:url
+     headers:headers
+     postData:nil
+     userContext:nil
+     success:^(NSDictionary *json, id userContext) {
+
+         if (successBlock != nil) {
+             successBlock(timer.objectID);
+         }
+         
+     } failure:^(NSError *error, id userContext) {
+         
+         if (failureBlock != nil) {
+             failureBlock(error);
+         }
+     }];
+    
     return YES;
 }
 
@@ -503,7 +604,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     [self fetchRecordsWithMetadata:metadata error:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     NSLog(@"JSON: %@", json);
@@ -578,7 +679,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     [self fetchRecordsWithMetadata:metadata error:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     NSLog(@"timer JSON: %@", json);

@@ -142,15 +142,15 @@
     
     if (_timedEntity.active == YES ) {
         activeTimer = [TCSService sharedInstance].activeTimer;
-        return [_dateRange.startDate isLessThanOrEqualTo:activeTimer.startTime] == YES &&
-        [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate] == YES;
+        return [_dateRange.startDate isLessThanOrEqualTo:activeTimer.metadata.startTime] == YES &&
+        [activeTimer.metadata.startTime isLessThanOrEqualTo:_dateRange.endDate] == YES;
     } else if (_timedEntity == nil) {
         TCSProject *activeProject = [TCSService sharedInstance].activeTimer.project;
         
         if (activeProject != nil) {
             activeTimer = [TCSService sharedInstance].activeTimer;
-            if ([_dateRange.startDate isLessThanOrEqualTo:activeTimer.startTime] == YES &&
-                [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate] == YES) {
+            if ([_dateRange.startDate isLessThanOrEqualTo:activeTimer.metadata.startTime] == YES &&
+                [activeTimer.metadata.startTime isLessThanOrEqualTo:_dateRange.endDate] == YES) {
                 return YES;
             }
         }
@@ -204,7 +204,7 @@
     return [_timers sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         TCSTimer *tc1 = obj1;
         TCSTimer *tc2 = obj2;
-        return [tc1.startTime compare:tc2.startTime];
+        return [tc1.metadata.startTime compare:tc2.metadata.startTime];
     }];
 }
         
@@ -238,7 +238,7 @@
         _rawElapsedTime += [timer timeIntervalForDateRange:_dateRange];
         _elapsedTime += combinedTime;
 
-        if (timer.endTime != nil && combinedTime <= 0.0f) {
+        if (timer.metadata.endTime != nil && combinedTime <= 0.0f) {
             [timerIndexesToRemove addObject:@(count)];
         }
 

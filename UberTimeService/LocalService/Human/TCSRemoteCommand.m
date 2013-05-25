@@ -60,7 +60,7 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
      error:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return payloadData;
@@ -126,7 +126,7 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
      error:&error];
 
     if (error != nil) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
     return payload;

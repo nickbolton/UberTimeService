@@ -40,6 +40,8 @@
 
 @interface TCSDefaultProviderTimer : TCSDefaultProviderBase <TCSProvidedTimer>
 @property (nonatomic, strong) NSString *utsMessage;
+@property (nonatomic, strong) NSDate *utsStartTime;
+@property (nonatomic, strong) NSDate *utsEndTime;
 @property (nonatomic, strong) NSString *utsProjectID;
 @end
 

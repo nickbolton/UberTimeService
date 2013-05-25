@@ -11,10 +11,7 @@
 
 @implementation TCSParseTimer
 
-@dynamic startTime;
-@dynamic endTime;
 @dynamic message;
-@dynamic adjustment;
 @dynamic projectID;
 
 + (NSString *)parseClassName {
@@ -25,20 +22,8 @@
     return [TCSTimer class];
 }
 
-- (NSDate *)utsStartTime {
-    return self.startTime;
-}
-
-- (NSDate *)utsEndTime {
-    return self.endTime;
-}
-
 - (NSString *)utsMessage {
     return self.message;
-}
-
-- (NSTimeInterval)utsAdjustment {
-    return self.adjustment;
 }
 
 - (NSString *)utsProjectID {

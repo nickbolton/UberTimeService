@@ -40,6 +40,13 @@ extern NSString * const kTCSJsonServiceEntriesKey;
             success:(void(^)(id json, id userContext))successBlock
             failure:(void(^)(NSError *error, id userContext))failureBlock;
 
+- (void)deleteWithURL:(NSURL *)url
+              headers:(NSDictionary *)headers
+             postData:(NSDictionary *)postData
+          userContext:(id)userContext
+              success:(void(^)(id json, id userContext))successBlock
+              failure:(void(^)(NSError *error, id userContext))failureBlock;
+
 - (void)requestWithURL:(NSURL *)url
                 method:(NSString *)method
                headers:(NSDictionary *)headers

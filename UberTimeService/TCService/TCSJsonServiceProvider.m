@@ -269,6 +269,22 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
      failure:failureBlock];
 }
 
+- (void)deleteWithURL:(NSURL *)url
+              headers:(NSDictionary *)headers
+             postData:(NSDictionary *)postData
+          userContext:(id)userContext
+              success:(void(^)(id json, id userContext))successBlock
+              failure:(void(^)(NSError *error, id userContext))failureBlock {
+    [self
+     requestWithURL:url
+     method:@"DELETE"
+     headers:headers
+     postData:postData
+     userContext:userContext
+     success:successBlock
+     failure:failureBlock];
+}
+
 - (void)requestWithURL:(NSURL *)url
                 method:(NSString *)method
                headers:(NSDictionary *)headers

@@ -193,7 +193,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
                   failure:^(NSError *error) {
 
                       if (error != nil) {
-                          NSLog(@"Error: %@", error);
+                          NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                       }
                   }];
              }
@@ -201,7 +201,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
          } failure:^(NSError *error) {
 
              if (error != nil) {
-                 NSLog(@"Error: %@", error);
+                 NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
              }
          }];
     }
@@ -317,7 +317,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
                          self.activeTimer = timer;
 
                      } failure:^(NSError *error) {
-                         NSLog(@"Error: %@", error);
+                         NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                      }];
                 } else {
 
@@ -325,7 +325,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
                      stopTimer:timer
                      success:^(TCSTimer *updatedTimer) {
                      } failure:^(NSError *error) {
-                         NSLog(@"Error: %@", error);
+                         NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                      }];
                 }
             }
