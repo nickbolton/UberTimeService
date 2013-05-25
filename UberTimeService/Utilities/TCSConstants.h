@@ -106,6 +106,7 @@
 #define TCS_TEXTCOLOR_LIGHT [UIColor colorWithCalibratedRed:TCS_TEXTCOLOR_LIGHT_R green:TCS_TEXTCOLOR_LIGHT_G blue:TCS_TEXTCOLOR_LIGHT_B alpha:1.0f]
 
 #define TCS_PREF_FLIPPED_TIMER_CONTROLS @"flippedTimerControls"
+#define TCS_PREF_GROUP_NAME_FIRST @"groupNameFirst"
 #define TCS_PREF_ACTIVE_TIMER_FIRE_DELAY @"activeTimerLocalNotificationFireDuration"
 #define TCS_PREF_USE_RELATIVE_DATE_RANGES @"useHumanReadableDateRanges"
 #define TCS_PREF_AUTO_SCROLL_TO_CURRENT_TIME @"autoScrollToCurrentTime"

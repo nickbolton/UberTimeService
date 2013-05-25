@@ -433,6 +433,19 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     TCSProject *localProject =
     (id)[context existingObjectWithID:project.objectID error:&error];
 
+    if (project.metadata.archivedValue && localProject.isActive) {
+
+        TCSTimer *activeTimer =
+        [[TCSService sharedInstance] activeTimer];
+
+        activeTimer =
+        (id)[context existingObjectWithID:activeTimer.objectID error:&error];
+
+        if ([localProject.objectID isEqual:activeTimer.project.objectID]) {
+            [self doStopTimer:activeTimer];
+        }
+    }
+
     [localProject
      updateWithName:project.name
      entityVersion:project.entityVersionValue

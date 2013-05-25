@@ -24,6 +24,7 @@ enum _TimePeriod {
     TimePeriod_PreviousMonth,
     TimePeriod_PreviousYear,
     TimePeriod_Archived,
+    TimePeriod_OtherDay,
 };
 
 typedef NSInteger TimePeriod;

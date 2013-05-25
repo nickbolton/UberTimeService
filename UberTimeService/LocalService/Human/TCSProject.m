@@ -111,4 +111,30 @@
     return [self.objectID isEqual:activeProject.objectID];
 }
 
+- (NSString *)displayName:(BOOL)groupFirst {
+
+    NSString *displayName;
+
+    if (self.parent != nil) {
+
+        if (groupFirst) {
+
+            displayName =
+            [NSString stringWithFormat:@"%@ : %@",
+             self.parent.name, self.name];
+
+        } else {
+            
+            displayName =
+            [NSString stringWithFormat:@"%@ : %@",
+             self.name, self.parent.name];
+        }
+
+    } else {
+        displayName = self.name;
+    }
+
+    return displayName;
+}
+
 @end
