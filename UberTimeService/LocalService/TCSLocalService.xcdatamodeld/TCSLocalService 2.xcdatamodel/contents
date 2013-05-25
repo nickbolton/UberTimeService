@@ -33,7 +33,7 @@
     </entity>
     <entity name="TCSTimedEntity" representedClassName="TCSTimedEntity" isAbstract="YES" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="metadata" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntityMetadata" inverseName="timedEntity" inverseEntity="TCSTimedEntityMetadata" syncable="YES"/>
+        <relationship name="metadata" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="TCSTimedEntityMetadata" inverseName="timedEntity" inverseEntity="TCSTimedEntityMetadata" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSGroup" inverseName="children" inverseEntity="TCSGroup" syncable="YES"/>
     </entity>
     <entity name="TCSTimedEntityMetadata" representedClassName="TCSTimedEntityMetadata" parentEntity="TCSBaseEntity" syncable="YES">
