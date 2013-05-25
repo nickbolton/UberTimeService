@@ -51,6 +51,20 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
                           success:(void(^)(NSManagedObjectID *objectID))successBlock
                           failure:(void(^)(NSError *error))failureBlock;
 
+// Timer Metadata
+
+- (BOOL)createTimerMetadata:(TCSTimerMetadata *)timedEntityMetadata
+                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (BOOL)updateTimerMetadata:(TCSTimerMetadata *)timedEntityMetadata
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
+- (BOOL)deleteTimerMetadata:(TCSTimerMetadata *)timedEntityMetadata
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock;
+
 @end
 
 @protocol TCSProvidedBaseEntity <NSObject>
@@ -73,10 +87,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @end
 
 @protocol TCSProvidedTimer <TCSProvidedBaseEntity>
-@property (nonatomic, readonly) NSDate *utsStartTime;
-@property (nonatomic, readonly) NSDate *utsEndTime;
 @property (nonatomic, readonly) NSString *utsMessage;
-@property (nonatomic, readonly) NSTimeInterval utsAdjustment;
 @property (nonatomic, readonly) NSString *utsProjectID;
 @end
 
@@ -107,6 +118,14 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSInteger utsOrder;
 @property (nonatomic, readonly) BOOL utsArchived;
 @property (nonatomic, readonly) NSInteger utsColor;
+
+@end
+
+@protocol TCSProvidedTimerMetadata <TCSProvidedBaseEntity>
+
+@property (nonatomic, readonly) NSDate *utsStartTime;
+@property (nonatomic, readonly) NSDate *utsEndTime;
+@property (nonatomic, readonly) NSTimeInterval utsAdjustment;
 
 @end
 

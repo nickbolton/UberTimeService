@@ -18,6 +18,7 @@
 #import "TCSParseProviderInstance.h"
 #import "TCSParseCannedMessage.h"
 #import "TCSParseTimedEntityMetadata.h"
+#import "TCSParseTimerMetadata.h"
 #import "TCSParseRemoteCommand.h"
 #import "TCSParseAppConfig.h"
 #import "NSError+Utilities.h"
@@ -58,6 +59,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         [TCSParseRemoteCommand registerSubclass];
         [TCSParseProviderInstance registerSubclass];
         [TCSParseTimedEntityMetadata registerSubclass];
+        [TCSParseTimerMetadata registerSubclass];
 
         [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
 
@@ -860,9 +862,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 - (void)updateTimerProperties:(TCSParseTimer *)parseTimer
                         timer:(TCSTimer *)timer {
-    parseTimer.startTime = [self safePropertyValue:timer.startTime];
-    parseTimer.endTime = [self safePropertyValue:timer.endTime];
-    parseTimer.adjustment = timer.adjustmentValue;
     parseTimer.message = [self safePropertyValue:timer.message];
     parseTimer.instanceID = [NSString applicationInstanceId];
     parseTimer.entityVersion = timer.entityVersionValue;
@@ -1505,6 +1504,172 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     return YES;
 }
 
+#pragma mark - Timer Metadata
+
+- (void)updateTimerMetadata:(TCSParseTimerMetadata *)parseTimerMetadata
+              timerMetadata:(TCSTimerMetadata *)timerMetadata {
+
+    parseTimerMetadata.startTime = [self safePropertyValue:timerMetadata.startTime];
+    parseTimerMetadata.endTime = [self safePropertyValue:timerMetadata.endTime];
+    parseTimerMetadata.adjustment = timerMetadata.adjustmentValue;
+}
+
+- (BOOL)createTimerMetadata:(TCSTimerMetadata *)timerMetadata
+                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    TCSParseTimerMetadata *parseTimerMetadata =
+    [TCSParseTimerMetadata object];
+    parseTimerMetadata.user = [PFUser currentUser];
+
+    [self
+     updateTimerMetadata:parseTimerMetadata
+     timerMetadata:timerMetadata];
+
+    NSManagedObjectID *objectID = timerMetadata.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseTimerMetadata objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimerMetadata saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID, parseTimerMetadata.objectId);
+            }
+
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
+
+- (BOOL)updateTimerMetadata:(TCSTimerMetadata *)timerMetadata
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (timerMetadata.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timerMetadata update")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseTimerMetadata *parseTimerMetadata =
+    [TCSParseTimerMetadata object];
+    parseTimerMetadata.objectId = timerMetadata.remoteId;
+
+    [self
+     updateTimerMetadata:parseTimerMetadata
+     timerMetadata:timerMetadata];
+
+    NSManagedObjectID *objectID = timerMetadata.objectID;
+
+    if (self.isHoldingUpdates) {
+        [self bufferParseObject:(id)parseTimerMetadata objectID:objectID];
+        return NO;
+    }
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimerMetadata saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+            
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+
+}
+
+- (BOOL)deleteTimerMetadata:(TCSTimerMetadata *)timerMetadata
+                    success:(void(^)(NSManagedObjectID *objectID))successBlock
+                    failure:(void(^)(NSError *error))failureBlock {
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    if ([PFUser currentUser] == nil) return NO;
+
+    if (timerMetadata.remoteId.length == 0) {
+
+        if (failureBlock != nil) {
+
+            NSError *error =
+            [NSError errorWithCode:0 message:TCSLoc(@"No remote ID for timerMetadata delete")];
+
+            failureBlock(error);
+        }
+        return NO;
+    }
+
+    TCSParseTimerMetadata *parseTimerMetadata =
+    [TCSParseTimerMetadata object];
+    parseTimerMetadata.objectId = timerMetadata.remoteId;
+
+    NSManagedObjectID *objectID = timerMetadata.objectID;
+
+    if (_connected == NO) {
+        return NO;
+    }
+
+    [parseTimerMetadata deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error != nil) {
+
+            if (failureBlock != nil) {
+                failureBlock(error);
+            }
+
+        } else {
+
+            if (successBlock != nil) {
+                successBlock(objectID);
+            }
+            
+            [self sendPushNotification];
+        }
+    }];
+    
+    return YES;
+}
 
 #pragma mark - Update Polling
 

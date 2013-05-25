@@ -227,3 +227,19 @@
 }
 
 @end
+
+@implementation TCSDefaultProviderTimedEntityMetadata
+
+- (Class)utsLocalEntityType {
+    return [TCSTimedEntityMetadata class];
+}
+
+@end
+
+@implementation TCSDefaultProviderTimerMetadata
+
+- (Class)utsLocalEntityType {
+    return [TCSTimerMetadata class];
+}
+
+@end

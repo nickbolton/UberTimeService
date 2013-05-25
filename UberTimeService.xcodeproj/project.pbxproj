@@ -24,6 +24,8 @@
 		FE7E264617512B1B0084F59D /* TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264417512B1B0084F59D /* TCSTimerMetadata.m */; };
 		FE7E264917512B240084F59D /* _TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264817512B240084F59D /* _TCSTimerMetadata.m */; };
 		FE7E264A17512B240084F59D /* _TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264817512B240084F59D /* _TCSTimerMetadata.m */; };
+		FE7E264D175130830084F59D /* TCSParseTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264C175130830084F59D /* TCSParseTimerMetadata.m */; };
+		FE7E264E175130830084F59D /* TCSParseTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264C175130830084F59D /* TCSParseTimerMetadata.m */; };
 		FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
 		FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
 		FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
@@ -185,6 +187,8 @@
 		FE7E264417512B1B0084F59D /* TCSTimerMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimerMetadata.m; sourceTree = "<group>"; };
 		FE7E264717512B240084F59D /* _TCSTimerMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSTimerMetadata.h; sourceTree = "<group>"; };
 		FE7E264817512B240084F59D /* _TCSTimerMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSTimerMetadata.m; sourceTree = "<group>"; };
+		FE7E264B175130830084F59D /* TCSParseTimerMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseTimerMetadata.h; sourceTree = "<group>"; };
+		FE7E264C175130830084F59D /* TCSParseTimerMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseTimerMetadata.m; sourceTree = "<group>"; };
 		FE7F8BE517372D9D008EE46E /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
 		FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
 		FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseEntity.h; sourceTree = "<group>"; };
@@ -607,6 +611,8 @@
 				FEBD02F817354D0100DAB99D /* TCSParseProject.m */,
 				FE9E772D174F087E0035EABE /* TCSParseTimedEntityMetadata.h */,
 				FE9E772E174F087F0035EABE /* TCSParseTimedEntityMetadata.m */,
+				FE7E264B175130830084F59D /* TCSParseTimerMetadata.h */,
+				FE7E264C175130830084F59D /* TCSParseTimerMetadata.m */,
 				FEBD02FB17354D0E00DAB99D /* TCSParseTimer.h */,
 				FEBD02FC17354D0F00DAB99D /* TCSParseTimer.m */,
 				FE9C8007173F1D4200005FD8 /* TCSParseCannedMessage.h */,
@@ -887,6 +893,7 @@
 				FE9E7730174F087F0035EABE /* TCSParseTimedEntityMetadata.m in Sources */,
 				FE7E264617512B1B0084F59D /* TCSTimerMetadata.m in Sources */,
 				FE7E264A17512B240084F59D /* _TCSTimerMetadata.m in Sources */,
+				FE7E264E175130830084F59D /* TCSParseTimerMetadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,6 +955,7 @@
 				FE9E772F174F087F0035EABE /* TCSParseTimedEntityMetadata.m in Sources */,
 				FE7E264517512B1B0084F59D /* TCSTimerMetadata.m in Sources */,
 				FE7E264917512B240084F59D /* _TCSTimerMetadata.m in Sources */,
+				FE7E264D175130830084F59D /* TCSParseTimerMetadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

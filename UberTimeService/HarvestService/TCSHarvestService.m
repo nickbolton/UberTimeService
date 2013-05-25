@@ -259,7 +259,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
                           MAX(0.01666666666667f, [timer elapsedTimeInHours]),
                           timer.project.parent.remoteId,
                           timer.project.remoteId,
-                          [dateFormatter stringFromDate:timer.startTime]];
+                          [dateFormatter stringFromDate:timer.metadata.startTime]];
 
     NSURL *url =
     [NSURL URLWithString:[NSString stringWithFormat:@"%@/daily/add", timer.providerInstance.baseURL]];

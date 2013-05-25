@@ -161,19 +161,19 @@
 }
 
 - (NSTimeInterval)combinedTime {
-    return MAX(0.0f, self.timeInterval + self.adjustmentValue);
+    return MAX(0.0f, self.timeInterval + self.metadata.adjustmentValue);
 }
 
 - (NSTimeInterval)combinedTimeForDateRange:(TCSDateRange *)dateRange {
 
-    NSDate *start = self.startTime;
-    NSDate *end = self.endTime;
+    NSDate *start = self.metadata.startTime;
+    NSDate *end = self.metadata.endTime;
 
     if (end == nil) {
         end = [[TCSService sharedInstance] systemTime];
     }
 
-    end = [end dateByAddingTimeInterval:self.adjustmentValue];
+    end = [end dateByAddingTimeInterval:self.metadata.adjustmentValue];
 
     if ([start isLessThan:dateRange.startDate]) {
         start = dateRange.startDate;
@@ -196,18 +196,12 @@
     return hours;
 }
 
-- (void)updateWithStartTime:(NSDate *)startTime
-                    endTime:(NSDate *)endTime
-                 adjustment:(NSTimeInterval)adjustment
-                    message:(NSString *)message
-              entityVersion:(int64_t)entityVersion
-                   remoteId:(NSString *)remoteId
-                 updateTime:(NSDate *)updateTime
-              markAsUpdated:(BOOL)markAsUpdated {
+- (void)updateWithMessage:(NSString *)message
+            entityVersion:(int64_t)entityVersion
+                 remoteId:(NSString *)remoteId
+               updateTime:(NSDate *)updateTime
+            markAsUpdated:(BOOL)markAsUpdated {
 
-    self.startTime = [self nonNullValue:startTime];
-    self.endTime = [self nonNullValue:endTime];
-    self.adjustmentValue = adjustment;
     self.message = [self nonNullValue:message];
     
     [super

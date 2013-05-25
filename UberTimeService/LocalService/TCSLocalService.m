@@ -1005,6 +1005,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         timer.providerInstance = updatedProject.providerInstance;
         timer.project = updatedProject;
 
+        timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
+        timer.metadata.providerInstance = nil;
+        [timer.metadata markEntityAsUpdated];
+
         [timer
          updateWithStartTime:[[TCSService sharedInstance] systemTime]
          endTime:nil
@@ -1065,6 +1069,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         timer = [TCSTimer MR_createInContext:localContext];
         timer.project = updatedProject;
         timer.providerInstance = updatedProject.providerInstance;
+
+        timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
+        timer.metadata.providerInstance = nil;
+        [timer.metadata markEntityAsUpdated];
 
         [timer
          updateWithStartTime:startTime
@@ -1435,12 +1443,12 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
      existingObjectWithID:timer.objectID
      error:NULL];
 
-    NSDate *finalEndTime = timer.endTime;
+    NSDate *finalEndTime = timer.metadata.endTime;
 
-    if (endDate == nil || [endDate isLessThan:timer.startTime]) {
-        timer.endTime = [[TCSService sharedInstance] systemTime];
+    if (endDate == nil || [endDate isLessThan:timer.metadata.startTime]) {
+        timer.metadata.endTime = [[TCSService sharedInstance] systemTime];
     } else {
-        timer.endTime = endDate;
+        timer.metadata.endTime = endDate;
     }
 
     TCSTimer *rolledTimer =
@@ -1448,8 +1456,12 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     rolledTimer.project = project;
     rolledTimer.providerInstance = project.providerInstance;
 
+    rolledTimer.metadata = [TCSTimerMetadata MR_createInContext:project.managedObjectContext];
+    rolledTimer.metadata.providerInstance = nil;
+    [rolledTimer.metadata markEntityAsUpdated];
+
     [rolledTimer
-     updateWithStartTime:timer.endTime
+     updateWithStartTime:timer.metadata.endTime
      endTime:finalEndTime
      adjustment:0.0f
      message:timer.message
@@ -3092,6 +3104,10 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSTimer *timer =
         [TCSTimer MR_createInContext:context];
         timer.providerInstance = providerInstance;
+
+        timer.metadata = [TCSTimerMetadata MR_createInContext:context];
+        timer.metadata.providerInstance = nil;
+        [timer.metadata markEntityAsUpdated];
 
         [timer
          updateWithStartTime:providedTimer.utsStartTime

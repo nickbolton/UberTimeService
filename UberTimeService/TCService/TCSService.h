@@ -13,6 +13,7 @@
 #import "TCSRemoteCommand.h"
 #import "TCSProviderInstance.h"
 #import "TCSTimedEntityMetadata.h"
+#import "TCSTimerMetadata.h"
 #import "NSError+Utilities.h"
 
 extern NSString * const kTCSServicRemoteProviderNameKey;

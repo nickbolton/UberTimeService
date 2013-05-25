@@ -39,10 +39,23 @@
 @end
 
 @interface TCSDefaultProviderTimer : TCSDefaultProviderBase <TCSProvidedTimer>
-@property (nonatomic, strong) NSDate *utsStartTime;
-@property (nonatomic, strong) NSDate *utsEndTime;
 @property (nonatomic, strong) NSString *utsMessage;
-@property (nonatomic) NSTimeInterval utsAdjustment;
 @property (nonatomic, strong) NSString *utsProjectID;
 @end
+
+@interface TCSDefaultProviderTimedEntityMetadata : TCSDefaultProviderBase <TCSProvidedTimedEntityMetadata>
+@property (nonatomic) NSInteger utsFilteredModifiers;
+@property (nonatomic) NSInteger utsKeyCode;
+@property (nonatomic) NSInteger utsModifiers;
+@property (nonatomic) NSInteger utsOrder;
+@property (nonatomic) BOOL utsArchived;
+@property (nonatomic) NSInteger utsColor;
+@end
+
+@interface TCSDefaultProviderTimerMetadata : TCSDefaultProviderBase <TCSProvidedTimerMetadata>
+@property (nonatomic) NSTimeInterval utsAdjustment;
+@property (nonatomic, strong) NSDate *utsStartTime;
+@property (nonatomic, strong) NSDate *utsEndTime;
+@end
+
 
