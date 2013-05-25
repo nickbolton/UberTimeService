@@ -4,7 +4,6 @@
 
 - (void)updateWithName:(NSString *)name
                baseURL:(NSString *)baseURL
-                  type:(NSString *)type
               username:(NSString *)username
               password:(NSString *)password
         remoteProvider:(NSString *)remoteProvider

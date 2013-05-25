@@ -14,7 +14,6 @@
 @dynamic baseURL;
 @dynamic name;
 @dynamic password;
-@dynamic type;
 @dynamic username;
 @dynamic userID;
 @dynamic remoteProvider;
@@ -33,10 +32,6 @@
 
 - (NSString *)utsPassword {
     return self.password;
-}
-
-- (NSString *)utsType {
-    return self.type;
 }
 
 - (NSString *)utsUsername {

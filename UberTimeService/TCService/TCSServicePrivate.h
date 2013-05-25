@@ -94,7 +94,6 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSString *utsBaseURL;
 @property (nonatomic, readonly) NSString *utsName;
 @property (nonatomic, readonly) NSString *utsPassword;
-@property (nonatomic, readonly) NSString *utsType;
 @property (nonatomic, readonly) NSString *utsUsername;
 @property (nonatomic, readonly) NSString *utsUserID;
 @property (nonatomic, readonly) NSString *utsRemoteProvider;
@@ -278,9 +277,9 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 
 - (void)createProviderInstance:(NSString *)name
                        baseURL:(NSString *)baseURL
-                          type:(NSString *)type
                       username:(NSString *)username
                       password:(NSString *)password
+                remoteProvider:(NSString *)remoteProvider
                        success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                        failure:(void(^)(NSError *error))failureBlock;
 

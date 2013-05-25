@@ -15,7 +15,6 @@
 @property (nonatomic) NSString *baseURL;
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *password;
-@property (nonatomic) NSString *type;
 @property (nonatomic) NSString *username;
 @property (nonatomic) NSString *userID;
 @property (nonatomic) NSString *remoteProvider;

@@ -93,7 +93,6 @@
 
 - (void)updateWithName:(NSString *)name
                baseURL:(NSString *)baseURL
-                  type:(NSString *)type
               username:(NSString *)username
               password:(NSString *)password
         remoteProvider:(NSString *)remoteProvider
@@ -105,7 +104,6 @@
 
     self.name = [self nonNullValue:name];
     self.baseURL = [self nonNullValue:baseURL];
-    self.type = [self nonNullValue:type];
     self.username = [self nonNullValue:username];
     self.password = [self nonNullValue:password];
     self.userID = [self nonNullValue:userID];

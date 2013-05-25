@@ -103,8 +103,14 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 }
 
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderNamed:(NSString *)providerName {
-    NSObject <TCSServiceRemoteProvider> *remoteProvider =
-    _remoteServiceProviders[providerName];
+
+    NSObject <TCSServiceRemoteProvider> *remoteProvider = nil;
+
+    if (providerName != nil) {
+        remoteProvider = _remoteServiceProviders[providerName];
+    } else {
+        remoteProvider = _localService.syncingRemoteProvider;
+    }
 
     if (remoteProvider == nil) {
         NSLog(@"WARN: no provider named: %@", providerName);
@@ -118,11 +124,11 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     for (TCSProviderInstance *providerInstance in [self allProviderInstances]) {
 
-        NSMutableArray *list = providerInstanceMap[providerInstance.type];
+        NSMutableArray *list = providerInstanceMap[providerInstance.remoteProvider];
 
         if (list == nil) {
             list = [NSMutableArray array];
-            providerInstanceMap[providerInstance.type] = list;
+            providerInstanceMap[providerInstance.remoteProvider] = list;
         }
 
         [list addObject:providerInstance];
@@ -727,7 +733,6 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
 - (void)createProviderInstance:(NSString *)name
                      baseURL:(NSString *)baseURL
-                        type:(NSString *)type
                     username:(NSString *)username
                     password:(NSString *)password
                 remoteProvider:(NSString *)remoteProvider
@@ -736,9 +741,9 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     [_localService
      createProviderInstance:name
      baseURL:baseURL
-     type:type
      username:username
      password:password
+     remoteProvider:remoteProvider
      success:successBlock
      failure:failureBlock];
 }

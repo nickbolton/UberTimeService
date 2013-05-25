@@ -310,7 +310,6 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (void)createProviderInstance:(NSString *)name
                        baseURL:(NSString *)baseURL
-                          type:(NSString *)type
                       username:(NSString *)username
                       password:(NSString *)password
                 remoteProvider:(NSString *)remoteProvider

@@ -86,7 +86,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     NSString *providerName = providerInstance.remoteProvider;
 
     if (providerName == nil) {
-        providerName = _syncingRemoteProvider;
+        if (_syncingRemoteProvider != nil) {
+            providerName = NSStringFromClass(_syncingRemoteProvider.class);
+        }
     }
 
     return providerName;
@@ -2016,8 +2018,21 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (TCSProviderInstance *)providerInstanceWithID:(NSManagedObjectID *)objectID {
+    return
+    [self
+     providerInstanceWithID:objectID
+     inContext:[self managedObjectContextForCurrentThread]];
+}
+
+- (TCSProviderInstance *)providerInstanceWithID:(NSManagedObjectID *)objectID
+                                      inContext:(NSManagedObjectContext *)context {
+
+    if (objectID == nil) {
+        return nil;
+    }
+    
     TCSProviderInstance *remoteProvider = (id)
-    [[self managedObjectContextForCurrentThread]
+    [context
      existingObjectWithID:objectID
      error:NULL];
 
@@ -2030,7 +2045,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
 - (void)createProviderInstance:(NSString *)name
                        baseURL:(NSString *)baseURL
-                          type:(NSString *)type
                       username:(NSString *)username
                       password:(NSString *)password
                 remoteProvider:(NSString *)remoteProvider
@@ -2055,7 +2069,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [providerInstance
          updateWithName:name
          baseURL:baseURL
-         type:type
          username:username
          password:password
          remoteProvider:remoteProvider
@@ -2140,7 +2153,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     [localProviderInstance
      updateWithName:providerInstance.name
      baseURL:providerInstance.baseURL
-     type:providerInstance.type
      username:providerInstance.username
      password:providerInstance.password
      remoteProvider:providerInstance.remoteProvider
@@ -2271,7 +2283,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     for (TCSBaseEntity *entity in updates) {
 
         id <TCSServiceRemoteProvider> remoteProvider =
-        [self providerNameForInstance:entity.providerInstance];
+        [self remoteProviderForInstance:entity.providerInstance];
 
         if (remoteProvider != nil) {
 
@@ -2521,7 +2533,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                 TCSBaseEntity *updated = nil;
                 NSArray *deleted = nil;
                 TCSProviderInstance *providerInstance =
-                [self providerInstanceWithID:obj.utsProviderInstanceID];
+                [self
+                 providerInstanceWithID:obj.utsProviderInstanceID
+                 inContext:localContext];
 
                 if (localType == [TCSRemoteCommand class] && [obj conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
                     deleted =
@@ -3270,7 +3284,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             [existingProviderInstance
              updateWithName:providedProviderInstance.utsName
              baseURL:providedProviderInstance.utsBaseURL
-             type:providedProviderInstance.utsType
              username:providedProviderInstance.utsUsername
              password:providedProviderInstance.utsPassword
              remoteProvider:providedProviderInstance.utsRemoteProvider
@@ -3298,7 +3311,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [providerInstance
          updateWithName:providedProviderInstance.utsName
          baseURL:providedProviderInstance.utsBaseURL
-         type:providedProviderInstance.utsType
          username:providedProviderInstance.utsUsername
          password:providedProviderInstance.utsPassword
          remoteProvider:providedProviderInstance.utsRemoteProvider
