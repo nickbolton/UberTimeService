@@ -639,14 +639,15 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (NSArray *)allProjects {
+    return [self allProjectsInContext:[self managedObjectContextForCurrentThread]];
+}
 
-    NSArray *projects =
+- (NSArray *)allProjectsInContext:(NSManagedObjectContext *)context {
+    return
     [TCSProject
      MR_findByAttribute:@"pendingRemoteDelete"
      withValue:@NO
-     inContext:[self managedObjectContextForCurrentThread]];
-
-    return projects;
+     inContext:context];
 }
 
 - (NSArray *)allProjectsWithArchived:(BOOL)archived {
@@ -783,11 +784,15 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (NSArray *)allGroups {
+    return [self allGroupsInContext:[self managedObjectContextForCurrentThread]];
+}
+
+- (NSArray *)allGroupsInContext:(NSManagedObjectContext *)context {
     return
     [TCSGroup
      MR_findByAttribute:@"pendingRemoteDelete"
      withValue:@NO
-     inContext:[self managedObjectContextForCurrentThread]];
+     inContext:context];
 }
 
 - (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
@@ -2485,6 +2490,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
+            NSMutableSet *remainingEntityIDs = [NSMutableSet set];
             for (id<TCSProvidedBaseEntity> obj in updatedEntities) {
 
                 NSAssert([obj conformsToProtocol:@protocol(TCSProvidedBaseEntity)],
@@ -2553,6 +2559,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                         updates[NSInsertedObjectsKey] = insertedObjects;
                     }
                     [insertedObjects addObject:inserted];
+                    [remainingEntityIDs addObject:inserted.objectID];
                 }
                 if (updated != nil) {
                     NSMutableArray *updatedObjects = updates[NSUpdatedObjectsKey];
@@ -2561,6 +2568,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                         updates[NSUpdatedObjectsKey] = updatedObjects;
                     }
                     [updatedObjects addObject:updated];
+                    [remainingEntityIDs addObject:updated.objectID];
                 }
                 if (deleted != nil) {
                     NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
@@ -2571,6 +2579,47 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                     [deletedObjects addObjectsFromArray:deleted];
                 }
             }
+
+            id <TCSServiceRemoteProvider> remoteProvider =
+            [[TCSService sharedInstance] serviceProviderNamed:providerName];
+
+            if ([remoteProvider canCreateEntities] == NO) {
+
+                for (TCSGroup *group in [self allGroupsInContext:localContext]) {
+
+                    if ([providerName isEqual:group.remoteProvider]) {
+
+                        if ([remainingEntityIDs containsObject:group.objectID] == NO) {
+                            [group MR_deleteInContext:localContext];
+
+                            NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                            if (deletedObjects == nil) {
+                                deletedObjects = [NSMutableArray array];
+                                updates[NSDeletedObjectsKey] = deletedObjects;
+                            }
+                            [deletedObjects addObjectsFromArray:group];
+                        }
+                    }
+                }
+
+                for (TCSProject *project in [self allProjectsInContext:localContext]) {
+
+                    if ([providerName isEqual:project.remoteProvider]) {
+
+                        if ([remainingEntityIDs containsObject:project.objectID] == NO) {
+                            [project MR_deleteInContext:localContext];
+
+                            NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                            if (deletedObjects == nil) {
+                                deletedObjects = [NSMutableArray array];
+                                updates[NSDeletedObjectsKey] = deletedObjects;
+                            }
+                            [deletedObjects addObject:project];
+                        }
+                    }
+                }
+            }
+
         } completion:^(BOOL success, NSError *error) {
 
             if (error != nil) {
