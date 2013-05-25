@@ -13,6 +13,7 @@
 #import "NSDate+Utilities.h"
 
 static NSString * const kTCSHarvestBaseURL = @"";
+static NSString * const kTCSHarvestProjectIDSeparator = @"|";
 
 NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
@@ -49,6 +50,10 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 - (BOOL)importProjectsAsArchived {
     return YES;
+}
+
+- (NSString *)timerProjectIDSeparator {
+    return kTCSHarvestProjectIDSeparator;
 }
 
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
@@ -364,7 +369,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         NSLog(@"Error: %@", error);
     }
 
-    NSLog(@"JSON: %@", json);
+    NSLog(@"timer JSON: %@", json);
 
     NSMutableArray *normalizedTimers = [NSMutableArray array];
 
@@ -389,14 +394,32 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             
             NSString *spentAt = timerDict[@"spent_at"];
             NSString *startedAt = timerDict[@"started_at"];
-            NSString *startDateString =
-            [NSString stringWithFormat:@"%@ %@", spentAt, startedAt];
+            NSString *timerStartedAt = timerDict[@"timer_started_at"];
+            NSString *startDateString = nil;
+
+            if (timerStartedAt != nil && timerStartedAt != [NSNull null]) {
+                startDateString = timerStartedAt;
+            } else {
+
+                if (startedAt == nil || startedAt == [NSNull null]) {
+                    startedAt = @"12:00am";
+                }
+
+                startDateString =
+                [NSString stringWithFormat:@"%@ %@", spentAt, startedAt];
+            }
 
             timer.utsStartTime =
             [timestampFormatter dateFromString:startDateString];
             timer.utsEndTime = [timer.utsStartTime dateByAddingTimeInterval:duration];
             timer.utsMessage = timerDict[@"notes"];
-            timer.utsProjectID = [NSString stringWithFormat:@"%@-%@", timerDict[@"project_id"], timerDict[@"task_id"]];
+
+            timer.utsProjectID =
+            [NSString stringWithFormat:@"%@%@%@",
+             timerDict[@"project_id"],
+             kTCSHarvestProjectIDSeparator,
+             timerDict[@"task_id"]];
+
             timer.utsUpdateTime = updateTime;
 
             [normalizedTimers addObject:timer];

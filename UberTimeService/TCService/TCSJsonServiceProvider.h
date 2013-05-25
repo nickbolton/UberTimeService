@@ -15,29 +15,29 @@ extern NSString * const kTCSJsonServiceEntriesKey;
 
 @property (nonatomic, strong) NSDateFormatter *systemTimeFormatter;
 
-- (NSDictionary *)fetchRecordsWithMetadata:(NSDictionary *)metadata
-                                     error:(NSError **)error;
+- (id)fetchRecordsWithMetadata:(NSDictionary *)metadata
+                         error:(NSError **)error;
 
-- (NSDictionary *)requestWithURL:(NSURL *)url
-                          method:(NSString *)method
-                         headers:(NSDictionary *)headers
-                     userContext:(id)userContext
-                    asynchronous:(BOOL)asynchronous
-                         success:(void(^)(NSDictionary *json, id userContext))successBlock
-                         failure:(void(^)(NSError *error, id userContext))failureBlock;
+- (id)requestWithURL:(NSURL *)url
+              method:(NSString *)method
+             headers:(NSDictionary *)headers
+         userContext:(id)userContext
+        asynchronous:(BOOL)asynchronous
+             success:(void(^)(id json, id userContext))successBlock
+             failure:(void(^)(NSError *error, id userContext))failureBlock;
 
 - (void)putWithURL:(NSURL *)url
            headers:(NSDictionary *)headers
           postData:(NSDictionary *)postData
        userContext:(id)userContext
-           success:(void(^)(NSDictionary *json, id userContext))successBlock
+           success:(void(^)(id json, id userContext))successBlock
            failure:(void(^)(NSError *error, id userContext))failureBlock;
 
 - (void)postWithURL:(NSURL *)url
             headers:(NSDictionary *)headers
            postData:(NSDictionary *)postData
         userContext:(id)userContext
-            success:(void(^)(NSDictionary *json, id userContext))successBlock
+            success:(void(^)(id json, id userContext))successBlock
             failure:(void(^)(NSError *error, id userContext))failureBlock;
 
 - (void)requestWithURL:(NSURL *)url
@@ -45,7 +45,7 @@ extern NSString * const kTCSJsonServiceEntriesKey;
                headers:(NSDictionary *)headers
               postData:(NSDictionary *)postData
            userContext:(id)userContext
-               success:(void(^)(NSDictionary *json, id userContext))successBlock
+               success:(void(^)(id json, id userContext))successBlock
                failure:(void(^)(NSError *error, id userContext))failureBlock;
 
 @end

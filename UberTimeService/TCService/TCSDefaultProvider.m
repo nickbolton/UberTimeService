@@ -61,6 +61,10 @@
     return NO;
 }
 
+- (NSString *)timerProjectIDSeparator {
+    return nil;
+}
+
 - (void)holdUpdates {
     self.holdingUpdates = YES;
 }

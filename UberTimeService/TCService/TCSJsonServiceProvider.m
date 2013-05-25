@@ -15,18 +15,34 @@
 NSString * const kTCSJsonServiceProviderSystemTimeKey = @"tcs-json-system-time";
 NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
 
+@interface TCSJsonServiceProvider()
+
+@property (nonatomic, strong) NSMutableSet *activeOperations;
+
+@end
+
 @implementation TCSJsonServiceProvider
+
+- (id)init {
+    self = [super init];
+
+    if (self != nil) {
+        self.activeOperations = [NSMutableSet set];
+    }
+
+    return self;
+}
 
 - (NSDateFormatter *)systemTimeFormatter {
     return nil;
 }
 
-- (NSDictionary *)fetchRecordsWithMetadata:(NSDictionary *)metadata
-                                     error:(NSError **)error {
+- (id)fetchRecordsWithMetadata:(NSDictionary *)metadata
+                         error:(NSError **)error {
 
     __block NSError *localError = nil;
 
-    NSDictionary *result =
+    id result =
     [self
      requestWithURL:[NSURL URLWithString:metadata[@"url"]]
      method:metadata[@"method"]
@@ -78,16 +94,64 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
     return json;
 }
 
-- (NSDictionary *)executeJSONRequestWithRequest:(NSURLRequest *)request
-                                    userContext:(id)userContext
-                                   asynchronous:(BOOL)asynchronous
-                                        success:(void(^)(NSDictionary *json, id userContext))successBlock
-                                        failure:(void(^)(NSError *error, id userContext))failureBlock {
+- (id)executeJSONRequestWithRequest:(NSURLRequest *)request
+                        userContext:(id)userContext
+                       asynchronous:(BOOL)asynchronous
+                            success:(void(^)(id json, id userContext))successBlock
+                            failure:(void(^)(NSError *error, id userContext))failureBlock {
 
-    __block NSDictionary *result = nil;
+    if (asynchronous) {
+        [self
+         executeAsyncJSONRequestWithRequest:request
+         userContext:userContext
+         success:successBlock
+         failure:failureBlock];
 
-    NSLog(@"hello1");
-    
+        return nil;
+    }
+
+    NSURLResponse *response = nil;
+    NSError *error = nil;
+
+    NSData *data =
+    [NSURLConnection
+     sendSynchronousRequest:request
+     returningResponse:&response
+     error:&error];
+
+    id json = nil;
+
+    if (error != nil) {
+
+        if (failureBlock != nil) {
+            failureBlock(error, userContext);
+        }
+        
+    } else {
+
+        json =
+        [NSJSONSerialization
+         JSONObjectWithData:data
+         options:NSJSONReadingMutableContainers
+         error:&error];
+
+        if (error != nil) {
+            if (failureBlock != nil) {
+                failureBlock(error, userContext);
+            }
+        }
+
+        json = [self appendSystemTime:json response:response];
+    }
+
+    return json;
+}
+
+- (void)executeAsyncJSONRequestWithRequest:(NSURLRequest *)request
+                               userContext:(id)userContext
+                                   success:(void(^)(id json, id userContext))successBlock
+                                   failure:(void(^)(NSError *error, id userContext))failureBlock {
+
     AFJSONRequestOperation *operation =
     [AFJSONRequestOperation
      JSONRequestOperationWithRequest:request
@@ -95,18 +159,12 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
 
          NSInteger statusCode = response.statusCode;
 
-         NSLog(@"sc: %d, async: %d", statusCode, asynchronous);
-         
-         NSLog(@"JSONNNNN: %@", JSON);
-
          if (statusCode >= 200 && statusCode < 300) {
 
              JSON = [self appendSystemTime:JSON response:response];
 
-             if (asynchronous) {                 
+             if (successBlock != nil) {
                  successBlock(JSON, userContext);
-             } else {
-                 result = JSON;
              }
 
          } else {
@@ -143,23 +201,15 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
      }];
 
     [operation start];
-
-    if (asynchronous == NO) {
-        [operation waitUntilFinished];
-    }
-
-    NSLog(@"hello2");
-
-    return result;
 }
 
-- (NSDictionary *)requestWithURL:(NSURL *)url
-                          method:(NSString *)method
-                         headers:(NSDictionary *)headers
-                     userContext:(id)userContext
-                    asynchronous:(BOOL)asynchronous
-                         success:(void(^)(NSDictionary *json, id userContext))successBlock
-                         failure:(void(^)(NSError *error, id userContext))failureBlock {
+- (id)requestWithURL:(NSURL *)url
+              method:(NSString *)method
+             headers:(NSDictionary *)headers
+         userContext:(id)userContext
+        asynchronous:(BOOL)asynchronous
+             success:(void(^)(id json, id userContext))successBlock
+             failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     if (successBlock == nil && asynchronous) {
         NSLog(@"WARN : no successBlock. aborting json request.");
@@ -189,7 +239,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
            headers:(NSDictionary *)headers
           postData:(NSDictionary *)postData
        userContext:(id)userContext
-           success:(void(^)(NSDictionary *json, id userContext))successBlock
+           success:(void(^)(id json, id userContext))successBlock
            failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     [self
@@ -206,7 +256,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
             headers:(NSDictionary *)headers
            postData:(NSDictionary *)postData
         userContext:(id)userContext
-            success:(void(^)(NSDictionary *json, id userContext))successBlock
+            success:(void(^)(id json, id userContext))successBlock
             failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     [self
@@ -224,7 +274,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
                headers:(NSDictionary *)headers
               postData:(NSDictionary *)postData
            userContext:(id)userContext
-               success:(void(^)(NSDictionary *json, id userContext))successBlock
+               success:(void(^)(id json, id userContext))successBlock
                failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     if (successBlock == nil) {

@@ -2490,8 +2490,28 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
+            NSArray *sortedEntities =
+            [updatedEntities
+             sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+
+                 if ([obj1 conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
+                     return NSOrderedAscending;
+                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
+                     return NSOrderedAscending;
+                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedGroup)]) {
+                     return NSOrderedAscending;
+                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProject)]) {
+                     return NSOrderedAscending;
+                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedTimer)]) {
+                     return NSOrderedAscending;
+                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedCannedMessage)]) {
+                     return NSOrderedAscending;
+                 }
+                 return NSOrderedSame;
+             }];
+
             NSMutableSet *remainingEntityIDs = [NSMutableSet set];
-            for (id<TCSProvidedBaseEntity> obj in updatedEntities) {
+            for (id<TCSProvidedBaseEntity> obj in sortedEntities) {
 
                 NSAssert([obj conformsToProtocol:@protocol(TCSProvidedBaseEntity)],
                          @"Entity doesn't conform to TCSProvidedBaseEntity");
@@ -2932,6 +2952,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSAssert(providedTimer.utsRemoteID != nil, @"timer remoteID is nil");
 
+    if (providedTimer.utsStartTime == nil) {
+        NSLog(@"WARN : provided start time is missing: %@");
+        return;
+    }
+
     NSArray *entities =
     [TCSTimer
      MR_findByAttribute:@"remoteId"
@@ -2952,11 +2977,45 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (providedTimer.utsProjectID != nil) {
 
-        entities =
-        [TCSProject
-         MR_findByAttribute:@"remoteId"
-         withValue:providedTimer.utsProjectID
-         inContext:context];
+        id <TCSServiceRemoteProvider> remoteProvider =
+        [[TCSService sharedInstance]
+         serviceProviderNamed:providerName];
+
+        NSString *projectIDSeparator = [remoteProvider timerProjectIDSeparator];
+
+        if (projectIDSeparator == nil) {
+
+            entities =
+            [TCSProject
+             MR_findByAttribute:@"remoteId"
+             withValue:providedTimer.utsProjectID
+             inContext:context];
+
+        } else {
+
+            NSArray *idComponents =
+            [providedTimer.utsProjectID
+             componentsSeparatedByString:projectIDSeparator];
+
+            if (idComponents.count == 2) {
+                NSString *groupID = idComponents[0];
+                NSString *projectID = idComponents[1];
+
+                NSPredicate *predicate =
+                [NSPredicate
+                 predicateWithFormat:@"remoteId = %@ and parent.remoteId = %@",
+                 projectID, groupID];
+
+                NSLog(@"predicate: %@", predicate);
+
+                entities =
+                [TCSProject
+                 MR_findAllWithPredicate:predicate inContext:context];
+            } else {
+                NSLog(@"WARN : utsProjectID '%@' not separated by %@ char",
+                      providedTimer.utsProjectID, projectIDSeparator);
+            }
+        }
 
         if (entities.count > 1) {
             NSLog(@"SYNC: Warn: multiple timer.projects exist with remoteID: %@",
@@ -2968,6 +3027,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (existingProject == nil) {
         NSLog(@"SYNC: Missing timer project!!! providerTimer: %@", providedTimer);
+        [existingTimer markEntityAsDeleted];
         return;
     }
 
