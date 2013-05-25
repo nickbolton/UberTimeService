@@ -458,7 +458,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     [push setQuery:pushQuery];
     [push setData:
      @{
-     kTCSPushNotificationRemoteServiceProviderKey : NSStringFromClass([self class]),
+     kTCSServicRemoteProviderNameKey : NSStringFromClass([self class]),
      }];
     
     [push sendPushInBackground];

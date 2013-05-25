@@ -125,8 +125,8 @@
 
 - (NSTimeInterval)timeInterval {
 
-    NSDate *start = self.startTime;
-    NSDate *end = self.endTime;
+    NSDate *start = self.metadata.startTime;
+    NSDate *end = self.metadata.endTime;
 
 	if (end != nil) {
 		return [end timeIntervalSinceDate:start];
@@ -138,8 +138,8 @@
 
 - (NSTimeInterval)timeIntervalForDateRange:(TCSDateRange *)dateRange {
 
-    NSDate *start = self.startTime;
-    NSDate *end = self.endTime;
+    NSDate *start = self.metadata.startTime;
+    NSDate *end = self.metadata.endTime;
 
     if (end == nil) {
         end = [[TCSService sharedInstance] systemTime];

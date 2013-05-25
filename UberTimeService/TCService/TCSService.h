@@ -15,8 +15,10 @@
 #import "TCSTimedEntityMetadata.h"
 #import "NSError+Utilities.h"
 
-extern NSString * const kTCSPushNotificationRemoteServiceProviderKey;
+extern NSString * const kTCSServicRemoteProviderNameKey;
 extern NSString * const kTCSServiceDataResetNotification;
+extern NSString * const kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification;
+extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
 @protocol TCSServiceDelegate <NSObject>
 
@@ -150,6 +152,7 @@ extern NSString * const kTCSServiceDataResetNotification;
 
 - (void)pollRemoteServicesForUpdates;
 - (void)pollRemoteServiceForUpdates:(NSString *)providerName;
+- (void)pollProviderInstanceForUpdates:(TCSProviderInstance *)providerInstance;
 
 - (NSArray *)registeredRemoteProviders;
 - (void)registerRemoteServiceProvider:(Class)providerClass;

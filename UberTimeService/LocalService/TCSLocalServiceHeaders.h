@@ -7,3 +7,4 @@
 #import "TCSTimedEntity.h"
 #import "TCSTimedEntityMetadata.h"
 #import "TCSTimer.h"
+#import "TCSTimerMetadata.h"

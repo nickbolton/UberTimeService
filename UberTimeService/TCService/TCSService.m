@@ -10,10 +10,13 @@
 #import "NSDate+Utilities.h"
 #import "TCSServicePrivate.h"
 
-NSString * const kTCSPushNotificationRemoteServiceProviderKey = @"remoteProvider";
+NSString * const kTCSServicRemoteProviderNameKey = @"provider-name";
 NSString * const kTCSServicePrivateRemoteSyncCompletedNotification =
 @"kTCSServicePrivateRemoteSyncCompletedNotification";
 NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotification";
+NSString * const kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification =
+@"kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification";
+NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 
 @interface TCSService()
 
@@ -204,6 +207,16 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
     }
 }
 
+- (void)pollProviderInstanceForUpdates:(TCSProviderInstance *)providerInstance {
+
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [self serviceProviderNamed:providerInstance.remoteProvider];
+
+    [self
+     updateProviderInstancesIfNeeded:@[providerInstance]
+     remoteProvider:remoteProvider];
+}
+
 - (void)pollRemoteServiceForUpdates:(NSString *)providerName {
 
     id <TCSServiceRemoteProvider> remoteProvider =
@@ -285,13 +298,13 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     for (TCSTimer *timer in updatedTimers) {
 
-        if ([timer.objectID isEqual:self.activeTimer.objectID] && timer.endTime != nil) {
+        if ([timer.objectID isEqual:self.activeTimer.objectID] && timer.metadata.endTime != nil) {
             self.activeTimer = nil;
         }
     }
 
     for (TCSTimer *timer in insertedTimers) {
-        if (timer.endTime == nil) {
+        if (timer.metadata.endTime == nil) {
             if (self.activeTimer == nil) {
                 self.activeTimer = timer;
             } else {
@@ -629,7 +642,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 
     if (successBlock != nil) {
 
-        if (timer.adjustmentValue == 0) {
+        if (timer.metadata.adjustmentValue == 0) {
             [_localService
              rollTimer:timer
              maxDuration:maxDuration

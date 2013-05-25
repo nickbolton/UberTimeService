@@ -45,6 +45,30 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     return dateFormatter;
 }
 
+- (NSDateFormatter *)timerEntryFormatter {
+
+    static NSDateFormatter *dateFormatter = nil;
+    
+    if (dateFormatter == nil) {
+        // Tue, 17 Oct 2006
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"EEE, d MMM yyyy"];
+    }
+
+    return dateFormatter;
+}
+
+- (NSString *)addTimerPostFormat {
+
+    static NSString *format = nil;
+    
+    if (format == nil) {
+        format =
+        @"{notes:'%@',hours:%f,project_id:%@,task_id:%@,spent_at:'%@'}";
+    }
+    return format;
+}
+
 - (void)clearCache {
 }
 
@@ -198,44 +222,65 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-//    if ([NSStringFromClass([self class]) isEqualToString:timer.remoteProvider] == NO) {
-//        return NO;
-//    }
-//
-//    
-//    if ([PFUser currentUser] == nil) return NO;
-//
-//    TCSParseTimer *parseTimer = [TCSParseTimer object];
-//    parseTimer.user = [PFUser currentUser];
-//    [self updateTimerProperties:parseTimer timer:timer];
-//
-//    NSManagedObjectID *objectID = timer.objectID;
-//
-//    if (self.isHoldingUpdates) {
-//        [self bufferParseObject:(id)parseTimer objectID:objectID];
-//        return NO;
-//    }
-//
-//    if (_connected == NO) {
-//        return NO;
-//    }
-//
-//    [parseTimer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        if (error != nil) {
-//
-//            if (failureBlock != nil) {
-//                failureBlock(error);
-//            }
-//
-//        } else {
-//
-//            if (successBlock != nil) {
-//                successBlock(objectID, parseTimer.objectId);
-//            }
-//
-//            [self sendPushNotification];
-//        }
-//    }];
+    if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
+        NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
+        return NO;
+    }
+
+    if (timer.providerInstance.userID == nil) {
+        NSLog(@"%s WARN : provider to harvest: %@", timer.providerInstance.remoteProvider);
+
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification
+         object:self
+         userInfo:@{
+         kTCSServiceRemoteProviderInstanceKey : timer.providerInstance,
+         }];
+        return NO;
+    }
+
+    NSString *authString = [NSString stringWithFormat:@"%@:%@",
+                            timer.providerInstance.username,
+                            timer.providerInstance.password];
+    
+    NSData *authData = [authString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *auth = [authData base64EncodedString];
+
+    NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"application/json", @"Accept",
+                             @"application/json", @"Content-Type",
+                             [NSString stringWithFormat:@"Basic %@", auth], @"Authorization",
+                             nil];
+
+    NSDateFormatter *dateFormatter = [self timerEntryFormatter];
+
+    NSString *postData = [NSString stringWithFormat:[self addTimerPostFormat],
+                          timer.message != nil ? timer.message : @"",
+                          MAX(0.01666666666667f, [timer elapsedTimeInHours]),
+                          timer.project.parent.remoteId,
+                          timer.project.remoteId,
+                          [dateFormatter stringFromDate:timer.startTime]];
+
+    NSURL *url =
+    [NSURL URLWithString:[NSString stringWithFormat:@"%@/daily/add", timer.providerInstance.baseURL]];
+
+    [self
+     postWithURL:url
+     headers:headers
+     postData:postData
+     userContext:nil
+     success:^(id json, id userContext) {
+
+         if (successBlock != nil) {
+             successBlock(timer.objectID, nil);
+         }
+         
+     } failure:^(NSError *error, id userContext) {
+
+         if (failureBlock != nil) {
+             failureBlock(error);
+         }
+     }];
 
     return YES;
 }

@@ -208,7 +208,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                       failure:(void(^)(NSError *error))failureBlock {
 
     if (_syncingRemoteProvider == nil) {
-        NSLog(@"WARN : no sync remote provider registered");
+        NSLog(@"%s WARN : no sync remote provider registered");
         return;
     }
 
@@ -223,7 +223,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                   failure:(void(^)(NSError *error))failureBlock {
 
     if (_syncingRemoteProvider == nil) {
-        NSLog(@"WARN : no sync remote provider registered");
+        NSLog(@"%s WARN : no sync remote provider registered");
         return;
     }
 
@@ -268,7 +268,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     }
 
     if (remoteProvider == nil) {
-        NSLog(@"WARN : No remote provider specified");
+        NSLog(@"%s WARN : No remote provider specified");
         return;
     }
 
@@ -312,7 +312,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     }
 
     if (remoteProvider == nil) {
-        NSLog(@"WARN : No remote provider specified");
+        NSLog(@"%s WARN : No remote provider specified");
         return;
     }
 
@@ -2052,7 +2052,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                        failure:(void(^)(NSError *error))failureBlock {
 
     if (_syncingRemoteProvider == nil) {
-        NSLog(@"WARN : no syncing provider specified");
+        NSLog(@"%s WARN : no syncing provider specified");
         return;
 
     }
@@ -2138,7 +2138,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          }];
 
     } else {
-        NSLog(@"WARN : no remote provider");
+        NSLog(@"%s WARN : no remote provider");
     }
 }
 
@@ -2983,7 +2983,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     NSAssert(providedTimer.utsRemoteID != nil, @"timer remoteID is nil");
 
     if (providedTimer.utsStartTime == nil) {
-        NSLog(@"WARN : provided start time is missing: %@");
+        NSLog(@"%s WARN : provided start time is missing: %@");
         return;
     }
 
@@ -3041,7 +3041,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                 [TCSProject
                  MR_findAllWithPredicate:predicate inContext:context];
             } else {
-                NSLog(@"WARN : utsProjectID '%@' not separated by %@ char",
+                NSLog(@"%s WARN : utsProjectID '%@' not separated by %@ char",
                       providedTimer.utsProjectID, projectIDSeparator);
             }
         }

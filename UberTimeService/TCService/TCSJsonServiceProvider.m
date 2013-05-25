@@ -54,7 +54,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
          localError = error;
      }];
 
-    if (*error != nil) {
+    if (error != nil) {
         *error = localError;
     }
     
@@ -126,7 +126,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
         if (failureBlock != nil) {
             failureBlock(error, userContext);
         }
-        
+
     } else {
 
         json =
@@ -212,7 +212,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
              failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     if (successBlock == nil && asynchronous) {
-        NSLog(@"WARN : no successBlock. aborting json request.");
+        NSLog(@"%s WARN : no successBlock. aborting json request.");
         return nil;
     }
     
@@ -278,11 +278,11 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
                failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     if (successBlock == nil) {
-        NSLog(@"WARN : no successBlock. aborting json request.");
+        NSLog(@"%s WARN : no successBlock. aborting json request.");
         return;
     }
 
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest/?method=flickr.groups.browse&api_key=b6300e17ad3c506e706cb0072175d047&cat_id=34427469792%40N01&format=rest"]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = method;
 
     for (NSString *key in headers) {

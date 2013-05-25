@@ -47,11 +47,15 @@
         <relationship name="timedEntity" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimedEntity" inverseName="metadata" inverseEntity="TCSTimedEntity" syncable="YES"/>
     </entity>
     <entity name="TCSTimer" representedClassName="TCSTimer" parentEntity="TCSBaseEntity" syncable="YES">
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="metadata" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimerMetadata" inverseName="timers" inverseEntity="TCSTimerMetadata" syncable="YES"/>
+        <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProject" inverseName="timers" inverseEntity="TCSProject" syncable="YES"/>
+    </entity>
+    <entity name="TCSTimerMetadata" representedClassName="TCSTimerMetadata" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startTime" attributeType="Date" syncable="YES"/>
-        <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProject" inverseName="timers" inverseEntity="TCSProject" syncable="YES"/>
+        <relationship name="timers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TCSTimer" inverseName="metadata" inverseEntity="TCSTimer" syncable="YES"/>
     </entity>
     <elements>
         <element name="TCSBaseEntity" positionX="160" positionY="192" width="128" height="135"/>
@@ -62,6 +66,7 @@
         <element name="TCSRemoteCommand" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimedEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimedEntityMetadata" positionX="160" positionY="192" width="128" height="150"/>
-        <element name="TCSTimer" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="TCSTimer" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="TCSTimerMetadata" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

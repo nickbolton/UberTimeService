@@ -4,13 +4,11 @@
 #import "_TCSTimer.h"
 
 const struct TCSTimerAttributes TCSTimerAttributes = {
-	.adjustment = @"adjustment",
-	.endTime = @"endTime",
 	.message = @"message",
-	.startTime = @"startTime",
 };
 
 const struct TCSTimerRelationships TCSTimerRelationships = {
+	.metadata = @"metadata",
 	.project = @"project",
 };
 
@@ -43,46 +41,9 @@ const struct TCSTimerFetchedProperties TCSTimerFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"adjustmentValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"adjustment"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic adjustment;
-
-
-
-- (float)adjustmentValue {
-	NSNumber *result = [self adjustment];
-	return [result floatValue];
-}
-
-- (void)setAdjustmentValue:(float)value_ {
-	[self setAdjustment:[NSNumber numberWithFloat:value_]];
-}
-
-- (float)primitiveAdjustmentValue {
-	NSNumber *result = [self primitiveAdjustment];
-	return [result floatValue];
-}
-
-- (void)setPrimitiveAdjustmentValue:(float)value_ {
-	[self setPrimitiveAdjustment:[NSNumber numberWithFloat:value_]];
-}
-
-
-
-
-
-@dynamic endTime;
-
-
 
 
 
@@ -94,12 +55,9 @@ const struct TCSTimerFetchedProperties TCSTimerFetchedProperties = {
 
 
 
-@dynamic startTime;
+@dynamic metadata;
 
-
-
-
-
+	
 
 @dynamic project;
 

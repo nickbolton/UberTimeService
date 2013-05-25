@@ -20,6 +20,10 @@
 		FE55454D174B9B5B0076C48B /* TCSJsonServiceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454B174B9B5A0076C48B /* TCSJsonServiceProvider.m */; };
 		FE554550174BA6B70076C48B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454F174BA6B70076C48B /* NSData+Base64.m */; };
 		FE554551174BA6B70076C48B /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = FE55454F174BA6B70076C48B /* NSData+Base64.m */; };
+		FE7E264517512B1B0084F59D /* TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264417512B1B0084F59D /* TCSTimerMetadata.m */; };
+		FE7E264617512B1B0084F59D /* TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264417512B1B0084F59D /* TCSTimerMetadata.m */; };
+		FE7E264917512B240084F59D /* _TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264817512B240084F59D /* _TCSTimerMetadata.m */; };
+		FE7E264A17512B240084F59D /* _TCSTimerMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7E264817512B240084F59D /* _TCSTimerMetadata.m */; };
 		FE7F8BE717372D9D008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
 		FE7F8BEA17372DA7008EE46E /* _TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE917372DA7008EE46E /* _TCSBaseEntity.m */; };
 		FE7F8BEB17372DC3008EE46E /* TCSBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */; };
@@ -177,6 +181,10 @@
 		FE55454B174B9B5A0076C48B /* TCSJsonServiceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSJsonServiceProvider.m; sourceTree = "<group>"; };
 		FE55454E174BA6B70076C48B /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "UberTimeService/Utilities/NSData+Base64.h"; sourceTree = SOURCE_ROOT; };
 		FE55454F174BA6B70076C48B /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "UberTimeService/Utilities/NSData+Base64.m"; sourceTree = SOURCE_ROOT; };
+		FE7E264317512B1B0084F59D /* TCSTimerMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSTimerMetadata.h; sourceTree = "<group>"; };
+		FE7E264417512B1B0084F59D /* TCSTimerMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSTimerMetadata.m; sourceTree = "<group>"; };
+		FE7E264717512B240084F59D /* _TCSTimerMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSTimerMetadata.h; sourceTree = "<group>"; };
+		FE7E264817512B240084F59D /* _TCSTimerMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSTimerMetadata.m; sourceTree = "<group>"; };
 		FE7F8BE517372D9D008EE46E /* TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseEntity.h; sourceTree = "<group>"; };
 		FE7F8BE617372D9D008EE46E /* TCSBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseEntity.m; sourceTree = "<group>"; };
 		FE7F8BE817372DA7008EE46E /* _TCSBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseEntity.h; sourceTree = "<group>"; };
@@ -638,6 +646,8 @@
 				FE9E7719174E37B00035EABE /* TCSProviderInstance.m */,
 				FE9E7725174F07880035EABE /* TCSTimedEntityMetadata.h */,
 				FE9E7726174F07880035EABE /* TCSTimedEntityMetadata.m */,
+				FE7E264317512B1B0084F59D /* TCSTimerMetadata.h */,
+				FE7E264417512B1B0084F59D /* TCSTimerMetadata.m */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -663,6 +673,8 @@
 				FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */,
 				FE9E7729174F07950035EABE /* _TCSTimedEntityMetadata.h */,
 				FE9E772A174F07950035EABE /* _TCSTimedEntityMetadata.m */,
+				FE7E264717512B240084F59D /* _TCSTimerMetadata.h */,
+				FE7E264817512B240084F59D /* _TCSTimerMetadata.m */,
 			);
 			path = Machine;
 			sourceTree = "<group>";
@@ -873,6 +885,8 @@
 				FE9E7728174F07880035EABE /* TCSTimedEntityMetadata.m in Sources */,
 				FE9E772C174F07950035EABE /* _TCSTimedEntityMetadata.m in Sources */,
 				FE9E7730174F087F0035EABE /* TCSParseTimedEntityMetadata.m in Sources */,
+				FE7E264617512B1B0084F59D /* TCSTimerMetadata.m in Sources */,
+				FE7E264A17512B240084F59D /* _TCSTimerMetadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,6 +946,8 @@
 				FE9E7727174F07880035EABE /* TCSTimedEntityMetadata.m in Sources */,
 				FE9E772B174F07950035EABE /* _TCSTimedEntityMetadata.m in Sources */,
 				FE9E772F174F087F0035EABE /* TCSParseTimedEntityMetadata.m in Sources */,
+				FE7E264517512B1B0084F59D /* TCSTimerMetadata.m in Sources */,
+				FE7E264917512B240084F59D /* _TCSTimerMetadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
