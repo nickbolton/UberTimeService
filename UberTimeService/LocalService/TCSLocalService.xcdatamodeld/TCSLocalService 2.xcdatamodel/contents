@@ -51,17 +51,18 @@
     </entity>
     <entity name="TCSTimer" representedClassName="TCSTimer" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="metadata" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimerMetadata" inverseName="timers" inverseEntity="TCSTimerMetadata" syncable="YES"/>
+        <relationship name="metadata" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="TCSTimerMetadata" inverseName="timer" inverseEntity="TCSTimerMetadata" syncable="YES"/>
         <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProject" inverseName="timers" inverseEntity="TCSProject" syncable="YES"/>
     </entity>
     <entity name="TCSTimerMetadata" representedClassName="TCSTimerMetadata" parentEntity="TCSBaseMetadataEntity" syncable="YES">
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="startTime" attributeType="Date" syncable="YES"/>
-        <relationship name="timers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TCSTimer" inverseName="metadata" inverseEntity="TCSTimer" syncable="YES"/>
+        <relationship name="timer" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimer" inverseName="metadata" inverseEntity="TCSTimer" syncable="YES"/>
     </entity>
     <elements>
         <element name="TCSBaseEntity" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="TCSBaseMetadataEntity" positionX="160" positionY="192" width="128" height="60"/>
         <element name="TCSCannedMessage" positionX="160" positionY="192" width="128" height="75"/>
         <element name="TCSGroup" positionX="160" positionY="192" width="128" height="60"/>
         <element name="TCSProject" positionX="160" positionY="192" width="128" height="60"/>
@@ -71,6 +72,5 @@
         <element name="TCSTimedEntityMetadata" positionX="160" positionY="192" width="128" height="150"/>
         <element name="TCSTimer" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimerMetadata" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="TCSBaseMetadataEntity" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>

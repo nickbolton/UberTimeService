@@ -3074,11 +3074,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSAssert(providedTimer.utsRemoteID != nil, @"timer remoteID is nil");
 
-    if (providedTimer.utsStartTime == nil) {
-        NSLog(@"%s WARN : provided start time is missing");
-        return;
-    }
-
     NSArray *entities =
     [TCSTimer
      MR_findByAttribute:@"remoteId"
@@ -3452,6 +3447,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
              markAsUpdated:NO];
             
             *inserted = timerMetadata;
+
+            timer.metadata = timerMetadata;
             
             NSLog(@"SYNC: created new timerMetadata: %@", timerMetadata);
         }

@@ -11,7 +11,7 @@ extern const struct TCSTimerMetadataAttributes {
 } TCSTimerMetadataAttributes;
 
 extern const struct TCSTimerMetadataRelationships {
-	__unsafe_unretained NSString *timers;
+	__unsafe_unretained NSString *timer;
 } TCSTimerMetadataRelationships;
 
 extern const struct TCSTimerMetadataFetchedProperties {
@@ -64,9 +64,9 @@ extern const struct TCSTimerMetadataFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet* timers;
+@property (nonatomic, strong) TCSTimer* timer;
 
-- (NSMutableSet*)timersSet;
+//- (BOOL)validateTimer:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -75,11 +75,6 @@ extern const struct TCSTimerMetadataFetchedProperties {
 @end
 
 @interface _TCSTimerMetadata (CoreDataGeneratedAccessors)
-
-- (void)addTimers:(NSSet*)value_;
-- (void)removeTimers:(NSSet*)value_;
-- (void)addTimersObject:(TCSTimer*)value_;
-- (void)removeTimersObject:(TCSTimer*)value_;
 
 @end
 
@@ -108,8 +103,8 @@ extern const struct TCSTimerMetadataFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveTimers;
-- (void)setPrimitiveTimers:(NSMutableSet*)value;
+- (TCSTimer*)primitiveTimer;
+- (void)setPrimitiveTimer:(TCSTimer*)value;
 
 
 @end

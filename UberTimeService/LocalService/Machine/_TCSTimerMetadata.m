@@ -10,7 +10,7 @@ const struct TCSTimerMetadataAttributes TCSTimerMetadataAttributes = {
 };
 
 const struct TCSTimerMetadataRelationships TCSTimerMetadataRelationships = {
-	.timers = @"timers",
+	.timer = @"timer",
 };
 
 const struct TCSTimerMetadataFetchedProperties TCSTimerMetadataFetchedProperties = {
@@ -93,17 +93,8 @@ const struct TCSTimerMetadataFetchedProperties TCSTimerMetadataFetchedProperties
 
 
 
-@dynamic timers;
+@dynamic timer;
 
-	
-- (NSMutableSet*)timersSet {
-	[self willAccessValueForKey:@"timers"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"timers"];
-  
-	[self didAccessValueForKey:@"timers"];
-	return result;
-}
 	
 
 
