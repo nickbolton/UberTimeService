@@ -58,7 +58,7 @@
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="startTime" attributeType="Date" syncable="YES"/>
-        <relationship name="timer" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimer" inverseName="metadata" inverseEntity="TCSTimer" syncable="YES"/>
+        <relationship name="timer" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="TCSTimer" inverseName="metadata" inverseEntity="TCSTimer" syncable="YES"/>
     </entity>
     <elements>
         <element name="TCSBaseEntity" positionX="160" positionY="192" width="128" height="135"/>

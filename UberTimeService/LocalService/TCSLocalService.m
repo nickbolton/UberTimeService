@@ -2380,7 +2380,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                 if (entity.remoteId != nil) {
 
                     void (^executionBlock)(void) = ^{
-                        [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+                        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
                             NSError *error = nil;
 
@@ -2391,6 +2391,11 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                                 NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                             } else {
                                 [localEntity MR_deleteInContext:localContext];
+                            }
+                        } completion:^(BOOL success, NSError *error) {
+
+                            if (error != nil) {
+                                NSLog(@"%s Error : %@", __PRETTY_FUNCTION__, error);
                             }
                         }];
                     };
