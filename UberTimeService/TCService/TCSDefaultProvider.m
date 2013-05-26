@@ -23,6 +23,11 @@
     } else if ([remoteID isKindOfClass:[NSString class]] == NO) {
         remoteID = [remoteID description];
     }
+
+    if (remoteID == nil) {
+        remoteID = [NSNull null];
+    }
+    
     return remoteID;
 }
 
@@ -224,6 +229,18 @@
 
 - (void)setUtsProjectID:(NSString *)utsProjectID {
     _utsProjectID = [self safeRemoteID:utsProjectID];
+}
+
+@end
+
+@implementation TCSDefaultProviderBaseMetadata
+
+- (Class)utsLocalEntityType {
+    return [TCSBaseMetadataEntity class];
+}
+
+- (void)setUtsRelatedRemoteID:(NSString *)utsRelatedRemoteID {
+    _utsRelatedRemoteID = [self safeRemoteID:utsRelatedRemoteID];
 }
 
 @end

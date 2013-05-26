@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import "TCSParseBaseEntity.h"
+#import "TCSParseBaseMetadataEntity.h"
 
-@interface TCSParseTimedEntityMetadata : TCSParseBaseEntity<PFSubclassing, TCSProvidedTimedEntityMetadata>
+@interface TCSParseTimedEntityMetadata : TCSParseBaseMetadataEntity<PFSubclassing, TCSProvidedTimedEntityMetadata>
 
 + (NSString *)parseClassName;
 

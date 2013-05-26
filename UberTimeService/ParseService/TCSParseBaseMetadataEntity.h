@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import <Parse/Parse.h>
+#import "TCSParseBaseEntity.h"
 
-@interface TCSParseBaseMetadataEntity : PFObject<TCSProvidedBaseMetadataEntity>
+@interface TCSParseBaseMetadataEntity : TCSParseBaseEntity<TCSProvidedBaseMetadataEntity>
 
 @property (nonatomic) NSString *relatedRemoteID;
 

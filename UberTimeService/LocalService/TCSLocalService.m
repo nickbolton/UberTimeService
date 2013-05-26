@@ -377,6 +377,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
     project.metadata.providerInstance = nil;
+    project.metadata.relatedRemoteId = project.remoteId;
 
     [project
      updateWithName:name
@@ -841,6 +842,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         group.metadata = [TCSTimedEntityMetadata MR_createInContext:localContext];
         group.metadata.providerInstance = nil;
+        group.metadata.relatedRemoteId = group.remoteId;
 
         [group markEntityAsUpdated];
 
@@ -992,6 +994,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
         timer.metadata.providerInstance = nil;
+        timer.metadata.relatedRemoteId = timer.remoteId;
 
         [timer
          updateWithMessage:nil
@@ -1062,6 +1065,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
         timer.metadata.providerInstance = nil;
+        timer.metadata.relatedRemoteId = timer.remoteId;
 
         [timer
          updateWithMessage:nil
@@ -1453,6 +1457,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     rolledTimer.metadata = [TCSTimerMetadata MR_createInContext:project.managedObjectContext];
     rolledTimer.metadata.providerInstance = nil;
+    rolledTimer.metadata.relatedRemoteId = rolledTimer.remoteId;
 
     [rolledTimer
      updateWithMessage:timer.message
@@ -2260,6 +2265,22 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 //    });
 }
 
+- (void)updateMetadataRelations:(TCSBaseEntity *)entity {
+
+    if ([entity isKindOfClass:[TCSTimedEntity class]]) {
+
+        TCSTimedEntity *timedEntity = (id)entity;
+        timedEntity.metadata.relatedRemoteId = entity.remoteId;
+        [timedEntity.metadata markEntityAsUpdated];
+
+    } else if ([entity isKindOfClass:[TCSTimer class]]) {
+
+        TCSTimer *timer = (id)entity;
+        timer.metadata.relatedRemoteId = entity.remoteId;
+        [timer.metadata markEntityAsUpdated];
+    }
+}
+
 - (void)handlePushingToRemoteProviders {
 
     NSPredicate *predicate =
@@ -2305,6 +2326,16 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             if (entity.remoteId == nil) {
 
+//                if ([entity respondsToSelector:@selector(relatedRemoteId)]) {
+//
+//                    if ([(TCSBaseMetadataEntity *)entity relatedRemoteId] == nil) {
+//
+//                        NSLog(@"%s INFO : TCSBaseMetadataEntity entity doesn't yet have its relatedRemoteId: %@",
+//                              __PRETTY_FUNCTION__, entity);
+//                        continue;
+//                    }
+//                }
+
                 [self
                  createRemoteEntity:entity
                  success:^(NSManagedObjectID *objectID, NSString *remoteID) {
@@ -2326,6 +2357,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                              }
 
                              localEntity.remoteId = remoteID;
+
+                             [self updateMetadataRelations:localEntity];
                          }
 
                      } completion:^(BOOL success, NSError *error) {
@@ -2452,6 +2485,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                                     }
                                     
                                     localEntity.remoteId = remoteIDMap[objectID];
+
+                                    [self updateMetadataRelations:localEntity];
                                 }
                             }
                             
@@ -2566,6 +2601,8 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                      return NSOrderedAscending;
                  } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
                      return NSOrderedAscending;
+                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
+                     return NSOrderedAscending;
                  } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedGroup)]) {
                      return NSOrderedAscending;
                  } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProject)]) {
@@ -2637,6 +2674,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                 } else if (localType == [TCSTimedEntityMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)]) {
                     [self
                      handleTimedEntityMetadataUpdate:(id)obj
+                     providerInstance:providerInstance
                      inserted:&inserted
                      updated:&updated
                      inContext:localContext];
@@ -2925,9 +2963,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [TCSGroup MR_createInContext:context];
         group.providerInstance = providerInstance;
 
-        group.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-        group.metadata.providerInstance = nil;
-
         [group
          updateWithName:providedGroup.utsName
          entityVersion:providedGroup.utsEntityVersion
@@ -3015,10 +3050,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSProject *project =
         [TCSProject MR_createInContext:context];
         project.providerInstance = providerInstance;
-
-        project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-        project.metadata.providerInstance = nil;
-        project.metadata.archivedValue = remoteProvider.importProjectsAsArchived;
 
         [project
          updateWithName:providedProject.utsName
@@ -3166,23 +3197,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [TCSTimer MR_createInContext:context];
         timer.providerInstance = providerInstance;
 
-        timer.metadata = [TCSTimerMetadata MR_createInContext:context];
-        timer.metadata.providerInstance = nil;
-
         [timer
          updateWithMessage:providedTimer.utsMessage
          entityVersion:providedTimer.utsEntityVersion
          remoteId:providedTimer.utsRemoteID
          updateTime:providedTimer.utsUpdateTime
-         markAsUpdated:NO];
-
-        [timer.metadata
-         updateWithStartTime:providedTimer.utsStartTime
-         endTime:providedTimer.utsEndTime
-         adjustment:0.0f
-         entityVersion:0
-         remoteId:nil
-         updateTime:[[TCSService sharedInstance] systemTime]
          markAsUpdated:NO];
 
         timer.project = existingProject;
@@ -3261,11 +3280,17 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 }
 
 - (void)handleTimedEntityMetadataUpdate:(id <TCSProvidedTimedEntityMetadata>)providedTimedEntityMetadata
+                       providerInstance:(TCSProviderInstance *)providerInstance
                                inserted:(TCSBaseEntity **)inserted
                                 updated:(TCSBaseEntity **)updated
                               inContext:(NSManagedObjectContext *)context {
 
     NSAssert(providedTimedEntityMetadata.utsRemoteID != nil, @"timedEntityMetadata remoteID is nil");
+
+    if (providedTimedEntityMetadata.utsRelatedRemoteID == nil) {
+        NSLog(@"%s INFO : relatedRemoteID doesn't exist yet, skipping: %@", __PRETTY_FUNCTION__, providedTimedEntityMetadata);
+        return;
+    }
 
     NSArray *entities =
     [TCSTimedEntityMetadata
@@ -3312,25 +3337,41 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     } else {
 
-        TCSTimedEntityMetadata *timedEntityMetadata =
-        [TCSTimedEntityMetadata MR_createInContext:context];
-        timedEntityMetadata.providerInstance = nil;
+        TCSTimedEntity *timedEntity =
+        [TCSTimedEntity
+         MR_findFirstByAttribute:@"remoteId"
+         withValue:providedTimedEntityMetadata.utsRelatedRemoteID
+         inContext:context];
 
-        [timedEntityMetadata
-         updateWithColor:providedTimedEntityMetadata.utsColor
-         archived:providedTimedEntityMetadata.utsArchived
-         filteredModifiers:providedTimedEntityMetadata.utsFilteredModifiers
-         keyCode:providedTimedEntityMetadata.utsKeyCode
-         modifiers:providedTimedEntityMetadata.utsModifiers
-         order:providedTimedEntityMetadata.utsOrder
-         entityVersion:providedTimedEntityMetadata.utsEntityVersion
-         remoteId:providedTimedEntityMetadata.utsRemoteID
-         updateTime:providedTimedEntityMetadata.utsUpdateTime
-         markAsUpdated:NO];
+        if (timedEntity != nil) {
 
-        *inserted = timedEntityMetadata;
+            id <TCSServiceRemoteProvider> remoteProvider =
+            [self remoteProviderForInstance:providerInstance];
 
-        NSLog(@"SYNC: created new timedEntityMetadata: %@", timedEntityMetadata);
+            TCSTimedEntityMetadata *timedEntityMetadata =
+            [TCSTimedEntityMetadata MR_createInContext:context];
+            timedEntityMetadata.providerInstance = nil;
+            timedEntityMetadata.relatedRemoteId = providedTimedEntityMetadata.utsRelatedRemoteID;
+            timedEntityMetadata.archivedValue = remoteProvider.importProjectsAsArchived;
+
+            [timedEntityMetadata
+             updateWithColor:providedTimedEntityMetadata.utsColor
+             archived:providedTimedEntityMetadata.utsArchived
+             filteredModifiers:providedTimedEntityMetadata.utsFilteredModifiers
+             keyCode:providedTimedEntityMetadata.utsKeyCode
+             modifiers:providedTimedEntityMetadata.utsModifiers
+             order:providedTimedEntityMetadata.utsOrder
+             entityVersion:providedTimedEntityMetadata.utsEntityVersion
+             remoteId:providedTimedEntityMetadata.utsRemoteID
+             updateTime:providedTimedEntityMetadata.utsUpdateTime
+             markAsUpdated:NO];
+
+            *inserted = timedEntityMetadata;
+
+            timedEntity.metadata = timedEntityMetadata;
+            
+            NSLog(@"SYNC: created new timedEntityMetadata: %@", timedEntityMetadata);
+        }
     }
 }
 
@@ -3340,6 +3381,11 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
                         inContext:(NSManagedObjectContext *)context {
 
     NSAssert(providedTimerMetadata.utsRemoteID != nil, @"providedTimerMetadata remoteID is nil");
+
+    if (providedTimerMetadata.utsRelatedRemoteID == nil) {
+        NSLog(@"%s INFO : relatedRemoteID doesn't exist yet, skipping: %@", __PRETTY_FUNCTION__, providedTimerMetadata);
+        return;
+    }
 
     NSArray *entities =
     [TCSTimerMetadata
@@ -3383,22 +3429,32 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     } else {
 
-        TCSTimerMetadata *timerMetadata =
-        [TCSTimerMetadata MR_createInContext:context];
-        timerMetadata.providerInstance = nil;
+        TCSTimer *timer =
+        [TCSTimer
+         MR_findFirstByAttribute:@"remoteId"
+         withValue:providedTimerMetadata.utsRelatedRemoteID
+         inContext:context];
 
-        [timerMetadata
-         updateWithStartTime:providedTimerMetadata.utsStartTime
-         endTime:providedTimerMetadata.utsEndTime
-         adjustment:providedTimerMetadata.utsAdjustment
-         entityVersion:providedTimerMetadata.utsEntityVersion
-         remoteId:providedTimerMetadata.utsRemoteID
-         updateTime:providedTimerMetadata.utsUpdateTime
-         markAsUpdated:NO];
+        if (timer != nil) {
 
-        *inserted = timerMetadata;
-        
-        NSLog(@"SYNC: created new timerMetadata: %@", timerMetadata);
+            TCSTimerMetadata *timerMetadata =
+            [TCSTimerMetadata MR_createInContext:context];
+            timerMetadata.providerInstance = nil;
+            timerMetadata.relatedRemoteId = providedTimerMetadata.utsRelatedRemoteID;
+
+            [timerMetadata
+             updateWithStartTime:providedTimerMetadata.utsStartTime
+             endTime:providedTimerMetadata.utsEndTime
+             adjustment:providedTimerMetadata.utsAdjustment
+             entityVersion:providedTimerMetadata.utsEntityVersion
+             remoteId:providedTimerMetadata.utsRemoteID
+             updateTime:providedTimerMetadata.utsUpdateTime
+             markAsUpdated:NO];
+            
+            *inserted = timerMetadata;
+            
+            NSLog(@"SYNC: created new timerMetadata: %@", timerMetadata);
+        }
     }
 }
 

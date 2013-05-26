@@ -1343,6 +1343,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (void)updateTimedEntityMetadata:(TCSParseTimedEntityMetadata *)parseTimedEntityMetadata
               timedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata {
 
+    parseTimedEntityMetadata.relatedRemoteID = [self safeRemoteID:timedEntityMetadata.relatedRemoteId];
     parseTimedEntityMetadata.filteredModifiers = timedEntityMetadata.filteredModifiersValue;
     parseTimedEntityMetadata.keyCode = timedEntityMetadata.keyCodeValue;
     parseTimedEntityMetadata.modifiers = timedEntityMetadata.modifiersValue;
@@ -1512,6 +1513,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (void)updateTimerMetadata:(TCSParseTimerMetadata *)parseTimerMetadata
               timerMetadata:(TCSTimerMetadata *)timerMetadata {
 
+    parseTimerMetadata.relatedRemoteID = [self safeRemoteID:timerMetadata.relatedRemoteId];
     parseTimerMetadata.startTime = [self safePropertyValue:timerMetadata.startTime];
     parseTimerMetadata.endTime = [self safePropertyValue:timerMetadata.endTime];
     parseTimerMetadata.adjustment = timerMetadata.adjustmentValue;
