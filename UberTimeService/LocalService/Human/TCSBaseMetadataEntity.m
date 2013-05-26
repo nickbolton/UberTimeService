@@ -2,6 +2,4 @@
 
 @implementation TCSBaseMetadataEntity
 
-// Custom logic goes here.
-
 @end

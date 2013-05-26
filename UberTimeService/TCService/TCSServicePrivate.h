@@ -75,6 +75,10 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSDate *utsUpdateTime;
 @end
 
+@protocol TCSProvidedBaseMetadataEntity <TCSProvidedBaseEntity>
+@property (nonatomic, readonly) NSString *utsRelatedRemoteID;
+@end
+
 @protocol TCSProvidedTimedEntity <TCSProvidedBaseEntity>
 @property (nonatomic, readonly) NSString *utsName;
 @property (nonatomic, readonly) NSString *utsParentID;
@@ -112,7 +116,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSString *utsRemoteProvider;
 @end
 
-@protocol TCSProvidedTimedEntityMetadata <TCSProvidedBaseEntity>
+@protocol TCSProvidedTimedEntityMetadata <TCSProvidedBaseMetadataEntity>
 
 @property (nonatomic, readonly) NSInteger utsFilteredModifiers;
 @property (nonatomic, readonly) NSInteger utsKeyCode;
@@ -123,7 +127,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 
 @end
 
-@protocol TCSProvidedTimerMetadata <TCSProvidedBaseEntity>
+@protocol TCSProvidedTimerMetadata <TCSProvidedBaseMetadataEntity>
 
 @property (nonatomic, readonly) NSDate *utsStartTime;
 @property (nonatomic, readonly) NSDate *utsEndTime;

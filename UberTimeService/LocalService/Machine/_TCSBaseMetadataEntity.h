@@ -2,10 +2,10 @@
 // Make changes to TCSBaseMetadataEntity.h instead.
 
 #import <CoreData/CoreData.h>
-
+#import "TCSBaseEntity.h"
 
 extern const struct TCSBaseMetadataEntityAttributes {
-	__unsafe_unretained NSString *relatedObjectId;
+	__unsafe_unretained NSString *relatedRemoteId;
 } TCSBaseMetadataEntityAttributes;
 
 extern const struct TCSBaseMetadataEntityRelationships {
@@ -20,7 +20,7 @@ extern const struct TCSBaseMetadataEntityFetchedProperties {
 @interface TCSBaseMetadataEntityID : NSManagedObjectID {}
 @end
 
-@interface _TCSBaseMetadataEntity : NSManagedObject {}
+@interface _TCSBaseMetadataEntity : TCSBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -29,10 +29,10 @@ extern const struct TCSBaseMetadataEntityFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* relatedObjectId;
+@property (nonatomic, strong) NSString* relatedRemoteId;
 
 
-//- (BOOL)validateRelatedObjectId:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateRelatedRemoteId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -48,8 +48,8 @@ extern const struct TCSBaseMetadataEntityFetchedProperties {
 @interface _TCSBaseMetadataEntity (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSString*)primitiveRelatedObjectId;
-- (void)setPrimitiveRelatedObjectId:(NSString*)value;
+- (NSString*)primitiveRelatedRemoteId;
+- (void)setPrimitiveRelatedRemoteId:(NSString*)value;
 
 
 

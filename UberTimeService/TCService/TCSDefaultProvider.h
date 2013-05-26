@@ -27,6 +27,10 @@
 @property (nonatomic, strong) NSManagedObjectID *utsProviderInstanceID;
 @end
 
+@interface TCSDefaultProviderBaseMetadata : TCSDefaultProviderBase <TCSProvidedBaseMetadataEntity>
+@property (nonatomic, strong) NSString *utsRelatedRemoteID;
+@end
+
 @interface TCSDefaultProviderTimedEntity : TCSDefaultProviderBase <TCSProvidedTimedEntity>
 @property (nonatomic, strong) NSString *utsName;
 @property (nonatomic, strong) NSString *utsParentID;
@@ -45,7 +49,7 @@
 @property (nonatomic, strong) NSString *utsProjectID;
 @end
 
-@interface TCSDefaultProviderTimedEntityMetadata : TCSDefaultProviderBase <TCSProvidedTimedEntityMetadata>
+@interface TCSDefaultProviderTimedEntityMetadata : TCSDefaultProviderBaseMetadata <TCSProvidedTimedEntityMetadata>
 @property (nonatomic) NSInteger utsFilteredModifiers;
 @property (nonatomic) NSInteger utsKeyCode;
 @property (nonatomic) NSInteger utsModifiers;
@@ -54,7 +58,7 @@
 @property (nonatomic) NSInteger utsColor;
 @end
 
-@interface TCSDefaultProviderTimerMetadata : TCSDefaultProviderBase <TCSProvidedTimerMetadata>
+@interface TCSDefaultProviderTimerMetadata : TCSDefaultProviderBaseMetadata <TCSProvidedTimerMetadata>
 @property (nonatomic) NSTimeInterval utsAdjustment;
 @property (nonatomic, strong) NSDate *utsStartTime;
 @property (nonatomic, strong) NSDate *utsEndTime;

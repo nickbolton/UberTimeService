@@ -4,7 +4,7 @@
 #import "_TCSBaseMetadataEntity.h"
 
 const struct TCSBaseMetadataEntityAttributes TCSBaseMetadataEntityAttributes = {
-	.relatedObjectId = @"relatedObjectId",
+	.relatedRemoteId = @"relatedRemoteId",
 };
 
 const struct TCSBaseMetadataEntityRelationships TCSBaseMetadataEntityRelationships = {
@@ -46,7 +46,7 @@ const struct TCSBaseMetadataEntityFetchedProperties TCSBaseMetadataEntityFetched
 
 
 
-@dynamic relatedObjectId;
+@dynamic relatedRemoteId;
 
 
 
