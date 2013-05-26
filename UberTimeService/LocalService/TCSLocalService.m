@@ -2282,10 +2282,23 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"pending = 1"];
 
-    NSArray *updates =
+    NSArray *proposedUpdates =
     [TCSBaseEntity
      MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
+
+    NSMutableArray *updates = [proposedUpdates mutableCopy];
+
+    for (TCSBaseMetadataEntity *entity in proposedUpdates) {
+
+        if ([entity isKindOfClass:[TCSBaseMetadataEntity class]]) {
+            if (entity.relatedRemoteId == nil ||
+                entity.relatedRemoteId == [NSNull null]) {
+                
+                [updates removeObject:entity];
+            }
+        }
+    }
 
     if (updates.count > 0) {
         NSLog(@"updates: %@", updates);

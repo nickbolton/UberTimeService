@@ -1734,6 +1734,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 - (BOOL)pollForUpdates:(NSArray *)providerInstances {
 
+    NSLog(@"lastPollingDate: %@", _lastPollingDate);
+    
     if (_pollingForUpdates) return NO;
     
     if ([PFUser currentUser] != nil) {
