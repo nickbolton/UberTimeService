@@ -11,6 +11,7 @@
 @interface TCSDefaultProvider : NSObject
 
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
+@property (nonatomic, weak) id <TCSPollingDelegate> pollingDelegate;
 
 @property (nonatomic, getter = isHoldingUpdates) BOOL holdingUpdates;
 @property (nonatomic, getter = isPollingForUpdates) BOOL pollingForUpdates;

@@ -9,12 +9,9 @@
 #import "TCSService.h"
 #import "TCSServicePrivate.h"
 
-extern NSString * const kTCSLocalServiceUpdatedRemoteEntitiesNotification;
 extern NSString * const kTCSLocalServiceRemoteSyncCompletedNotification;
-extern NSString * const kTCSLocalServiceUpdatedRemoteEntitiesKey;
-extern NSString * const kTCSLocalServiceRemoteProviderNameKey;
 
-@interface TCSLocalService : TCSDefaultProvider <TCSServiceLocalService>
+@interface TCSLocalService : TCSDefaultProvider <TCSServiceLocalService, TCSPollingDelegate>
 
 + (instancetype)sharedInstance;
 

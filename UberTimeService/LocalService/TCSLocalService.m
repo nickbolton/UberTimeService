@@ -17,12 +17,8 @@
 #import "TCSServicePrivate.h"
 #import "TCSCommon.h"
 
-NSString * const kTCSLocalServiceUpdatedRemoteEntitiesNotification =
-@"kTCSLocalServiceUpdatedRemoteEntitiesNotification";
 NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 @"kTCSLocalServiceRemoteSyncCompletedNotification";
-NSString * const kTCSLocalServiceUpdatedRemoteEntitiesKey = @"updated-entities";
-NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name";
 
 @interface TCSLocalService() {
 
@@ -53,12 +49,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          name:UIApplicationDidEnterBackgroundNotification
          object:nil];
 #endif
-
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(handleUpdatedRemoteEntities:)
-         name:kTCSLocalServiceUpdatedRemoteEntitiesNotification
-         object:nil];
 
         self.sweepTimer =
         [NSTimer
@@ -2283,6 +2273,12 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
 - (void)handlePushingToRemoteProviders {
 
+    @synchronized (self) {
+        if (_savingUpdates) {
+            return;
+        }
+    }
+
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"pending = 1"];
 
@@ -2293,12 +2289,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     if (updates.count > 0) {
         NSLog(@"updates: %@", updates);
-    }
-
-    @synchronized (self) {
-        if (_savingUpdates) {
-            return;
-        }
     }
 
     NSMutableArray *createdEntities = [NSMutableArray array];
@@ -2573,272 +2563,332 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
 #pragma mark - Remote Updates
 
-- (void)handleUpdatedRemoteEntities:(NSNotification *)notification {
-    
-    NSString *providerName =
-    notification.userInfo[kTCSLocalServiceRemoteProviderNameKey];
+- (BOOL)updatePollingEntities:(NSArray *)updatedEntities
+                 providerName:(NSString *)providerName {
 
-    NSArray *updatedEntities =
-    notification.userInfo[kTCSLocalServiceUpdatedRemoteEntitiesKey];
+    NSMutableArray *mutableEntities = [updatedEntities mutableCopy];
 
-    if (updatedEntities.count == 0) {
-        [self.delegate remoteSyncCompleted];
-        return;
+    NSMutableDictionary *allMetadataEntities = [NSMutableDictionary dictionary];
+
+    for (id<TCSProvidedBaseEntity> obj in updatedEntities) {
+
+        if ([obj conformsToProtocol:@protocol(TCSProvidedTimer)] ||
+            [obj conformsToProtocol:@protocol(TCSProvidedGroup)] ||
+            [obj conformsToProtocol:@protocol(TCSProvidedProject)]) {
+
+            allMetadataEntities[obj.utsRemoteID] = obj;
+        }
+
+        if ([obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)] ||
+            [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
+
+            id <TCSProvidedTimedEntityMetadata> metadata = obj;
+
+            if (metadata.utsRelatedRemoteID == nil ||
+                metadata.utsRelatedRemoteID == [NSNull null]) {
+
+                [mutableEntities removeObject:obj];
+            }
+        }
     }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    for (id<TCSProvidedBaseEntity> obj in updatedEntities) {
 
-        __block NSMutableDictionary *updates =
-        [NSMutableDictionary dictionaryWithCapacity:3];
+        if ([obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)] ||
+            [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
 
-        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+            id <TCSProvidedTimedEntityMetadata> metadata = obj;
 
-            NSArray *sortedEntities =
-            [updatedEntities
-             sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            [allMetadataEntities removeObjectForKey:metadata.utsRelatedRemoteID];
+        }
+    }
 
-                 if ([obj1 conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
-                     return NSOrderedAscending;
-                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
-                     return NSOrderedAscending;
-                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
-                     return NSOrderedAscending;
-                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedGroup)]) {
-                     return NSOrderedAscending;
-                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProject)]) {
-                     return NSOrderedAscending;
-                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedTimer)]) {
-                     return NSOrderedAscending;
-                 } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedCannedMessage)]) {
-                     return NSOrderedAscending;
-                 }
-                 return NSOrderedSame;
-             }];
+    NSLog(@"entities without metadata: %@", allMetadataEntities);
 
-            NSMutableSet *remainingEntityIDs = [NSMutableSet set];
-            for (id<TCSProvidedBaseEntity> obj in sortedEntities) {
+    for (id<TCSProvidedBaseEntity> obj in allMetadataEntities.allValues) {
+        [mutableEntities removeObject:obj];
+    }
 
-                NSAssert([obj conformsToProtocol:@protocol(TCSProvidedBaseEntity)],
-                         @"Entity doesn't conform to TCSProvidedBaseEntity");
+    BOOL processingAllEntries = mutableEntities.count == updatedEntities.count;
 
-                Class localType = obj.utsLocalEntityType;
+    if (mutableEntities.count == 0) {
+        return processingAllEntries;
+    }
 
-                TCSBaseEntity *inserted = nil;
-                TCSBaseEntity *updated = nil;
-                NSArray *deleted = nil;
-                TCSProviderInstance *providerInstance =
+    [self.delegate remoteSyncStarting];
+
+    __block NSMutableDictionary *updates =
+    [NSMutableDictionary dictionaryWithCapacity:3];
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        NSArray *sortedEntities =
+        [mutableEntities
+         sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+
+             if ([obj1 conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
+                 return NSOrderedAscending;
+             } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
+                 return NSOrderedAscending;
+             } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
+                 return NSOrderedAscending;
+             } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedGroup)]) {
+                 return NSOrderedAscending;
+             } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedProject)]) {
+                 return NSOrderedAscending;
+             } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedTimer)]) {
+                 return NSOrderedAscending;
+             } else if ([obj1 conformsToProtocol:@protocol(TCSProvidedCannedMessage)]) {
+                 return NSOrderedAscending;
+             }
+             return NSOrderedSame;
+         }];
+
+        NSMutableSet *remainingEntityIDs = [NSMutableSet set];
+        for (id<TCSProvidedBaseEntity> obj in sortedEntities) {
+
+            NSAssert([obj conformsToProtocol:@protocol(TCSProvidedBaseEntity)],
+                     @"Entity doesn't conform to TCSProvidedBaseEntity");
+
+            Class localType = obj.utsLocalEntityType;
+
+            TCSBaseEntity *inserted = nil;
+            TCSBaseEntity *updated = nil;
+            NSArray *deleted = nil;
+            TCSProviderInstance *providerInstance =
+            [self
+             providerInstanceWithID:obj.utsProviderInstanceID
+             inContext:localContext];
+
+            if (localType == [TCSRemoteCommand class] && [obj conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
+                deleted =
                 [self
-                 providerInstanceWithID:obj.utsProviderInstanceID
+                 handleRemoteCommand:(id)obj
+                 providerName:providerName
                  inContext:localContext];
-
-                if (localType == [TCSRemoteCommand class] && [obj conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
-                    deleted =
-                    [self
-                     handleRemoteCommand:(id)obj
-                     providerName:providerName
-                     inContext:localContext];
-                } else if (localType == [TCSProviderInstance class] && [obj conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
-                    [self
-                     handleProviderInstanceUpdate:(id)obj
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                } else if (localType == [TCSGroup class] && [obj conformsToProtocol:@protocol(TCSProvidedGroup)]) {
-                    [self
-                     handleGroupUpdate:(id)obj
-                     providerInstance:providerInstance
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                } else if (localType == [TCSProject class] && [obj conformsToProtocol:@protocol(TCSProvidedProject)]) {
-                    [self
-                     handleProjectUpdate:(id)obj
-                     providerInstance:providerInstance
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                } else if (localType == [TCSTimer class] && [obj conformsToProtocol:@protocol(TCSProvidedTimer)]) {
-                    [self
-                     handleTimerUpdate:(id)obj
-                     providerInstance:providerInstance
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                } else if (localType == [TCSCannedMessage class] && [obj conformsToProtocol:@protocol(TCSProvidedCannedMessage)]) {
-                    [self
-                     handleCannedMessageUpdate:(id)obj
-                     providerInstance:providerInstance
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                } else if (localType == [TCSTimedEntityMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)]) {
-                    [self
-                     handleTimedEntityMetadataUpdate:(id)obj
-                     providerInstance:providerInstance
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                } else if (localType == [TCSTimerMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
-                    [self
-                     handleTimerMetadataUpdate:(id)obj
-                     inserted:&inserted
-                     updated:&updated
-                     inContext:localContext];
-                }
-
-                if (inserted != nil) {
-                    NSMutableArray *insertedObjects = updates[NSInsertedObjectsKey];
-                    if (insertedObjects == nil) {
-                        insertedObjects = [NSMutableArray array];
-                        updates[NSInsertedObjectsKey] = insertedObjects;
-                    }
-                    [insertedObjects addObject:inserted];
-                    [remainingEntityIDs addObject:inserted.objectID];
-                }
-                if (updated != nil) {
-                    NSMutableArray *updatedObjects = updates[NSUpdatedObjectsKey];
-                    if (updatedObjects == nil) {
-                        updatedObjects = [NSMutableArray array];
-                        updates[NSUpdatedObjectsKey] = updatedObjects;
-                    }
-                    [updatedObjects addObject:updated];
-                    [remainingEntityIDs addObject:updated.objectID];
-                }
-                if (deleted != nil) {
-                    NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
-                    if (deletedObjects == nil) {
-                        deletedObjects = [NSMutableArray array];
-                        updates[NSDeletedObjectsKey] = deletedObjects;
-                    }
-                    [deletedObjects addObjectsFromArray:deleted];
-                }
+            } else if (localType == [TCSProviderInstance class] && [obj conformsToProtocol:@protocol(TCSProvidedProviderInstance)]) {
+                [self
+                 handleProviderInstanceUpdate:(id)obj
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
+            } else if (localType == [TCSGroup class] && [obj conformsToProtocol:@protocol(TCSProvidedGroup)]) {
+                [self
+                 handleGroupUpdate:(id)obj
+                 providerInstance:providerInstance
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
+            } else if (localType == [TCSProject class] && [obj conformsToProtocol:@protocol(TCSProvidedProject)]) {
+                [self
+                 handleProjectUpdate:(id)obj
+                 providerInstance:providerInstance
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
+            } else if (localType == [TCSTimer class] && [obj conformsToProtocol:@protocol(TCSProvidedTimer)]) {
+                [self
+                 handleTimerUpdate:(id)obj
+                 providerInstance:providerInstance
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
+            } else if (localType == [TCSCannedMessage class] && [obj conformsToProtocol:@protocol(TCSProvidedCannedMessage)]) {
+                [self
+                 handleCannedMessageUpdate:(id)obj
+                 providerInstance:providerInstance
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
+            } else if (localType == [TCSTimedEntityMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)]) {
+                [self
+                 handleTimedEntityMetadataUpdate:(id)obj
+                 providerInstance:providerInstance
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
+            } else if (localType == [TCSTimerMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
+                [self
+                 handleTimerMetadataUpdate:(id)obj
+                 inserted:&inserted
+                 updated:&updated
+                 inContext:localContext];
             }
 
-            id <TCSServiceRemoteProvider> remoteProvider =
-            [[TCSService sharedInstance] serviceProviderNamed:providerName];
-
-            if ([remoteProvider canCreateEntities] == NO) {
-
-                for (TCSGroup *group in [self allGroupsInContext:localContext]) {
-
-                    if ([providerName isEqual:group.providerInstance.remoteProvider]) {
-
-                        if ([remainingEntityIDs containsObject:group.objectID] == NO) {
-                            [group MR_deleteInContext:localContext];
-
-                            NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
-                            if (deletedObjects == nil) {
-                                deletedObjects = [NSMutableArray array];
-                                updates[NSDeletedObjectsKey] = deletedObjects;
-                            }
-                            [deletedObjects addObjectsFromArray:group];
-                        }
-                    }
+            if (inserted != nil) {
+                NSMutableArray *insertedObjects = updates[NSInsertedObjectsKey];
+                if (insertedObjects == nil) {
+                    insertedObjects = [NSMutableArray array];
+                    updates[NSInsertedObjectsKey] = insertedObjects;
                 }
-
-                for (TCSProject *project in [self allProjectsInContext:localContext]) {
-
-                    if ([providerName isEqual:project.providerInstance.remoteProvider]) {
-
-                        if ([remainingEntityIDs containsObject:project.objectID] == NO) {
-                            [project MR_deleteInContext:localContext];
-
-                            NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
-                            if (deletedObjects == nil) {
-                                deletedObjects = [NSMutableArray array];
-                                updates[NSDeletedObjectsKey] = deletedObjects;
-                            }
-                            [deletedObjects addObject:project];
-                        }
-                    }
+                [insertedObjects addObject:inserted];
+                [remainingEntityIDs addObject:inserted.objectID];
+            }
+            if (updated != nil) {
+                NSMutableArray *updatedObjects = updates[NSUpdatedObjectsKey];
+                if (updatedObjects == nil) {
+                    updatedObjects = [NSMutableArray array];
+                    updates[NSUpdatedObjectsKey] = updatedObjects;
                 }
+                [updatedObjects addObject:updated];
+                [remainingEntityIDs addObject:updated.objectID];
+            }
+            if (deleted != nil) {
+                NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                if (deletedObjects == nil) {
+                    deletedObjects = [NSMutableArray array];
+                    updates[NSDeletedObjectsKey] = deletedObjects;
+                }
+                [deletedObjects addObjectsFromArray:deleted];
+            }
+        }
 
-                for (TCSTimer *timer in [self allTimersInContext:localContext]) {
+        id <TCSServiceRemoteProvider> remoteProvider =
+        [[TCSService sharedInstance] serviceProviderNamed:providerName];
 
-                    if ([providerName isEqual:timer.providerInstance.remoteProvider]) {
+        if ([remoteProvider canCreateEntities] == NO) {
 
-                        if ([remainingEntityIDs containsObject:timer.objectID] == NO) {
-                            [timer MR_deleteInContext:localContext];
+            for (TCSGroup *group in [self allGroupsInContext:localContext]) {
 
-                            NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
-                            if (deletedObjects == nil) {
-                                deletedObjects = [NSMutableArray array];
-                                updates[NSDeletedObjectsKey] = deletedObjects;
-                            }
-                            [deletedObjects addObject:timer];
+                if ([providerName isEqual:group.providerInstance.remoteProvider]) {
+
+                    if ([remainingEntityIDs containsObject:group.objectID] == NO) {
+                        [group MR_deleteInContext:localContext];
+
+                        NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                        if (deletedObjects == nil) {
+                            deletedObjects = [NSMutableArray array];
+                            updates[NSDeletedObjectsKey] = deletedObjects;
                         }
+                        [deletedObjects addObjectsFromArray:group];
                     }
                 }
             }
 
-        } completion:^(BOOL success, NSError *error) {
+            for (TCSProject *project in [self allProjectsInContext:localContext]) {
 
-            if (error != nil) {
-                NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-            } else {
-                if (updates.count > 0) {
+                if ([providerName isEqual:project.providerInstance.remoteProvider]) {
 
-                    NSArray *insertedObjects = updates[NSInsertedObjectsKey];
-                    if (insertedObjects.count > 0) {
-                        NSMutableArray *updatedInsertedObjects =
-                        [NSMutableArray arrayWithCapacity:insertedObjects.count];
+                    if ([remainingEntityIDs containsObject:project.objectID] == NO) {
+                        [project MR_deleteInContext:localContext];
 
-                        for (TCSBaseEntity *entity in insertedObjects) {
+                        NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                        if (deletedObjects == nil) {
+                            deletedObjects = [NSMutableArray array];
+                            updates[NSDeletedObjectsKey] = deletedObjects;
+                        }
+                        [deletedObjects addObject:project];
+                    }
+                }
+            }
 
-                            NSError *error = nil;
+            for (TCSTimer *timer in [self allTimersInContext:localContext]) {
 
-                            TCSBaseEntity *updatedEntity = (id)
-                            [[NSManagedObjectContext MR_contextForCurrentThread]
-                             existingObjectWithID:entity.objectID
-                             error:&error];
+                if ([providerName isEqual:timer.providerInstance.remoteProvider]) {
 
-                            if (error != nil) {
-                                NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-                            } else {
+                    if ([remainingEntityIDs containsObject:timer.objectID] == NO) {
+                        [timer MR_deleteInContext:localContext];
+
+                        NSMutableArray *deletedObjects = updates[NSDeletedObjectsKey];
+                        if (deletedObjects == nil) {
+                            deletedObjects = [NSMutableArray array];
+                            updates[NSDeletedObjectsKey] = deletedObjects;
+                        }
+                        [deletedObjects addObject:timer];
+                    }
+                }
+            }
+        }
+
+    } completion:^(BOOL success, NSError *error) {
+
+        if (error != nil) {
+            NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+        } else {
+            if (updates.count > 0) {
+
+                NSArray *insertedObjects = updates[NSInsertedObjectsKey];
+                if (insertedObjects.count > 0) {
+                    NSMutableArray *updatedInsertedObjects =
+                    [NSMutableArray arrayWithCapacity:insertedObjects.count];
+
+                    for (TCSBaseEntity *entity in insertedObjects) {
+
+                        NSError *error = nil;
+
+                        TCSBaseEntity *updatedEntity = (id)
+                        [[NSManagedObjectContext MR_contextForCurrentThread]
+                         existingObjectWithID:entity.objectID
+                         error:&error];
+
+                        if (error != nil) {
+                            NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+                        } else {
+
+                            if ([updatedEntity isKindOfClass:[TCSTimerMetadata class]]) {
+                                updatedEntity = ((TCSTimerMetadata *)updatedEntity).timer;
+                            } else if ([updatedEntity isKindOfClass:[TCSTimedEntityMetadata class]]) {
+                                updatedEntity = ((TCSTimedEntityMetadata *)updatedEntity).timedEntity;
+                            }
+
+                            if (updatedEntity == nil) {
+                                NSLog(@"ZZZZ");
+                            }
+
+                            if ([updatedInsertedObjects containsObject:updatedEntity] == NO) {
                                 [updatedInsertedObjects addObject:updatedEntity];
                             }
                         }
-                        updates[NSInsertedObjectsKey] = updatedInsertedObjects;
                     }
+                    updates[NSInsertedObjectsKey] = updatedInsertedObjects;
+                }
 
-                    NSArray *updatedObjects = updates[NSUpdatedObjectsKey];
-                    if (updatedObjects.count > 0) {
-                        NSMutableArray *updatedUpdatedObjects =
-                        [NSMutableArray arrayWithCapacity:updatedObjects.count];
+                NSArray *updatedObjects = updates[NSUpdatedObjectsKey];
+                if (updatedObjects.count > 0) {
+                    NSMutableArray *updatedUpdatedObjects =
+                    [NSMutableArray arrayWithCapacity:updatedObjects.count];
 
-                        for (TCSBaseEntity *entity in updatedObjects) {
+                    for (TCSBaseEntity *entity in updatedObjects) {
 
-                            NSError *error = nil;
+                        NSError *error = nil;
 
-                            TCSBaseEntity *updatedEntity = (id)
-                            [[NSManagedObjectContext MR_contextForCurrentThread]
-                             existingObjectWithID:entity.objectID
-                             error:&error];
+                        TCSBaseEntity *updatedEntity = (id)
+                        [[NSManagedObjectContext MR_contextForCurrentThread]
+                         existingObjectWithID:entity.objectID
+                         error:&error];
 
-                            if (error != nil) {
-                                NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-                            } else {
+                        if (error != nil) {
+                            NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+                        } else {
+
+                            if ([updatedEntity isKindOfClass:[TCSTimerMetadata class]]) {
+                                updatedEntity = ((TCSTimerMetadata *)updatedEntity).timer;
+                            } else if ([updatedEntity isKindOfClass:[TCSTimedEntityMetadata class]]) {
+                                updatedEntity = ((TCSTimedEntityMetadata *)updatedEntity).timedEntity;
+                            }
+
+                            if ([updatedUpdatedObjects containsObject:updatedEntity] == NO) {
                                 [updatedUpdatedObjects addObject:updatedEntity];
                             }
                         }
-                        updates[NSUpdatedObjectsKey] = updatedUpdatedObjects;
                     }
-
-                    [[NSNotificationCenter defaultCenter]
-                     postNotificationName:kTCSServicePrivateRemoteSyncCompletedNotification
-                     object:self
-                     userInfo:updates];
-
-                    [[NSNotificationCenter defaultCenter]
-                     postNotificationName:kTCSLocalServiceRemoteSyncCompletedNotification
-                     object:self
-                     userInfo:updates];
+                    updates[NSUpdatedObjectsKey] = updatedUpdatedObjects;
                 }
-            }
 
-            [self.delegate remoteSyncCompleted];
-        }];
-    });
+                [[NSNotificationCenter defaultCenter]
+                 postNotificationName:kTCSServicePrivateRemoteSyncCompletedNotification
+                 object:self
+                 userInfo:updates];
+
+                [[NSNotificationCenter defaultCenter]
+                 postNotificationName:kTCSLocalServiceRemoteSyncCompletedNotification
+                 object:self
+                 userInfo:updates];
+            }
+        }
+
+        [self.delegate remoteSyncCompleted];
+    }];
 }
 
 - (NSArray *)handleRemoteCommand:(id <TCSProvidedRemoteCommand>)providedRemoteCommand
@@ -3160,21 +3210,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
              updateTime:providedTimer.utsUpdateTime
              markAsUpdated:NO];
 
-            NSTimeInterval duration =
-            providedTimer.utsEndTime.timeIntervalSinceReferenceDate -
-            providedTimer.utsStartTime.timeIntervalSinceReferenceDate;
-
-            duration = MAX(0.0f, duration);
-
-            [existingTimer.metadata
-             updateWithStartTime:existingTimer.metadata.startTime
-             endTime:[existingTimer.metadata.startTime dateByAddingTimeInterval:duration]
-             adjustment:0.0f
-             entityVersion:0
-             remoteId:nil
-             updateTime:[[TCSService sharedInstance] systemTime]
-             markAsUpdated:YES];
-
             existingTimer.project = existingProject;
 
             *updated = existingTimer;
@@ -3282,7 +3317,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSAssert(providedTimedEntityMetadata.utsRemoteID != nil, @"timedEntityMetadata remoteID is nil");
 
-    if (providedTimedEntityMetadata.utsRelatedRemoteID == nil) {
+    if (providedTimedEntityMetadata.utsRelatedRemoteID == nil ||
+        providedTimedEntityMetadata.utsRelatedRemoteID == [NSNull null]) {
+        
         NSLog(@"%s INFO : relatedRemoteID doesn't exist yet, skipping: %@", __PRETTY_FUNCTION__, providedTimedEntityMetadata);
         return;
     }
@@ -3377,7 +3414,9 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     NSAssert(providedTimerMetadata.utsRemoteID != nil, @"providedTimerMetadata remoteID is nil");
 
-    if (providedTimerMetadata.utsRelatedRemoteID == nil) {
+    if (providedTimerMetadata.utsRelatedRemoteID == nil ||
+        providedTimerMetadata.utsRelatedRemoteID == [NSNull null]) {
+        
         NSLog(@"%s INFO : relatedRemoteID doesn't exist yet, skipping: %@", __PRETTY_FUNCTION__, providedTimerMetadata);
         return;
     }

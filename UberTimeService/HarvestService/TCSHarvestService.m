@@ -503,29 +503,16 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
         __block NSArray *groupsAndProjects = nil;
         __block NSArray *timers = nil;
-        __block BOOL sentSyncStarting = NO;
 
         for (TCSProviderInstance *providerInstance in providerInstances) {
 
             if (providerInstance.userID != nil) {
                 dispatch_group_async(group, queue, ^{
                     groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
-                    if (sentSyncStarting == NO && groupsAndProjects.count > 0) {
-                        sentSyncStarting = YES;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.delegate remoteSyncStarting];
-                        });
-                    }
                 });
 
                 dispatch_group_async(group, queue, ^{
                     timers = [self fetchUpdatedTimerObjects:providerInstance];
-                    if (sentSyncStarting == NO && timers.count > 0) {
-                        sentSyncStarting = YES;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.delegate remoteSyncStarting];
-                        });
-                    }
                 });
             }
         }
@@ -544,29 +531,26 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
         if (updatedEntities.count > 0) {
 
-            for (TCSDefaultProviderBase *entity in updatedEntities) {
-                if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-                    self.lastPollingDate =
-                    entity.utsUpdateTime;
+            BOOL updatePollingDate =
+            [self.pollingDelegate
+             updatePollingEntities:updatedEntities
+             providerName:NSStringFromClass([self class])];
+
+            if (updatePollingDate) {
+                for (TCSDefaultProviderBase *entity in updatedEntities) {
+                    if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+                        self.lastPollingDate =
+                        entity.utsUpdateTime;
+                    }
+                }
+
+                if (_lastPollingDate != nil) {
+                    [[NSUserDefaults standardUserDefaults]
+                     setObject:_lastPollingDate forKey:kTCSHarvestLastPollingDateKey];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
                 }
             }
-
-            if (_lastPollingDate != nil) {
-                [[NSUserDefaults standardUserDefaults]
-                 setObject:_lastPollingDate forKey:kTCSHarvestLastPollingDateKey];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
         }
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
-             object:self
-             userInfo:@{
-             kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
-             kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
-             }];
-        });
 
         _pollingForUpdates = NO;
     });

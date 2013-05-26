@@ -88,6 +88,10 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
     _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
     _localService.syncingRemoteProvider = serviceProvider;
     serviceProvider.delegate = _delegate;
+
+    if ([serviceProvider respondsToSelector:@selector(setPollingDelegate:)]) {
+        ((TCSDefaultProvider *)serviceProvider).pollingDelegate = _localService;
+    }
 }
 
 - (void)registerRemoteServiceProvider:(Class)providerClass {
@@ -99,6 +103,10 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
     
     _remoteServiceProviders[NSStringFromClass(providerClass)] = serviceProvider;
     serviceProvider.delegate = _delegate;
+
+    if ([serviceProvider respondsToSelector:@selector(setPollingDelegate:)]) {
+        ((TCSDefaultProvider *)serviceProvider).pollingDelegate = _localService;
+    }
 }
 
 - (NSObject <TCSServiceRemoteProvider> *)serviceProviderOfType:(Class)providerClass {

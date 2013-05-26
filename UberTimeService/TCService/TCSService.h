@@ -28,6 +28,13 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
 @end
 
+@protocol TCSPollingDelegate <NSObject>
+
+- (BOOL)updatePollingEntities:(NSArray *)updatedEntities
+                 providerName:(NSString *)providerName;
+
+@end
+
 @protocol TCSServiceRemoteProvider <NSObject>
 
 + (instancetype)sharedInstance;

@@ -1752,76 +1752,33 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             __block NSArray *cannedMessages = nil;
             __block NSArray *timedEntityMetadata = nil;
             __block NSArray *timerMetadata = nil;
-            __block BOOL sentSyncStarting = NO;
 
             dispatch_group_async(group, queue, ^{
                 remoteCommands = [self fetchUpdatedObjectsOfType:[TCSParseRemoteCommand class]];
-                if (sentSyncStarting == NO && remoteCommands.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_async(group, queue, ^{
                 groups = [self fetchUpdatedObjectsOfType:[TCSParseGroup class]];
-                if (sentSyncStarting == NO && groups.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_async(group, queue, ^{
                 projects = [self fetchUpdatedObjectsOfType:[TCSParseProject class]];
-                if (sentSyncStarting == NO && projects.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_async(group, queue, ^{
                 timers = [self fetchUpdatedObjectsOfType:[TCSParseTimer class]];
-                if (sentSyncStarting == NO && timers.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_async(group, queue, ^{
                 cannedMessages = [self fetchUpdatedObjectsOfType:[TCSParseCannedMessage class]];
-                if (sentSyncStarting == NO && cannedMessages.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_async(group, queue, ^{
                 timedEntityMetadata = [self fetchUpdatedObjectsOfType:[TCSParseTimedEntityMetadata class]];
-                if (sentSyncStarting == NO && timedEntityMetadata.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_async(group, queue, ^{
                 timerMetadata = [self fetchUpdatedObjectsOfType:[TCSParseTimerMetadata class]];
-                if (sentSyncStarting == NO && timerMetadata.count > 0) {
-                    sentSyncStarting = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate remoteSyncStarting];
-                    });
-                }
             });
 
             dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
@@ -1838,29 +1795,34 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
             if (updatedEntities.count > 0) {
 
-                for (TCSParseBaseEntity *entity in updatedEntities) {
-                    if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-                        self.lastPollingDate =
-                        entity.utsUpdateTime;
-                    }
-                }
+                BOOL updatePollingDate =
+                [self.pollingDelegate
+                 updatePollingEntities:updatedEntities
+                 providerName:NSStringFromClass([self class])];
 
-                if (_lastPollingDate != nil) {
-                    [[NSUserDefaults standardUserDefaults]
-                     setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
+                if (updatePollingDate) {
+                    for (TCSParseBaseEntity *entity in updatedEntities) {
+                        if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
+                            self.lastPollingDate =
+                            entity.utsUpdateTime;
+                        }
+                    }
+
+                    if (_lastPollingDate != nil) {
+                        [[NSUserDefaults standardUserDefaults]
+                         setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                    }
+                } else {
+
+                    NSTimeInterval delayInSeconds = 5.0f;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        [self pollForUpdates:providerInstances];
+                    });
+
                 }
             }
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter]
-                 postNotificationName:kTCSLocalServiceUpdatedRemoteEntitiesNotification
-                 object:self
-                 userInfo:@{
-                 kTCSLocalServiceUpdatedRemoteEntitiesKey : updatedEntities,
-                 kTCSLocalServiceRemoteProviderNameKey : NSStringFromClass([self class]),
-                 }];
-            });
 
             _pollingForUpdates = NO;
         });
