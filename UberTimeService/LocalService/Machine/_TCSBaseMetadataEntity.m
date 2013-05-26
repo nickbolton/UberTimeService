@@ -46,6 +46,11 @@ const struct TCSBaseMetadataEntityFetchedProperties TCSBaseMetadataEntityFetched
 
 
 
+@dynamic relatedObjectId;
+
+
+
+
 
 
 

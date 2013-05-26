@@ -9,7 +9,7 @@
         <relationship name="providerInstance" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProviderInstance" inverseName="entities" inverseEntity="TCSProviderInstance" syncable="YES"/>
     </entity>
     <entity name="TCSBaseMetadataEntity" representedClassName="TCSBaseMetadataEntity" isAbstract="YES" syncable="YES">
-        <attribute name="relatedObjectId" optional="YES" syncable="YES"/>
+        <attribute name="relatedObjectId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="TCSCannedMessage" representedClassName="TCSCannedMessage" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="message" attributeType="String" indexed="YES" syncable="YES"/>

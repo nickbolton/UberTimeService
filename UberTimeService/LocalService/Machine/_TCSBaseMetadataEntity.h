@@ -29,6 +29,12 @@ extern const struct TCSBaseMetadataEntityFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* relatedObjectId;
+
+
+//- (BOOL)validateRelatedObjectId:(id*)value_ error:(NSError**)error_;
+
+
 
 
 
@@ -40,6 +46,10 @@ extern const struct TCSBaseMetadataEntityFetchedProperties {
 @end
 
 @interface _TCSBaseMetadataEntity (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSString*)primitiveRelatedObjectId;
+- (void)setPrimitiveRelatedObjectId:(NSString*)value;
 
 
 
