@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		7155735B2001481DA0734471 /* libPods-BasePods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB51A264C2846AD9D3F2A50 /* libPods-BasePods.a */; };
 		79F7E822255A4F04B2DE77AB /* libPods-IntegrationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A161D6FDF95340609138410D /* libPods-IntegrationTests.a */; };
-		FE182E4A17525E2000ED1574 /* TCSBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E4917525E2000ED1574 /* TCSBaseMetadataEntity.m */; };
-		FE182E4B17525E2000ED1574 /* TCSBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E4917525E2000ED1574 /* TCSBaseMetadataEntity.m */; };
+		FE182E4A17525E2000ED1574 /* TCSParseBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E4917525E2000ED1574 /* TCSParseBaseMetadataEntity.m */; };
+		FE182E4B17525E2000ED1574 /* TCSParseBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E4917525E2000ED1574 /* TCSParseBaseMetadataEntity.m */; };
 		FE182E4E17525FE800ED1574 /* TCSBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E4D17525FE800ED1574 /* TCSBaseMetadataEntity.m */; };
 		FE182E4F17525FE800ED1574 /* TCSBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E4D17525FE800ED1574 /* TCSBaseMetadataEntity.m */; };
 		FE182E5217525FEF00ED1574 /* _TCSBaseMetadataEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = FE182E5117525FEF00ED1574 /* _TCSBaseMetadataEntity.m */; };
@@ -179,8 +179,8 @@
 		A161D6FDF95340609138410D /* libPods-IntegrationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IntegrationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CAE1762EAA41928F4E4B0A /* Pods-OCTests-IntegrationTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCTests-IntegrationTests.xcconfig"; path = "Pods/Pods-OCTests-IntegrationTests.xcconfig"; sourceTree = SOURCE_ROOT; };
 		E999345D174A464E853C247E /* Pods-BasePods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods.xcconfig"; path = "Pods/Pods-BasePods.xcconfig"; sourceTree = SOURCE_ROOT; };
-		FE182E4817525E2000ED1574 /* TCSBaseMetadataEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseMetadataEntity.h; sourceTree = "<group>"; };
-		FE182E4917525E2000ED1574 /* TCSBaseMetadataEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseMetadataEntity.m; sourceTree = "<group>"; };
+		FE182E4817525E2000ED1574 /* TCSParseBaseMetadataEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseBaseMetadataEntity.h; sourceTree = "<group>"; };
+		FE182E4917525E2000ED1574 /* TCSParseBaseMetadataEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseBaseMetadataEntity.m; sourceTree = "<group>"; };
 		FE182E4C17525FE800ED1574 /* TCSBaseMetadataEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSBaseMetadataEntity.h; sourceTree = "<group>"; };
 		FE182E4D17525FE800ED1574 /* TCSBaseMetadataEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSBaseMetadataEntity.m; sourceTree = "<group>"; };
 		FE182E5017525FEF00ED1574 /* _TCSBaseMetadataEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSBaseMetadataEntity.h; sourceTree = "<group>"; };
@@ -635,8 +635,8 @@
 				FE9E7715174E2C600035EABE /* TCSParseProviderInstance.m */,
 				FEBD03281735735800DAB99D /* TCSParseBaseEntity.h */,
 				FEBD03291735735900DAB99D /* TCSParseBaseEntity.m */,
-				FE182E4817525E2000ED1574 /* TCSBaseMetadataEntity.h */,
-				FE182E4917525E2000ED1574 /* TCSBaseMetadataEntity.m */,
+				FE182E4817525E2000ED1574 /* TCSParseBaseMetadataEntity.h */,
+				FE182E4917525E2000ED1574 /* TCSParseBaseMetadataEntity.m */,
 				FEB316731743A7ED00A6F16D /* TCSParseSystemTime.h */,
 				FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */,
 				FEB316761743A8BB00A6F16D /* TCSParseAppConfig.h */,
@@ -912,7 +912,7 @@
 				FE7E264617512B1B0084F59D /* TCSTimerMetadata.m in Sources */,
 				FE7E264A17512B240084F59D /* _TCSTimerMetadata.m in Sources */,
 				FE7E264E175130830084F59D /* TCSParseTimerMetadata.m in Sources */,
-				FE182E4B17525E2000ED1574 /* TCSBaseMetadataEntity.m in Sources */,
+				FE182E4B17525E2000ED1574 /* TCSParseBaseMetadataEntity.m in Sources */,
 				FE182E4F17525FE800ED1574 /* TCSBaseMetadataEntity.m in Sources */,
 				FE182E5317525FEF00ED1574 /* _TCSBaseMetadataEntity.m in Sources */,
 			);
@@ -977,7 +977,7 @@
 				FE7E264517512B1B0084F59D /* TCSTimerMetadata.m in Sources */,
 				FE7E264917512B240084F59D /* _TCSTimerMetadata.m in Sources */,
 				FE7E264D175130830084F59D /* TCSParseTimerMetadata.m in Sources */,
-				FE182E4A17525E2000ED1574 /* TCSBaseMetadataEntity.m in Sources */,
+				FE182E4A17525E2000ED1574 /* TCSParseBaseMetadataEntity.m in Sources */,
 				FE182E4E17525FE800ED1574 /* TCSBaseMetadataEntity.m in Sources */,
 				FE182E5217525FEF00ED1574 /* _TCSBaseMetadataEntity.m in Sources */,
 			);

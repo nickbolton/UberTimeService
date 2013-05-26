@@ -1,5 +1,5 @@
 //
-//  TCSBaseMetadataEntity.h
+//  TCSParseBaseMetadataEntity.h
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/26/13.
@@ -8,7 +8,7 @@
 
 #import <Parse/Parse.h>
 
-@interface TCSBaseMetadataEntity : PFObject<TCSProvidedBaseMetadataEntity>
+@interface TCSParseBaseMetadataEntity : PFObject<TCSProvidedBaseMetadataEntity>
 
 @property (nonatomic) NSString *relatedRemoteID;
 

@@ -1,14 +1,14 @@
 //
-//  TCSBaseMetadataEntity.m
+//  TCSParseBaseMetadataEntity.m
 //  UberTimeService
 //
 //  Created by Nick Bolton on 5/26/13.
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
-#import "TCSBaseMetadataEntity.h"
+#import "TCSParseBaseMetadataEntity.h"
 
-@implementation TCSBaseMetadataEntity
+@implementation TCSParseBaseMetadataEntity
 
 @dynamic relatedRemoteID;
 
