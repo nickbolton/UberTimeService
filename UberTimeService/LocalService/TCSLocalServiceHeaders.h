@@ -1,4 +1,5 @@
 #import "TCSBaseEntity.h"
+#import "TCSBaseMetadataEntity.h"
 #import "TCSCannedMessage.h"
 #import "TCSGroup.h"
 #import "TCSProject.h"

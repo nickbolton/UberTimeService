@@ -2,7 +2,7 @@
 // Make changes to TCSTimedEntityMetadata.h instead.
 
 #import <CoreData/CoreData.h>
-#import "TCSBaseEntity.h"
+#import "TCSBaseMetadataEntity.h"
 
 extern const struct TCSTimedEntityMetadataAttributes {
 	__unsafe_unretained NSString *archived;
@@ -32,7 +32,7 @@ extern const struct TCSTimedEntityMetadataFetchedProperties {
 @interface TCSTimedEntityMetadataID : NSManagedObjectID {}
 @end
 
-@interface _TCSTimedEntityMetadata : TCSBaseEntity {}
+@interface _TCSTimedEntityMetadata : TCSBaseMetadataEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;

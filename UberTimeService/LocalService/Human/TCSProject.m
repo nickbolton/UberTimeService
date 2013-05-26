@@ -1,5 +1,7 @@
 #import "TCSProject.h"
 #import "TCSService.h"
+#import "TCSTimerMetadata.h"
+#import "TCSTimer.h"
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 
@@ -135,6 +137,22 @@
     }
 
     return displayName;
+}
+
+- (void)markEntityAsDeleted {
+    [super markEntityAsDeleted];
+
+    for (TCSTimer *timer in self.timers) {
+        [timer markEntityAsDeleted];
+    }
+}
+
+- (void)markEntityAsUpdated {
+    [super markEntityAsUpdated];
+
+    for (TCSTimer *timer in self.timers) {
+        [timer markEntityAsUpdated];
+    }
 }
 
 @end

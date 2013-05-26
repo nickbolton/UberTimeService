@@ -22,6 +22,10 @@
     return NSStringFromClass([self class]);
 }
 
+- (Class)utsLocalEntityType {
+    return [TCSTimedEntityMetadata class];
+}
+
 - (NSInteger)utsFilteredModifiers {
     return self.filteredModifiers;
 }

@@ -138,4 +138,14 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
      markAsUpdated:markAsUpdated];
 }
 
+- (void)markEntityAsDeleted {
+    [super markEntityAsDeleted];
+    [self.metadata markEntityAsDeleted];
+}
+
+- (void)markEntityAsUpdated {
+    [super markEntityAsUpdated];
+    [self.metadata markEntityAsUpdated];
+}
+
 @end

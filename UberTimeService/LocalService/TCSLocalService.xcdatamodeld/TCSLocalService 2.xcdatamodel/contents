@@ -8,6 +8,9 @@
         <attribute name="updateTime" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="providerInstance" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProviderInstance" inverseName="entities" inverseEntity="TCSProviderInstance" syncable="YES"/>
     </entity>
+    <entity name="TCSBaseMetadataEntity" representedClassName="TCSBaseMetadataEntity" isAbstract="YES" syncable="YES">
+        <attribute name="relatedObjectId" optional="YES" syncable="YES"/>
+    </entity>
     <entity name="TCSCannedMessage" representedClassName="TCSCannedMessage" parentEntity="TCSBaseEntity" syncable="YES">
         <attribute name="message" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="order" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -37,7 +40,7 @@
         <relationship name="metadata" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="TCSTimedEntityMetadata" inverseName="timedEntity" inverseEntity="TCSTimedEntityMetadata" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSGroup" inverseName="children" inverseEntity="TCSGroup" syncable="YES"/>
     </entity>
-    <entity name="TCSTimedEntityMetadata" representedClassName="TCSTimedEntityMetadata" parentEntity="TCSBaseEntity" syncable="YES">
+    <entity name="TCSTimedEntityMetadata" representedClassName="TCSTimedEntityMetadata" parentEntity="TCSBaseMetadataEntity" syncable="YES">
         <attribute name="archived" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="color" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="filteredModifiers" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -51,7 +54,7 @@
         <relationship name="metadata" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSTimerMetadata" inverseName="timers" inverseEntity="TCSTimerMetadata" syncable="YES"/>
         <relationship name="project" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TCSProject" inverseName="timers" inverseEntity="TCSProject" syncable="YES"/>
     </entity>
-    <entity name="TCSTimerMetadata" representedClassName="TCSTimerMetadata" parentEntity="TCSBaseEntity" syncable="YES">
+    <entity name="TCSTimerMetadata" representedClassName="TCSTimerMetadata" parentEntity="TCSBaseMetadataEntity" syncable="YES">
         <attribute name="adjustment" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="startTime" attributeType="Date" syncable="YES"/>
@@ -68,5 +71,6 @@
         <element name="TCSTimedEntityMetadata" positionX="160" positionY="192" width="128" height="150"/>
         <element name="TCSTimer" positionX="160" positionY="192" width="128" height="90"/>
         <element name="TCSTimerMetadata" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="TCSBaseMetadataEntity" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>

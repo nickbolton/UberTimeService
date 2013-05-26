@@ -377,7 +377,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
     project.metadata.providerInstance = nil;
-    [project.metadata markEntityAsUpdated];
 
     [project
      updateWithName:name
@@ -525,11 +524,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
             @synchronized (self) {
                 [localProject markEntityAsDeleted];
-                [localProject.metadata markEntityAsDeleted];
-
-                for (TCSTimer *timer in localProject.timers) {
-                    [timer markEntityAsDeleted];
-                }
             }
         }
 
@@ -752,12 +746,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         @synchronized (self) {
             if (localGroup != nil) {
                 [localGroup markEntityAsDeleted];
-                [localGroup.metadata markEntityAsDeleted];
-
-                for (TCSTimedEntity *entity in localGroup.children) {
-                    [entity markEntityAsDeleted];
-                    [entity.metadata markEntityAsDeleted];
-                }
             }
         }
 
@@ -853,7 +841,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         group.metadata = [TCSTimedEntityMetadata MR_createInContext:localContext];
         group.metadata.providerInstance = nil;
-        [group.metadata markEntityAsUpdated];
 
         [group markEntityAsUpdated];
 
@@ -863,7 +850,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          inContext:localContext];
 
         [localToProject markEntityAsDeleted];
-        [localToProject.metadata markEntityAsDeleted];
 
     } completion:^(BOOL success, NSError *error) {
 
@@ -979,7 +965,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         [parent.parent removeChildrenObject:parent];
 
         [parent markEntityAsDeleted];
-        [parent.metadata markEntityAsDeleted];
 
     } else {
         [parent markEntityAsUpdated];
@@ -1007,7 +992,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
         timer.metadata.providerInstance = nil;
-        [timer.metadata markEntityAsUpdated];
 
         [timer
          updateWithMessage:nil
@@ -1078,7 +1062,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
         timer.metadata.providerInstance = nil;
-        [timer.metadata markEntityAsUpdated];
 
         [timer
          updateWithMessage:nil
@@ -1136,7 +1119,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             timer.pendingRemoteDeleteValue = YES;
         }
         [timer markEntityAsUpdated];
-        [timer.metadata markEntityAsUpdated];
     }
 }
 
@@ -1196,7 +1178,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             localTimer.metadata.endTime = timer.metadata.endTime;
         }
         [localTimer markEntityAsUpdated];
-        [localTimer.metadata markEntityAsUpdated];
     }
 
     return error;
@@ -1391,7 +1372,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         TCSTimer *rollingTimer = localTimer;
 
         [rollingTimer markEntityAsUpdated];
-        [rollingTimer.metadata markEntityAsUpdated];
 
         while (localProject != nil && rollingTimer != nil && rollingTimer.combinedTime > maxDuration) {
 
@@ -1412,7 +1392,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         for (TCSTimer *t in rolledTimers) {
 
             [t markEntityAsUpdated];
-            [t.metadata markEntityAsUpdated];
 
             if (t.objectID.isTemporaryID) {
                 [temporaryLocalObjects addObject:t];
@@ -1474,7 +1453,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
     rolledTimer.metadata = [TCSTimerMetadata MR_createInContext:project.managedObjectContext];
     rolledTimer.metadata.providerInstance = nil;
-    [rolledTimer.metadata markEntityAsUpdated];
 
     [rolledTimer
      updateWithMessage:timer.message
@@ -1523,7 +1501,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             timer.metadata.endTime = nil;
             timer.metadata.adjustment = @(0);
             [timer markEntityAsUpdated];
-            [timer.metadata markEntityAsUpdated];
 
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
             [userInfo setObject:self forKey:@"project"];
@@ -1561,7 +1538,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         if (localTimer != nil) {
             [localTimer markEntityAsDeleted];
-            [localTimer.metadata markEntityAsDeleted];
         }
 
     } completion:^(BOOL success, NSError *error) {
@@ -1590,7 +1566,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
             (id)[localContext existingObjectWithID:timer.objectID error:NULL];
 
             if (localTimer != nil) {
-                [localTimer markEntityAsDeleted];
                 [localTimer markEntityAsDeleted];
             }
         }
@@ -2952,7 +2927,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         group.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
         group.metadata.providerInstance = nil;
-        [group.metadata markEntityAsUpdated];
 
         [group
          updateWithName:providedGroup.utsName
@@ -3045,7 +3019,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
         project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
         project.metadata.providerInstance = nil;
         project.metadata.archivedValue = remoteProvider.importProjectsAsArchived;
-        [project.metadata markEntityAsUpdated];
 
         [project
          updateWithName:providedProject.utsName
@@ -3071,7 +3044,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
     NSAssert(providedTimer.utsRemoteID != nil, @"timer remoteID is nil");
 
     if (providedTimer.utsStartTime == nil) {
-        NSLog(@"%s WARN : provided start time is missing: %@");
+        NSLog(@"%s WARN : provided start time is missing");
         return;
     }
 
@@ -3195,7 +3168,6 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
 
         timer.metadata = [TCSTimerMetadata MR_createInContext:context];
         timer.metadata.providerInstance = nil;
-        [timer.metadata markEntityAsUpdated];
 
         [timer
          updateWithMessage:providedTimer.utsMessage
@@ -3211,7 +3183,7 @@ NSString * const kTCSLocalServiceRemoteProviderNameKey = @"remote-provider-name"
          entityVersion:0
          remoteId:nil
          updateTime:[[TCSService sharedInstance] systemTime]
-         markAsUpdated:YES];
+         markAsUpdated:NO];
 
         timer.project = existingProject;
 

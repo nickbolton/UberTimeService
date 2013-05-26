@@ -1,5 +1,7 @@
 #import "TCSGroup.h"
 #import "TCSProject.h"
+#import "TCSTimer.h"
+#import "TCSTimerMetadata.h"
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 
@@ -121,6 +123,22 @@
         }
     }
     return NO;
+}
+
+- (void)markEntityAsDeleted {
+    [super markEntityAsDeleted];
+
+    for (TCSProject *project in self.children) {
+        [project markEntityAsDeleted];
+    }
+}
+
+- (void)markEntityAsUpdated {
+    [super markEntityAsUpdated];
+
+    for (TCSProject *project in self.children) {
+        [project markEntityAsUpdated];
+    }
 }
 
 @end

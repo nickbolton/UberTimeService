@@ -1748,10 +1748,12 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             __block NSArray *projects = nil;
             __block NSArray *timers = nil;
             __block NSArray *cannedMessages = nil;
+            __block NSArray *timedEntityMetadata = nil;
+            __block NSArray *timerMetadata = nil;
             __block BOOL sentSyncStarting = NO;
 
             dispatch_group_async(group, queue, ^{
-                remoteCommands = [self fetchUpdatedRemoteCommandObjects];
+                remoteCommands = [self fetchUpdatedObjectsOfType:[TCSParseRemoteCommand class]];
                 if (sentSyncStarting == NO && remoteCommands.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1761,7 +1763,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             });
 
             dispatch_group_async(group, queue, ^{
-                groups = [self fetchUpdatedGroupObjects];
+                groups = [self fetchUpdatedObjectsOfType:[TCSParseGroup class]];
                 if (sentSyncStarting == NO && groups.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1771,7 +1773,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             });
 
             dispatch_group_async(group, queue, ^{
-                projects = [self fetchUpdatedProjectObjects];
+                projects = [self fetchUpdatedObjectsOfType:[TCSParseProject class]];
                 if (sentSyncStarting == NO && projects.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1781,7 +1783,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             });
 
             dispatch_group_async(group, queue, ^{
-                timers = [self fetchUpdatedTimerObjects];
+                timers = [self fetchUpdatedObjectsOfType:[TCSParseTimer class]];
                 if (sentSyncStarting == NO && timers.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1791,8 +1793,28 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             });
 
             dispatch_group_async(group, queue, ^{
-                cannedMessages = [self fetchUpdatedCannedMessageObjects];
+                cannedMessages = [self fetchUpdatedObjectsOfType:[TCSParseCannedMessage class]];
                 if (sentSyncStarting == NO && cannedMessages.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                timedEntityMetadata = [self fetchUpdatedObjectsOfType:[TCSParseTimedEntityMetadata class]];
+                if (sentSyncStarting == NO && timedEntityMetadata.count > 0) {
+                    sentSyncStarting = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate remoteSyncStarting];
+                    });
+                }
+            });
+
+            dispatch_group_async(group, queue, ^{
+                timerMetadata = [self fetchUpdatedObjectsOfType:[TCSParseTimerMetadata class]];
+                if (sentSyncStarting == NO && timerMetadata.count > 0) {
                     sentSyncStarting = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.delegate remoteSyncStarting];
@@ -1804,25 +1826,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
             NSMutableArray *updatedEntities = [NSMutableArray array];
 
-            if (remoteCommands.count > 0) {
-                [updatedEntities addObjectsFromArray:remoteCommands];
-            }
-
-            if (groups.count > 0) {
-                [updatedEntities addObjectsFromArray:groups];
-            }
-
-            if (projects.count > 0) {
-                [updatedEntities addObjectsFromArray:projects];
-            }
-
-            if (timers.count > 0) {
-                [updatedEntities addObjectsFromArray:timers];
-            }
-
-            if (cannedMessages.count > 0) {
-                [updatedEntities addObjectsFromArray:cannedMessages];
-            }
+            [updatedEntities addObjectsFromArray:remoteCommands];
+            [updatedEntities addObjectsFromArray:groups];
+            [updatedEntities addObjectsFromArray:projects];
+            [updatedEntities addObjectsFromArray:timers];
+            [updatedEntities addObjectsFromArray:cannedMessages];
+            [updatedEntities addObjectsFromArray:timedEntityMetadata];
+            [updatedEntities addObjectsFromArray:timerMetadata];
 
             if (updatedEntities.count > 0) {
 
@@ -1857,98 +1867,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     return _pollingForUpdates;
 }
 
-- (NSArray *)fetchUpdatedRemoteCommandObjects {
-
-    PFQuery *query = [TCSParseRemoteCommand query];
-    [query whereKey:@"user" equalTo:[PFUser currentUser]];
-    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
-    query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-    if (_lastPollingDate != nil) {
-        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
-    }
-
-    NSError *error = nil;
-    NSArray *results = [query findObjects:&error];
-
-    if (error != nil) {
-        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-    }
-
-    return results;
-}
-
-- (NSArray *)fetchUpdatedGroupObjects {
-
-    PFQuery *query = [TCSParseGroup query];
-    [query whereKey:@"user" equalTo:[PFUser currentUser]];
-    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
-    query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-    if (_lastPollingDate != nil) {
-        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
-    }
-
-    NSError *error = nil;
-    NSArray *results = [query findObjects:&error];
-
-    if (error != nil) {
-        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-    }
-
-    return results;
-}
-
-- (NSArray *)fetchUpdatedProjectObjects {
-
-    PFQuery *query = [TCSParseProject query];
-    [query whereKey:@"user" equalTo:[PFUser currentUser]];
-    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
-    query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-    if (_lastPollingDate != nil) {
-        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
-    }
-    query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-    NSError *error = nil;
-    NSArray *results = [query findObjects:&error];
-
-    if (error != nil) {
-        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-    }
-
-    return results;
-}
-
-- (NSArray *)fetchUpdatedTimerObjects {
-
-    PFQuery *query = [TCSParseTimer query];
-    [query whereKey:@"user" equalTo:[PFUser currentUser]];
-    [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
-    query.cachePolicy = kPFCachePolicyNetworkOnly;
-
-    if (_lastPollingDate != nil) {
-        [query whereKey:@"updatedAt" greaterThan:_lastPollingDate];
-    }
-
-    NSError *error = nil;
-    NSArray *results = [query findObjects:&error];
-
-//    NSLog(@"query: %@", query);
-//    NSLog(@"lastPollingDate: %@", _lastPollingDate);
-//    NSLog(@"polling timers: %@", results);
-
-    if (error != nil) {
-        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-    }
-
-    return results;
-}
-
-- (NSArray *)fetchUpdatedCannedMessageObjects {
-
-    PFQuery *query = [TCSParseCannedMessage query];
+- (NSArray *)fetchUpdatedObjectsOfType:(Class)objectType {
+    PFQuery *query = [objectType query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
     [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];
     query.cachePolicy = kPFCachePolicyNetworkOnly;
