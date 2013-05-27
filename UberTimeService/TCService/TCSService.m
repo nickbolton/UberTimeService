@@ -23,6 +23,8 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 @property (nonatomic, strong) TCSLocalService *localService;
 @property (nonatomic, strong) NSMutableDictionary *remoteServiceProviders;
 @property (nonatomic, readwrite) TCSTimer *activeTimer;
+@property (nonatomic, strong) NSMutableArray *providerQueue;
+@property (nonatomic, strong) TCSProviderInstance *pollingProviderInstance;
 
 @end
 
@@ -32,6 +34,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 {
     self = [super init];
     if (self) {
+        self.providerQueue = [NSMutableArray array];
         self.remoteServiceProviders = [NSMutableDictionary dictionary];
         self.localService = [TCSLocalService sharedInstance];
         [self updateActiveTimer];
@@ -148,71 +151,139 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 }
 
 - (void)pollRemoteServicesForUpdates {
+    [self pollRemoteServicesForUpdatesWithProviders:_remoteServiceProviders.allValues];
+}
 
-    BOOL anyProviderLoggedIn = NO;
-
-    for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
-        anyProviderLoggedIn |= [remoteProvider isUserAuthenticated];
-    }
-
-    if (anyProviderLoggedIn) {
-        [_delegate remoteSyncStarting];
-    }
-
-    BOOL isPolling = NO;
-
+- (void)pollRemoteServicesForUpdatesWithProviders:(NSArray *)serviceProviders {
 
     NSDictionary *providerInstanceMap = [self providerInstanceMap];
 
-    for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
+    for (id <TCSServiceRemoteProvider> remoteProvider in serviceProviders) {
 
-        NSArray *providerInstances = nil;
+        if (remoteProvider == _localService.syncingRemoteProvider) {
+            [self pollProviderInstance:nil remoteProvider:remoteProvider];
+        } else {
 
-        if (remoteProvider != _localService.syncingRemoteProvider) {
-
-            providerInstances =
+            NSArray *providerInstances =
             providerInstanceMap[NSStringFromClass([remoteProvider class])];
+
+            for (TCSProviderInstance *providerInstance in providerInstances) {
+                [self pollProviderInstance:providerInstance remoteProvider:remoteProvider];
+            }
         }
-
-        isPolling |= [remoteProvider pollForUpdates:providerInstances];
-
-        [self
-         updateProviderInstancesIfNeeded:providerInstances
-         remoteProvider:remoteProvider];
-    }
-
-    if (isPolling == NO && anyProviderLoggedIn) {
-        [_delegate remoteSyncCompleted];
     }
 }
 
-- (void)updateProviderInstancesIfNeeded:(NSArray *)providerInstances
-                         remoteProvider:(id <TCSServiceRemoteProvider>)remoteProvider {
+- (void)pollProviderInstance:(TCSProviderInstance *)providerInstance
+              remoteProvider:(id <TCSServiceRemoteProvider>)remoteProvider {
 
-    for (TCSProviderInstance *providerInstance in providerInstances) {
+
+    @synchronized (self) {
+        if (_pollingProviderInstance != nil) {
+
+            if (remoteProvider == _localService.syncingRemoteProvider) {
+                [_providerQueue addObject:_localService.syncingRemoteProvider];
+            } else {
+                [_providerQueue addObject:providerInstance];
+            }
+            return;
+        }
+        self.pollingProviderInstance = providerInstance;
+    }
+
+    void (^finishBlock)(void) = ^{
+
+        @synchronized (self) {
+
+            self.pollingProviderInstance = nil;
+
+            TCSProviderInstance *nextInstance =
+            [_providerQueue lastObject];
+            [_providerQueue removeLastObject];
+
+            if (nextInstance != nil) {
+
+                if (nextInstance == _localService.syncingRemoteProvider) {
+
+                    [self
+                     pollProviderInstance:nil
+                     remoteProvider:_localService.syncingRemoteProvider];
+
+                } else {
+
+                    id <TCSServiceRemoteProvider> nextProvider =
+                    [self serviceProviderNamed:nextInstance.remoteProvider];
+
+                    [self
+                     pollProviderInstance:nextInstance
+                     remoteProvider:remoteProvider];
+                }
+            }
+        }
+    };
+
+    if (remoteProvider == _localService.syncingRemoteProvider) {
+
         [remoteProvider
-         updateProviderInstanceUserIdIfNeeded:providerInstance
-         success:^(TCSProviderInstance *providerInstance) {
+         pollForUpdates:providerInstance
+         success:^{
 
-             if (providerInstance.userID != nil) {
-                 [self
-                  updateProviderInstance:providerInstance
-                  success:nil
-                  failure:^(NSError *error) {
-
-                      if (error != nil) {
-                          NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-                      }
-                  }];
-             }
+             finishBlock();
 
          } failure:^(NSError *error) {
 
              if (error != nil) {
                  NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
              }
+
+             finishBlock();
          }];
+        return;
     }
+
+    [remoteProvider
+     updateProviderInstanceUserIdIfNeeded:providerInstance
+     force:YES
+     success:^(TCSProviderInstance *providerInstance) {
+
+         if (providerInstance.userID != nil) {
+             [self
+              updateProviderInstance:providerInstance
+              success:^(TCSProviderInstance *providerInstance) {
+
+                  [remoteProvider
+                   pollForUpdates:providerInstance
+                   success:^{
+
+                       finishBlock();
+
+                   } failure:^(NSError *error) {
+
+                       if (error != nil) {
+                           NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+                       }
+
+                       finishBlock();
+                   }];
+
+              } failure:^(NSError *error) {
+
+                  if (error != nil) {
+                      NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+                  }
+
+                  finishBlock();
+              }];
+         }
+
+     } failure:^(NSError *error) {
+
+         if (error != nil) {
+             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+         }
+
+         finishBlock();
+     }];
 }
 
 - (void)pollProviderInstanceForUpdates:(TCSProviderInstance *)providerInstance {
@@ -220,9 +291,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
     id <TCSServiceRemoteProvider> remoteProvider =
     [self serviceProviderNamed:providerInstance.remoteProvider];
 
-    [self
-     updateProviderInstancesIfNeeded:@[providerInstance]
-     remoteProvider:remoteProvider];
+    [self pollProviderInstance:providerInstance remoteProvider:remoteProvider];
 }
 
 - (void)pollRemoteServiceForUpdates:(NSString *)providerName {
@@ -230,14 +299,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
     id <TCSServiceRemoteProvider> remoteProvider =
     [self serviceProviderNamed:providerName];
 
-    NSDictionary *providerInstanceMap = [self providerInstanceMap];
-    NSArray *providerInstances =
-    providerInstanceMap[NSStringFromClass([remoteProvider class])];
-    [remoteProvider pollForUpdates:providerInstances];
-
-    [self
-     updateProviderInstancesIfNeeded:providerInstances
-     remoteProvider:remoteProvider];
+    [self pollRemoteServicesForUpdatesWithProviders:@[remoteProvider]];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {

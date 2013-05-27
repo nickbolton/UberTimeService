@@ -18,16 +18,25 @@ static NSString * const kTCSHarvestProjectIDSeparator = @"|";
 NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 @interface TCSHarvestService() {
-
-    BOOL _pollingForUpdates;
 }
 
 @property (nonatomic, strong) NSDate *lastPollingDate;
+@property (nonatomic, strong) NSMutableSet *pollingProviderInstances;
 
 @end
 
 
 @implementation TCSHarvestService
+
+- (id)init {
+    self = [super init];
+
+    if (self != nil) {
+        self.pollingProviderInstances = [NSMutableSet set];
+    }
+
+    return self;
+}
 
 - (NSString *)name {
     return NSLocalizedString(@"Harvest", nil);
@@ -91,10 +100,14 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 }
 
 - (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
+                                       force:(BOOL)force
                                      success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                                      failure:(void(^)(NSError *error))failureBlock {
 
-    if (providerInstance.userID == nil) {
+    if (force || providerInstance.userID == nil) {
+
+        providerInstance.userID = nil;
+        
         [self
          primAuthenticateUser:providerInstance.username
          password:providerInstance.password
@@ -197,8 +210,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     
 }
 
-- (BOOL)isUserAuthenticated {
-    return NO;
+- (BOOL)isUserAuthenticated:(TCSProviderInstance *)providerInstance {
+    return providerInstance.userID != nil;
 }
 
 #pragma mark - Timer
@@ -490,11 +503,15 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 #pragma mark - Update Polling
 
-- (BOOL)pollForUpdates:(NSArray *)providerInstances {
+- (void)pollForUpdates:(TCSProviderInstance *)providerInstance
+               success:(void(^)(void))successBlock
+               failure:(void(^)(NSError *error))failureBlock {
 
-    if (_pollingForUpdates) return NO;
+    if ([_pollingProviderInstances containsObject:providerInstance]) {
+        return;
+    }
 
-    _pollingForUpdates = YES;
+    [_pollingProviderInstances addObject:providerInstance];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
@@ -504,17 +521,14 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         __block NSArray *groupsAndProjects = nil;
         __block NSArray *timers = nil;
 
-        for (TCSProviderInstance *providerInstance in providerInstances) {
+        if (providerInstance.userID != nil) {
+            dispatch_group_async(group, queue, ^{
+                groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
+            });
 
-            if (providerInstance.userID != nil) {
-                dispatch_group_async(group, queue, ^{
-                    groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
-                });
-
-                dispatch_group_async(group, queue, ^{
-                    timers = [self fetchUpdatedTimerObjects:providerInstance];
-                });
-            }
+            dispatch_group_async(group, queue, ^{
+                timers = [self fetchUpdatedTimerObjects:providerInstance];
+            });
         }
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
@@ -533,6 +547,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
             BOOL updatePollingDate =
             [self.pollingDelegate
+             remoteProvider:self
              updatePollingEntities:updatedEntities
              providerName:NSStringFromClass([self class])];
 
@@ -552,10 +567,12 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             }
         }
 
-        _pollingForUpdates = NO;
-    });
+        [_pollingProviderInstances removeObject:providerInstance];
 
-    return _pollingForUpdates;
+        if (successBlock != nil) {
+            successBlock();
+        }
+    });
 }
 
 - (NSArray *)fetchUpdatedProjectObjects:(TCSProviderInstance *)providerInstance {

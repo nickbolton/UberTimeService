@@ -385,7 +385,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     }
 }
 
-- (BOOL)isUserAuthenticated {
+- (BOOL)isUserAuthenticated:(TCSProviderInstance *)providerInstances {
     return [PFUser currentUser] != nil;
 }
 
@@ -1732,11 +1732,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     });
 }
 
-- (BOOL)pollForUpdates:(NSArray *)providerInstances {
+- (void)pollForUpdates:(TCSProviderInstance *)providerInstance
+               success:(void(^)(void))successBlock
+               failure:(void(^)(NSError *error))failureBlock {
 
     NSLog(@"lastPollingDate: %@", _lastPollingDate);
     
-    if (_pollingForUpdates) return NO;
+    if (_pollingForUpdates) return;
     
     if ([PFUser currentUser] != nil) {
 
@@ -1799,6 +1801,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
                 BOOL updatePollingDate =
                 [self.pollingDelegate
+                 remoteProvider:self
                  updatePollingEntities:updatedEntities
                  providerName:NSStringFromClass([self class])];
 
@@ -1815,22 +1818,29 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                          setObject:_lastPollingDate forKey:kTCSParseLastPollingDateKey];
                         [[NSUserDefaults standardUserDefaults] synchronize];
                     }
+
+                    if (successBlock != nil) {
+                        successBlock();
+                    }
+
                 } else {
 
                     NSTimeInterval delayInSeconds = 5.0f;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [self pollForUpdates:providerInstances];
-                    });
+                        [self pollForUpdates:providerInstance success:successBlock failure:^(NSError *error) {
 
+                            if (error != nil) {
+                                NSLog(@"%s Error : %@", __PRETTY_FUNCTION__, error);
+                            }
+                        }];
+                    });
                 }
             }
 
             _pollingForUpdates = NO;
         });
     }
-
-    return _pollingForUpdates;
 }
 
 - (NSArray *)fetchUpdatedObjectsOfType:(Class)objectType {

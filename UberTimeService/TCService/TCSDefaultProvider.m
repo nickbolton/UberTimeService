@@ -58,7 +58,7 @@
     return NO;
 }
 
-- (BOOL)isUserAuthenticated {
+- (BOOL)isUserAuthenticated:(TCSProviderInstance *)providerInstances {
     return NO;
 }
 
@@ -75,6 +75,7 @@
 }
 
 - (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
+                                       force:(BOOL)force
                                      success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                                      failure:(void(^)(NSError *error))failureBlock {
 }

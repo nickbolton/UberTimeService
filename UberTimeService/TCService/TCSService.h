@@ -30,8 +30,9 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
 @protocol TCSPollingDelegate <NSObject>
 
-- (BOOL)updatePollingEntities:(NSArray *)updatedEntities
-                 providerName:(NSString *)providerName;
+- (BOOL)remoteProvider:(id <TCSServiceRemoteProvider>)removeProvider
+ updatePollingEntities:(NSArray *)updatedEntities
+          providerName:(NSString *)providerName;
 
 @end
 
@@ -47,7 +48,9 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
 - (void)clearCache;
 - (void)holdUpdates;
-- (BOOL)pollForUpdates:(NSArray *)providerInstances;
+- (void)pollForUpdates:(TCSProviderInstance *)providerInstance
+               success:(void(^)(void))successBlock
+               failure:(void(^)(NSError *error))failureBlock;
 
 // method needs to be synchronous because it's designed to be run in the background
 - (NSDictionary *)flushUpdates:(BOOL *)requestSent
@@ -64,13 +67,14 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
                  failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
+                                       force:(BOOL)force
                                      success:(void(^)(TCSProviderInstance *providerInstance))successBlock
                                      failure:(void(^)(NSError *error))failureBlock;
 
 - (void)logoutUser:(void(^)(void))successBlock
            failure:(void(^)(NSError *error))failureBlock;
 
-- (BOOL)isUserAuthenticated;
+- (BOOL)isUserAuthenticated:(TCSProviderInstance *)providerInstances;
 
 // Project
 
