@@ -10,17 +10,37 @@
 
 @implementation TCSParseTimedEntity
 
-@dynamic archived;
 @dynamic name;
+@dynamic filteredModifiers;
+@dynamic keyCode;
+@dynamic modifiers;
+@dynamic order;
+@dynamic archived;
 @dynamic color;
 @dynamic parentID;
 
-- (BOOL)utsArchived {
-    return self.archived;
-}
-
 - (NSString *)utsName {
     return self.name;
+}
+
+- (NSInteger)utsFilteredModifiers {
+    return self.filteredModifiers;
+}
+
+- (NSInteger)utsKeyCode {
+    return self.keyCode;
+}
+
+- (NSInteger)utsModifiers {
+    return self.modifiers;
+}
+
+- (NSInteger)utsOrder {
+    return self.order;
+}
+
+- (BOOL)utsArchived {
+    return self.archived;
 }
 
 - (NSInteger)utsColor {

@@ -198,7 +198,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                       failure:(void(^)(NSError *error))failureBlock {
 
     if (_syncingRemoteProvider == nil) {
-        NSLog(@"%s WARN : no sync remote provider registered");
+        NSLog(@"%s WARN : no sync remote provider registered", __PRETTY_FUNCTION__);
         return;
     }
 
@@ -213,7 +213,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                   failure:(void(^)(NSError *error))failureBlock {
 
     if (_syncingRemoteProvider == nil) {
-        NSLog(@"%s WARN : no sync remote provider registered");
+        NSLog(@"%s WARN : no sync remote provider registered", __PRETTY_FUNCTION__);
         return;
     }
 
@@ -258,7 +258,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     }
 
     if (remoteProvider == nil) {
-        NSLog(@"%s WARN : No remote provider specified");
+        NSLog(@"%s WARN : No remote provider specified", __PRETTY_FUNCTION__);
         return;
     }
 
@@ -302,7 +302,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     }
 
     if (remoteProvider == nil) {
-        NSLog(@"%s WARN : No remote provider specified");
+        NSLog(@"%s WARN : No remote provider specified", __PRETTY_FUNCTION__);
         return;
     }
 
@@ -365,12 +365,14 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     project.providerInstance = providerInstance;
 
-    project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-    project.metadata.providerInstance = nil;
-    project.metadata.relatedRemoteId = project.remoteId;
-
     [project
      updateWithName:name
+     color:0
+     archived:NO
+     filteredModifiers:0
+     keyCode:0
+     modifiers:0
+     order:0
      entityVersion:0
      remoteId:nil
      updateTime:[[TCSService sharedInstance] systemTime]
@@ -429,7 +431,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     TCSProject *localProject =
     (id)[context existingObjectWithID:project.objectID error:&error];
 
-    if (project.metadata.archivedValue && localProject.isActive) {
+    if (project.archivedValue && localProject.isActive) {
 
         TCSTimer *activeTimer =
         [[TCSService sharedInstance] activeTimer];
@@ -444,20 +446,14 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     [localProject
      updateWithName:project.name
+     color:project.colorValue
+     archived:project.archivedValue
+     filteredModifiers:project.filteredModifiersValue
+     keyCode:project.keyCodeValue
+     modifiers:project.modifiersValue
+     order:project.orderValue
      entityVersion:project.entityVersionValue
      remoteId:project.remoteId
-     updateTime:[[TCSService sharedInstance] systemTime]
-     markAsUpdated:YES];
-
-    [localProject.metadata
-     updateWithColor:project.metadata.colorValue
-     archived:project.metadata.archivedValue
-     filteredModifiers:project.metadata.filteredModifiersValue
-     keyCode:project.metadata.keyCodeValue
-     modifiers:project.metadata.modifiersValue
-     order:project.metadata.orderValue
-     entityVersion:project.metadata.entityVersionValue
-     remoteId:project.metadata.remoteId
      updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:YES];
 
@@ -558,8 +554,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
             TCSProject *p2 = obj2;
 
             if (ignoreOrder == NO) {
-                NSInteger order1 = p1.metadata.orderValue;
-                NSInteger order2 = p2.metadata.orderValue;
+                NSInteger order1 = p1.orderValue;
+                NSInteger order2 = p2.orderValue;
 
                 if (order1 >= 0 || order2 >= 0) {
                     if (order1 < 0) {
@@ -569,7 +565,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                         return NSOrderedAscending;
                     }
                     if (order1 != order2) {
-                        return [p1.metadata.order compare:p2.metadata.order];
+                        return [p1.order compare:p2.order];
                     }
                 }
             }
@@ -596,8 +592,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
             TCSProject *p2 = obj2;
 
             if (ignoreOrder == NO) {
-                NSInteger order1 = p1.metadata.orderValue;
-                NSInteger order2 = p2.metadata.orderValue;
+                NSInteger order1 = p1.orderValue;
+                NSInteger order2 = p2.orderValue;
 
                 if (order1 >= 0 || order2 >= 0) {
                     if (order1 < 0) {
@@ -607,7 +603,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                         return NSOrderedAscending;
                     }
                     if (order1 != order2) {
-                        return [p1.metadata.order compare:p2.metadata.order];
+                        return [p1.order compare:p2.order];
                     }
                 }
             }
@@ -645,7 +641,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     NSPredicate *predicate =
     [NSPredicate
-     predicateWithFormat:@"pendingRemoteDelete = 0 and metadata.archived = %d",
+     predicateWithFormat:@"pendingRemoteDelete = 0 and archived = %d",
      archived];
 
     NSArray *projects =
@@ -668,20 +664,14 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     [localGroup
      updateWithName:group.name
+     color:group.colorValue
+     archived:group.archivedValue
+     filteredModifiers:group.filteredModifiersValue
+     keyCode:group.keyCodeValue
+     modifiers:group.modifiersValue
+     order:group.orderValue
      entityVersion:group.entityVersionValue
      remoteId:group.remoteId
-     updateTime:[[TCSService sharedInstance] systemTime]
-     markAsUpdated:YES];
-
-    [localGroup.metadata
-     updateWithColor:group.metadata.colorValue
-     archived:group.metadata.archivedValue
-     filteredModifiers:group.metadata.filteredModifiersValue
-     keyCode:group.metadata.keyCodeValue
-     modifiers:group.metadata.modifiersValue
-     order:group.metadata.orderValue
-     entityVersion:group.metadata.entityVersionValue
-     remoteId:group.metadata.remoteId
      updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:YES];
 
@@ -830,10 +820,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         group.name = toProject.name;
         group.providerInstance = localToProject.providerInstance;
 
-        group.metadata = [TCSTimedEntityMetadata MR_createInContext:localContext];
-        group.metadata.providerInstance = nil;
-        group.metadata.relatedRemoteId = group.remoteId;
-
         [group markEntityAsUpdated];
 
         [self
@@ -952,7 +938,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
          modifiers:0
          inContext:context];
         
-        demotedProject.metadata.archived = parent.metadata.archived;
+        demotedProject.archived = parent.archived;
         [parent.parent addChildrenObject:demotedProject];
         [parent.parent removeChildrenObject:parent];
 
@@ -982,21 +968,11 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         timer.providerInstance = updatedProject.providerInstance;
         timer.project = updatedProject;
 
-        timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
-        timer.metadata.providerInstance = nil;
-        timer.metadata.relatedRemoteId = timer.remoteId;
-
         [timer
-         updateWithMessage:nil
-         entityVersion:0
-         remoteId:nil
-         updateTime:[[TCSService sharedInstance] systemTime]
-         markAsUpdated:YES];
-
-        [timer.metadata
          updateWithStartTime:[[TCSService sharedInstance] systemTime]
          endTime:nil
          adjustment:0.0f
+         message:nil
          entityVersion:0
          remoteId:nil
          updateTime:[[TCSService sharedInstance] systemTime]
@@ -1053,21 +1029,11 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         timer.project = updatedProject;
         timer.providerInstance = updatedProject.providerInstance;
 
-        timer.metadata = [TCSTimerMetadata MR_createInContext:localContext];
-        timer.metadata.providerInstance = nil;
-        timer.metadata.relatedRemoteId = timer.remoteId;
-
         [timer
-         updateWithMessage:nil
-         entityVersion:0
-         remoteId:nil
-         updateTime:[[TCSService sharedInstance] systemTime]
-         markAsUpdated:YES];
-
-        [timer.metadata
          updateWithStartTime:startTime
          endTime:[startTime dateByAddingSeconds:duration]
          adjustment:0.0f
+         message:nil
          entityVersion:0
          remoteId:nil
          updateTime:[[TCSService sharedInstance] systemTime]
@@ -1107,7 +1073,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
 - (void)doStopTimer:(TCSTimer *)timer {
     if (timer != nil) {
-        timer.metadata.endTime = [[TCSService sharedInstance] systemTime];
+        timer.endTime = [[TCSService sharedInstance] systemTime];
 
         if (timer.combinedTime < 5.0f) {
             timer.pendingRemoteDeleteValue = YES;
@@ -1167,9 +1133,9 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     if (localTimer != nil) {
         localTimer.message = timer.message;
-        localTimer.metadata.adjustment= timer.metadata.adjustment;
-        if (localTimer.metadata.endTime != nil && timer.metadata.endTime != nil) {
-            localTimer.metadata.endTime = timer.metadata.endTime;
+        localTimer.adjustment = timer.adjustment;
+        if (localTimer.endTime != nil && timer.endTime != nil) {
+            localTimer.endTime = timer.endTime;
         }
         [localTimer markEntityAsUpdated];
     }
@@ -1370,7 +1336,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         while (localProject != nil && rollingTimer != nil && rollingTimer.combinedTime > maxDuration) {
 
             NSDate *endDate =
-            [rollingTimer.metadata.startTime dateByAddingTimeInterval:maxDuration];
+            [rollingTimer.startTime dateByAddingTimeInterval:maxDuration];
 
             rollingTimer =
             [self
@@ -1432,12 +1398,12 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      existingObjectWithID:timer.objectID
      error:NULL];
 
-    NSDate *finalEndTime = timer.metadata.endTime;
+    NSDate *finalEndTime = timer.endTime;
 
-    if (endDate == nil || [endDate isLessThan:timer.metadata.startTime]) {
-        timer.metadata.endTime = [[TCSService sharedInstance] systemTime];
+    if (endDate == nil || [endDate isLessThan:timer.startTime]) {
+        timer.endTime = [[TCSService sharedInstance] systemTime];
     } else {
-        timer.metadata.endTime = endDate;
+        timer.endTime = endDate;
     }
 
     TCSTimer *rolledTimer =
@@ -1445,25 +1411,15 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     rolledTimer.project = project;
     rolledTimer.providerInstance = project.providerInstance;
 
-    rolledTimer.metadata = [TCSTimerMetadata MR_createInContext:project.managedObjectContext];
-    rolledTimer.metadata.providerInstance = nil;
-    rolledTimer.metadata.relatedRemoteId = rolledTimer.remoteId;
-
     [rolledTimer
-     updateWithMessage:timer.message
+     updateWithStartTime:timer.endTime
+     endTime:finalEndTime
+     adjustment:0.0f
+     message:timer.message
      entityVersion:0
      remoteId:nil
      updateTime:[[TCSService sharedInstance] systemTime]
      markAsUpdated:NO];
-
-    [rolledTimer.metadata
-     updateWithStartTime:timer.metadata.endTime
-     endTime:finalEndTime
-     adjustment:0.0f
-     entityVersion:0
-     remoteId:nil
-     updateTime:[[TCSService sharedInstance] systemTime]
-     markAsUpdated:YES];
 
     [project addTimersObject:rolledTimer];
 
@@ -1484,17 +1440,17 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         NSDate *now = [[TCSService sharedInstance] systemTime];
 
         NSDate *virtualEndTime =
-        [localTimer.metadata.startTime dateByAddingSeconds:localTimer.combinedTime];
+        [localTimer.startTime dateByAddingSeconds:localTimer.combinedTime];
 
-        if (localTimer.metadata.endTime != nil &&
+        if (localTimer.endTime != nil &&
             [[virtualEndTime midnight] isEqualToDate:[now midnight]] &&
             [virtualEndTime isLessThanOrEqualTo:now]) {
 
             TCSTimer *activeTimer = [TCSService sharedInstance].activeTimer;
             [self doStopTimer:activeTimer];
 
-            timer.metadata.endTime = nil;
-            timer.metadata.adjustment = @(0);
+            timer.endTime = nil;
+            timer.adjustment = @(0);
             [timer markEntityAsUpdated];
 
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -1614,7 +1570,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     static NSArray *sortDescriptors = nil;
 
     if (sortDescriptors == nil) {
-        sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"metadata.startTime" ascending:YES]];
+        sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES]];
     }
 
 //    NSPredicate *p1 =
@@ -1650,7 +1606,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     NSPredicate * predicate =
     [NSPredicate predicateWithFormat:
-     @"(pendingRemoteDelete = 0) and ((project in %@) or (project.parent in %@)) and ((metadata.startTime <= %@ and metadata.endTime >= %@) or (metadata.endTime = nil and metadata.startTime <= %@ and %@ >= %@))",
+     @"(pendingRemoteDelete = 0) and ((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
      timedEntities, timedEntities, toDate, fromDate, toDate, now, fromDate];
 
     NSArray *timers =
@@ -1684,7 +1640,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         [TCSTimer
          MR_findByAttribute:@"pendingRemoteDelete"
          withValue:@NO
-         andOrderBy:@"metadata.startTime"
+         andOrderBy:@"startTime"
          ascending:YES
          inContext:[self managedObjectContextForCurrentThread]];
     }
@@ -1700,7 +1656,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 - (TCSTimer *)activeTimer {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"metadata.endTime = nil AND pendingRemoteDelete = 0"];
+    [NSPredicate predicateWithFormat:@"endTime = nil AND pendingRemoteDelete = 0"];
 
     NSArray *activeTimers =
     [TCSTimer
@@ -2059,7 +2015,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                        failure:(void(^)(NSError *error))failureBlock {
 
     if (_syncingRemoteProvider == nil) {
-        NSLog(@"%s WARN : no syncing provider specified");
+        NSLog(@"%s WARN : no syncing provider specified", __PRETTY_FUNCTION__);
         return;
 
     }
@@ -2146,7 +2102,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
          }];
 
     } else {
-        NSLog(@"%s WARN : no remote provider");
+        NSLog(@"%s WARN : no remote provider", __PRETTY_FUNCTION__);
     }
 }
 
@@ -2256,22 +2212,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 //    });
 }
 
-- (void)updateMetadataRelations:(TCSBaseEntity *)entity {
-
-    if ([entity isKindOfClass:[TCSTimedEntity class]]) {
-
-        TCSTimedEntity *timedEntity = (id)entity;
-        timedEntity.metadata.relatedRemoteId = entity.remoteId;
-        [timedEntity.metadata markEntityAsUpdated];
-
-    } else if ([entity isKindOfClass:[TCSTimer class]]) {
-
-        TCSTimer *timer = (id)entity;
-        timer.metadata.relatedRemoteId = entity.remoteId;
-        [timer.metadata markEntityAsUpdated];
-    }
-}
-
 - (void)handlePushingToRemoteProviders {
 
     @synchronized (self) {
@@ -2283,23 +2223,10 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"pending = 1"];
 
-    NSArray *proposedUpdates =
+    NSArray *updates =
     [TCSBaseEntity
      MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
-
-    NSMutableArray *updates = [proposedUpdates mutableCopy];
-
-    for (TCSBaseMetadataEntity *entity in proposedUpdates) {
-
-        if ([entity isKindOfClass:[TCSBaseMetadataEntity class]]) {
-            if (entity.relatedRemoteId == nil ||
-                entity.relatedRemoteId == [NSNull null]) {
-                
-                [updates removeObject:entity];
-            }
-        }
-    }
 
     if (updates.count > 0) {
         NSLog(@"updates: %@", updates);
@@ -2330,16 +2257,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             if (entity.remoteId == nil) {
 
-//                if ([entity respondsToSelector:@selector(relatedRemoteId)]) {
-//
-//                    if ([(TCSBaseMetadataEntity *)entity relatedRemoteId] == nil) {
-//
-//                        NSLog(@"%s INFO : TCSBaseMetadataEntity entity doesn't yet have its relatedRemoteId: %@",
-//                              __PRETTY_FUNCTION__, entity);
-//                        continue;
-//                    }
-//                }
-
                 [self
                  createRemoteEntity:entity
                  success:^(NSManagedObjectID *objectID, NSString *remoteID) {
@@ -2361,8 +2278,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                              }
 
                              localEntity.remoteId = remoteID;
-
-                             [self updateMetadataRelations:localEntity];
                          }
 
                      } completion:^(BOOL success, NSError *error) {
@@ -2494,8 +2409,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                                     }
                                     
                                     localEntity.remoteId = remoteIDMap[objectID];
-
-                                    [self updateMetadataRelations:localEntity];
                                 }
                             }
                             
@@ -2568,7 +2481,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
          [self
           sendDeleteObjectCommand:entity.remoteId
-          withProvider:entity.providerInstance
+          withProvider:entity.providerInstance.remoteProvider
           success:^{
 
               if (successBlock != nil) {
@@ -2586,60 +2499,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
  updatePollingEntities:(NSArray *)updatedEntities
           providerName:(NSString *)providerName {
 
-    NSMutableArray *mutableEntities = [updatedEntities mutableCopy];
-
-    if (remoteProvider == _syncingRemoteProvider) {
-
-        NSMutableDictionary *allMetadataEntities = [NSMutableDictionary dictionary];
-
-        for (id<TCSProvidedBaseEntity> obj in updatedEntities) {
-
-            if ([obj conformsToProtocol:@protocol(TCSProvidedTimer)] ||
-                [obj conformsToProtocol:@protocol(TCSProvidedGroup)] ||
-                [obj conformsToProtocol:@protocol(TCSProvidedProject)]) {
-
-                allMetadataEntities[obj.utsRemoteID] = obj;
-            }
-
-            if ([obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)] ||
-                [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
-
-                id <TCSProvidedTimedEntityMetadata> metadata = obj;
-
-                if (metadata.utsRelatedRemoteID == nil ||
-                    metadata.utsRelatedRemoteID == [NSNull null]) {
-
-                    [mutableEntities removeObject:obj];
-                }
-            }
-        }
-
-        for (id<TCSProvidedBaseEntity> obj in updatedEntities) {
-
-            if ([obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)] ||
-                [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
-
-                id <TCSProvidedTimedEntityMetadata> metadata = obj;
-
-                [allMetadataEntities removeObjectForKey:metadata.utsRelatedRemoteID];
-            }
-        }
-        
-        NSLog(@"entities without metadata: %@", allMetadataEntities);
-        
-        for (id<TCSProvidedBaseEntity> obj in allMetadataEntities.allValues) {
-            [mutableEntities removeObject:obj];
-        }
-    } else {
-//        return YES;
-    }
-
-    BOOL processingAllEntries = mutableEntities.count == updatedEntities.count;
-
-    if (mutableEntities.count == 0) {
-        return processingAllEntries;
-    }
-
     [self.delegate remoteSyncStarting];
 
     __block NSMutableDictionary *updates =
@@ -2648,7 +2507,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
         NSArray *sortedEntities =
-        [mutableEntities
+        [updatedEntities
          sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
 
              if ([obj1 conformsToProtocol:@protocol(TCSProvidedRemoteCommand)]) {
@@ -2724,19 +2583,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                  inserted:&inserted
                  updated:&updated
                  inContext:localContext];
-            } else if (localType == [TCSTimedEntityMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimedEntityMetadata)]) {
-                [self
-                 handleTimedEntityMetadataUpdate:(id)obj
-                 providerInstance:providerInstance
-                 inserted:&inserted
-                 updated:&updated
-                 inContext:localContext];
-            } else if (localType == [TCSTimerMetadata class] && [obj conformsToProtocol:@protocol(TCSProvidedTimerMetadata)]) {
-                [self
-                 handleTimerMetadataUpdate:(id)obj
-                 inserted:&inserted
-                 updated:&updated
-                 inContext:localContext];
             }
 
             if (inserted != nil) {
@@ -2784,7 +2630,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                             deletedObjects = [NSMutableArray array];
                             updates[NSDeletedObjectsKey] = deletedObjects;
                         }
-                        [deletedObjects addObjectsFromArray:group];
+                        [deletedObjects addObject:group];
                     }
                 }
             }
@@ -2849,16 +2695,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                         } else {
 
-                            if ([updatedEntity isKindOfClass:[TCSTimerMetadata class]]) {
-                                updatedEntity = ((TCSTimerMetadata *)updatedEntity).timer;
-                            } else if ([updatedEntity isKindOfClass:[TCSTimedEntityMetadata class]]) {
-                                updatedEntity = ((TCSTimedEntityMetadata *)updatedEntity).timedEntity;
-                            }
-
-                            if (updatedEntity == nil) {
-                                NSLog(@"ZZZZ");
-                            }
-
                             if ([updatedInsertedObjects containsObject:updatedEntity] == NO) {
                                 [updatedInsertedObjects addObject:updatedEntity];
                             }
@@ -2884,12 +2720,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                         if (error != nil) {
                             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                         } else {
-
-                            if ([updatedEntity isKindOfClass:[TCSTimerMetadata class]]) {
-                                updatedEntity = ((TCSTimerMetadata *)updatedEntity).timer;
-                            } else if ([updatedEntity isKindOfClass:[TCSTimedEntityMetadata class]]) {
-                                updatedEntity = ((TCSTimedEntityMetadata *)updatedEntity).timedEntity;
-                            }
 
                             if ([updatedUpdatedObjects containsObject:updatedEntity] == NO) {
                                 [updatedUpdatedObjects addObject:updatedEntity];
@@ -3018,6 +2848,12 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             [existingGroup
              updateWithName:providedGroup.utsName
+             color:providedGroup.utsColor
+             archived:providedGroup.utsArchived
+             filteredModifiers:providedGroup.utsFilteredModifiers
+             keyCode:providedGroup.utsKeyCode
+             modifiers:providedGroup.utsModifiers
+             order:providedGroup.utsOrder
              entityVersion:providedGroup.utsEntityVersion
              remoteId:providedGroup.utsRemoteID
              updateTime:providedGroup.utsUpdateTime
@@ -3040,32 +2876,17 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         [group
          updateWithName:providedGroup.utsName
+         color:providedGroup.utsColor
+         archived:providedGroup.utsArchived
+         filteredModifiers:providedGroup.utsFilteredModifiers
+         keyCode:providedGroup.utsKeyCode
+         modifiers:providedGroup.utsModifiers
+         order:providedGroup.utsOrder
          entityVersion:providedGroup.utsEntityVersion
          remoteId:providedGroup.utsRemoteID
          updateTime:providedGroup.utsUpdateTime
          markAsUpdated:NO];
 
-        if (providerInstance != nil) {
-            group.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-            group.metadata.providerInstance = nil;
-            group.metadata.relatedRemoteId = group.remoteId;
-
-            [group.metadata
-             updateWithColor:0
-             archived:YES
-             filteredModifiers:0
-             keyCode:0
-             modifiers:0
-             order:0
-             entityVersion:0
-             remoteId:nil
-             updateTime:[[TCSService sharedInstance] systemTime]
-             markAsUpdated:YES];
-
-            NSLog(@"group: %@", group);
-            NSLog(@"meta: %@", group.metadata);
-        }
-        
         *inserted = group;
 
         NSLog(@"SYNC: created new group: %@", group);
@@ -3122,6 +2943,12 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             [existingProject
              updateWithName:providedProject.utsName
+             color:providedProject.utsColor
+             archived:providedProject.utsArchived
+             filteredModifiers:providedProject.utsFilteredModifiers
+             keyCode:providedProject.utsKeyCode
+             modifiers:providedProject.utsModifiers
+             order:providedProject.utsOrder
              entityVersion:providedProject.utsEntityVersion
              remoteId:providedProject.utsRemoteID
              updateTime:providedProject.utsUpdateTime
@@ -3140,40 +2967,22 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     } else {
 
-        id <TCSServiceRemoteProvider> remoteProvider =
-        [self remoteProviderForInstance:providerInstance];
-
         TCSProject *project =
         [TCSProject MR_createInContext:context];
         project.providerInstance = providerInstance;
 
         [project
          updateWithName:providedProject.utsName
+         color:providedProject.utsColor
+         archived:providedProject.utsArchived
+         filteredModifiers:providedProject.utsFilteredModifiers
+         keyCode:providedProject.utsKeyCode
+         modifiers:providedProject.utsModifiers
+         order:providedProject.utsOrder
          entityVersion:providedProject.utsEntityVersion
          remoteId:providedProject.utsRemoteID
          updateTime:providedProject.utsUpdateTime
          markAsUpdated:NO];
-
-        if (providerInstance != nil) {
-            project.metadata = [TCSTimedEntityMetadata MR_createInContext:context];
-            project.metadata.providerInstance = nil;
-            project.metadata.relatedRemoteId = project.remoteId;
-
-            [project.metadata
-             updateWithColor:0
-             archived:YES
-             filteredModifiers:0
-             keyCode:0
-             modifiers:0
-             order:0
-             entityVersion:0
-             remoteId:nil
-             updateTime:[[TCSService sharedInstance] systemTime]
-             markAsUpdated:YES];
-
-            NSLog(@"project: %@", project);
-            NSLog(@"meta: %@", project.metadata);
-        }
 
         project.parent = existingParent;
 
@@ -3246,7 +3055,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                  MR_findAllWithPredicate:predicate inContext:context];
             } else {
                 NSLog(@"%s WARN : utsProjectID '%@' not separated by %@ char",
-                      providedTimer.utsProjectID, projectIDSeparator);
+                      __PRETTY_FUNCTION__, providedTimer.utsProjectID, projectIDSeparator);
             }
         }
 
@@ -3271,7 +3080,10 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
             [providedTimer.utsUpdateTime isGreaterThan:existingTimer.updateTime]) {
 
             [existingTimer
-             updateWithMessage:providedTimer.utsMessage
+             updateWithStartTime:providedTimer.utsStartTime
+             endTime:providedTimer.utsEndTime
+             adjustment:providedTimer.utsAdjustment
+             message:providedTimer.utsMessage
              entityVersion:providedTimer.utsEntityVersion
              remoteId:providedTimer.utsRemoteID
              updateTime:providedTimer.utsUpdateTime
@@ -3295,26 +3107,14 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         timer.providerInstance = providerInstance;
 
         [timer
-         updateWithMessage:providedTimer.utsMessage
+         updateWithStartTime:providedTimer.utsStartTime
+         endTime:providedTimer.utsEndTime
+         adjustment:providedTimer.utsAdjustment
+         message:providedTimer.utsMessage
          entityVersion:providedTimer.utsEntityVersion
          remoteId:providedTimer.utsRemoteID
          updateTime:providedTimer.utsUpdateTime
          markAsUpdated:NO];
-
-        if (providerInstance != nil) {
-            timer.metadata = [TCSTimerMetadata MR_createInContext:context];
-            timer.metadata.providerInstance = nil;
-            timer.metadata.relatedRemoteId = timer.remoteId;
-
-            [timer.metadata
-             updateWithStartTime:providedTimer.utsStartTime
-             endTime:providedTimer.utsEndTime
-             adjustment:0.0f
-             entityVersion:0
-             remoteId:nil
-             updateTime:[[TCSService sharedInstance] systemTime]
-             markAsUpdated:YES];
-        }
 
         timer.project = existingProject;
 
@@ -3388,191 +3188,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         *inserted = cannedMessage;
         
         NSLog(@"SYNC: created new canned message: %@", cannedMessage);
-    }
-}
-
-- (void)handleTimedEntityMetadataUpdate:(id <TCSProvidedTimedEntityMetadata>)providedTimedEntityMetadata
-                       providerInstance:(TCSProviderInstance *)providerInstance
-                               inserted:(TCSBaseEntity **)inserted
-                                updated:(TCSBaseEntity **)updated
-                              inContext:(NSManagedObjectContext *)context {
-
-    NSAssert(providedTimedEntityMetadata.utsRemoteID != nil, @"timedEntityMetadata remoteID is nil");
-
-    if (providedTimedEntityMetadata.utsRelatedRemoteID == nil ||
-        providedTimedEntityMetadata.utsRelatedRemoteID == [NSNull null]) {
-        
-        NSLog(@"%s INFO : relatedRemoteID doesn't exist yet, skipping: %@", __PRETTY_FUNCTION__, providedTimedEntityMetadata);
-        return;
-    }
-
-    NSArray *entities =
-    [TCSTimedEntityMetadata
-     MR_findByAttribute:@"remoteId"
-     withValue:providedTimedEntityMetadata.utsRemoteID
-     inContext:context];
-
-    if (entities.count > 1) {
-        NSLog(@"SYNC: Warn: multiple timedEntityMetadata exist with remoteID: %@",
-              providedTimedEntityMetadata.utsRemoteID);
-    }
-
-    *inserted = nil;
-    *updated = nil;
-
-    TCSTimedEntityMetadata *existingTimedEntityMetadata = entities.firstObject;
-
-    if (existingTimedEntityMetadata != nil) {
-
-        if (providedTimedEntityMetadata.utsUpdateTime == nil ||
-            existingTimedEntityMetadata.updateTime == nil ||
-            [providedTimedEntityMetadata.utsUpdateTime isGreaterThan:existingTimedEntityMetadata.updateTime]) {
-
-            [existingTimedEntityMetadata
-             updateWithColor:providedTimedEntityMetadata.utsColor
-             archived:providedTimedEntityMetadata.utsArchived
-             filteredModifiers:providedTimedEntityMetadata.utsFilteredModifiers
-             keyCode:providedTimedEntityMetadata.utsKeyCode
-             modifiers:providedTimedEntityMetadata.utsModifiers
-             order:providedTimedEntityMetadata.utsOrder
-             entityVersion:providedTimedEntityMetadata.utsEntityVersion
-             remoteId:providedTimedEntityMetadata.utsRemoteID
-             updateTime:providedTimedEntityMetadata.utsUpdateTime
-             markAsUpdated:NO];
-
-            *updated = existingTimedEntityMetadata;
-
-            NSLog(@"SYNC: updated existing timedEntityMetadata: %@", existingTimedEntityMetadata);
-
-        } else {
-            NSLog(@"SYNC: timedEntityMetadata not updated because it has a entityVersion greater than or equal to (%d): %@",
-                  providedTimedEntityMetadata.utsEntityVersion, existingTimedEntityMetadata);
-        }
-
-    } else {
-
-        TCSTimedEntity *timedEntity =
-        [TCSTimedEntity
-         MR_findFirstByAttribute:@"remoteId"
-         withValue:providedTimedEntityMetadata.utsRelatedRemoteID
-         inContext:context];
-
-        if (timedEntity != nil) {
-
-            id <TCSServiceRemoteProvider> remoteProvider =
-            [self remoteProviderForInstance:providerInstance];
-
-            TCSTimedEntityMetadata *timedEntityMetadata =
-            [TCSTimedEntityMetadata MR_createInContext:context];
-            timedEntityMetadata.providerInstance = nil;
-            timedEntityMetadata.relatedRemoteId = providedTimedEntityMetadata.utsRelatedRemoteID;
-            timedEntityMetadata.archivedValue = remoteProvider.importProjectsAsArchived;
-
-            [timedEntityMetadata
-             updateWithColor:providedTimedEntityMetadata.utsColor
-             archived:providedTimedEntityMetadata.utsArchived
-             filteredModifiers:providedTimedEntityMetadata.utsFilteredModifiers
-             keyCode:providedTimedEntityMetadata.utsKeyCode
-             modifiers:providedTimedEntityMetadata.utsModifiers
-             order:providedTimedEntityMetadata.utsOrder
-             entityVersion:providedTimedEntityMetadata.utsEntityVersion
-             remoteId:providedTimedEntityMetadata.utsRemoteID
-             updateTime:providedTimedEntityMetadata.utsUpdateTime
-             markAsUpdated:NO];
-
-            *inserted = timedEntityMetadata;
-
-            timedEntity.metadata = timedEntityMetadata;
-            
-            NSLog(@"SYNC: created new timedEntityMetadata: %@", timedEntityMetadata);
-        }
-    }
-}
-
-- (void)handleTimerMetadataUpdate:(id <TCSProvidedTimerMetadata>)providedTimerMetadata
-                         inserted:(TCSBaseEntity **)inserted
-                          updated:(TCSBaseEntity **)updated
-                        inContext:(NSManagedObjectContext *)context {
-
-    NSAssert(providedTimerMetadata.utsRemoteID != nil, @"providedTimerMetadata remoteID is nil");
-
-    if (providedTimerMetadata.utsRelatedRemoteID == nil ||
-        providedTimerMetadata.utsRelatedRemoteID == [NSNull null]) {
-        
-        NSLog(@"%s INFO : relatedRemoteID doesn't exist yet, skipping: %@", __PRETTY_FUNCTION__, providedTimerMetadata);
-        return;
-    }
-
-    NSArray *entities =
-    [TCSTimerMetadata
-     MR_findByAttribute:@"remoteId"
-     withValue:providedTimerMetadata.utsRemoteID
-     inContext:context];
-
-    if (entities.count > 1) {
-        NSLog(@"SYNC: Warn: multiple timerMetadata exist with remoteID: %@",
-              providedTimerMetadata.utsRemoteID);
-    }
-
-    *inserted = nil;
-    *updated = nil;
-
-    TCSTimerMetadata *existingTimerMetadata = entities.firstObject;
-
-    if (existingTimerMetadata != nil) {
-
-        if (providedTimerMetadata.utsUpdateTime == nil ||
-            existingTimerMetadata.updateTime == nil ||
-            [providedTimerMetadata.utsUpdateTime isGreaterThan:existingTimerMetadata.updateTime]) {
-
-            [existingTimerMetadata
-             updateWithStartTime:providedTimerMetadata.utsStartTime
-             endTime:providedTimerMetadata.utsEndTime
-             adjustment:providedTimerMetadata.utsAdjustment
-             entityVersion:providedTimerMetadata.utsEntityVersion
-             remoteId:providedTimerMetadata.utsRemoteID
-             updateTime:providedTimerMetadata.utsUpdateTime
-             markAsUpdated:NO];
-
-            *updated = existingTimerMetadata;
-
-            NSLog(@"SYNC: updated existing timerMetadata: %@", existingTimerMetadata);
-
-        } else {
-            NSLog(@"SYNC: timerMetadata not updated because it has a entityVersion greater than or equal to (%d): %@",
-                  providedTimerMetadata.utsEntityVersion, existingTimerMetadata);
-        }
-
-    } else {
-
-        TCSTimer *timer =
-        [TCSTimer
-         MR_findFirstByAttribute:@"remoteId"
-         withValue:providedTimerMetadata.utsRelatedRemoteID
-         inContext:context];
-
-        if (timer != nil) {
-
-            TCSTimerMetadata *timerMetadata =
-            [TCSTimerMetadata MR_createInContext:context];
-            timerMetadata.providerInstance = nil;
-            timerMetadata.relatedRemoteId = providedTimerMetadata.utsRelatedRemoteID;
-
-            [timerMetadata
-             updateWithStartTime:providedTimerMetadata.utsStartTime
-             endTime:providedTimerMetadata.utsEndTime
-             adjustment:providedTimerMetadata.utsAdjustment
-             entityVersion:providedTimerMetadata.utsEntityVersion
-             remoteId:providedTimerMetadata.utsRemoteID
-             updateTime:providedTimerMetadata.utsUpdateTime
-             markAsUpdated:NO];
-            
-            *inserted = timerMetadata;
-
-            timer.metadata = timerMetadata;
-            
-            NSLog(@"SYNC: created new timerMetadata: %@", timerMetadata);
-        }
     }
 }
 

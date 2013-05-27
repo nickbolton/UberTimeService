@@ -74,8 +74,8 @@
 //            NSLog(@"(4): %d", [now isGreaterThanOrEqualTo:_dateRange.startDate]);
 
             if ([project.objectID isEqual:activeProject.objectID] &&
-                activeTimer.metadata.endTime == nil &&
-                [activeTimer.metadata.startTime isLessThanOrEqualTo:_dateRange.endDate] &&
+                activeTimer.endTime == nil &&
+                [activeTimer.startTime isLessThanOrEqualTo:_dateRange.endDate] &&
                 [now isGreaterThanOrEqualTo:_dateRange.startDate]) {
                 return YES;
             }
@@ -90,7 +90,7 @@
     for (TCSProject *project in _projects) {
         if (project.isActive) {
             TCSTimer *activeTimer = [TCSService sharedInstance].activeTimer;
-            _activeTimestamp = activeTimer.metadata.startTime.timeIntervalSinceReferenceDate;
+            _activeTimestamp = activeTimer.startTime.timeIntervalSinceReferenceDate;
         }
     }
 }

@@ -14,6 +14,9 @@
 
 + (NSString *)parseClassName;
 
+@property (nonatomic) NSDate *startTime;
+@property (nonatomic) NSDate *endTime;
+@property (nonatomic) NSTimeInterval adjustment;
 @property (nonatomic) NSString *message;
 @property (nonatomic) NSString *projectID;
 

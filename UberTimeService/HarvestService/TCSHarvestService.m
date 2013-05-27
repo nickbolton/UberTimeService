@@ -160,17 +160,15 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
       @"Authorization" : [NSString stringWithFormat:@"Basic %@", auth],
     };
 
-    NSDictionary *metadata =
-    @{
-      @"url" : [NSString stringWithFormat:@"%@/account/who_am_i", @"https://deucent.harvestapp.com"],
-      @"method" : @"GET",
-      @"headers" : headers,
-    };
+    NSString *urlString =
+    [NSString stringWithFormat:@"%@/account/who_am_i", @"https://deucent.harvestapp.com"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
 
     [self
-     requestWithURL:[NSURL URLWithString:metadata[@"url"]]
-     method:metadata[@"method"]
-     headers:metadata[@"headers"]
+     requestWithURL:url
+     method:@"GET"
+     headers:headers
      userContext:nil
      asynchronous:YES
      success:^(NSDictionary *json, id userContext) {
@@ -272,7 +270,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
                           MAX(0.01666666666667f, [timer elapsedTimeInHours]),
                           timer.project.parent.remoteId,
                           timer.project.remoteId,
-                          [dateFormatter stringFromDate:timer.metadata.startTime]];
+                          [dateFormatter stringFromDate:timer.startTime]];
 
     NSURL *url =
     [NSURL URLWithString:[NSString stringWithFormat:@"%@/daily/add", timer.providerInstance.baseURL]];
@@ -375,7 +373,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
                           MAX(0.01666666666667f, [timer elapsedTimeInHours]),
                           timer.project.parent.remoteId,
                           timer.project.remoteId,
-                          [dateFormatter stringFromDate:timer.metadata.startTime]];
+                          [dateFormatter stringFromDate:timer.startTime]];
 
     NSURL *url =
     [NSURL

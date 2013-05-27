@@ -34,21 +34,21 @@
 
     [self.service
      createProjectWithName:@"projectC"
-     remoteProvider:self.remoteProvider
+     providerInstance:nil
      success:^(TCSProject *project) {
 
          self.project = project;
 
          [self.service
           createProjectWithName:@"second project"
-          remoteProvider:self.remoteProvider
+          providerInstance:nil
           success:^(TCSProject *project) {
 
               self.secondProject = project;
 
               [self.service
                createProjectWithName:@"target project"
-               remoteProvider:self.remoteProvider
+               providerInstance:nil
                success:^(TCSProject *project) {
 
                    self.targetProject = project;
@@ -210,20 +210,20 @@
     NSInteger color = 50;
 
     self.group.name = name;
-    self.group.metadata.archivedValue = archived;
-    self.group.metadata.colorValue = color;
+    self.group.archivedValue = archived;
+    self.group.colorValue = color;
 
     [self.service
      updateGroup:self.group
      success:^(TCSGroup *updatedGroup){
 
-         GHAssertTrue(updatedGroup.metadata.archivedValue == archived,
+         GHAssertTrue(updatedGroup.archivedValue == archived,
                       @"group.archived (%d) != archived (%d)",
-                      updatedGroup.metadata.archivedValue, archived);
+                      updatedGroup.archivedValue, archived);
 
-         GHAssertTrue(updatedGroup.metadata.colorValue == color,
+         GHAssertTrue(updatedGroup.colorValue == color,
                       @"group.color (%d) != color (%d)",
-                      updatedGroup.metadata.colorValue, color);
+                      updatedGroup.colorValue, color);
 
          GHAssertTrue([updatedGroup.name isEqualToString:name],
                       @"group.name (%@) != name (%@)",

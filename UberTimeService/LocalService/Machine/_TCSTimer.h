@@ -5,19 +5,23 @@
 #import "TCSBaseEntity.h"
 
 extern const struct TCSTimerAttributes {
+	__unsafe_unretained NSString *adjustment;
+	__unsafe_unretained NSString *endTime;
 	__unsafe_unretained NSString *message;
+	__unsafe_unretained NSString *startTime;
 } TCSTimerAttributes;
 
 extern const struct TCSTimerRelationships {
-	__unsafe_unretained NSString *metadata;
 	__unsafe_unretained NSString *project;
 } TCSTimerRelationships;
 
 extern const struct TCSTimerFetchedProperties {
 } TCSTimerFetchedProperties;
 
-@class TCSTimerMetadata;
 @class TCSProject;
+
+
+
 
 
 
@@ -33,6 +37,26 @@ extern const struct TCSTimerFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* adjustment;
+
+
+@property float adjustmentValue;
+- (float)adjustmentValue;
+- (void)setAdjustmentValue:(float)value_;
+
+//- (BOOL)validateAdjustment:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSDate* endTime;
+
+
+//- (BOOL)validateEndTime:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSString* message;
 
 
@@ -41,10 +65,11 @@ extern const struct TCSTimerFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* startTime;
 
-@property (nonatomic, strong) TCSTimerMetadata* metadata;
 
-//- (BOOL)validateMetadata:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateStartTime:(id*)value_ error:(NSError**)error_;
+
 
 
 
@@ -66,15 +91,31 @@ extern const struct TCSTimerFetchedProperties {
 @interface _TCSTimer (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSNumber*)primitiveAdjustment;
+- (void)setPrimitiveAdjustment:(NSNumber*)value;
+
+- (float)primitiveAdjustmentValue;
+- (void)setPrimitiveAdjustmentValue:(float)value_;
+
+
+
+
+- (NSDate*)primitiveEndTime;
+- (void)setPrimitiveEndTime:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveMessage;
 - (void)setPrimitiveMessage:(NSString*)value;
 
 
 
 
+- (NSDate*)primitiveStartTime;
+- (void)setPrimitiveStartTime:(NSDate*)value;
 
-- (TCSTimerMetadata*)primitiveMetadata;
-- (void)setPrimitiveMetadata:(TCSTimerMetadata*)value;
+
 
 
 

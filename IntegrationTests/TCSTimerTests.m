@@ -31,14 +31,14 @@
 
     [self.service
      createProjectWithName:@"projectB"
-     remoteProvider:self.remoteProvider
+     providerInstance:nil
      success:^(TCSProject *project) {
 
          self.project = project;
 
          [self.service
           createProjectWithName:@"second project"
-          remoteProvider:self.remoteProvider
+          providerInstance:nil
           success:^(TCSProject *project) {
 
               self.secondProject = project;

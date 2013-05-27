@@ -11,6 +11,9 @@
 
 @implementation TCSParseTimer
 
+@dynamic startTime;
+@dynamic endTime;
+@dynamic adjustment;
 @dynamic message;
 @dynamic projectID;
 
@@ -20,6 +23,18 @@
 
 - (Class)utsLocalEntityType {
     return [TCSTimer class];
+}
+
+- (NSDate *)utsStartTime {
+    return self.startTime;
+}
+
+- (NSDate *)utsEndTime {
+    return self.endTime;
+}
+
+- (NSTimeInterval)utsAdjustment {
+    return self.adjustment;
 }
 
 - (NSString *)utsMessage {

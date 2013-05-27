@@ -37,34 +37,6 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
                        success:(void(^)(NSManagedObjectID *objectID))successBlock
                        failure:(void(^)(NSError *error))failureBlock;
 
-// Timed Entity Metadata
-
-- (BOOL)createTimedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata
-                          success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
-                          failure:(void(^)(NSError *error))failureBlock;
-
-- (BOOL)updateTimedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata
-                          success:(void(^)(NSManagedObjectID *objectID))successBlock
-                          failure:(void(^)(NSError *error))failureBlock;
-
-- (BOOL)deleteTimedEntityMetadata:(TCSTimedEntityMetadata *)timedEntityMetadata
-                          success:(void(^)(NSManagedObjectID *objectID))successBlock
-                          failure:(void(^)(NSError *error))failureBlock;
-
-// Timer Metadata
-
-- (BOOL)createTimerMetadata:(TCSTimerMetadata *)timedEntityMetadata
-                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
-                    failure:(void(^)(NSError *error))failureBlock;
-
-- (BOOL)updateTimerMetadata:(TCSTimerMetadata *)timedEntityMetadata
-                    success:(void(^)(NSManagedObjectID *objectID))successBlock
-                    failure:(void(^)(NSError *error))failureBlock;
-
-- (BOOL)deleteTimerMetadata:(TCSTimerMetadata *)timedEntityMetadata
-                    success:(void(^)(NSManagedObjectID *objectID))successBlock
-                    failure:(void(^)(NSError *error))failureBlock;
-
 @end
 
 @protocol TCSProvidedBaseEntity <NSObject>
@@ -75,12 +47,14 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSDate *utsUpdateTime;
 @end
 
-@protocol TCSProvidedBaseMetadataEntity <TCSProvidedBaseEntity>
-@property (nonatomic, readonly) NSString *utsRelatedRemoteID;
-@end
-
 @protocol TCSProvidedTimedEntity <TCSProvidedBaseEntity>
 @property (nonatomic, readonly) NSString *utsName;
+@property (nonatomic, readonly) NSInteger utsFilteredModifiers;
+@property (nonatomic, readonly) NSInteger utsKeyCode;
+@property (nonatomic, readonly) NSInteger utsModifiers;
+@property (nonatomic, readonly) NSInteger utsOrder;
+@property (nonatomic, readonly) BOOL utsArchived;
+@property (nonatomic, readonly) NSInteger utsColor;
 @property (nonatomic, readonly) NSString *utsParentID;
 @end
 
@@ -95,6 +69,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSString *utsProjectID;
 @property (nonatomic, readonly) NSDate *utsStartTime;
 @property (nonatomic, readonly) NSDate *utsEndTime;
+@property (nonatomic, readonly) NSTimeInterval utsAdjustment;
 @end
 
 @protocol TCSProvidedCannedMessage <TCSProvidedBaseEntity>
@@ -114,25 +89,6 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSString *utsUsername;
 @property (nonatomic, readonly) NSString *utsUserID;
 @property (nonatomic, readonly) NSString *utsRemoteProvider;
-@end
-
-@protocol TCSProvidedTimedEntityMetadata <TCSProvidedBaseMetadataEntity>
-
-@property (nonatomic, readonly) NSInteger utsFilteredModifiers;
-@property (nonatomic, readonly) NSInteger utsKeyCode;
-@property (nonatomic, readonly) NSInteger utsModifiers;
-@property (nonatomic, readonly) NSInteger utsOrder;
-@property (nonatomic, readonly) BOOL utsArchived;
-@property (nonatomic, readonly) NSInteger utsColor;
-
-@end
-
-@protocol TCSProvidedTimerMetadata <TCSProvidedBaseMetadataEntity>
-
-@property (nonatomic, readonly) NSDate *utsStartTime;
-@property (nonatomic, readonly) NSDate *utsEndTime;
-@property (nonatomic, readonly) NSTimeInterval utsAdjustment;
-
 @end
 
 @protocol TCSServiceDelegate;

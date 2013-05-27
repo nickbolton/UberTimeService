@@ -23,8 +23,6 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 @property (nonatomic, strong) TCSLocalService *localService;
 @property (nonatomic, strong) NSMutableDictionary *remoteServiceProviders;
 @property (nonatomic, readwrite) TCSTimer *activeTimer;
-@property (nonatomic, strong) NSMutableArray *providerQueue;
-@property (nonatomic, strong) TCSProviderInstance *pollingProviderInstance;
 
 @end
 
@@ -34,7 +32,6 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 {
     self = [super init];
     if (self) {
-        self.providerQueue = [NSMutableArray array];
         self.remoteServiceProviders = [NSMutableDictionary dictionary];
         self.localService = [TCSLocalService sharedInstance];
         [self updateActiveTimer];
@@ -177,58 +174,11 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 - (void)pollProviderInstance:(TCSProviderInstance *)providerInstance
               remoteProvider:(id <TCSServiceRemoteProvider>)remoteProvider {
 
-
-    @synchronized (self) {
-        if (_pollingProviderInstance != nil) {
-
-            if (remoteProvider == _localService.syncingRemoteProvider) {
-                [_providerQueue addObject:_localService.syncingRemoteProvider];
-            } else {
-                [_providerQueue addObject:providerInstance];
-            }
-            return;
-        }
-        self.pollingProviderInstance = providerInstance;
-    }
-
-    void (^finishBlock)(void) = ^{
-
-        @synchronized (self) {
-
-            self.pollingProviderInstance = nil;
-
-            TCSProviderInstance *nextInstance =
-            [_providerQueue lastObject];
-            [_providerQueue removeLastObject];
-
-            if (nextInstance != nil) {
-
-                if (nextInstance == _localService.syncingRemoteProvider) {
-
-                    [self
-                     pollProviderInstance:nil
-                     remoteProvider:_localService.syncingRemoteProvider];
-
-                } else {
-
-                    id <TCSServiceRemoteProvider> nextProvider =
-                    [self serviceProviderNamed:nextInstance.remoteProvider];
-
-                    [self
-                     pollProviderInstance:nextInstance
-                     remoteProvider:remoteProvider];
-                }
-            }
-        }
-    };
-
     if (remoteProvider == _localService.syncingRemoteProvider) {
 
         [remoteProvider
          pollForUpdates:providerInstance
          success:^{
-
-             finishBlock();
 
          } failure:^(NSError *error) {
 
@@ -236,7 +186,6 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
                  NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
              }
 
-             finishBlock();
          }];
         return;
     }
@@ -255,15 +204,11 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
                    pollForUpdates:providerInstance
                    success:^{
 
-                       finishBlock();
-
                    } failure:^(NSError *error) {
 
                        if (error != nil) {
                            NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                        }
-
-                       finishBlock();
                    }];
 
               } failure:^(NSError *error) {
@@ -271,8 +216,6 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
                   if (error != nil) {
                       NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                   }
-
-                  finishBlock();
               }];
          }
 
@@ -281,8 +224,6 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
          if (error != nil) {
              NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
          }
-
-         finishBlock();
      }];
 }
 
@@ -368,13 +309,13 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 
     for (TCSTimer *timer in updatedTimers) {
 
-        if ([timer.objectID isEqual:self.activeTimer.objectID] && timer.metadata.endTime != nil) {
+        if ([timer.objectID isEqual:self.activeTimer.objectID] && timer.endTime != nil) {
             self.activeTimer = nil;
         }
     }
 
     for (TCSTimer *timer in insertedTimers) {
-        if (timer.metadata.endTime == nil) {
+        if (timer.endTime == nil) {
             if (self.activeTimer == nil) {
                 self.activeTimer = timer;
             } else {
@@ -712,7 +653,7 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 
     if (successBlock != nil) {
 
-        if (timer.metadata.adjustmentValue == 0) {
+        if (timer.adjustmentValue == 0) {
             [_localService
              rollTimer:timer
              maxDuration:maxDuration

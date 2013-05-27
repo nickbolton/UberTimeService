@@ -110,7 +110,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
         return nil;
     }
 
-    NSURLResponse *response = nil;
+    NSHTTPURLResponse *response = nil;
     NSError *error = nil;
 
     NSData *data =
@@ -212,7 +212,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
              failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     if (successBlock == nil && asynchronous) {
-        NSLog(@"%s WARN : no successBlock. aborting json request.");
+        NSLog(@"%s WARN : no successBlock. aborting json request.", __PRETTY_FUNCTION__);
         return nil;
     }
     
@@ -294,7 +294,7 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
                failure:(void(^)(NSError *error, id userContext))failureBlock {
 
     if (successBlock == nil) {
-        NSLog(@"%s WARN : no successBlock. aborting json request.");
+        NSLog(@"%s WARN : no successBlock. aborting json request.", __PRETTY_FUNCTION__);
         return;
     }
 

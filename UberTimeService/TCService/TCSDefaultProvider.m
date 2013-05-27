@@ -233,31 +233,3 @@
 }
 
 @end
-
-@implementation TCSDefaultProviderBaseMetadata
-
-- (Class)utsLocalEntityType {
-    return [TCSBaseMetadataEntity class];
-}
-
-- (void)setUtsRelatedRemoteID:(NSString *)utsRelatedRemoteID {
-    _utsRelatedRemoteID = [self safeRemoteID:utsRelatedRemoteID];
-}
-
-@end
-
-@implementation TCSDefaultProviderTimedEntityMetadata
-
-- (Class)utsLocalEntityType {
-    return [TCSTimedEntityMetadata class];
-}
-
-@end
-
-@implementation TCSDefaultProviderTimerMetadata
-
-- (Class)utsLocalEntityType {
-    return [TCSTimerMetadata class];
-}
-
-@end

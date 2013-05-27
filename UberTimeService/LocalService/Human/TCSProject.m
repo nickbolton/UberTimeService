@@ -1,6 +1,5 @@
 #import "TCSProject.h"
 #import "TCSService.h"
-#import "TCSTimerMetadata.h"
 #import "TCSTimer.h"
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"

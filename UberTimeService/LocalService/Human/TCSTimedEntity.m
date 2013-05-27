@@ -11,15 +11,15 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 }
 
 - (UIColor *)backgroundColor {
-    return [TCSTimedEntity backgroundColorForTimerColor:self.metadata.colorValue];
+    return [TCSTimedEntity backgroundColorForTimerColor:self.colorValue];
 }
 
 - (UIColor *)backgroundEditColor {
-    return [TCSTimedEntity backgroundEditColorForTimerColor:self.metadata.colorValue];
+    return [TCSTimedEntity backgroundEditColorForTimerColor:self.colorValue];
 }
 
 - (UIImage *)dragImage {
-    return [TCSTimedEntity dragImageForTimerColor:self.metadata.colorValue];
+    return [TCSTimedEntity dragImageForTimerColor:self.colorValue];
 }
 
 + (UIColor *)backgroundColorForTimerColor:(TCSTimedEntityColor)timerColor {
@@ -124,28 +124,30 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 }
 
 - (void)updateWithName:(NSString *)name
+                 color:(NSInteger)color
+              archived:(BOOL)archived
+     filteredModifiers:(NSInteger)filteredModifiers
+               keyCode:(NSInteger)keyCode
+             modifiers:(NSInteger)modifiers
+                 order:(NSInteger)order
          entityVersion:(int64_t)entityVersion
               remoteId:(NSString *)remoteId
             updateTime:(NSDate *)updateTime
          markAsUpdated:(BOOL)markAsUpdated {
 
     self.name = [self nonNullValue:name];
-    
+    self.colorValue = color;
+    self.archivedValue = archived;
+    self.filteredModifiersValue = filteredModifiers;
+    self.keyCodeValue = keyCode;
+    self.modifiersValue = modifiers;
+    self.orderValue = order;
+
     [super
      updateWithEntityVersion:entityVersion
      remoteId:remoteId
      updateTime:updateTime
      markAsUpdated:markAsUpdated];
-}
-
-- (void)markEntityAsDeleted {
-    [super markEntityAsDeleted];
-    [self.metadata markEntityAsDeleted];
-}
-
-- (void)markEntityAsUpdated {
-    [super markEntityAsUpdated];
-    [self.metadata markEntityAsUpdated];
 }
 
 @end
