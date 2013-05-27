@@ -29,8 +29,6 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSRemoteCommand class]],

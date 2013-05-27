@@ -12,8 +12,6 @@
     NSAssert([syncingProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
              @"syncingProvider does not conform to TCSServiceSyncingRemoteProvider");
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if (syncingProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProviderInstance class]],
@@ -38,8 +36,6 @@
 
     NSAssert([syncingProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
              @"syncingProvider does not conform to TCSServiceSyncingRemoteProvider");
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if (successBlock != nil) {
 
@@ -68,8 +64,6 @@
 
     NSAssert([syncingProvider conformsToProtocol:@protocol(TCSServiceSyncingRemoteProvider)],
              @"syncingProvider does not conform to TCSServiceSyncingRemoteProvider");
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSProviderInstance class]],
              @"Not a TCSCannedMessage object");

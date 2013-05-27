@@ -490,8 +490,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                     success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseRemoteCommand *parseRemoteCommand = [TCSParseRemoteCommand object];
@@ -560,8 +558,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
               success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseProject *parseProject = [TCSParseProject object];
@@ -602,8 +598,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)updateProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -657,8 +651,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)deleteProject:(TCSProject *)project
               success:(void(^)(NSManagedObjectID *objectID))successBlock
               failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -728,8 +720,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseGroup *parseGroup = [TCSParseGroup object];
@@ -770,8 +760,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)updateGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -825,8 +813,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)deleteGroup:(TCSGroup *)group
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -889,8 +875,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseTimer *parseTimer = [TCSParseTimer object];
@@ -931,8 +915,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)updateTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -986,8 +968,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)deleteTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -1044,8 +1024,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                     success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseCannedMessage *parseCannedMessage = [TCSParseCannedMessage object];
@@ -1086,8 +1064,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)updateCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(NSManagedObjectID *objectID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -1141,8 +1117,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)deleteCannedMessage:(TCSCannedMessage *)cannedMessage
                     success:(void(^)(NSManagedObjectID *objectID))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -1203,8 +1177,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                      success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                      failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([PFUser currentUser] == nil) return NO;
 
     TCSParseProviderInstance *parseProviderInstance = [TCSParseProviderInstance object];
@@ -1247,8 +1219,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)updateProviderInstance:(TCSProviderInstance *)providerInstance
                        success:(void(^)(NSManagedObjectID *objectID))successBlock
                        failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 
@@ -1304,8 +1274,6 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 - (BOOL)deleteProviderInstance:(TCSProviderInstance *)providerInstance
                        success:(void(^)(NSManagedObjectID *objectID))successBlock
                        failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([PFUser currentUser] == nil) return NO;
 

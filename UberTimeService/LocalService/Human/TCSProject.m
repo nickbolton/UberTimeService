@@ -11,8 +11,6 @@
                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProject class]],
@@ -49,8 +47,6 @@
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if (successBlock != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSProject class]],
@@ -86,8 +82,6 @@
             remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSProject class]],
              @"Not a TCSProject object");

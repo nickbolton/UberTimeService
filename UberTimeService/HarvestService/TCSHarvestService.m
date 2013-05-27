@@ -231,8 +231,6 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
         NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
         return NO;
@@ -328,8 +326,6 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 - (BOOL)updateTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
         NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
@@ -434,8 +430,6 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 - (BOOL)deleteTimer:(TCSTimer *)timer
             success:(void(^)(NSManagedObjectID *objectID))successBlock
             failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
         NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
@@ -606,7 +600,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
-    NSLog(@"JSON: %@", json);
+//    NSLog(@"JSON: %@", json);
 
     NSMutableArray *normalizedGroups = [NSMutableArray array];
     NSMutableArray *normalizedProjects = [NSMutableArray array];
@@ -681,7 +675,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
-    NSLog(@"timer JSON: %@", json);
+//    NSLog(@"timer JSON: %@", json);
 
     NSMutableArray *normalizedTimers = [NSMutableArray array];
 

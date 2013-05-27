@@ -2435,8 +2435,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      remoteProvider:remoteProvider
      success:^(NSManagedObjectID *objectID, NSString *remoteID) {
 
-         NSLog(@"createdEntity: %@", entity);
-
          if (successBlock != nil) {
              successBlock(objectID, remoteID);
          }
@@ -2456,8 +2454,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      remoteProvider:remoteProvider
      success:^(NSManagedObjectID *objectID) {
 
-         NSLog(@"updatedEntity: %@", entity);
-
          if (successBlock != nil) {
              successBlock(objectID);
          }
@@ -2476,8 +2472,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      deleteRemoteObject:entity
      remoteProvider:remoteProvider
      success:^(NSManagedObjectID *objectID) {
-
-         NSLog(@"deletedEntity: %@", entity);
 
          [self
           sendDeleteObjectCommand:entity.remoteId
@@ -2861,7 +2855,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             *updated = existingGroup;
 
-            NSLog(@"SYNC: updated existing group: %@", existingGroup);
+//            NSLog(@"SYNC: updated existing group: %@", existingGroup);
 
         } else {
             NSLog(@"SYNC: group not updated because it has a entityVersion greater than or equal to (%d): %@",
@@ -2889,7 +2883,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         *inserted = group;
 
-        NSLog(@"SYNC: created new group: %@", group);
+//        NSLog(@"SYNC: created new group: %@", group);
     }
 }
 
@@ -2958,8 +2952,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             *updated = existingProject;
 
-            NSLog(@"SYNC: updated existing project: %@", existingProject);
-            
+//            NSLog(@"SYNC: updated existing project: %@", existingProject);
+
         } else {
             NSLog(@"SYNC: project not updated because it has a entityVersion greater than or equal to (%d): %@",
                   providedProject.utsEntityVersion, existingProject);
@@ -2988,7 +2982,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         *inserted = project;
         
-        NSLog(@"SYNC: created new project: %@", project);
+//        NSLog(@"SYNC: created new project: %@", project);
     }
 }
 
@@ -3048,8 +3042,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                  predicateWithFormat:@"remoteId = %@ and parent.remoteId = %@",
                  projectID, groupID];
 
-                NSLog(@"predicate: %@", predicate);
-
                 entities =
                 [TCSProject
                  MR_findAllWithPredicate:predicate inContext:context];
@@ -3093,7 +3085,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             *updated = existingTimer;
 
-            NSLog(@"SYNC: updated existing timer: %@", existingTimer);
+//            NSLog(@"SYNC: updated existing timer: %@", existingTimer);
 
         } else {
             NSLog(@"SYNC: timer not updated because it has a entityVersion greater than or equal to (%d): %@",
@@ -3120,7 +3112,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         *inserted = timer;
 
-        NSLog(@"SYNC: created new timer: %@", timer);
+//        NSLog(@"SYNC: created new timer: %@", timer);
     }
 }
 
@@ -3164,7 +3156,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             *updated = existingCannedMessage;
 
-            NSLog(@"SYNC: updated existing cannedMessage: %@", existingCannedMessage);
+//            NSLog(@"SYNC: updated existing cannedMessage: %@", existingCannedMessage);
 
         } else {
             NSLog(@"SYNC: cannedMessage not updated because it has a entityVersion greater than or equal to (%d): %@",
@@ -3187,7 +3179,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         *inserted = cannedMessage;
         
-        NSLog(@"SYNC: created new canned message: %@", cannedMessage);
+//        NSLog(@"SYNC: created new canned message: %@", cannedMessage);
     }
 }
 
@@ -3234,7 +3226,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
             *updated = existingProviderInstance;
 
-            NSLog(@"SYNC: updated existing remoteProvider: %@", existingProviderInstance);
+//            NSLog(@"SYNC: updated existing remoteProvider: %@", existingProviderInstance);
 
         } else {
             NSLog(@"SYNC: cannedMessage not updated because it has a entityVersion greater than or equal to (%d): %@",
@@ -3261,7 +3253,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         *inserted = providerInstance;
         
-        NSLog(@"SYNC: created new remoteProvider: %@", providerInstance);
+//        NSLog(@"SYNC: created new remoteProvider: %@", providerInstance);
     }
 }
 

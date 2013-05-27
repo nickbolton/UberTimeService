@@ -13,8 +13,6 @@
                    success:(void(^)(NSManagedObjectID *objectID, NSString *remoteID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     if (remoteProvider != nil) {
 
         NSAssert([localEntity isKindOfClass:[TCSTimer class]],
@@ -48,8 +46,6 @@
             remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     if (successBlock != nil) {
 
@@ -86,8 +82,6 @@
             remoteProvider:(NSObject <TCSServiceRemoteProvider> *)remoteProvider
                    success:(void(^)(NSManagedObjectID *objectID))successBlock
                    failure:(void(^)(NSError *error))failureBlock {
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     NSAssert([localEntity isKindOfClass:[TCSTimer class]],
              @"Not a TCSTimer object");
