@@ -217,4 +217,8 @@
      markAsUpdated:markAsUpdated];
 }
 
+- (BOOL)isEquivalent:(TCSTimer *)timer {
+    return self.combinedTime == timer.combinedTime;
+}
+
 @end

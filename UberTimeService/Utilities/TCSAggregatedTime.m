@@ -88,6 +88,20 @@
     return NO;
 }
 
+- (BOOL)isEquivalent:(TCSAggregatedTime *)aggregatedTime {
+
+    BOOL isEquivalent = [self isEqual:aggregatedTime] && self.timers.count == aggregatedTime.timers.count;
+
+    if (isEquivalent) {
+
+        for (NSInteger idx = 0; isEquivalent && idx < self.timers.count; idx++) {
+            isEquivalent &= [self.timers[idx] isEquivalent:aggregatedTime.timers[idx]];
+        }
+    }
+
+    return isEquivalent;
+}
+
 - (BOOL)containsTimer:(TCSTimer *)timer {
 
     for (TCSTimer *t in self.timers) {

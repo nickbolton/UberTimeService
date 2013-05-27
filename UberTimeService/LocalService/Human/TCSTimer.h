@@ -16,6 +16,8 @@
                                    endTime:(NSDate *)endDate
                                 adjustment:(NSTimeInterval)adjustment;
 
+- (BOOL)isEquivalent:(TCSTimer *)timer;
+
 - (void)updateWithStartTime:(NSDate *)startTime
                     endTime:(NSDate *)endTime
                  adjustment:(NSTimeInterval)adjustment

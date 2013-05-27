@@ -35,6 +35,8 @@
 - (id)initRootEntityWithApplications:(BOOL)applications
                 dateRange:(TCSDateRange *)dateRange;
 
+- (BOOL)isEquivalent:(TCSAggregatedTime *)aggregatedTime;
+
 - (CGFloat)elapsedTimeInHours;
 - (BOOL)containsTimer:(TCSTimer *)timer;
 - (void)refreshOnBackground:(BOOL)background
