@@ -16,6 +16,7 @@
 
 @property (nonatomic, readonly) NSArray *dateRanges;
 @property (nonatomic, readonly) TCSTimerReportItem *totalReportItem;
+@property (nonatomic) BOOL filterEmptyProjects;
 
 + (TCSTimerReport *)timerReportForProjects:(NSArray *)projects
                                 dateRanges:(NSArray *)dateRanges

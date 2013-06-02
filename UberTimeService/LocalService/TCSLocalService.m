@@ -2228,10 +2228,6 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      MR_findAllWithPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 
-    if (updates.count > 0) {
-        NSLog(@"updates: %@", updates);
-    }
-
     NSMutableArray *createdEntities = [NSMutableArray array];
 
     for (TCSBaseEntity *entity in updates) {
@@ -2430,16 +2426,18 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     id <TCSServiceRemoteProvider> remoteProvider =
     [self remoteProviderForInstance:entity.providerInstance];
 
-    [entity.class
-     createRemoteObject:entity
-     remoteProvider:remoteProvider
-     success:^(NSManagedObjectID *objectID, NSString *remoteID) {
+    if ([remoteProvider isUserAuthenticated:entity.providerInstance]) {
+        [entity.class
+         createRemoteObject:entity
+         remoteProvider:remoteProvider
+         success:^(NSManagedObjectID *objectID, NSString *remoteID) {
 
-         if (successBlock != nil) {
-             successBlock(objectID, remoteID);
-         }
-
-     } failure:failureBlock];
+             if (successBlock != nil) {
+                 successBlock(objectID, remoteID);
+             }
+             
+         } failure:failureBlock];
+    }
 }
 
 - (void)updateRemoteEntity:(TCSBaseEntity *)entity
@@ -2449,16 +2447,18 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     id <TCSServiceRemoteProvider> remoteProvider =
     [self remoteProviderForInstance:entity.providerInstance];
 
-    [entity.class
-     updateRemoteObject:entity
-     remoteProvider:remoteProvider
-     success:^(NSManagedObjectID *objectID) {
+    if ([remoteProvider isUserAuthenticated:entity.providerInstance]) {
+        [entity.class
+         updateRemoteObject:entity
+         remoteProvider:remoteProvider
+         success:^(NSManagedObjectID *objectID) {
 
-         if (successBlock != nil) {
-             successBlock(objectID);
-         }
-
-     } failure:failureBlock];
+             if (successBlock != nil) {
+                 successBlock(objectID);
+             }
+             
+         } failure:failureBlock];
+    }
 }
 
 - (void)deleteRemoteEntity:(TCSBaseEntity *)entity
@@ -2468,23 +2468,25 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     id <TCSServiceRemoteProvider> remoteProvider =
     [self remoteProviderForInstance:entity.providerInstance];
 
-    [entity.class
-     deleteRemoteObject:entity
-     remoteProvider:remoteProvider
-     success:^(NSManagedObjectID *objectID) {
+    if ([remoteProvider isUserAuthenticated:entity.providerInstance]) {
+        [entity.class
+         deleteRemoteObject:entity
+         remoteProvider:remoteProvider
+         success:^(NSManagedObjectID *objectID) {
 
-         [self
-          sendDeleteObjectCommand:entity.remoteId
-          withProvider:entity.providerInstance.remoteProvider
-          success:^{
+             [self
+              sendDeleteObjectCommand:entity.remoteId
+              withProvider:entity.providerInstance.remoteProvider
+              success:^{
 
-              if (successBlock != nil) {
-                  successBlock(objectID);
-              }
-
-          } failure:failureBlock];
-
-     } failure:failureBlock];
+                  if (successBlock != nil) {
+                      successBlock(objectID);
+                  }
+                  
+              } failure:failureBlock];
+             
+         } failure:failureBlock];
+    }
 }
 
 #pragma mark - Remote Updates

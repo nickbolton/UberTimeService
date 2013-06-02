@@ -125,7 +125,8 @@
     [TCSTimerReportItem
      reportItemWithProjects:filteredProjects.allObjects
      dateRange:totalDateRange
-     elapsedTime:elapsedTime];
+     elapsedTime:elapsedTime
+     timerReport:self];
 }
 
 - (TCSTimerReportItem *)buildReportItem:(TCSDateRange *)dateRange
@@ -171,7 +172,8 @@
         [TCSTimerReportItem
          reportItemWithProjects:projectsInReport
          dateRange:dateRange
-         elapsedTime:elapsedTime];
+         elapsedTime:elapsedTime
+         timerReport:self];
 
         [_dateRangeReportItems addObject:reportItem];
     }
@@ -202,7 +204,8 @@
         [TCSTimerReportItem
          reportItemWithProjects:@[project]
          dateRange:dateRange
-         elapsedTime:elapsedTime];
+         elapsedTime:elapsedTime
+         timerReport:self];
     }
 
     return reportItem;
@@ -225,6 +228,22 @@
 
 - (NSArray *)dateRanges {
     return _availableDateRanges;
+}
+
+- (void)setFilterEmptyProjects:(BOOL)filterEmptyProjects {
+    _filterEmptyProjects = filterEmptyProjects;
+
+    _totalReportItem.filterEmptyProjects = filterEmptyProjects;
+
+    for (TCSTimerReportItem *reportItem in _dateRangeReportItems) {
+        reportItem.filterEmptyProjects = filterEmptyProjects;
+    }
+
+    for (NSDictionary *item in _projectReportItems) {
+        for (TCSTimerReportItem *reportItem in item.allValues) {
+            reportItem.filterEmptyProjects = filterEmptyProjects;
+        }
+    }
 }
 
 - (TCSTimerReportItem *)reportItemForProject:(TCSProject *)project

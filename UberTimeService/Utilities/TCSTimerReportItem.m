@@ -11,6 +11,7 @@
 #import "TCSTimer.h"
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
+#import "TCSTimerReport.h"
 
 @interface TCSTimerReportItem() {
 
@@ -20,6 +21,8 @@
 @property (nonatomic, readwrite) NSArray *projects;
 @property (nonatomic, readwrite) TCSDateRange *dateRange;
 @property (nonatomic, readwrite) NSTimeInterval elapsedTime;
+@property (nonatomic, readwrite) TCSTimerReport *timerReport;
+@property (nonatomic, strong) NSArray *nonEmptyProjects;
 
 @end
 
@@ -27,24 +30,28 @@
 
 + (TCSTimerReportItem *)reportItemWithProjects:(NSArray *)projects
                                      dateRange:(TCSDateRange *)dateRange
-                                   elapsedTime:(NSTimeInterval)elapsedTime {
+                                   elapsedTime:(NSTimeInterval)elapsedTime
+                                   timerReport:(TCSTimerReport *)timerReport {
 
     return
     [[TCSTimerReportItem alloc]
      initWithProjects:projects
      dateRange:dateRange
-     elapsedTime:elapsedTime];
+     elapsedTime:elapsedTime
+     timerReport:timerReport];
 }
 
 - (id)initWithProjects:(NSArray *)projects
              dateRange:(TCSDateRange *)dateRange
-           elapsedTime:(NSTimeInterval)elapsedTime {
-    
+           elapsedTime:(NSTimeInterval)elapsedTime
+           timerReport:(TCSTimerReport *)timerReport {
+
     self = [super init];
     if (self) {
         self.projects = projects;
         self.dateRange = dateRange;
         self.elapsedTime = elapsedTime;
+        self.timerReport = timerReport;
 
         _activeTimestamp = -1.0f;
         
@@ -54,6 +61,34 @@
         }
     }
     return self;
+}
+
+- (NSArray *)projects {
+
+    if (_filterEmptyProjects) {
+
+        if (_nonEmptyProjects == nil) {
+
+            NSMutableArray *projectList = [NSMutableArray array];
+
+            for (TCSProject *project in _projects) {
+
+                TCSTimerReportItem *reportItem =
+                [_timerReport
+                 reportItemForProject:project dateRangeIndex:0];
+
+                if (project.isActive || reportItem.elapsedTime > 0.0f) {
+                    [projectList addObject:project];
+                }
+            }
+
+            self.nonEmptyProjects = projectList;
+        }
+
+        return _nonEmptyProjects;
+    }
+
+    return _projects;
 }
 
 - (BOOL)isActive {

@@ -18,10 +18,6 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
     return [TCSTimedEntity backgroundEditColorForTimerColor:self.colorValue];
 }
 
-- (UIImage *)dragImage {
-    return [TCSTimedEntity dragImageForTimerColor:self.colorValue];
-}
-
 + (UIColor *)backgroundColorForTimerColor:(TCSTimedEntityColor)timerColor {
 
     NSInteger rgbHexValue = 0;
@@ -87,40 +83,6 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
 
     return [UIColor colorWithRGBHex:rgbHexValue];
 
-}
-
-+ (UIImage *)dragImageForTimerColor:(TCSTimedEntityColor)timerColor {
-
-    if (timerColor > kTCSTimedEntityMaxColor) {
-        timerColor = kTCSTimedEntityDefaultColor;
-    }
-
-    NSString *imageName;
-
-    switch (timerColor) {
-        case TCSTimedEntityColorBlue:
-            imageName = @"blue_drag_dot.png";
-            break;
-
-        case TCSTimedEntityColorGreen:
-            imageName = @"green_drag_dot.png";
-            break;
-
-        case TCSTimedEntityColorYellow:
-            imageName = @"yellow_drag_dot.png";
-            break;
-
-        case TCSTimedEntityColorOrange:
-            imageName = @"orange_drag_dot.png";
-            break;
-
-        case TCSTimedEntityColorPink:
-            imageName = @"pink_drag_dot.png";
-            break;
-    }
-    
-    return [UIImage imageNamed:imageName];
-    
 }
 
 - (void)updateWithName:(NSString *)name

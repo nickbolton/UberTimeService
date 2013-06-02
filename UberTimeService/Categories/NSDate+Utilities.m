@@ -370,9 +370,9 @@
     NSString *label = nil;
     
     switch (timePeriod) {
-        case TimePeriod_All:
-            label = NSLocalizedString(@"all time", nil);
-            break;
+//        case TimePeriod_All:
+//            label = NSLocalizedString(@"all time", nil);
+//            break;
         case TimePeriod_Today:
             label = NSLocalizedString(@"today", nil);
             break;
@@ -382,30 +382,30 @@
         case TimePeriod_ThisMonth:
             label = NSLocalizedString(@"this month", nil);
             break;            
-        case TimePeriod_ThisYear:
-            label = NSLocalizedString(@"this year", nil);
-            break;            
+//        case TimePeriod_ThisYear:
+//            label = NSLocalizedString(@"this year", nil);
+//            break;            
         case TimePeriod_Yesterday:
             label = NSLocalizedString(@"yesterday", nil);
             break;            
-        case TimePeriod_LastWeek:
-            label = NSLocalizedString(@"last week", nil);
-            break;            
-        case TimePeriod_LastMonth:
-            label = NSLocalizedString(@"last month", nil);
-            break;            
-        case TimePeriod_LastYear:
-            label = NSLocalizedString(@"last year", nil);
-            break;            
-        case TimePeriod_PreviousWeek:
-            label = NSLocalizedString(@"previous week", nil);
-            break;            
-        case TimePeriod_PreviousMonth:
-            label = NSLocalizedString(@"previous month", nil);
-            break;            
-        case TimePeriod_PreviousYear:
-            label = NSLocalizedString(@"previous year", nil);
-            break;            
+//        case TimePeriod_LastWeek:
+//            label = NSLocalizedString(@"last week", nil);
+//            break;            
+//        case TimePeriod_LastMonth:
+//            label = NSLocalizedString(@"last month", nil);
+//            break;            
+//        case TimePeriod_LastYear:
+//            label = NSLocalizedString(@"last year", nil);
+//            break;            
+//        case TimePeriod_PreviousWeek:
+//            label = NSLocalizedString(@"previous week", nil);
+//            break;            
+//        case TimePeriod_PreviousMonth:
+//            label = NSLocalizedString(@"previous month", nil);
+//            break;            
+//        case TimePeriod_PreviousYear:
+//            label = NSLocalizedString(@"previous year", nil);
+//            break;
     }
     
     return label;

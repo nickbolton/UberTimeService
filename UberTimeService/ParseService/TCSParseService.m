@@ -1350,8 +1350,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             _localTimeLastSystemTimeReceived = now;
             self.systemTime = parseSystemTime.updatedAt;
 
-            NSLog(@"systemTime: %@", parseSystemTime.updatedAt);
-            NSLog(@"roundTripTime: %f", roundTripTime);
+//            NSLog(@"systemTime: %@", parseSystemTime.updatedAt);
+//            NSLog(@"roundTripTime: %f", roundTripTime);
 
             if (roundTripTime > 2.0f) {
                 retryTime = 1.0f;
@@ -1378,8 +1378,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                success:(void(^)(void))successBlock
                failure:(void(^)(NSError *error))failureBlock {
 
-    NSLog(@"lastPollingDate: %@", _lastPollingDate);
-    
+//    NSLog(@"lastPollingDate: %@", _lastPollingDate);
+
     if (_pollingForUpdates) return;
     
     if ([PFUser currentUser] != nil) {

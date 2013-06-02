@@ -19,11 +19,9 @@ extern TCSTimedEntityColor const kTCSTimedEntityMaxColor;
 
 - (UIColor *)backgroundColor;
 - (UIColor *)backgroundEditColor;
-- (UIImage *)dragImage;
 
 + (UIColor *)backgroundColorForTimerColor:(TCSTimedEntityColor)timerColor;
 + (UIColor *)backgroundEditColorForTimerColor:(TCSTimedEntityColor)timerColor;
-+ (UIImage *)dragImageForTimerColor:(TCSTimedEntityColor)timerColor;
 
 - (void)updateWithName:(NSString *)name
                  color:(NSInteger)color
