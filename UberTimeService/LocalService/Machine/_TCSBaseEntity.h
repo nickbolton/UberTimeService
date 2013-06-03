@@ -5,6 +5,7 @@
 
 
 extern const struct TCSBaseEntityAttributes {
+	__unsafe_unretained NSString *dataVersion;
 	__unsafe_unretained NSString *entityVersion;
 	__unsafe_unretained NSString *pending;
 	__unsafe_unretained NSString *pendingRemoteDelete;
@@ -27,6 +28,7 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 
 
+
 @interface TCSBaseEntityID : NSManagedObjectID {}
 @end
 
@@ -35,6 +37,18 @@ extern const struct TCSBaseEntityFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (TCSBaseEntityID*)objectID;
+
+
+
+
+@property (nonatomic, strong) NSNumber* dataVersion;
+
+
+@property int64_t dataVersionValue;
+- (int64_t)dataVersionValue;
+- (void)setDataVersionValue:(int64_t)value_;
+
+//- (BOOL)validateDataVersion:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -107,6 +121,15 @@ extern const struct TCSBaseEntityFetchedProperties {
 @end
 
 @interface _TCSBaseEntity (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveDataVersion;
+- (void)setPrimitiveDataVersion:(NSNumber*)value;
+
+- (int64_t)primitiveDataVersionValue;
+- (void)setPrimitiveDataVersionValue:(int64_t)value_;
+
+
 
 
 - (NSNumber*)primitiveEntityVersion;

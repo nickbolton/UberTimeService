@@ -22,6 +22,7 @@
 
 @interface TCSDefaultProviderBase : NSObject <TCSProvidedBaseEntity>
 @property (nonatomic, strong) NSString *utsRemoteID;
+@property (nonatomic) NSInteger utsDataVersion;
 @property (nonatomic) NSInteger utsEntityVersion;
 @property (nonatomic) Class utsLocalEntityType;
 @property (nonatomic, strong) NSDate *utsUpdateTime;

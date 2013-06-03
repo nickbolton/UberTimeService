@@ -42,6 +42,7 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @protocol TCSProvidedBaseEntity <NSObject>
 @property (nonatomic, readonly) NSString *utsRemoteID;
 @property (nonatomic, readonly) NSManagedObjectID *utsProviderInstanceID;
+@property (nonatomic, readonly) NSInteger utsDataVersion;
 @property (nonatomic, readonly) NSInteger utsEntityVersion;
 @property (nonatomic, readonly) Class utsLocalEntityType;
 @property (nonatomic, readonly) NSDate *utsUpdateTime;

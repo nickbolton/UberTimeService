@@ -4,6 +4,7 @@
 #import "_TCSBaseEntity.h"
 
 const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
+	.dataVersion = @"dataVersion",
 	.entityVersion = @"entityVersion",
 	.pending = @"pending",
 	.pendingRemoteDelete = @"pendingRemoteDelete",
@@ -44,6 +45,10 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"dataVersionValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"dataVersion"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
 	if ([key isEqualToString:@"entityVersionValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"entityVersion"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -59,6 +64,32 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic dataVersion;
+
+
+
+- (int64_t)dataVersionValue {
+	NSNumber *result = [self dataVersion];
+	return [result longLongValue];
+}
+
+- (void)setDataVersionValue:(int64_t)value_ {
+	[self setDataVersion:[NSNumber numberWithLongLong:value_]];
+}
+
+- (int64_t)primitiveDataVersionValue {
+	NSNumber *result = [self primitiveDataVersion];
+	return [result longLongValue];
+}
+
+- (void)setPrimitiveDataVersionValue:(int64_t)value_ {
+	[self setPrimitiveDataVersion:[NSNumber numberWithLongLong:value_]];
+}
+
 
 
 

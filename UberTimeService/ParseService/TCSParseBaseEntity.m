@@ -10,12 +10,17 @@
 
 @implementation TCSParseBaseEntity
 
+@dynamic dataVersion;
 @dynamic entityVersion;
 @dynamic instanceID;
 @dynamic user;
 
 - (NSString *)utsRemoteID {
     return self.objectId;
+}
+
+- (NSInteger)utsDataVersion {
+    return self.dataVersion;
 }
 
 - (NSInteger)utsEntityVersion {

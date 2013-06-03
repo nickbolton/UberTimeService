@@ -14,6 +14,7 @@
 
 @interface TCSParseBaseEntity : PFObject <TCSProvidedBaseEntity>
 
+@property (nonatomic) NSInteger dataVersion;
 @property (nonatomic) NSInteger entityVersion;
 @property (nonatomic) NSString *instanceID;
 @property (nonatomic) PFUser *user;
