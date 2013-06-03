@@ -7,7 +7,11 @@
 //
 
 #import "TCSParseProviderInstance.h"
+#if TARGET_OS_IPHONE
 #import <Parse/PFObject+Subclass.h>
+#else
+#import <ParseOSX/PFObject+Subclass.h>
+#endif
 
 @implementation TCSParseProviderInstance
 

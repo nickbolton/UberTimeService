@@ -1,5 +1,8 @@
 #import "TCSTimedEntity.h"
+
+#if TARGET_OS_IPHONE
 #import "UIColor+PBFoundation.h"
+#endif
 
 TCSTimedEntityColor const kTCSTimedEntityDefaultColor = TCSTimedEntityColorBlue;
 TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
@@ -10,6 +13,7 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
     return NO;
 }
 
+#if TARGET_OS_IPHONE
 - (UIColor *)backgroundColor {
     return [TCSTimedEntity backgroundColorForTimerColor:self.colorValue];
 }
@@ -84,6 +88,7 @@ TCSTimedEntityColor const kTCSTimedEntityMaxColor = TCSTimedEntityColorPink;
     return [UIColor colorWithRGBHex:rgbHexValue];
 
 }
+#endif
 
 - (void)updateWithName:(NSString *)name
                  color:(NSInteger)color

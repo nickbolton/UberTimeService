@@ -6,7 +6,11 @@
 //  Copyright (c) 2013 Pixelbleed. All rights reserved.
 //
 
+#if TARGET_OS_IPHONE
 #import <Parse/Parse.h>
+#else
+#import <ParseOSX/ParseOSX.h>
+#endif
 
 @interface TCSParseAppConfig : PFObject <PFSubclassing>
 

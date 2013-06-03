@@ -42,11 +42,13 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
          name:kTCSServicePrivateRemoteSyncCompletedNotification
          object:nil];
 
+#if TARGET_OS_IPHONE
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(applicationWillEnterForeground:)
          name:UIApplicationWillEnterForegroundNotification
          object:nil];
+#endif
 
     }
     return self;
@@ -413,6 +415,10 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 
 - (NSArray *)allProjects {
     return [_localService allProjects];
+}
+
+- (NSArray *)allProjectsWithArchived:(BOOL)archived {
+    return [_localService allProjectsWithArchived:archived];
 }
 
 - (TCSProject *)projectWithID:(NSManagedObjectID *)objectID {

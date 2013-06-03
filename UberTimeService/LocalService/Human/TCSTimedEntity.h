@@ -17,11 +17,13 @@ extern TCSTimedEntityColor const kTCSTimedEntityMaxColor;
 
 @property (nonatomic, readonly, getter = isActive) BOOL active;
 
+#if TARGET_OS_IPHONE
 - (UIColor *)backgroundColor;
 - (UIColor *)backgroundEditColor;
 
 + (UIColor *)backgroundColorForTimerColor:(TCSTimedEntityColor)timerColor;
 + (UIColor *)backgroundEditColorForTimerColor:(TCSTimedEntityColor)timerColor;
+#endif
 
 - (void)updateWithName:(NSString *)name
                  color:(NSInteger)color

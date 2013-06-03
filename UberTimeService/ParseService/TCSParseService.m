@@ -7,7 +7,13 @@
 //
 
 #import "TCSParseService.h"
+#if TARGET_OS_IPHONE
 #import <Parse/Parse.h>
+#else
+#import <ParseOSX/ParseOSX.h>
+//#import <ParseOSX/PFFacebookUtils.h>
+//#import <ParseOSX/PFTwitterUtils.h>
+#endif
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
 #import "GCNetworkReachability.h"
@@ -150,6 +156,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         NSLog(@"Created AppConfig: %@", appConfig);
     }];
 
+#if TARGET_OS_IPHONE
     // Saving the device's owner
     PFInstallation *installation = [PFInstallation currentInstallation];
     [installation setObject:[PFUser currentUser] forKey:@"owner"];
@@ -159,6 +166,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             NSLog(@"Error bind current user to installation: %@", error);
         }
     }];
+#endif
 }
 
 - (void)updateAppConfig {
@@ -198,6 +206,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         }];
     }];
 
+#if TARGET_OS_IPHONE
     // Saving the device's owner
     PFInstallation *installation = [PFInstallation currentInstallation];
     [installation setObject:[PFUser currentUser] forKey:@"owner"];
@@ -207,6 +216,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             NSLog(@"Error bind current user to installation: %@", error);
         }
     }];
+#endif
 }
 
 - (void)clearCache {
@@ -454,6 +464,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 - (void)sendPushNotification {
 
+#if TARGET_OS_IPHONE
     if ([PFUser currentUser] == nil || [PFInstallation currentInstallation].deviceToken == nil) return;
 
     PFQuery *pushQuery = [PFInstallation query];
@@ -472,6 +483,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
      }];
     
     [push sendPushInBackground];
+#endif
 }
 
 #pragma mark - Remote Command
