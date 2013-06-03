@@ -7,6 +7,7 @@
 //
 
 #import "TCSAggregatedTime.h"
+#import "TCSAggregatedTimeList.h"
 #import "NSDate+Utilities.h"
 #import "TCSDateFormatManager.h"
 #import "TCSDateRange.h"
@@ -272,6 +273,116 @@
 - (NSString *)description {
     return [NSString stringWithFormat:@"(%p) Entity: %@, timers: %@, startDate: %@, endDate: %@, rawTime: %.0f, totalTime: %.0f",
             self, [_timedEntity name], _timers, _dateRange.startDate, _dateRange.endDate, self.rawElapsedTime, self.elapsedTime];
+}
+
++ (NSArray *)dailyAggregatedTimeForTimedEntities:(NSArray *)timedEntities
+                                       startDate:(NSDate *)startDate
+                                         endDate:(NSDate *)endDate
+                                       hideEmpty:(BOOL)hideEmpty {
+
+    NSMutableArray *array = [NSMutableArray array];
+
+    NSDate *currentDate = [[[TCSService sharedInstance] systemTime] midnight];
+
+    if (startDate == nil || endDate == nil) {
+        startDate = currentDate;
+        endDate = startDate;
+    }
+
+    startDate = [startDate midnight];
+    endDate = [endDate endOfDay];
+
+    NSDate *now = [[TCSService sharedInstance] systemTime];
+
+    // narrow the time period by the project's timers
+    NSDate *minStartTime = nil;
+    NSDate *maxEndTime = nil;
+    NSDate *timerStartTime;
+    NSDate *timerEndTime;
+
+    NSInteger timerCount = 0;
+
+    for (TCSTimedEntity *timedEntity in timedEntities) {
+
+        NSArray *timers =
+        [[TCSService sharedInstance]
+         timersForProjects:@[timedEntity]
+         fromDate:startDate
+         toDate:endDate
+         sortByStartTime:YES];
+        
+        for (TCSTimer *t in timers) {
+
+            timerCount++;
+
+            timerStartTime = [t.startTime midnight];
+            timerEndTime = [t.endTime endOfDay];
+
+            if (timerEndTime == nil) {
+                timerEndTime = now;
+            }
+
+            if (!minStartTime || [timerStartTime isLessThan:minStartTime]) {
+                minStartTime = timerStartTime;
+            }
+
+            if (!maxEndTime || [timerEndTime isGreaterThan:maxEndTime]) {
+                maxEndTime = timerEndTime;
+            }
+        }
+    }
+
+    if (hideEmpty == YES && timerCount == 0) {
+        return array;
+    }
+
+    if (hideEmpty == YES && [minStartTime isGreaterThan:startDate]) {
+        // use the project's min start time
+        startDate = minStartTime;
+    }
+
+    if (hideEmpty == YES &&
+        [maxEndTime isLessThan:endDate] == YES &&
+        [maxEndTime isGreaterThanOrEqualTo:startDate] == YES) {
+        // use the project's max start time
+        endDate = maxEndTime;
+    }
+
+    NSDate *fromDate = startDate;
+    NSDate *toDate;
+
+    while ([fromDate isLessThanOrEqualTo:endDate]) {
+        toDate = [fromDate dateByAddingDays:1];
+
+        TCSAggregatedTime *aggregatedTime;
+
+        TCSDateRange *dateRange =
+        [TCSDateRange dateRangeWithStartDate:fromDate endDate:toDate];
+        dateRange.endDate = toDate;
+
+        if (timedEntities.count == 1) {
+
+            aggregatedTime =
+            [[TCSAggregatedTime alloc]
+             initWithTimedEntity:timedEntities.lastObject
+             dateRange:dateRange];
+
+        } else {
+
+            aggregatedTime =
+            [[TCSAggregatedTimeList alloc]
+             initWithTimedEntities:timedEntities
+             andDateRange:dateRange];
+        }
+        
+
+        if (hideEmpty == NO || aggregatedTime.elapsedTime > 0.0) {
+            [array addObject:aggregatedTime];
+        }
+        fromDate = toDate;
+    }
+    
+    return array;
 }
 
 @end

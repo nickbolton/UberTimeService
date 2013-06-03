@@ -113,6 +113,7 @@
 #define TCS_PREF_SNAP_TO_TIMER_BOUNDARY @"snapToTimerBoundary"
 #define TCS_PREF_TIMER_EDIT_TAP_HOLD_ACTION @"timerEditTapHoldAction"
 #define TCS_PREF_SELECTED_SECTION @"selectedSection"
+#define TCS_PREF_SOUND_FX @"soundFx"
 
 #else
 

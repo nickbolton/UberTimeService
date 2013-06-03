@@ -29,6 +29,11 @@
 @property (nonatomic) BOOL expanded;
 @property (nonatomic) NSTimeInterval recalculatedTimestamp;
 
++ (NSArray *)dailyAggregatedTimeForTimedEntities:(NSArray *)timedEntities
+                                       startDate:(NSDate *)startDate
+                                         endDate:(NSDate *)endDate
+                                       hideEmpty:(BOOL)hideEmpty;
+
 - (id)initWithTimedEntity:(TCSTimedEntity *)timedEntity
                 dateRange:(TCSDateRange *)dateRange;
 
