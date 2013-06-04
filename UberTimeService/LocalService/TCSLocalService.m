@@ -3372,10 +3372,12 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
         [TCSService sharedInstance].dataVersion = dataVersion;
     }
 
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kTCSServiceDataResetNotification
-     object:self
-     userInfo:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kTCSServiceDataResetNotification
+         object:self
+         userInfo:nil];
+    });
 
     [self
      resetRemoteDataWithProvider:nil
