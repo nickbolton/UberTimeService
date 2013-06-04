@@ -124,15 +124,20 @@ NSString * const kTCSRemoteCommandDataVersionKey = @"data-version";
 
     NSError *error = nil;
 
-    NSDictionary *payload =
-    [NSPropertyListSerialization
-     propertyListWithData:self.payload
-     options:0
-     format:NULL
-     error:&error];
+    NSDictionary *payload = nil;
 
-    if (error != nil) {
-        NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+    if ([self.payload isKindOfClass:[NSData class]]) {
+
+        payload =
+        [NSPropertyListSerialization
+         propertyListWithData:self.payload
+         options:0
+         format:NULL
+         error:&error];
+
+        if (error != nil) {
+            NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+        }
     }
 
     return payload;
