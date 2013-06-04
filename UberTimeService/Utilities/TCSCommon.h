@@ -9,9 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "TCSConstants.h"
 
-extern NSString *kTCSPreferencesDataResetNotification;
-extern NSString *kTCSPreferencesDataResetBeginNotification;
-
 typedef enum _TCPreferencesMaxTimerSession {
 
     TCSPreferencesMaxTimerSession_None = 0,

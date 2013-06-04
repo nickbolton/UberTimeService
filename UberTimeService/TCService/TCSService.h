@@ -143,9 +143,11 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 @property (nonatomic, readonly) TCSTimer *activeTimer;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
+@property (nonatomic) NSInteger dataVersion;
 
 - (NSDate *)systemTime;
 - (void)updateAppConfig;
+- (void)updateActiveTimer;
 
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;

@@ -17,6 +17,7 @@ NSString * const kTCSServiceDataResetNotification = @"kTCSServiceDataResetNotifi
 NSString * const kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification =
 @"kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification";
 NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
+NSString * const kTCSServiceDataVersionKey = @"tcs-data-version";
 
 @interface TCSService()
 
@@ -32,9 +33,13 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 {
     self = [super init];
     if (self) {
+
+        self.dataVersion =
+        [[NSUserDefaults standardUserDefaults]
+         integerForKey:kTCSServiceDataVersionKey];
+        
         self.remoteServiceProviders = [NSMutableDictionary dictionary];
         self.localService = [TCSLocalService sharedInstance];
-        [self updateActiveTimer];
 
         [[NSNotificationCenter defaultCenter]
          addObserver:self
@@ -61,6 +66,14 @@ NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
     for (id <TCSServiceRemoteProvider> remoteProvider in _remoteServiceProviders.allValues) {
         remoteProvider.delegate = delegate;
     }
+}
+
+- (void)setDataVersion:(NSInteger)dataVersion {
+    _dataVersion = dataVersion;
+
+    [[NSUserDefaults standardUserDefaults]
+     setInteger:dataVersion forKey:kTCSServiceDataVersionKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSManagedObjectContext *)defaultLocalManagedObjectContext {

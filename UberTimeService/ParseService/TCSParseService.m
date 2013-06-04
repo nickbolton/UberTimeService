@@ -496,6 +496,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseRemoteCommand.type = remoteCommand.typeValue;
     parseRemoteCommand.instanceID = [NSString applicationInstanceId];
     parseRemoteCommand.entityVersion = remoteCommand.entityVersionValue;
+    parseRemoteCommand.dataVersion = remoteCommand.dataVersionValue;
 }
 
 - (BOOL)createRemoteCommand:(TCSRemoteCommand *)remoteCommand
@@ -557,6 +558,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseProject.color = project.colorValue;
     parseProject.instanceID = [NSString applicationInstanceId];
     parseProject.entityVersion = project.entityVersionValue;
+    parseProject.dataVersion = project.dataVersionValue;
 
     if (project.parent != nil) {
         NSAssert(project.parent.remoteId != nil, @"No remoteId for project parent");
@@ -719,6 +721,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseGroup.color = group.colorValue;
     parseGroup.instanceID = [NSString applicationInstanceId];
     parseGroup.entityVersion = group.entityVersionValue;
+    parseGroup.dataVersion = group.dataVersionValue;
 
     if (group.parent != nil) {
         NSAssert(group.parent.remoteId != nil, @"No remoteId for group parent");
@@ -878,6 +881,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseTimer.message = [self safePropertyValue:timer.message];
     parseTimer.instanceID = [NSString applicationInstanceId];
     parseTimer.entityVersion = timer.entityVersionValue;
+    parseTimer.dataVersion = timer.dataVersionValue;
 
     NSAssert(timer.project.remoteId != nil, @"No remoteId for timer project");
     parseTimer.projectID = timer.project.remoteId;
@@ -1030,6 +1034,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseCannedMessage.order = cannedMessage.orderValue;
     parseCannedMessage.instanceID = [NSString applicationInstanceId];
     parseCannedMessage.entityVersion = cannedMessage.entityVersionValue;
+    parseCannedMessage.dataVersion = cannedMessage.dataVersionValue;
 }
 
 - (BOOL)createCannedMessage:(TCSCannedMessage *)cannedMessage
@@ -1183,6 +1188,8 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     parseProviderInstance.remoteProvider = [self safePropertyValue:providerInstance.remoteProvider];
     parseProviderInstance.username = [self safePropertyValue:providerInstance.username];
     parseProviderInstance.userID = [self safePropertyValue:providerInstance.userID];
+    parseProviderInstance.entityVersion = providerInstance.entityVersionValue;
+    parseProviderInstance.dataVersion = providerInstance.dataVersionValue;
 }
 
 - (BOOL)createProviderInstance:(TCSProviderInstance *)providerInstance
@@ -1486,6 +1493,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 }
 
 - (NSArray *)fetchUpdatedObjectsOfType:(Class)objectType {
+    
     PFQuery *query = [objectType query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
     [query whereKey:@"instanceID" notEqualTo:[NSString applicationInstanceId]];

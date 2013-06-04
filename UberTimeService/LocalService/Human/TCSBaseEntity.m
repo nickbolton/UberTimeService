@@ -62,4 +62,11 @@
     }
     return value;
 }
+
+- (BOOL)isEntityCurrent {
+    NSInteger dataVersion =
+    [TCSService sharedInstance].dataVersion;
+    return self.dataVersionValue == dataVersion;
+}
+
 @end

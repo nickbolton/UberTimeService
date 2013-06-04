@@ -8,9 +8,6 @@
 
 #import "TCSCommon.h"
 
-NSString *kTCSPreferencesDataResetBeginNotification = @"kTCSPreferencesDataResetBeginNotification";
-NSString *kTCSPreferencesDataResetNotification = @"kTCSPreferencesDataResetNotification";
-
 @implementation TCSDummyClass @end
 
 @implementation TCSCommon

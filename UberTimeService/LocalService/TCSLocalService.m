@@ -19,6 +19,7 @@
 
 NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 @"kTCSLocalServiceRemoteSyncCompletedNotification";
+NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
 @interface TCSLocalService() {
 
@@ -180,12 +181,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    [self resetCoreDataStack];
+    [self resetData:[TCSService sharedInstance].dataVersion + 1];
 
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kTCSPreferencesDataResetNotification
-     object:nil];
-    
     if (successBlock != nil) {
         successBlock();
     }
@@ -364,6 +361,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     [TCSProject MR_createInContext:context];
 
     project.providerInstance = providerInstance;
+    project.dataVersionValue = [TCSService sharedInstance].dataVersion;
 
     [project
      updateWithName:name
@@ -536,7 +534,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      existingObjectWithID:entityID
      error:NULL];
 
-    if (project.pendingRemoteDeleteValue) {
+    if (project.pendingRemoteDeleteValue || project.isEntityCurrent == NO) {
         project = nil;
     }
 
@@ -630,19 +628,21 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 }
 
 - (NSArray *)allProjectsInContext:(NSManagedObjectContext *)context {
-    return
-    [TCSProject
-     MR_findByAttribute:@"pendingRemoteDelete"
-     withValue:@NO
-     inContext:context];
+
+    NSPredicate *predicate =
+    [NSPredicate
+     predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
+
+    return [TCSProject MR_findAllWithPredicate:predicate inContext:context];
 }
 
 - (NSArray *)allProjectsWithArchived:(BOOL)archived {
 
     NSPredicate *predicate =
     [NSPredicate
-     predicateWithFormat:@"pendingRemoteDelete = 0 and archived = %d",
-     archived];
+     predicateWithFormat:@"pendingRemoteDelete = 0 and archived = %d and dataVersion = %d",
+     archived, [TCSService sharedInstance].dataVersion];
 
     NSArray *projects =
     [TCSProject
@@ -751,7 +751,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      existingObjectWithID:entityID
      error:NULL];
 
-    if (group.pendingRemoteDeleteValue) {
+    if (group.pendingRemoteDeleteValue || group.isEntityCurrent == NO) {
         group = nil;
     }
 
@@ -763,17 +763,23 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 }
 
 - (NSArray *)allGroupsInContext:(NSManagedObjectContext *)context {
+
+    NSPredicate *predicate =
+    [NSPredicate
+     predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
+
     return
     [TCSGroup
-     MR_findByAttribute:@"pendingRemoteDelete"
-     withValue:@NO
+     MR_findAllWithPredicate:predicate
      inContext:context];
 }
 
 - (NSArray *)topLevelEntitiesSortedByName:(BOOL)sortedByName {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"parent = null AND pendingRemoteDelete = 0"];
+    [NSPredicate predicateWithFormat:@"parent = null AND pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
 
     NSArray *entities =
     [TCSTimedEntity
@@ -819,6 +825,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         group.name = toProject.name;
         group.providerInstance = localToProject.providerInstance;
+        group.dataVersionValue = [TCSService sharedInstance].dataVersion;
 
         [group markEntityAsUpdated];
 
@@ -966,6 +973,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         timer = [TCSTimer MR_createInContext:localContext];
         timer.providerInstance = updatedProject.providerInstance;
+        timer.dataVersionValue = [TCSService sharedInstance].dataVersion;
         timer.project = updatedProject;
 
         [timer
@@ -1028,6 +1036,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         timer = [TCSTimer MR_createInContext:localContext];
         timer.project = updatedProject;
         timer.providerInstance = updatedProject.providerInstance;
+        timer.dataVersionValue = [TCSService sharedInstance].dataVersion;
 
         [timer
          updateWithStartTime:startTime
@@ -1410,6 +1419,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     [TCSTimer MR_createInContext:project.managedObjectContext];
     rolledTimer.project = project;
     rolledTimer.providerInstance = project.providerInstance;
+    rolledTimer.dataVersionValue = [TCSService sharedInstance].dataVersion;
 
     [rolledTimer
      updateWithStartTime:timer.endTime
@@ -1543,7 +1553,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      existingObjectWithID:entityID
      error:NULL];
 
-    if (timer.pendingRemoteDeleteValue) {
+    if (timer.pendingRemoteDeleteValue || timer.isEntityCurrent == NO) {
         timer = nil;
     }
 
@@ -1606,7 +1616,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     NSPredicate * predicate =
     [NSPredicate predicateWithFormat:
-     @"(pendingRemoteDelete = 0) and ((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
+     @"(pendingRemoteDelete = 0 and dataVersion = %d) and ((project in %@) or (project.parent in %@)) and ((startTime <= %@ and endTime >= %@) or (endTime = nil and startTime <= %@ and %@ >= %@))",
+     [TCSService sharedInstance].dataVersion,
      timedEntities, timedEntities, toDate, fromDate, toDate, now, fromDate];
 
     NSArray *timers =
@@ -1626,22 +1637,29 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 }
 
 - (NSArray *)allTimersInContext:(NSManagedObjectContext *)context {
-    return
-    [TCSTimer
-     MR_findByAttribute:@"pendingRemoteDelete"
-     withValue:@NO
-     inContext:context];
+
+    NSPredicate *predicate =
+    [NSPredicate
+     predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
+
+    return [TCSTimer MR_findAllWithPredicate:predicate inContext:context];
 }
 
 - (NSArray *)allTimersSortedByStartTime:(BOOL)sortedByStartTime {
 
     if (sortedByStartTime) {
+
+        NSPredicate *predicate =
+        [NSPredicate
+         predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+         [TCSService sharedInstance].dataVersion];
+
         return
         [TCSTimer
-         MR_findByAttribute:@"pendingRemoteDelete"
-         withValue:@NO
-         andOrderBy:@"startTime"
+         MR_findAllSortedBy:@"startTime"
          ascending:YES
+         withPredicate:predicate
          inContext:[self managedObjectContextForCurrentThread]];
     }
 
@@ -1656,7 +1674,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 - (TCSTimer *)activeTimer {
 
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"endTime = nil AND pendingRemoteDelete = 0"];
+    [NSPredicate predicateWithFormat:@"endTime = nil AND pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
 
     NSArray *activeTimers =
     [TCSTimer
@@ -1742,12 +1761,17 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 #pragma mark - Canned Messages
 
 - (NSArray *)allCannedMessages {
+
+    NSPredicate *predicate =
+    [NSPredicate
+     predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
+
     return
     [TCSCannedMessage
-     MR_findByAttribute:@"pendingRemoteDelete"
-     withValue:@NO
-     andOrderBy:@"order"
+     MR_findAllSortedBy:@"order"
      ascending:YES
+     withPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 }
 
@@ -1757,7 +1781,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      existingObjectWithID:objectID
      error:NULL];
 
-    if (cannedMessage.pendingRemoteDeleteValue) {
+    if (cannedMessage.pendingRemoteDeleteValue || cannedMessage.isEntityCurrent == NO) {
         cannedMessage = nil;
     }
 
@@ -1775,7 +1799,9 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
         NSPredicate *predicate =
-        [NSPredicate predicateWithFormat:@"pendingRemoteDelete = 0"];
+        [NSPredicate
+         predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+         [TCSService sharedInstance].dataVersion];
 
         TCSCannedMessage *lastCannedMessage =
         [TCSCannedMessage
@@ -1792,6 +1818,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         cannedMessage = [TCSCannedMessage MR_createInContext:localContext];
         cannedMessage.providerInstance = providerInstance;
+        cannedMessage.dataVersionValue = [TCSService sharedInstance].dataVersion;
 
         [cannedMessage
          updateWithMessage:message
@@ -1840,12 +1867,16 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 
+        NSPredicate *predicate =
+        [NSPredicate
+         predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+         [TCSService sharedInstance].dataVersion];
+
         NSArray *orderedMessages =
         [TCSCannedMessage
-         MR_findByAttribute:@"pendingRemoteDelete"
-         withValue:@NO
-         andOrderBy:@"order"
+         MR_findAllSortedBy:@"order"
          ascending:YES
+         withPredicate:predicate
          inContext:localContext];
 
         TCSCannedMessage *localCannedMessage =
@@ -1971,12 +2002,17 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 #pragma mark - Provider Instance
 
 - (NSArray *)allProviderInstances {
+
+    NSPredicate *predicate =
+    [NSPredicate
+     predicateWithFormat:@"pendingRemoteDelete = 0 and dataVersion = %d",
+     [TCSService sharedInstance].dataVersion];
+
     return
     [TCSProviderInstance
-     MR_findByAttribute:@"pendingRemoteDelete"
-     withValue:@NO
-     andOrderBy:@"name"
+     MR_findAllSortedBy:@"name"
      ascending:YES
+     withPredicate:predicate
      inContext:[self managedObjectContextForCurrentThread]];
 }
 
@@ -1999,7 +2035,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
      existingObjectWithID:objectID
      error:NULL];
 
-    if (remoteProvider.pendingRemoteDeleteValue) {
+    if (remoteProvider.pendingRemoteDeleteValue || remoteProvider.isEntityCurrent == NO) {
         remoteProvider = nil;
     }
 
@@ -2028,6 +2064,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
 
         providerInstance = [TCSProviderInstance MR_createInContext:localContext];
         providerInstance.remoteProvider = syncingProvider;
+        providerInstance.dataVersionValue = [TCSService sharedInstance].dataVersion;
 
         [providerInstance
          updateWithName:name
@@ -2500,7 +2537,25 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
     __block NSMutableDictionary *updates =
     [NSMutableDictionary dictionaryWithCapacity:3];
 
+    __block NSMutableArray *existingInitialEntities = nil;
+
+    NSInteger syncCount =
+    [[NSUserDefaults standardUserDefaults]
+     integerForKey:kTCSLocalServiceSyncCountKey];
+
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        if (syncCount == 0 && remoteProvider == _syncingRemoteProvider) {
+
+            NSPredicate *predicate =
+            [NSPredicate predicateWithFormat:@"dataVersion = %d",
+             [TCSService sharedInstance].dataVersion];
+
+            existingInitialEntities =
+            [TCSBaseEntity
+             MR_findAllWithPredicate:predicate
+             inContext:localContext];
+        }
 
         NSArray *sortedEntities =
         [updatedEntities
@@ -2673,6 +2728,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         } else {
             if (updates.count > 0) {
 
+                NSInteger dataVersion = [TCSService sharedInstance].dataVersion;
+
                 NSArray *insertedObjects = updates[NSInsertedObjectsKey];
                 if (insertedObjects.count > 0) {
                     NSMutableArray *updatedInsertedObjects =
@@ -2690,6 +2747,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                         if (error != nil) {
                             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                         } else {
+
+                            dataVersion = MAX(dataVersion, updatedEntity.dataVersionValue);
 
                             if ([updatedInsertedObjects containsObject:updatedEntity] == NO) {
                                 [updatedInsertedObjects addObject:updatedEntity];
@@ -2717,6 +2776,8 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
                         } else {
 
+                            dataVersion = MAX(dataVersion, updatedEntity.dataVersionValue);
+
                             if ([updatedUpdatedObjects containsObject:updatedEntity] == NO) {
                                 [updatedUpdatedObjects addObject:updatedEntity];
                             }
@@ -2725,16 +2786,41 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
                     updates[NSUpdatedObjectsKey] = updatedUpdatedObjects;
                 }
 
-                [[NSNotificationCenter defaultCenter]
-                 postNotificationName:kTCSServicePrivateRemoteSyncCompletedNotification
-                 object:self
-                 userInfo:updates];
+                if (dataVersion > [TCSService sharedInstance].dataVersion) {
 
-                [[NSNotificationCenter defaultCenter]
-                 postNotificationName:kTCSLocalServiceRemoteSyncCompletedNotification
-                 object:self
-                 userInfo:updates];
+                    if (syncCount == 0 && existingInitialEntities.count > 0) {
+
+                        [self
+                         updateExistingEntities:existingInitialEntities
+                         toDataVersion:dataVersion
+                         completion:^{
+                             [self resetData:dataVersion];
+                         }];
+
+                    } else {
+
+                        [self resetData:dataVersion];
+                    }
+                    
+                } else {
+
+                    [[NSNotificationCenter defaultCenter]
+                     postNotificationName:kTCSServicePrivateRemoteSyncCompletedNotification
+                     object:self
+                     userInfo:updates];
+
+                    [[NSNotificationCenter defaultCenter]
+                     postNotificationName:kTCSLocalServiceRemoteSyncCompletedNotification
+                     object:self
+                     userInfo:updates];
+                }
             }
+        }
+
+        if (remoteProvider == _syncingRemoteProvider) {
+            [[NSUserDefaults standardUserDefaults]
+             setInteger:syncCount+1 forKey:kTCSLocalServiceSyncCountKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }
 
         [self.delegate remoteSyncCompleted];
@@ -2869,6 +2955,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         TCSGroup *group =
         [TCSGroup MR_createInContext:context];
         group.providerInstance = providerInstance;
+        group.dataVersionValue = providedGroup.utsDataVersion;
 
         [group
          updateWithName:providedGroup.utsName
@@ -2966,6 +3053,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         TCSProject *project =
         [TCSProject MR_createInContext:context];
         project.providerInstance = providerInstance;
+        project.dataVersionValue = providedProject.utsDataVersion;
 
         [project
          updateWithName:providedProject.utsName
@@ -3099,6 +3187,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         TCSTimer *timer =
         [TCSTimer MR_createInContext:context];
         timer.providerInstance = providerInstance;
+        timer.dataVersionValue = providedTimer.utsDataVersion;
 
         [timer
          updateWithStartTime:providedTimer.utsStartTime
@@ -3170,6 +3259,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         TCSCannedMessage *cannedMessage =
         [TCSCannedMessage MR_createInContext:context];
         cannedMessage.providerInstance = providerInstance;
+        cannedMessage.dataVersionValue = providedCannedMessage.utsDataVersion;
 
         [cannedMessage
          updateWithMessage:providedCannedMessage.utsMessage
@@ -3240,6 +3330,7 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         TCSProviderInstance *providerInstance =
         [TCSProviderInstance MR_createInContext:context];
         providerInstance.providerInstance = nil;
+        providerInstance.dataVersionValue = providedProviderInstance.utsDataVersion;
 
         [providerInstance
          updateWithName:providedProviderInstance.utsName
@@ -3257,6 +3348,67 @@ NSString * const kTCSLocalServiceRemoteSyncCompletedNotification =
         
 //        NSLog(@"SYNC: created new remoteProvider: %@", providerInstance);
     }
+}
+
+#pragma mark - Data Reset
+
+- (void)resetData:(NSInteger)dataVersion {
+
+    [TCSService sharedInstance].dataVersion = dataVersion;
+
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kTCSServiceDataResetNotification
+     object:self
+     userInfo:nil];
+
+    [self purgeOldData];
+}
+
+- (void)updateExistingEntities:(NSArray *)entities
+                 toDataVersion:(NSInteger)dataVersion
+                    completion:(void(^)(void))completionBlock {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        for (TCSBaseEntity *entity in entities) {
+
+            NSError *error = nil;
+
+            TCSBaseEntity *localEntity = (id)
+            [localContext existingObjectWithID:entity.objectID error:&error];
+
+            if (error != nil) {
+                NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+            } else {
+                localEntity.dataVersionValue = dataVersion;
+            }
+        }
+        
+    } completion:^(BOOL success, NSError *error) {
+
+        if (completionBlock != nil) {
+            completionBlock();
+        }
+    }];
+}
+
+- (void)purgeOldData {
+
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+        NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"dataVersion < %d",
+         [TCSService sharedInstance].dataVersion];
+
+        NSArray *allEntities =
+        [TCSBaseEntity
+         MR_findAllWithPredicate:predicate
+         inContext:localContext];
+
+        for (TCSBaseEntity *entity in allEntities) {
+            [entity MR_deleteInContext:localContext];
+        }
+    }];
 }
 
 #pragma mark - Singleton Methods
