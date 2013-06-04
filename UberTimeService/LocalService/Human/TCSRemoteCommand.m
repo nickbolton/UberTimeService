@@ -6,6 +6,7 @@
 NSString * const kTCSRemoteCommandMessageNotification = @"kTCSRemoteCommandMessageNotification";
 NSString * const kTCSRemoteCommandMessageKey = @"remote-message";
 NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
+NSString * const kTCSRemoteCommandDataVersionKey = @"data-version";
 
 @implementation TCSRemoteCommand
 
@@ -21,6 +22,8 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
             default:
                 break;
         }
+
+        self.executedValue = YES;
     }
 }
 
@@ -108,6 +111,11 @@ NSString * const kTCSRemoteCommandObjectIdKey = @"object-id";
 
     remoteCommand.typeValue = TCSRemoteCommandTypeResetData;
     remoteCommand.providerInstance = nil;
+    remoteCommand.payload =
+    [self
+     payloadDataFromDictionary:@{
+     kTCSRemoteCommandDataVersionKey : @([TCSService sharedInstance].dataVersion),
+    }];
 
     return remoteCommand;
 }

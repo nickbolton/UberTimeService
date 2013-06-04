@@ -188,6 +188,10 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
     }
 }
 
+- (void)deleteAllDataFromRemoteSource:(NSInteger)dataVersion {
+    [self resetData:dataVersion];
+}
+
 #pragma mark - Remote Commands
 
 - (void)executedRemoteCommand:(TCSRemoteCommand *)remoteCommand
@@ -2894,6 +2898,16 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
 - (NSArray *)handleResetDataCommand:(TCSRemoteCommand *)remoteCommand
                      inContext:(NSManagedObjectContext *)context {
+
+    NSDictionary *userInfo = remoteCommand.payloadDictionary;
+
+    NSNumber *dataVersion = userInfo[kTCSRemoteCommandDataVersionKey];
+
+    if (dataVersion != nil) {
+
+        [self deleteAllDataFromRemoteSource:dataVersion.integerValue];
+    }
+
     remoteCommand.executedValue = YES;
     return nil;
 }
@@ -3354,12 +3368,24 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
 - (void)resetData:(NSInteger)dataVersion {
 
-    [TCSService sharedInstance].dataVersion = dataVersion;
+    if (dataVersion > [TCSService sharedInstance].dataVersion) {
+        [TCSService sharedInstance].dataVersion = dataVersion;
+    }
 
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kTCSServiceDataResetNotification
      object:self
      userInfo:nil];
+
+    [self
+     resetRemoteDataWithProvider:nil
+     success:nil
+     failure:^(NSError *error) {
+
+         if (error != nil) {
+             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+         }
+     }];
 
     [self purgeOldData];
 }

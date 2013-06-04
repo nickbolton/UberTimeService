@@ -10,6 +10,7 @@ typedef NS_ENUM(NSInteger, TCSRemoteCommandType) {
 extern NSString * const kTCSRemoteCommandMessageNotification;
 extern NSString * const kTCSRemoteCommandMessageKey;
 extern NSString * const kTCSRemoteCommandObjectIdKey;
+extern NSString * const kTCSRemoteCommandDataVersionKey;
 
 @interface TCSRemoteCommand : _TCSRemoteCommand {}
 

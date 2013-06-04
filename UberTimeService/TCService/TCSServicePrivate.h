@@ -103,6 +103,8 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
+- (void)deleteAllDataFromRemoteSource:(NSInteger)dataVersion;
+
 - (void)sendRemoteMessage:(NSString *)message
                   success:(void(^)(void))successBlock
                   failure:(void(^)(NSError *error))failureBlock;

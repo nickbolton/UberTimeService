@@ -492,7 +492,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                         remoteCommand:(TCSRemoteCommand *)remoteCommand {
 
     parseRemoteCommand.user = [PFUser currentUser];
-    parseRemoteCommand.payload = remoteCommand.payload;
+    parseRemoteCommand.payload = [self safePropertyValue:remoteCommand.payload];
     parseRemoteCommand.type = remoteCommand.typeValue;
     parseRemoteCommand.instanceID = [NSString applicationInstanceId];
     parseRemoteCommand.entityVersion = remoteCommand.entityVersionValue;
