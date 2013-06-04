@@ -181,7 +181,9 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 - (void)deleteAllData:(void(^)(void))successBlock
               failure:(void(^)(NSError *error))failureBlock {
 
-    [self resetData:[TCSService sharedInstance].dataVersion + 1];
+    [self
+     resetData:[TCSService sharedInstance].dataVersion + 1
+     fromRemoteSource:NO];
 
     if (successBlock != nil) {
         successBlock();
@@ -189,7 +191,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 }
 
 - (void)deleteAllDataFromRemoteSource:(NSInteger)dataVersion {
-    [self resetData:dataVersion];
+    [self resetData:dataVersion fromRemoteSource:YES];
 }
 
 #pragma mark - Remote Commands
@@ -2798,12 +2800,12 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                          updateExistingEntities:existingInitialEntities
                          toDataVersion:dataVersion
                          completion:^{
-                             [self resetData:dataVersion];
+                             [self resetData:dataVersion fromRemoteSource:YES];
                          }];
 
                     } else {
 
-                        [self resetData:dataVersion];
+                        [self resetData:dataVersion fromRemoteSource:YES];
                     }
                     
                 } else {
@@ -3366,7 +3368,8 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
 #pragma mark - Data Reset
 
-- (void)resetData:(NSInteger)dataVersion {
+- (void)resetData:(NSInteger)dataVersion
+ fromRemoteSource:(BOOL)fromRemoteSource {
 
     if (dataVersion > [TCSService sharedInstance].dataVersion) {
         [TCSService sharedInstance].dataVersion = dataVersion;
@@ -3379,15 +3382,17 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          userInfo:nil];
     });
 
-    [self
-     resetRemoteDataWithProvider:nil
-     success:nil
-     failure:^(NSError *error) {
+    if (fromRemoteSource == NO) {
+        [self
+         resetRemoteDataWithProvider:nil
+         success:nil
+         failure:^(NSError *error) {
 
-         if (error != nil) {
-             NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
-         }
-     }];
+             if (error != nil) {
+                 NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+             }
+         }];
+    }
 
     [self purgeOldData];
 }

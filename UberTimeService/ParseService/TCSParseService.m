@@ -175,6 +175,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
     PFQuery *query = [TCSParseAppConfig query];
     [query whereKey:@"user" equalTo:[PFUser currentUser]];
+    [query whereKey:@"instanceID" equalTo:[NSString applicationInstanceId]];
     query.cachePolicy = kPFCachePolicyNetworkOnly;
 
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
