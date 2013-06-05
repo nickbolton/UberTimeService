@@ -28,6 +28,8 @@
 #import "NSError+Utilities.h"
 #import "TCSCommon.h"
 #import "TCSParseSystemTime.h"
+#import "AFHTTPRequestOperation.h"
+#import "AFHTTPClient.h"
 
 static inline NSError * TCSParseServiceWrapObjectNotFoundError(NSError *error) {
     if ([error.domain isEqualToString:@"Parse"]) {
@@ -56,6 +58,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 @property (nonatomic, strong) NSMutableDictionary *bufferedUpdates;
 @property (nonatomic, strong) NSDate *lastPollingDate;
 @property (nonatomic, strong) NSDate *systemTime;
+@property (nonatomic, strong) NSTimer *systemTimeTimer;
 
 @end
 
@@ -109,6 +112,11 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             [self updateSystemTime];
         });
 
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(updateSystemTime)
+         name:UIApplicationWillEnterForegroundNotification
+         object:nil];
     }
 
     return self;
@@ -1342,56 +1350,123 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 - (void)updateSystemTime {
 
-    NSTimeInterval retryTime = 5.0f;
+    [_systemTimeTimer invalidate];
+    self.systemTimeTimer = nil;
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    __block NSTimeInterval retryTime = 5.0f;
     
     if (_connected) {
 
-        TCSParseSystemTime *parseSystemTime = [TCSParseSystemTime object];
+        static NSString *baseRestURL = @"https://api.parse.com/1/";
+        static NSString *parseAppID = @"jF4VaTdB8FrBuFp52WFr9DzU70X9PPBeB9anwRga";
+        static NSString *parseRestApiKey = @"7JJUKmtlW0NQRoO3D5dDJU3teIxZ1NwGaxzhTBMd";
 
-        NSError *error = nil;
+//        curl -v -X HEAD   -H "X-Parse-Application-Id: jF4VaTdB8FrBuFp52WFr9DzU70X9PPBeB9anwRga"   -H "X-Parse-REST-API-Key: 7JJUKmtlW0NQRoO3D5dDJU3teIxZ1NwGaxzhTBMd"   https://api.parse.com/1/classes/TCParseProject
 
-        NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
-        [parseSystemTime save:&error];
+        AFHTTPClient *httpClient =
+        [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:baseRestURL]];
 
-        NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
-        NSTimeInterval roundTripTime = now - startTime;
+        [httpClient setDefaultHeader:@"X-Parse-Application-Id" value:parseAppID];
+        [httpClient setDefaultHeader:@"X-Parse-REST-API-Key" value:parseRestApiKey];
 
-        if (error != nil) {
-            NSLog(@"Error polling for system time: %@", error);
+        NSMutableURLRequest *request =
+        [httpClient
+         requestWithMethod:@"GET"
+         path:@"classes/TCParseProject"
+         parameters:nil];
 
-            if (_systemTime == nil) {
-                retryTime = 10.0f;
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+            NSHTTPURLResponse *response = operation.response;
+
+            if (response.statusCode == 200) {
+                NSLog(@"Date: %@", response.allHeaderFields[@"Date"]);
+
+                // Wed, 05 Jun 2013 10:37:46 GMT
+
+                static NSDateFormatter *dateFormatter = nil;
+
+                if (dateFormatter == nil) {
+                    dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+                }
+
+                NSString *systemTimeValue = response.allHeaderFields[@"Date"];
+
+                NSDate *systemTime =
+                [dateFormatter dateFromString:systemTimeValue];
+
+                if (systemTime != nil) {
+
+                    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+                    _localTimeLastSystemTimeReceived = now;
+                    _systemTime = systemTime;
+                    retryTime = 3600.0f;
+
+                    NSLog(@"Setting system time: %@", _systemTime);
+
+                } else {
+
+                    NSLog(@"%s WARN : system date not parsed from: %@", __PRETTY_FUNCTION__, systemTimeValue);
+
+                    if (_systemTime == nil) {
+                        retryTime = 10.0f;
+                    } else {
+                        retryTime = 30.0f;
+                    }
+                }
+
             } else {
-                retryTime = 30.0f;
+
+                if (_systemTime == nil) {
+                    retryTime = 10.0f;
+                } else {
+                    retryTime = 30.0f;
+                }
             }
 
-        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.systemTimeTimer =
+                [NSTimer
+                 scheduledTimerWithTimeInterval:retryTime
+                 target:self
+                 selector:@selector(updateSystemTime)
+                 userInfo:nil
+                 repeats:NO];
+            });
 
-            _localTimeLastSystemTimeReceived = now;
-            self.systemTime = parseSystemTime.updatedAt;
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
 
-//            NSLog(@"systemTime: %@", parseSystemTime.updatedAt);
-//            NSLog(@"roundTripTime: %f", roundTripTime);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.systemTimeTimer =
+                [NSTimer
+                 scheduledTimerWithTimeInterval:retryTime
+                 target:self
+                 selector:@selector(updateSystemTime)
+                 userInfo:nil
+                 repeats:NO];
+            });
+        }];
 
-            if (roundTripTime > 2.0f) {
-                retryTime = 1.0f;
-            } else {
-                retryTime = 3600.0f;
-            }
+        [operation start];
+        
+    } else {
 
-            error = nil;
-            [parseSystemTime delete:&error];
-
-            if (error != nil) {
-                NSLog(@"Error deleting system time: %@", error);
-            }
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.systemTimeTimer =
+            [NSTimer
+             scheduledTimerWithTimeInterval:.1f
+             target:self
+             selector:@selector(updateSystemTime)
+             userInfo:nil
+             repeats:NO];
+        });
     }
-
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(retryTime * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
-        [self updateSystemTime];
-    });
 }
 
 - (void)pollForUpdates:(TCSProviderInstance *)providerInstance
