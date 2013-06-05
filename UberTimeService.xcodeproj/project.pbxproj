@@ -71,9 +71,7 @@
 		FE9E771B174E37B20035EABE /* TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E7719174E37B00035EABE /* TCSProviderInstance.m */; };
 		FE9E771E174E37BB0035EABE /* _TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */; };
 		FE9E771F174E37BB0035EABE /* _TCSProviderInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */; };
-		FEB316751743A7ED00A6F16D /* TCSParseSystemTime.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */; };
 		FEB316781743A8BB00A6F16D /* TCSParseAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316771743A8BB00A6F16D /* TCSParseAppConfig.m */; };
-		FEB316791743AA3800A6F16D /* TCSParseSystemTime.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */; };
 		FEBD024D1733D85A00DAB99D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EA1732E60D0087EB4F /* UIKit.framework */; };
 		FEBD024E1733D85A00DAB99D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EC1732E60D0087EB4F /* Foundation.framework */; };
 		FEBD024F1733D85A00DAB99D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDAD2EE1732E60D0087EB4F /* CoreGraphics.framework */; };
@@ -221,8 +219,6 @@
 		FE9E7719174E37B00035EABE /* TCSProviderInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSProviderInstance.m; sourceTree = "<group>"; };
 		FE9E771C174E37BA0035EABE /* _TCSProviderInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TCSProviderInstance.h; sourceTree = "<group>"; };
 		FE9E771D174E37BB0035EABE /* _TCSProviderInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TCSProviderInstance.m; sourceTree = "<group>"; };
-		FEB316731743A7ED00A6F16D /* TCSParseSystemTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseSystemTime.h; sourceTree = "<group>"; };
-		FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseSystemTime.m; sourceTree = "<group>"; };
 		FEB316761743A8BB00A6F16D /* TCSParseAppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCSParseAppConfig.h; sourceTree = "<group>"; };
 		FEB316771743A8BB00A6F16D /* TCSParseAppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCSParseAppConfig.m; sourceTree = "<group>"; };
 		FEBD024C1733D85A00DAB99D /* IntegrationTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -595,8 +591,6 @@
 				FE9E7715174E2C600035EABE /* TCSParseProviderInstance.m */,
 				FEBD03281735735800DAB99D /* TCSParseBaseEntity.h */,
 				FEBD03291735735900DAB99D /* TCSParseBaseEntity.m */,
-				FEB316731743A7ED00A6F16D /* TCSParseSystemTime.h */,
-				FEB316741743A7ED00A6F16D /* TCSParseSystemTime.m */,
 				FEB316761743A8BB00A6F16D /* TCSParseAppConfig.h */,
 				FEB316771743A8BB00A6F16D /* TCSParseAppConfig.m */,
 			);
@@ -842,7 +836,6 @@
 				FE9C8006173F0EC000005FD8 /* TCSParseService.m in Sources */,
 				FE9C800A173F1D4300005FD8 /* TCSParseCannedMessage.m in Sources */,
 				FE9C800B173F22FD00005FD8 /* TCSCommon.m in Sources */,
-				FEB316791743AA3800A6F16D /* TCSParseSystemTime.m in Sources */,
 				FE3D1A651748FA2A000A4788 /* TCSRemoteCommand.m in Sources */,
 				FE3D1A691748FA32000A4788 /* _TCSRemoteCommand.m in Sources */,
 				FE3D1A6A174911E9000A4788 /* TCSParseAppConfig.m in Sources */,
@@ -898,7 +891,6 @@
 				FE9C8003173F07F400005FD8 /* NSError+Utilities.m in Sources */,
 				FE9C8005173F0EC000005FD8 /* TCSParseService.m in Sources */,
 				FE9C8009173F1D4300005FD8 /* TCSParseCannedMessage.m in Sources */,
-				FEB316751743A7ED00A6F16D /* TCSParseSystemTime.m in Sources */,
 				FEB316781743A8BB00A6F16D /* TCSParseAppConfig.m in Sources */,
 				FE3D1A641748FA2A000A4788 /* TCSRemoteCommand.m in Sources */,
 				FE3D1A681748FA32000A4788 /* _TCSRemoteCommand.m in Sources */,
