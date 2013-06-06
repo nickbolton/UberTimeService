@@ -210,7 +210,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
         appConfig.user = [PFUser currentUser];
 
         [appConfig saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            NSLog(@"Updated AppConfig: %@", appConfig);
+//            NSLog(@"Updated AppConfig: %@", appConfig);
         }];
     }];
 
@@ -1352,7 +1352,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
     [_systemTimeTimer invalidate];
     self.systemTimeTimer = nil;
 
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+//    NSLog(@"%s", __PRETTY_FUNCTION__);
 
     __block NSTimeInterval retryTime = 5.0f;
     
@@ -1383,7 +1383,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
             NSHTTPURLResponse *response = operation.response;
 
             if (response.statusCode == 200) {
-                NSLog(@"Date: %@", response.allHeaderFields[@"Date"]);
+//                NSLog(@"Date: %@", response.allHeaderFields[@"Date"]);
 
                 // Wed, 05 Jun 2013 10:37:46 GMT
 
