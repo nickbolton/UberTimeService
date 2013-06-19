@@ -251,12 +251,12 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
-        NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
+        NSLog(@"%s WARN : wrong provider to harvest: %@", __PRETTY_FUNCTION__, timer.providerInstance.remoteProvider);
         return NO;
     }
 
     if (timer.providerInstance.userID == nil) {
-        NSLog(@"%s WARN : provider to harvest: %@", timer.providerInstance.remoteProvider);
+        NSLog(@"%s WARN : provider to harvest: %@", __PRETTY_FUNCTION__, timer.providerInstance.remoteProvider);
 
         [[NSNotificationCenter defaultCenter]
          postNotificationName:kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification
@@ -347,12 +347,12 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
-        NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
+        NSLog(@"%s WARN : wrong provider to harvest: %@", __PRETTY_FUNCTION__, timer.providerInstance.remoteProvider);
         return NO;
     }
 
     if (timer.providerInstance.userID == nil) {
-        NSLog(@"%s WARN : provider to harvest: %@", timer.providerInstance.remoteProvider);
+        NSLog(@"%s WARN : provider to harvest: %@", __PRETTY_FUNCTION__, timer.providerInstance.remoteProvider);
 
         [[NSNotificationCenter defaultCenter]
          postNotificationName:kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification
@@ -364,7 +364,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     }
 
     if (timer.remoteId == nil) {
-        NSLog(@"%s WARN : no timer remoteID: %@", timer);
+        NSLog(@"%s WARN : no timer remoteID: %@", __PRETTY_FUNCTION__, timer);
         return NO;
     }
 
@@ -451,12 +451,12 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             failure:(void(^)(NSError *error))failureBlock {
 
     if ([NSStringFromClass([self class]) isEqualToString:timer.providerInstance.remoteProvider] == NO) {
-        NSLog(@"%s WARN : wrong provider to harvest: %@", timer.providerInstance.remoteProvider);
+        NSLog(@"%s WARN : wrong provider to harvest: %@", __PRETTY_FUNCTION__, timer.providerInstance.remoteProvider);
         return NO;
     }
 
     if (timer.providerInstance.userID == nil) {
-        NSLog(@"%s WARN : provider to harvest: %@", timer.providerInstance.remoteProvider);
+        NSLog(@"%s WARN : provider to harvest: %@", __PRETTY_FUNCTION__, timer.providerInstance.remoteProvider);
 
         [[NSNotificationCenter defaultCenter]
          postNotificationName:kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification
@@ -468,7 +468,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     }
 
     if (timer.remoteId == nil) {
-        NSLog(@"%s WARN : no timer remoteID: %@", timer);
+        NSLog(@"%s WARN : no timer remoteID: %@", __PRETTY_FUNCTION__, timer);
         return NO;
     }
 
@@ -699,7 +699,6 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     NSMutableArray *normalizedTimers = [NSMutableArray array];
 
     NSArray *timers = json[kTCSJsonServiceEntriesKey];
-    NSArray *projects;
     NSDate *updateTime = json[kTCSJsonServiceProviderSystemTimeKey];
 
     if (updateTime == nil) {
@@ -723,11 +722,11 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             NSString *timerStartedAt = timerDict[@"timer_started_at"];
             NSString *startDateString = nil;
 
-            if (timerStartedAt != nil && timerStartedAt != [NSNull null]) {
+            if (timerStartedAt != nil && timerStartedAt != (id)[NSNull null]) {
                 startDateString = timerStartedAt;
             } else {
 
-                if (startedAt == nil || startedAt == [NSNull null]) {
+                if (startedAt == nil || startedAt == (id)[NSNull null]) {
                     startedAt = @"12:00am";
                 }
 
