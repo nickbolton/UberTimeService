@@ -1390,8 +1390,14 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
                 static NSDateFormatter *dateFormatter = nil;
 
                 if (dateFormatter == nil) {
+
+                    NSLocale *usLocale =
+                    [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
                     dateFormatter = [[NSDateFormatter alloc] init];
-                    [dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+                    dateFormatter.dateFormat =
+                    @"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz";
+                    dateFormatter.locale = usLocale;
                 }
 
                 NSString *systemTimeValue = response.allHeaderFields[@"Date"];

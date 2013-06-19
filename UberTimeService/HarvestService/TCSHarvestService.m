@@ -48,7 +48,9 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
     if (dateFormatter == nil) {
         dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+        dateFormatter.dateFormat = @"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz";
+        dateFormatter.locale =
+        [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     }
 
     return dateFormatter;
@@ -57,11 +59,28 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 - (NSDateFormatter *)timerEntryFormatter {
 
     static NSDateFormatter *dateFormatter = nil;
-    
+
     if (dateFormatter == nil) {
         // Tue, 17 Oct 2006
         dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEE, d MMM yyyy"];
+        dateFormatter.dateFormat = @"EEE, d MMM yyyy";
+        dateFormatter.locale =
+        [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    }
+
+    return dateFormatter;
+}
+
+- (NSDateFormatter *)timerStartTimeFormatter {
+
+    static NSDateFormatter *dateFormatter = nil;
+
+    if (dateFormatter == nil) {
+        // Tue, 17 Oct 2006
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mmaa";
+        dateFormatter.locale =
+        [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     }
 
     return dateFormatter;
@@ -675,7 +694,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
-//    NSLog(@"timer JSON: %@", json);
+    NSLog(@"timer JSON: %@", json);
 
     NSMutableArray *normalizedTimers = [NSMutableArray array];
 
@@ -683,8 +702,9 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     NSArray *projects;
     NSDate *updateTime = json[kTCSJsonServiceProviderSystemTimeKey];
 
-    NSDateFormatter *timestampFormatter = [[NSDateFormatter alloc] init];
-    timestampFormatter.dateFormat = @"yyyy-MM-dd HH:mmaa";
+    if (updateTime == nil) {
+        updateTime = [NSDate date];
+    }
 
     for (NSDictionary *dayEntry in timers) {
 
@@ -716,7 +736,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             }
 
             timer.utsStartTime =
-            [timestampFormatter dateFromString:startDateString];
+            [self.timerStartTimeFormatter dateFromString:startDateString];
             timer.utsEndTime = [timer.utsStartTime dateByAddingTimeInterval:duration];
             timer.utsMessage = timerDict[@"notes"];
             timer.utsProviderInstanceID = providerInstance.objectID;

@@ -72,23 +72,23 @@ NSString * const kTCSJsonServiceEntriesKey = @"tcs-json-entries";
         NSDate *systemTime =
         [systemTimeFormatter dateFromString:dateValue];
 
-        if (systemTime != nil) {
+        NSMutableDictionary *mutableJson;
 
-            NSMutableDictionary *mutableJson;
+        if ([json isKindOfClass:[NSDictionary class]]) {
 
-            if ([json isKindOfClass:[NSDictionary class]]) {
+            mutableJson = [json mutableCopy];
 
-                mutableJson = [json mutableCopy];
+        } else if ([json isKindOfClass:[NSArray class]]) {
 
-            } else if ([json isKindOfClass:[NSArray class]]) {
-
-                mutableJson = [NSMutableDictionary dictionary];
-                mutableJson[kTCSJsonServiceEntriesKey] = json;
-            }
-
-            mutableJson[kTCSJsonServiceProviderSystemTimeKey] = systemTime;
-            json = mutableJson;
+            mutableJson = [NSMutableDictionary dictionary];
+            mutableJson[kTCSJsonServiceEntriesKey] = json;
         }
+
+        if (systemTime != nil) {
+            mutableJson[kTCSJsonServiceProviderSystemTimeKey] = systemTime;
+        }
+
+        json = mutableJson;
     }
 
     return json;
