@@ -10,6 +10,7 @@ extern const struct TCSBaseEntityAttributes {
 	__unsafe_unretained NSString *pending;
 	__unsafe_unretained NSString *pendingRemoteDelete;
 	__unsafe_unretained NSString *remoteId;
+	__unsafe_unretained NSString *syncingSource;
 	__unsafe_unretained NSString *updateTime;
 } TCSBaseEntityAttributes;
 
@@ -21,6 +22,7 @@ extern const struct TCSBaseEntityFetchedProperties {
 } TCSBaseEntityFetchedProperties;
 
 @class TCSProviderInstance;
+
 
 
 
@@ -97,6 +99,18 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* syncingSource;
+
+
+@property BOOL syncingSourceValue;
+- (BOOL)syncingSourceValue;
+- (void)setSyncingSourceValue:(BOOL)value_;
+
+//- (BOOL)validateSyncingSource:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSDate* updateTime;
 
 
@@ -161,6 +175,15 @@ extern const struct TCSBaseEntityFetchedProperties {
 
 - (NSString*)primitiveRemoteId;
 - (void)setPrimitiveRemoteId:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveSyncingSource;
+- (void)setPrimitiveSyncingSource:(NSNumber*)value;
+
+- (BOOL)primitiveSyncingSourceValue;
+- (void)setPrimitiveSyncingSourceValue:(BOOL)value_;
 
 
 
