@@ -9,7 +9,6 @@ const struct TCSBaseEntityAttributes TCSBaseEntityAttributes = {
 	.pending = @"pending",
 	.pendingRemoteDelete = @"pendingRemoteDelete",
 	.remoteId = @"remoteId",
-	.syncingSource = @"syncingSource",
 	.updateTime = @"updateTime",
 };
 
@@ -60,10 +59,6 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 	}
 	if ([key isEqualToString:@"pendingRemoteDeleteValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"pendingRemoteDelete"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
-	if ([key isEqualToString:@"syncingSourceValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"syncingSource"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 	}
 
@@ -179,32 +174,6 @@ const struct TCSBaseEntityFetchedProperties TCSBaseEntityFetchedProperties = {
 
 @dynamic remoteId;
 
-
-
-
-
-
-@dynamic syncingSource;
-
-
-
-- (BOOL)syncingSourceValue {
-	NSNumber *result = [self syncingSource];
-	return [result boolValue];
-}
-
-- (void)setSyncingSourceValue:(BOOL)value_ {
-	[self setSyncingSource:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveSyncingSourceValue {
-	NSNumber *result = [self primitiveSyncingSource];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveSyncingSourceValue:(BOOL)value_ {
-	[self setPrimitiveSyncingSource:[NSNumber numberWithBool:value_]];
-}
 
 
 
