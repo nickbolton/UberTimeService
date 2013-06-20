@@ -118,6 +118,29 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 }
 
+- (NSDictionary *)recoverySuggestionFromError:(NSError *)error {
+
+    NSString *suggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
+    NSData *suggestionData =
+    [NSData
+     dataWithBytes:suggestion.UTF8String
+     length:suggestion.length];
+
+    NSError *err = nil;
+
+    NSDictionary *suggestionJson =
+    [NSJSONSerialization
+     JSONObjectWithData:suggestionData
+     options:NSJSONReadingMutableContainers
+     error:&err];
+
+    if (err != nil) {
+        NSLog(@"%s Error : %@", __PRETTY_FUNCTION__, err);
+    }
+
+    return suggestionJson[@"error"];
+}
+
 - (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance
                                        force:(BOOL)force
                                      success:(void(^)(TCSProviderInstance *providerInstance))successBlock
@@ -130,6 +153,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         [self
          primAuthenticateUser:providerInstance.username
          password:providerInstance.password
+         providerInstance:providerInstance
          success:^(NSString *userID) {
 
              if (userID != nil) {
@@ -147,16 +171,18 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 - (void)authenticateUser:(NSString *)username
                 password:(NSString *)password
-                 success:(void(^)(void))successBlock
+        providerInstance:(TCSProviderInstance *)providerInstance
+                 success:(void(^)(NSString *userID))successBlock
                  failure:(void(^)(NSError *error))failureBlock {
 
     [self
      primAuthenticateUser:username
      password:password
+     providerInstance:providerInstance
      success:^(NSString *userID) {
 
          if (successBlock) {
-             successBlock();
+             successBlock(userID);
          }
          
      } failure:failureBlock];
@@ -165,6 +191,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
 - (void)primAuthenticateUser:(NSString *)username
                     password:(NSString *)password
+            providerInstance:(TCSProviderInstance *)providerInstance
                      success:(void (^)(NSString *userID))successBlock
                      failure:(void (^)(NSError *))failureBlock {
 
@@ -180,7 +207,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     };
 
     NSString *urlString =
-    [NSString stringWithFormat:@"%@/account/who_am_i", @"https://deucent.harvestapp.com"];
+    [NSString stringWithFormat:@"%@/account/who_am_i", providerInstance.baseURL];
     
     NSURL *url = [NSURL URLWithString:urlString];
 
@@ -196,7 +223,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
          
          NSString *userid = [self safeRemoteID:user[@"id"]];
 
-         if (userid != nil) {
+         if ([userid isKindOfClass:[NSString class]] && userid.length > 0) {
 
              if (successBlock != nil) {
                  successBlock(userid);
@@ -439,6 +466,23 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
      } failure:^(NSError *error, id userContext) {
          
          if (failureBlock != nil) {
+
+             NSDictionary *recoverySuggestion =
+             [self recoverySuggestionFromError:error];
+
+             NSString *kind = recoverySuggestion[@"kind"];
+
+             if (error.code == -1011 && [kind isEqualToString:@"ApprovedHours"]) {
+
+                 NSString *message = TCSLoc(@"Harvest time period locked.");
+
+                 error =
+                 [NSError
+                  errorWithCode:TCErrorRequestRemoteTimePeriodLocked
+                  message:message];
+
+             }
+             
              failureBlock(error);
          }
      }];
@@ -694,7 +738,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
         NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
     }
 
-    NSLog(@"timer JSON: %@", json);
+//    NSLog(@"timer JSON: %@", json);
 
     NSMutableArray *normalizedTimers = [NSMutableArray array];
 

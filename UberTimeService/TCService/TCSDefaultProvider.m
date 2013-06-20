@@ -35,10 +35,11 @@
 
 - (void)authenticateUser:(NSString *)username
                 password:(NSString *)password
-                 success:(void(^)(void))successBlock
+        providerInstance:(TCSProviderInstance *)providerInstance
+                 success:(void(^)(NSString *userID))successBlock
                  failure:(void(^)(NSError *error))failureBlock {
     if (successBlock != nil) {
-        successBlock();
+        successBlock(nil);
     }
 }
 

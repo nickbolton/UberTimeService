@@ -355,12 +355,13 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
 
 - (void)authenticateUser:(NSString *)username
                 password:(NSString *)password
-                 success:(void(^)(void))successBlock
+        providerInstance:(TCSProviderInstance *)providerInstance
+                 success:(void(^)(NSString *userID))successBlock
                  failure:(void(^)(NSError *error))failureBlock {
 
     if ([PFUser currentUser] != nil) {
         if (successBlock != nil) {
-            successBlock();
+            successBlock([PFUser currentUser].objectId);
         }
         return;
     }
@@ -376,7 +377,7 @@ NSTimeInterval const kTCSParsePollingDateThreshold = 5.0f; // look back 5 sec
              }
          } else {
              if (successBlock != nil) {
-                 successBlock();
+                 successBlock(user.objectId);
              }
          }
      }];

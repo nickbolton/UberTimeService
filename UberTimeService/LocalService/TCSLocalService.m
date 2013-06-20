@@ -2403,6 +2403,29 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
                  } failure:^(NSError *error) {
                      NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+
+                     if (error.domain == kTCErrorDomain && error.code == TCErrorRequestRemoteTimePeriodLocked) {
+
+                         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+                             NSError *error = nil;
+
+                             TCSBaseEntity *localEntity = (id)
+                             [localContext existingObjectWithID:entity.objectID error:&error];
+
+                             if (error != nil) {
+                                 NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+                             } else {
+
+                                 localEntity.pendingValue = NO;
+                             }
+                         } completion:^(BOOL success, NSError *error) {
+
+                             if (error != nil) {
+                                 NSLog(@"%s Error: %@", __PRETTY_FUNCTION__, error);
+                             }
+                         }];
+                     }
                  }];
             }
         }
@@ -2944,18 +2967,36 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
             existingGroup.updateTime == nil ||
             [providedGroup.utsUpdateTime isGreaterThan:existingGroup.updateTime]) {
 
-            [existingGroup
-             updateWithName:providedGroup.utsName
-             color:providedGroup.utsColor
-             archived:providedGroup.utsArchived
-             filteredModifiers:providedGroup.utsFilteredModifiers
-             keyCode:providedGroup.utsKeyCode
-             modifiers:providedGroup.utsModifiers
-             order:providedGroup.utsOrder
-             entityVersion:providedGroup.utsEntityVersion
-             remoteId:providedGroup.utsRemoteID
-             updateTime:providedGroup.utsUpdateTime
-             markAsUpdated:NO];
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
+
+                [existingGroup
+                 updateWithName:providedGroup.utsName
+                 color:existingGroup.colorValue
+                 archived:existingGroup.archivedValue
+                 filteredModifiers:existingGroup.filteredModifiersValue
+                 keyCode:existingGroup.keyCodeValue
+                 modifiers:existingGroup.modifiersValue
+                 order:existingGroup.orderValue
+                 entityVersion:existingGroup.entityVersionValue
+                 remoteId:providedGroup.utsRemoteID
+                 updateTime:providedGroup.utsUpdateTime
+                 markAsUpdated:NO];
+
+            } else {
+
+                [existingGroup
+                 updateWithName:providedGroup.utsName
+                 color:providedGroup.utsColor
+                 archived:providedGroup.utsArchived
+                 filteredModifiers:providedGroup.utsFilteredModifiers
+                 keyCode:providedGroup.utsKeyCode
+                 modifiers:providedGroup.utsModifiers
+                 order:providedGroup.utsOrder
+                 entityVersion:providedGroup.utsEntityVersion
+                 remoteId:providedGroup.utsRemoteID
+                 updateTime:providedGroup.utsUpdateTime
+                 markAsUpdated:NO];
+            }
 
             *updated = existingGroup;
 
@@ -3049,18 +3090,36 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
             existingProject.updateTime == nil ||
             [providedProject.utsUpdateTime isGreaterThan:existingProject.updateTime]) {
 
-            [existingProject
-             updateWithName:providedProject.utsName
-             color:providedProject.utsColor
-             archived:providedProject.utsArchived
-             filteredModifiers:providedProject.utsFilteredModifiers
-             keyCode:providedProject.utsKeyCode
-             modifiers:providedProject.utsModifiers
-             order:providedProject.utsOrder
-             entityVersion:providedProject.utsEntityVersion
-             remoteId:providedProject.utsRemoteID
-             updateTime:providedProject.utsUpdateTime
-             markAsUpdated:NO];
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
+
+                [existingProject
+                 updateWithName:providedProject.utsName
+                 color:existingProject.colorValue
+                 archived:existingProject.archivedValue
+                 filteredModifiers:existingProject.filteredModifiersValue
+                 keyCode:existingProject.keyCodeValue
+                 modifiers:existingProject.modifiersValue
+                 order:existingProject.orderValue
+                 entityVersion:existingProject.entityVersionValue
+                 remoteId:providedProject.utsRemoteID
+                 updateTime:providedProject.utsUpdateTime
+                 markAsUpdated:NO];
+
+            } else {
+
+                [existingProject
+                 updateWithName:providedProject.utsName
+                 color:providedProject.utsColor
+                 archived:providedProject.utsArchived
+                 filteredModifiers:providedProject.utsFilteredModifiers
+                 keyCode:providedProject.utsKeyCode
+                 modifiers:providedProject.utsModifiers
+                 order:providedProject.utsOrder
+                 entityVersion:providedProject.utsEntityVersion
+                 remoteId:providedProject.utsRemoteID
+                 updateTime:providedProject.utsUpdateTime
+                 markAsUpdated:NO];
+            }
 
             existingProject.parent = existingParent;
             existingProject.dataVersionValue = providedProject.utsDataVersion;
@@ -3190,7 +3249,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
     }
 
     if (existingProject == nil) {
-        NSLog(@"SYNC: Missing timer project!!! providerTimer: %@", providedTimer);
+//        NSLog(@"SYNC: Missing timer project!!! providerTimer: %@", providedTimer);
         [existingTimer markEntityAsDeleted];
         return;
     }

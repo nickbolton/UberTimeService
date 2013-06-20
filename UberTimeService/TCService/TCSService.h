@@ -61,7 +61,8 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
 - (void)authenticateUser:(NSString *)username
                 password:(NSString *)password
-                 success:(void(^)(void))successBlock
+        providerInstance:(TCSProviderInstance *)providerInstance
+                 success:(void(^)(NSString *userID))successBlock
                  failure:(void(^)(NSError *error))failureBlock;
 
 - (void)updateProviderInstanceUserIdIfNeeded:(TCSProviderInstance *)providerInstance

@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, TCErrorCode) {
 
     TCErrorRequestInvalidCredentials,
     TCErrorRequestMissingResource,
+    TCErrorRequestRemoteTimePeriodLocked,
     TCErrorRequestServerError,
     TCErrorRequestUnknownError,
 };
