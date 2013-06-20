@@ -2959,7 +2959,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
             *updated = existingGroup;
 
-            if (providerInstance != _syncingRemoteProvider) {
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
                 existingGroup.dataVersionValue = [TCSService sharedInstance].dataVersion;
             }
 
@@ -2976,10 +2976,10 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
         [TCSGroup MR_createInContext:context];
         group.providerInstance = providerInstance;
         
-        if (providerInstance == _syncingRemoteProvider) {
-            group.dataVersionValue = providedGroup.utsDataVersion;
-        } else {
+        if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
             group.dataVersionValue = [TCSService sharedInstance].dataVersion;
+        } else {
+            group.dataVersionValue = providedGroup.utsDataVersion;
         }
 
         [group
@@ -3067,7 +3067,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
             *updated = existingProject;
 
-            if (providerInstance != _syncingRemoteProvider) {
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
                 existingProject.dataVersionValue = [TCSService sharedInstance].dataVersion;
             }
 
@@ -3084,10 +3084,10 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
         [TCSProject MR_createInContext:context];
         project.providerInstance = providerInstance;
 
-        if (providerInstance == _syncingRemoteProvider) {
-            project.dataVersionValue = providedProject.utsDataVersion;
-        } else {
+        if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
             project.dataVersionValue = [TCSService sharedInstance].dataVersion;
+        } else {
+            project.dataVersionValue = providedProject.utsDataVersion;
         }
 
         [project
@@ -3201,9 +3201,32 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
             existingTimer.updateTime == nil ||
             [providedTimer.utsUpdateTime isGreaterThan:existingTimer.updateTime]) {
 
+            NSDate *startTime;
+            NSDate *endTime;
+
+            if (providedTimer.startTimeProvided) {
+
+                startTime = providedTimer.utsStartTime;
+                endTime = providedTimer.utsEndTime;
+
+            } else {
+
+                NSTimeInterval currentDuration = existingTimer.combinedTime;
+                NSTimeInterval updatedDuration = providedTimer.utsDuration;
+
+                startTime = existingTimer.startTime;
+                endTime = existingTimer.endTime;
+
+                if (currentDuration != updatedDuration) {
+                    endTime =
+                    [existingTimer.startTime
+                     dateByAddingTimeInterval:updatedDuration];
+                }
+            }
+
             [existingTimer
-             updateWithStartTime:providedTimer.utsStartTime
-             endTime:providedTimer.utsEndTime
+             updateWithStartTime:startTime
+             endTime:endTime
              adjustment:providedTimer.utsAdjustment
              message:providedTimer.utsMessage
              entityVersion:providedTimer.utsEntityVersion
@@ -3215,7 +3238,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
             *updated = existingTimer;
 
-            if (providerInstance != _syncingRemoteProvider) {
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
                 existingTimer.dataVersionValue = [TCSService sharedInstance].dataVersion;
             }
 
@@ -3232,10 +3255,10 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
         [TCSTimer MR_createInContext:context];
         timer.providerInstance = providerInstance;
 
-        if (providerInstance == _syncingRemoteProvider) {
-            timer.dataVersionValue = providedTimer.utsDataVersion;
-        } else {
+        if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
             timer.dataVersionValue = [TCSService sharedInstance].dataVersion;
+        } else {
+            timer.dataVersionValue = providedTimer.utsDataVersion;
         }
 
         [timer
@@ -3296,7 +3319,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
             *updated = existingCannedMessage;
 
-            if (providerInstance != _syncingRemoteProvider) {
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
                 existingCannedMessage.dataVersionValue = [TCSService sharedInstance].dataVersion;
             }
 
@@ -3313,10 +3336,10 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
         [TCSCannedMessage MR_createInContext:context];
         cannedMessage.providerInstance = providerInstance;
 
-        if (providerInstance == _syncingRemoteProvider) {
-            cannedMessage.dataVersionValue = providedCannedMessage.utsDataVersion;
-        } else {
+        if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
             cannedMessage.dataVersionValue = [TCSService sharedInstance].dataVersion;
+        } else {
+            cannedMessage.dataVersionValue = providedCannedMessage.utsDataVersion;
         }
 
         [cannedMessage

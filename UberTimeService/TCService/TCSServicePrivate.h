@@ -71,6 +71,8 @@ extern NSString * const kTCSServicePrivateRemoteSyncCompletedNotification;
 @property (nonatomic, readonly) NSDate *utsStartTime;
 @property (nonatomic, readonly) NSDate *utsEndTime;
 @property (nonatomic, readonly) NSTimeInterval utsAdjustment;
+@property (nonatomic, readonly) BOOL startTimeProvided;
+@property (nonatomic, readonly) NSTimeInterval utsDuration;
 @end
 
 @protocol TCSProvidedCannedMessage <TCSProvidedBaseEntity>

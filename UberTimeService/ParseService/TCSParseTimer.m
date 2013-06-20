@@ -49,4 +49,12 @@
     return self.projectID;
 }
 
+- (BOOL)startTimeProvided {
+    return YES;
+}
+
+- (NSTimeInterval)utsDuration {
+    return 0.0f;
+}
+
 @end

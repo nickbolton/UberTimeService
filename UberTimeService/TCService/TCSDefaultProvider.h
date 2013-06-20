@@ -51,5 +51,7 @@
 @property (nonatomic) NSTimeInterval utsAdjustment;
 @property (nonatomic, strong) NSDate *utsStartTime;
 @property (nonatomic, strong) NSDate *utsEndTime;
+@property (nonatomic) BOOL startTimeProvided;
 @property (nonatomic, strong) NSString *utsProjectID;
+@property (nonatomic) NSTimeInterval utsDuration;
 @end

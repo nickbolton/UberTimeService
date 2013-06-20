@@ -721,8 +721,10 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             NSString *startedAt = timerDict[@"started_at"];
             NSString *timerStartedAt = timerDict[@"timer_started_at"];
             NSString *startDateString = nil;
+            BOOL timerStartTimeProvided =
+            timerStartedAt != nil && timerStartedAt != (id)[NSNull null];
 
-            if (timerStartedAt != nil && timerStartedAt != (id)[NSNull null]) {
+            if (timerStartTimeProvided) {
                 startDateString = timerStartedAt;
             } else {
 
@@ -739,6 +741,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             timer.utsEndTime = [timer.utsStartTime dateByAddingTimeInterval:duration];
             timer.utsMessage = timerDict[@"notes"];
             timer.utsProviderInstanceID = providerInstance.objectID;
+            timer.startTimeProvided = timerStartTimeProvided;
+            timer.utsDuration = duration;
 
             timer.utsProjectID =
             [NSString stringWithFormat:@"%@%@%@",
