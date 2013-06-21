@@ -221,6 +221,11 @@
     return [TCSProject class];
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"name: %@, remoteID: %@, parentID: %@, dataVersion: %d, entityVersion: %d, updateTime: %@",
+            self.utsName, self.utsRemoteID, self.utsParentID, self.utsDataVersion, self.utsEntityVersion, self.utsUpdateTime];
+}
+
 @end
 
 @implementation TCSDefaultProviderTimer

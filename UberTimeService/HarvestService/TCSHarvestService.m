@@ -575,14 +575,22 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
 
         __block NSArray *groupsAndProjects = nil;
         __block NSArray *timers = nil;
+        __block NSDate *projectsUpdateTime = nil;
+        __block NSDate *timersUpdateTime = nil;
 
         if (providerInstance.userID != nil) {
             dispatch_group_async(group, queue, ^{
-                groupsAndProjects = [self fetchUpdatedProjectObjects:providerInstance];
+                groupsAndProjects =
+                [self
+                 fetchUpdatedProjectObjects:providerInstance
+                 systemTime:&projectsUpdateTime];
             });
 
             dispatch_group_async(group, queue, ^{
-                timers = [self fetchUpdatedTimerObjects:providerInstance];
+                timers =
+                [self
+                 fetchUpdatedTimerObjects:providerInstance
+                 systemTime:&timersUpdateTime];
             });
         }
 
@@ -607,11 +615,13 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
              providerName:NSStringFromClass([self class])];
 
             if (updatePollingDate) {
-                for (TCSDefaultProviderBase *entity in updatedEntities) {
-                    if (_lastPollingDate == nil || [entity.utsUpdateTime isGreaterThan:_lastPollingDate]) {
-                        self.lastPollingDate =
-                        entity.utsUpdateTime;
-                    }
+
+                if (_lastPollingDate == nil || [projectsUpdateTime isGreaterThan:_lastPollingDate]) {
+                    self.lastPollingDate = projectsUpdateTime;
+                }
+
+                if (_lastPollingDate == nil || [timersUpdateTime isGreaterThan:_lastPollingDate]) {
+                    self.lastPollingDate = timersUpdateTime;
                 }
 
                 if (_lastPollingDate != nil) {
@@ -630,7 +640,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     });
 }
 
-- (NSArray *)fetchUpdatedProjectObjects:(TCSProviderInstance *)providerInstance {
+- (NSArray *)fetchUpdatedProjectObjects:(TCSProviderInstance *)providerInstance
+                             systemTime:(NSDate **)systemTime {
 
     NSString *authString =
     [NSString
@@ -672,12 +683,20 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     NSArray *projects;
     NSDate *updateTime = json[kTCSJsonServiceProviderSystemTimeKey];
 
+    if (updateTime == nil) {
+        updateTime = [[TCSService sharedInstance] systemTime];
+    }
+
+    if (systemTime != nil) {
+        *systemTime = updateTime;
+    }
+
     for (NSDictionary *groupDict in groups) {
 
         TCSDefaultProviderGroup *group = [[TCSDefaultProviderGroup alloc] init];
         group.utsRemoteID = groupDict[@"id"];
         group.utsName = groupDict[@"name"];
-        group.utsUpdateTime = updateTime;
+        group.utsUpdateTime = nil;//updateTime;
         group.utsProviderInstanceID = providerInstance.objectID;
 
         [normalizedGroups addObject:group];
@@ -693,7 +712,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
             project.utsName = projectDict[@"name"];
             project.utsParentID = group.utsRemoteID;
             project.utsProviderInstanceID = providerInstance.objectID;
-            project.utsUpdateTime = updateTime;
+            project.utsUpdateTime = nil;//updateTime;
 
             [normalizedProjects addObject:project];
         }
@@ -704,7 +723,8 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     return normalizedGroups;
 }
 
-- (NSArray *)fetchUpdatedTimerObjects:(TCSProviderInstance *)providerInstance {
+- (NSArray *)fetchUpdatedTimerObjects:(TCSProviderInstance *)providerInstance
+                           systemTime:(NSDate **)systemTime {
 
     NSString *authString =
     [NSString
@@ -746,7 +766,11 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
     NSDate *updateTime = json[kTCSJsonServiceProviderSystemTimeKey];
 
     if (updateTime == nil) {
-        updateTime = [NSDate date];
+        updateTime = [[TCSService sharedInstance] systemTime];
+    }
+
+    if (systemTime != nil) {
+        *systemTime = updateTime;
     }
 
     for (NSDictionary *dayEntry in timers) {
@@ -794,7 +818,7 @@ NSString * const kTCSHarvestLastPollingDateKey = @"harvest-last-polling-date";
              kTCSHarvestProjectIDSeparator,
              timerDict[@"task_id"]];
 
-            timer.utsUpdateTime = updateTime;
+            timer.utsUpdateTime = nil;//updateTime;
 
             [normalizedTimers addObject:timer];
         }

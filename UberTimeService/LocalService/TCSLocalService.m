@@ -2945,6 +2945,13 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
     NSAssert(providedGroup.utsRemoteID != nil, @"group remoteID is nil");
 
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [self remoteProviderForInstance:providerInstance];
+
+    NSDate *updateTime =
+    providedGroup.utsUpdateTime != nil ? providedGroup.utsUpdateTime :
+    [[TCSService sharedInstance] systemTime];
+
     NSArray *entities =
     [TCSGroup
      MR_findByAttribute:@"remoteId"
@@ -2979,7 +2986,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                  order:existingGroup.orderValue
                  entityVersion:existingGroup.entityVersionValue
                  remoteId:providedGroup.utsRemoteID
-                 updateTime:providedGroup.utsUpdateTime
+                 updateTime:updateTime
                  markAsUpdated:NO];
 
             } else {
@@ -2994,7 +3001,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                  order:providedGroup.utsOrder
                  entityVersion:providedGroup.utsEntityVersion
                  remoteId:providedGroup.utsRemoteID
-                 updateTime:providedGroup.utsUpdateTime
+                 updateTime:updateTime
                  markAsUpdated:NO];
             }
 
@@ -3033,7 +3040,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          order:providedGroup.utsOrder
          entityVersion:providedGroup.utsEntityVersion
          remoteId:providedGroup.utsRemoteID
-         updateTime:providedGroup.utsUpdateTime
+         updateTime:updateTime
          markAsUpdated:NO];
 
         *inserted = group;
@@ -3050,23 +3057,17 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
     NSAssert(providedProject.utsRemoteID != nil, @"project remoteID is nil");
 
-    NSArray *entities =
-    [TCSProject
-     MR_findByAttribute:@"remoteId"
-     withValue:providedProject.utsRemoteID
-     inContext:context];
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [self remoteProviderForInstance:providerInstance];
 
-    if (entities.count > 1) {
-        NSLog(@"SYNC: Warn: multiple projects exist with remoteID: %@",
-          providedProject.utsRemoteID);
-    }
-
-    *inserted = nil;
-    *updated = nil;
-
-    TCSProject *existingProject = entities.firstObject;
+    NSDate *updateTime =
+    providedProject.utsUpdateTime != nil ? providedProject.utsUpdateTime :
+    [[TCSService sharedInstance] systemTime];
 
     TCSGroup *existingParent = nil;
+    TCSProject *existingProject = nil;
+    
+    NSArray *entities;
 
     if (providedProject.utsParentID != nil) {
 
@@ -3083,6 +3084,37 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
         existingParent = entities.firstObject;
     }
+
+    if (existingParent != nil) {
+
+        NSPredicate *predicate =
+        [NSPredicate predicateWithFormat:@"remoteId = %@ and parent = %@",
+         providedProject.utsRemoteID, existingParent];
+
+        entities =
+        [TCSProject
+         MR_findAllWithPredicate:predicate
+         inContext:context];
+
+    } else {
+
+        entities =
+        [TCSProject
+         MR_findByAttribute:@"remoteId"
+         withValue:providedProject.utsRemoteID
+         inContext:context];
+
+    }
+
+    if (entities.count > 1) {
+        NSLog(@"SYNC: Warn: multiple projects exist with remoteID: %@",
+              providedProject.utsRemoteID);
+    }
+
+    existingProject = entities.firstObject;
+
+    *inserted = nil;
+    *updated = nil;
 
     if (existingProject != nil) {
 
@@ -3102,7 +3134,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                  order:existingProject.orderValue
                  entityVersion:existingProject.entityVersionValue
                  remoteId:providedProject.utsRemoteID
-                 updateTime:providedProject.utsUpdateTime
+                 updateTime:updateTime
                  markAsUpdated:NO];
 
             } else {
@@ -3117,8 +3149,9 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                  order:providedProject.utsOrder
                  entityVersion:providedProject.utsEntityVersion
                  remoteId:providedProject.utsRemoteID
-                 updateTime:providedProject.utsUpdateTime
+                 updateTime:updateTime
                  markAsUpdated:NO];
+
             }
 
             existingProject.parent = existingParent;
@@ -3159,7 +3192,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          order:providedProject.utsOrder
          entityVersion:providedProject.utsEntityVersion
          remoteId:providedProject.utsRemoteID
-         updateTime:providedProject.utsUpdateTime
+         updateTime:updateTime
          markAsUpdated:NO];
 
         id <TCSServiceRemoteProvider> remoteProvider =
@@ -3171,7 +3204,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 
         *inserted = project;
         
-        NSLog(@"SYNC: created new project: %@", project);
+//        NSLog(@"SYNC: created new project: %@", project);
     }
 }
 
@@ -3182,6 +3215,13 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                 inContext:(NSManagedObjectContext *)context {
 
     NSAssert(providedTimer.utsRemoteID != nil, @"timer remoteID is nil");
+
+    NSDate *updateTime =
+    providedTimer.utsUpdateTime != nil ? providedTimer.utsUpdateTime :
+    [[TCSService sharedInstance] systemTime];
+
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [self remoteProviderForInstance:providerInstance];
 
     NSArray *entities =
     [TCSTimer
@@ -3283,6 +3323,12 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                 }
             }
 
+            if ([self remoteProviderForInstance:providerInstance] != _syncingRemoteProvider) {
+                if (existingTimer.endTime == nil) {
+                    endTime = nil;
+                }
+            }
+
             [existingTimer
              updateWithStartTime:startTime
              endTime:endTime
@@ -3290,7 +3336,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
              message:providedTimer.utsMessage
              entityVersion:providedTimer.utsEntityVersion
              remoteId:providedTimer.utsRemoteID
-             updateTime:providedTimer.utsUpdateTime
+             updateTime:updateTime
              markAsUpdated:NO];
 
             existingTimer.project = existingProject;
@@ -3327,7 +3373,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          message:providedTimer.utsMessage
          entityVersion:providedTimer.utsEntityVersion
          remoteId:providedTimer.utsRemoteID
-         updateTime:providedTimer.utsUpdateTime
+         updateTime:updateTime
          markAsUpdated:NO];
 
         timer.project = existingProject;
@@ -3345,6 +3391,13 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
                         inContext:(NSManagedObjectContext *)context {
 
     NSAssert(providedCannedMessage.utsRemoteID != nil, @"cannedMessage remoteID is nil");
+
+    id <TCSServiceRemoteProvider> remoteProvider =
+    [self remoteProviderForInstance:providerInstance];
+
+    NSDate *updateTime =
+    providedCannedMessage.utsUpdateTime != nil ? providedCannedMessage.utsUpdateTime :
+    [[TCSService sharedInstance] systemTime];
 
     NSArray *entities =
     [TCSCannedMessage
@@ -3373,7 +3426,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
              order:providedCannedMessage.utsOrder
              entityVersion:providedCannedMessage.utsEntityVersion
              remoteId:providedCannedMessage.utsRemoteID
-             updateTime:providedCannedMessage.utsUpdateTime
+             updateTime:updateTime
              markAsUpdated:NO];
 
             *updated = existingCannedMessage;
@@ -3406,7 +3459,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          order:providedCannedMessage.utsOrder
          entityVersion:providedCannedMessage.utsEntityVersion
          remoteId:providedCannedMessage.utsRemoteID
-         updateTime:providedCannedMessage.utsUpdateTime
+         updateTime:updateTime
          markAsUpdated:NO];
 
         *inserted = cannedMessage;
