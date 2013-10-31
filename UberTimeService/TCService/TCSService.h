@@ -19,6 +19,11 @@ extern NSString * const kTCSServiceDataResetNotification;
 extern NSString * const kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification;
 extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
+extern NSString * const kTCSiCloudServiceLocalStoreDeadNotification;
+extern NSString * const kTCSiCloudServiceLocalStoreLoadedNotification;
+extern NSString * const kTCSiCloudServiceCloudStoreKey;
+extern NSString * const kTCSiCloudServiceUbiquityStoreErrorCauseKey;
+
 @class TCSiCloudService;
 
 @protocol TCSServiceDelegate <NSObject>
