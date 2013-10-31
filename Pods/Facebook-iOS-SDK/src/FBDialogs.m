@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
+#import "FBDialogs+Internal.h"
+#import "FBDialogsData+Internal.h"
+#import "FBDialogsParams+Internal.h"
+
 #import <Social/Social.h>
 
-#import "FBDialogs+Internal.h"
-#import "FBSession.h"
-#import "FBError.h"
-#import "FBUtility.h"
-#import "FBAppCall+Internal.h"
-#import "FBAppBridge.h"
-#import "FBAccessTokenData.h"
-#import "FBInsights+Internal.h"
-#import "FBDialogsParams+Internal.h"
-#import "FBLoginDialogParams.h"
-#import "FBShareDialogParams.h"
-#import "FBOpenGraphActionShareDialogParams.h"
-#import "FBDialogsData+Internal.h"
-#import "FBAppLinkData+Internal.h"
 #import "FBAccessTokenData+Internal.h"
+#import "FBAccessTokenData.h"
+#import "FBAppBridge.h"
+#import "FBAppCall+Internal.h"
+#import "FBAppEvents+Internal.h"
+#import "FBAppLinkData+Internal.h"
+#import "FBDynamicFrameworkLoader.h"
+#import "FBError.h"
+#import "FBLoginDialogParams.h"
+#import "FBOpenGraphActionShareDialogParams.h"
+#import "FBSession.h"
 #import "FBSettings.h"
-
-static NSString *const kFBNativeLoginMinVersion = @"20130214";
+#import "FBShareDialogParams.h"
+#import "FBUtility.h"
 
 @interface FBDialogs ()
 
@@ -51,7 +51,7 @@ static NSString *const kFBNativeLoginMinVersion = @"20130214";
                                           handler:(FBOSIntegratedShareDialogHandler)handler {
     NSArray *images = image ? [NSArray arrayWithObject:image] : nil;
     NSArray *urls = url ? [NSArray arrayWithObject:url] : nil;
-    
+
     return [self presentOSIntegratedShareDialogModallyFrom:viewController
                                                    session:nil
                                                initialText:initialText
@@ -84,7 +84,7 @@ static NSString *const kFBNativeLoginMinVersion = @"20130214";
     if (!composeViewController) {
         return NO;
     }
-    
+
     if (initialText) {
         [composeViewController setInitialText:initialText];
     }
@@ -98,29 +98,29 @@ static NSString *const kFBNativeLoginMinVersion = @"20130214";
             [composeViewController addURL:url];
         }
     }
-    
+
     [composeViewController setCompletionHandler:^(SLComposeViewControllerResult result) {
         BOOL cancelled = (result == SLComposeViewControllerResultCancelled);
-        
-        [FBInsights logImplicitEvent:FBInsightsEventNameShareSheetDismiss
-                          valueToSum:1.0
+
+        [FBAppEvents logImplicitEvent:FBAppEventNameShareSheetDismiss
+                          valueToSum:nil
                           parameters:@{ @"render_type" : @"Native",
-FBInsightsEventParameterDialogOutcome : (cancelled
-                                         ? FBInsightsDialogOutcomeValue_Cancelled
-                                         : FBInsightsDialogOutcomeValue_Completed) }
+                                        FBAppEventParameterDialogOutcome : (cancelled
+                                         ? FBAppEventsDialogOutcomeValue_Cancelled
+                                         : FBAppEventsDialogOutcomeValue_Completed) }
                              session:session];
-        
+
         if (handler) {
             handler(cancelled ?  FBOSIntegratedShareDialogResultCancelled :  FBOSIntegratedShareDialogResultSucceeded, nil);
         }
     }];
-    
-    [FBInsights logImplicitEvent:FBInsightsEventNameShareSheetLaunch
-                      valueToSum:1.0
+
+    [FBAppEvents logImplicitEvent:FBAppEventNameShareSheetLaunch
+                      valueToSum:nil
                       parameters:@{ @"render_type" : @"Native" }
                          session:session];
-    [viewController presentModalViewController:composeViewController animated:YES];
-    
+    [viewController presentViewController:composeViewController animated:YES completion:nil];
+
     return YES;
 }
 
@@ -129,63 +129,50 @@ FBInsightsEventParameterDialogOutcome : (cancelled
                                                handler:nil] != nil;
 }
 
-// Private method to abstract away url polling for the present* and canPresent* methods for
-// the FB Login Dialog
-+ (NSString *)versionForLoginDialogWithParams:(FBLoginDialogParams *)params {
-    // Select the right minimum version for the passed in combination of params.
-    // NOTE: For now, there is only one.
-    NSString *minVersion = kFBNativeLoginMinVersion;
-    
-    return [FBAppBridge installedFBNativeAppVersionForMethod:@"auth3" minVersion:minVersion];
-}
-
 + (BOOL)canPresentLoginDialogWithParams:(FBLoginDialogParams *)params {
-    NSString *version = [FBDialogs versionForLoginDialogWithParams:params];
-    return (version != nil);
+    NSString *version = [params appBridgeVersion];
+    // Ensure version support and that FBAppCall can be constructed correctly (i.e., in case of urlSchemeSuffix overrides).
+    return (version != nil && [[[FBAppCall alloc] initWithID:nil enforceScheme:YES appID:params.session.appID urlSchemeSuffix:params.session.urlSchemeSuffix] autorelease]);
 }
 
 + (FBAppCall *)presentLoginDialogWithParams:(FBLoginDialogParams *)params
                                   clientState:(NSDictionary *)clientState
                                       handler:(FBDialogAppCallCompletionHandler)handler {
-    FBAppCall *call = nil;
-    NSString *version = [FBDialogs versionForLoginDialogWithParams:params];
-    if (version) {
+    FBAppCall *call = [[[FBAppCall alloc] initWithID:nil enforceScheme:YES appID:params.session.appID urlSchemeSuffix:params.session.urlSchemeSuffix] autorelease];
+    NSString *version = [params appBridgeVersion];
+    if (version && call) {
         FBDialogsData *dialogData = [[[FBDialogsData alloc] initWithMethod:@"auth3"
                                                                  arguments:[params dictionaryMethodArgs]]
                                      autorelease];
         dialogData.clientState = clientState;
-        
-        call = [[[FBAppCall alloc] init] autorelease];
+
         call.dialogData = dialogData;
-        
-        
+
         // log the timestamp for starting the switch to the Facebook application
-        [FBInsights logImplicitEvent:FBInsightsEventNameFBDialogsNativeLoginDialogStart
-                          valueToSum:1.0
+        [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsNativeLoginDialogStart
+                          valueToSum:nil
                           parameters:@{
-                            FBInsightsNativeLoginDialogStartTime : [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])],
+                            FBAppEventsNativeLoginDialogStartTime : [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])],
                             @"action_id" : [call ID],
                             @"app_id" : [FBSettings defaultAppID]
                           }
                           session:nil];
         [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
-                                                   version:version
-                                         completionHandler:handler];
+                                                    version:version
+                                                    session:params.session
+                                          completionHandler:^(FBAppCall *call) {
+                                              if (handler) {
+                                                  handler(call, call.dialogData.results, call.error);
+                                              }
+                                          }];
+        return call;
     }
-    
-    return call;
+
+    return nil;
 }
 
 + (BOOL)canPresentShareDialogWithParams:(FBShareDialogParams *)params {
-    BOOL canPresent = [params appBridgeVersion] != nil;
-    [FBInsights logImplicitEvent:FBInsightsEventNameFBDialogsCanPresentShareDialog
-                      valueToSum:1.0
-                      parameters:@{ FBInsightsEventParameterDialogOutcome :
-                                         canPresent ?
-                                            FBInsightsDialogOutcomeValue_Completed :
-                                            FBInsightsDialogOutcomeValue_Failed }
-                         session:nil];
-    return canPresent;
+    return [params appBridgeVersion] != nil;
 }
 
 + (FBAppCall *)presentShareDialogWithParams:(FBShareDialogParams *)params
@@ -198,15 +185,26 @@ FBInsightsEventParameterDialogOutcome : (cancelled
                                                                  arguments:[params dictionaryMethodArgs]]
                                      autorelease];
         dialogData.clientState = clientState;
-        
+
         call = [[[FBAppCall alloc] init] autorelease];
         call.dialogData = dialogData;
-        
+
         [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
-                                                   version:version
-                                         completionHandler:handler];
+                                                    version:version
+                                                    session:nil
+                                          completionHandler:^(FBAppCall *call) {
+                                              if (handler) {
+                                                  handler(call, call.dialogData.results, call.error);
+                                              }
+                                          }];
     }
-    
+    [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsPresentShareDialog
+                       valueToSum:nil
+                       parameters:@{ FBAppEventParameterDialogOutcome : call ?
+                                                                        FBAppEventsDialogOutcomeValue_Completed :
+                                                                        FBAppEventsDialogOutcomeValue_Failed }
+                          session:nil];
+
     return call;
 }
 
@@ -247,22 +245,14 @@ FBInsightsEventParameterDialogOutcome : (cancelled
     params.caption = caption;
     params.description = description;
     params.picture = picture;
-    
+
     return [self presentShareDialogWithParams:params
                                   clientState:clientState
                                       handler:handler];
 }
 
 + (BOOL)canPresentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)params {
-    BOOL canPresent = [params appBridgeVersion] != nil;
-    [FBInsights logImplicitEvent:FBInsightsEventNameFBDialogsCanPresentShareDialogOG
-                      valueToSum:1.0
-                      parameters:@{ FBInsightsEventParameterDialogOutcome :
-                                         canPresent ?
-                                            FBInsightsDialogOutcomeValue_Completed :
-                                            FBInsightsDialogOutcomeValue_Failed }
-                         session:nil];
-    return canPresent;
+    return [params appBridgeVersion] != nil;
 }
 
 + (FBAppCall *)presentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)params
@@ -285,13 +275,24 @@ FBInsightsEventParameterDialogOutcome : (cancelled
             dialogData.clientState = clientState;
 
             call.dialogData = dialogData;
-        
+
             [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                         version:version
-                                              completionHandler:handler];
+                                                        session:nil
+                                              completionHandler:^(FBAppCall *call) {
+                                                  if (handler) {
+                                                      handler(call, call.dialogData.results, call.error);
+                                                  }
+                                              }];
         }
     }
-    
+    [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsPresentShareDialogOG
+                       valueToSum:nil
+                       parameters:@{ FBAppEventParameterDialogOutcome : call ?
+                                                                        FBAppEventsDialogOutcomeValue_Completed :
+                                                                        FBAppEventsDialogOutcomeValue_Failed }
+                          session:nil];
+
     return call;
 }
 
@@ -312,12 +313,12 @@ FBInsightsEventParameterDialogOutcome : (cancelled
                                          clientState:(NSDictionary *)clientState
                                              handler:(FBDialogAppCallCompletionHandler) handler {
     FBOpenGraphActionShareDialogParams *params = [[[FBOpenGraphActionShareDialogParams alloc] init] autorelease];
-    
+
     // If we have OG objects, we want to pass just their URL or id to the share dialog.
     params.action = action;
     params.actionType = actionType;
     params.previewPropertyName = previewPropertyName;
-    
+
     return [self presentShareDialogWithOpenGraphActionParams:params
                                                  clientState:clientState
                                                      handler:handler];
@@ -326,16 +327,16 @@ FBInsightsEventParameterDialogOutcome : (cancelled
 + (SLComposeViewController*)composeViewControllerWithSession:(FBSession*)session
                                                      handler:(FBOSIntegratedShareDialogHandler)handler {
     // Can we even call the iOS API?
-    Class composeViewControllerClass = [SLComposeViewController class];
+    Class composeViewControllerClass = [[FBDynamicFrameworkLoader loadClass:@"SLComposeViewController" withFramework:@"Social"] class];
     if (composeViewControllerClass == nil ||
-        [composeViewControllerClass isAvailableForServiceType:SLServiceTypeFacebook] == NO) {
+        [composeViewControllerClass isAvailableForServiceType:[FBDynamicFrameworkLoader loadStringConstant:@"SLServiceTypeFacebook" withFramework:@"Social"]] == NO) {
         if (handler) {
             handler( FBOSIntegratedShareDialogResultError, [self createError:FBErrorDialogNotSupported
                                                                      session:session]);
         }
         return nil;
     }
-    
+
     if (session == nil) {
         // No session provided -- do we have an activeSession? We must either have a session that
         // was authenticated with native auth, or no session at all (in which case the app is
@@ -354,8 +355,8 @@ FBInsightsEventParameterDialogOutcome : (cancelled
             return nil;
         }
     }
-    
-    SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:SLServiceTypeFacebook];
+
+    SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:[FBDynamicFrameworkLoader loadStringConstant:@"SLServiceTypeFacebook" withFramework:@"Social"]];
     if (composeViewController == nil) {
         if (handler) {
             handler( FBOSIntegratedShareDialogResultError, [self createError:FBErrorDialogCantBeDisplayed

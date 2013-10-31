@@ -9,14 +9,14 @@
 // AFNetworking
 #define COCOAPODS_POD_AVAILABLE_AFNetworking
 #define COCOAPODS_VERSION_MAJOR_AFNetworking 1
-#define COCOAPODS_VERSION_MINOR_AFNetworking 2
-#define COCOAPODS_VERSION_PATCH_AFNetworking 1
+#define COCOAPODS_VERSION_MINOR_AFNetworking 3
+#define COCOAPODS_VERSION_PATCH_AFNetworking 3
 
 // Facebook-iOS-SDK
 #define COCOAPODS_POD_AVAILABLE_Facebook_iOS_SDK
 #define COCOAPODS_VERSION_MAJOR_Facebook_iOS_SDK 3
-#define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 5
-#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 1
+#define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 9
+#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 0
 
 // GCNetworkReachability
 #define COCOAPODS_POD_AVAILABLE_GCNetworkReachability
@@ -28,12 +28,18 @@
 #define COCOAPODS_POD_AVAILABLE_GHUnitIOS
 #define COCOAPODS_VERSION_MAJOR_GHUnitIOS 0
 #define COCOAPODS_VERSION_MINOR_GHUnitIOS 5
-#define COCOAPODS_VERSION_PATCH_GHUnitIOS 6
+#define COCOAPODS_VERSION_PATCH_GHUnitIOS 7
+
+// JRSwizzle
+#define COCOAPODS_POD_AVAILABLE_JRSwizzle
+#define COCOAPODS_VERSION_MAJOR_JRSwizzle 1
+#define COCOAPODS_VERSION_MINOR_JRSwizzle 0
+#define COCOAPODS_VERSION_PATCH_JRSwizzle 0
 
 // MagicalRecord
 #define COCOAPODS_POD_AVAILABLE_MagicalRecord
 #define COCOAPODS_VERSION_MAJOR_MagicalRecord 2
-#define COCOAPODS_VERSION_MINOR_MagicalRecord 1
+#define COCOAPODS_VERSION_MINOR_MagicalRecord 2
 #define COCOAPODS_VERSION_PATCH_MagicalRecord 0
 
 // PBFoundation
@@ -46,5 +52,11 @@
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
 #define COCOAPODS_VERSION_MINOR_Parse 2
-#define COCOAPODS_VERSION_PATCH_Parse 9
+#define COCOAPODS_VERSION_PATCH_Parse 15
+
+// UbiquityStoreManager
+#define COCOAPODS_POD_AVAILABLE_UbiquityStoreManager
+#define COCOAPODS_VERSION_MAJOR_UbiquityStoreManager 0
+#define COCOAPODS_VERSION_MINOR_UbiquityStoreManager 1
+#define COCOAPODS_VERSION_PATCH_UbiquityStoreManager 0
 

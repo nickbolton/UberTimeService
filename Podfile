@@ -8,6 +8,7 @@ platform :ios, :deployment_target => '6.0'
       pod 'AFNetworking', '~> 1.2'
       pod 'Facebook-iOS-SDK', '~> 3.5'
       pod 'GCNetworkReachability', '~> 1.3'
+      pod 'UbiquityStoreManager', '~> 0.1'
   end
 
   target :'IntegrationTests' do
@@ -19,6 +20,7 @@ platform :ios, :deployment_target => '6.0'
       pod 'Facebook-iOS-SDK', '~> 3.5'
       pod 'GCNetworkReachability', '~> 1.3'
       pod 'GHUnitIOS', '~> 0.5.6'
+      pod 'UbiquityStoreManager', '~> 0.1'
   end
 
 inhibit_all_warnings!
