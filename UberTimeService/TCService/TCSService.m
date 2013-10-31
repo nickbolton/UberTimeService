@@ -9,6 +9,7 @@
 #import "TCSService.h"
 #import "NSDate+Utilities.h"
 #import "TCSServicePrivate.h"
+#import "TCSiCloudService.h"
 
 NSString * const kTCSServicRemoteProviderNameKey = @"provider-name";
 NSString * const kTCSServicePrivateRemoteSyncCompletedNotification =
@@ -57,6 +58,32 @@ NSString * const kTCSServiceDataVersionKey = @"tcs-data-version";
 
     }
     return self;
+}
+
+- (void)fixCloudData {
+
+    if ([self.localService isKindOfClass:[TCSiCloudService class]]) {
+        [(TCSiCloudService *)self.localService fixCloudContent];
+    }
+}
+
+- (void)fixLocalData {
+
+    if ([self.localService isKindOfClass:[TCSiCloudService class]]) {
+        [(TCSiCloudService *)self.localService fixLocalContent];
+    }
+}
+
+- (BOOL)isCloudEnabled {
+    return
+    [self.localService isKindOfClass:[TCSiCloudService class]] &&
+    ((TCSiCloudService *)self.localService).isEnabled;
+}
+
+- (void)setCloudEnabled:(BOOL)enabled {
+    if ([self.localService isKindOfClass:[TCSiCloudService class]]) {
+        ((TCSiCloudService *)self.localService).enabled = enabled;
+    }
 }
 
 - (void)setDelegate:(id<TCSServiceDelegate>)delegate {

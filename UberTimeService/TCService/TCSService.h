@@ -19,10 +19,16 @@ extern NSString * const kTCSServiceDataResetNotification;
 extern NSString * const kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification;
 extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 
+@class TCSiCloudService;
+
 @protocol TCSServiceDelegate <NSObject>
 
 - (void)remoteSyncStarting;
 - (void)remoteSyncCompleted;
+
+@optional
+- (BOOL)iCloudService:(TCSiCloudService *)service
+handleCloudContentCorruptionWithHealthyStore:(BOOL)storeHealthy;
 
 @end
 
@@ -145,6 +151,10 @@ extern NSString * const kTCSServiceRemoteProviderInstanceKey;
 @property (nonatomic, readonly) NSManagedObjectContext *defaultLocalManagedObjectContext;
 @property (nonatomic, weak) id <TCSServiceDelegate> delegate;
 @property (nonatomic) NSInteger dataVersion;
+@property (nonatomic, getter = isCloudEnabled) BOOL cloudEnabled;
+
+- (void)fixCloudData;
+- (void)fixLocalData;
 
 - (NSDate *)systemTime;
 - (void)updateAppConfig;

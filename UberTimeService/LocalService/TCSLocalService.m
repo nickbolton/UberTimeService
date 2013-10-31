@@ -37,11 +37,7 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
     self = [super init];
     if (self) {
 
-#if IntegrationTests
-        [MagicalRecord setupCoreDataStackWithInMemoryStore];
-#else
-        [MagicalRecord setupCoreDataStackWithStoreNamed:@"TCSLocalService.data"];
-#endif
+        [self setupCoreDataStack];
 
 #if TARGET_OS_IPHONE
         [[NSNotificationCenter defaultCenter]
@@ -50,6 +46,12 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          name:UIApplicationDidEnterBackgroundNotification
          object:nil];
 #endif
+
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(applicationWillTerminate:)
+         name:UIApplicationWillTerminateNotification
+         object:nil];
 
         self.sweepTimer =
         [NSTimer
@@ -68,7 +70,19 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
     [_sweepTimer invalidate];
 }
 
+- (void)setupCoreDataStack {
+#if IntegrationTests
+    [MagicalRecord setupCoreDataStackWithInMemoryStore];
+#else
+    [MagicalRecord setupCoreDataStackWithStoreNamed:@"TCSLocalService.data"];
+#endif
+}
+
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
+    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification {
     [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
 }
 
