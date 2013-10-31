@@ -52,15 +52,6 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          selector:@selector(applicationWillTerminate:)
          name:UIApplicationWillTerminateNotification
          object:nil];
-
-        self.sweepTimer =
-        [NSTimer
-         scheduledTimerWithTimeInterval:5.0f
-         target:self
-         selector:@selector(handleRemoteProviderSyncing:)
-         userInfo:nil
-         repeats:YES];
-
     }
     return self;
 }
@@ -207,6 +198,26 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
 - (void)deleteAllDataFromRemoteSource:(NSInteger)dataVersion {
     [self resetData:dataVersion fromRemoteSource:YES];
 }
+
+#pragma mark - Getters and Setters
+
+- (void)setSyncingRemoteProvider:(id<TCSServiceSyncingRemoteProvider>)syncingRemoteProvider {
+    _syncingRemoteProvider = syncingRemoteProvider;
+
+    [self.sweepTimer invalidate];
+    self.sweepTimer = nil;
+
+    if (syncingRemoteProvider != nil) {
+        self.sweepTimer =
+        [NSTimer
+         scheduledTimerWithTimeInterval:5.0f
+         target:self
+         selector:@selector(handleRemoteProviderSyncing:)
+         userInfo:nil
+         repeats:YES];
+    }
+}
+
 
 #pragma mark - Remote Commands
 
