@@ -1,6 +1,8 @@
 #import "_TCSProject.h"
 
-@interface TCSProject : _TCSProject {}
+@protocol PBListViewEntity;
+
+@interface TCSProject : _TCSProject <PBListViewEntity> {}
 
 - (NSString *)displayName:(BOOL)groupFirst;
 

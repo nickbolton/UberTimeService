@@ -150,6 +150,8 @@ handleCloudContentCorruptionWithHealthyStore:(BOOL)storeHealthy;
 
 @interface TCSService : NSObject
 
++ (void)setLocalServiceType:(Class)localServiceType;
+
 + (TCSService *)sharedInstance;
 
 @property (nonatomic, readonly) TCSTimer *activeTimer;

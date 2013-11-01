@@ -15,7 +15,13 @@ NSString * const kTCSiCloudServiceLocalStoreLoadedNotification = @"kTCSiCloudSer
 NSString * const kTCSiCloudServiceCloudStoreKey = @"cloud-store";
 NSString * const kTCSiCloudServiceUbiquityStoreErrorCauseKey = @"cause";
 
-@interface TCSiCloudService() <UbiquityStoreManagerDelegate>
+static NSString * TCSiCloudService_storeName = nil;
+static NSString * TCSiCloudService_containerIdentifier = nil;
+
+@interface TCSiCloudService() <UbiquityStoreManagerDelegate> {
+
+    BOOL _mocInitialized;
+}
 
 @property (nonatomic, strong) UbiquityStoreManager *ubiquityStoreManager;
 
@@ -23,14 +29,22 @@ NSString * const kTCSiCloudServiceUbiquityStoreErrorCauseKey = @"cause";
 
 @implementation TCSiCloudService
 
++ (void)setStoreName:(NSString *)storeName {
+
+}
+
++ (void)setContainerIdentifier:(NSString *)containerIdentifier {
+
+}
+
 - (void)setupCoreDataStack {
 
     self.ubiquityStoreManager =
     [[UbiquityStoreManager alloc]
-     initStoreNamed:nil
+     initStoreNamed:TCSiCloudService_storeName
      withManagedObjectModel:nil
      localStoreURL:nil
-     containerIdentifier:nil
+     containerIdentifier:TCSiCloudService_containerIdentifier
      additionalStoreOptions:nil
      delegate:self];
 
@@ -57,19 +71,24 @@ NSString * const kTCSiCloudServiceUbiquityStoreErrorCauseKey = @"cause";
 }
 
 - (void)ubiquityStoreManager:(UbiquityStoreManager *)manager willLoadStoreIsCloud:(BOOL)isCloudStore {
-    [[NSManagedObjectContext MR_contextForCurrentThread]
-     MR_saveToPersistentStoreAndWait];
+
+    if (_mocInitialized) {
+        [[NSManagedObjectContext MR_contextForCurrentThread]
+         MR_saveToPersistentStoreAndWait];
+    }
 }
 
 - (void)ubiquityStoreManager:(UbiquityStoreManager *)manager didLoadStoreForCoordinator:(NSPersistentStoreCoordinator *)coordinator
                      isCloud:(BOOL)isCloudStore {
 
-    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:coordinator];
 
+    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:coordinator];
     [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:coordinator];
 
     NSManagedObjectContext *moc = [NSManagedObjectContext MR_defaultContext];
     moc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+
+    _mocInitialized = YES;
 
     dispatch_async( dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter]
@@ -105,6 +124,23 @@ NSString * const kTCSiCloudServiceUbiquityStoreErrorCauseKey = @"cause";
     }
 
     return NO;
+}
+
++ (id)sharedInstance {
+
+    static dispatch_once_t predicate;
+    static TCSiCloudService *sharedInstance = nil;
+
+    dispatch_once(&predicate, ^{
+        sharedInstance = [TCSiCloudService alloc];
+        sharedInstance = [sharedInstance init];
+    });
+
+    return sharedInstance;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return self;
 }
 
 @end

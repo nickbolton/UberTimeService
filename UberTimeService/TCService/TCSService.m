@@ -20,6 +20,9 @@ NSString * const kTCSServiceRemoteProviderInstanceNotAuthenticatedNotification =
 NSString * const kTCSServiceRemoteProviderInstanceKey = @"provider-instance";
 NSString * const kTCSServiceDataVersionKey = @"tcs-data-version";
 
+static NSString * const TCSService_defaultLocalServiceName = @"TCSLocalService";
+static Class TCSService_localServiceType = nil;
+
 @interface TCSService()
 
 @property (nonatomic, strong) TCSLocalService *localService;
@@ -30,17 +33,25 @@ NSString * const kTCSServiceDataVersionKey = @"tcs-data-version";
 
 @implementation TCSService
 
-- (id)init
-{
++ (void)setLocalServiceType:(Class)localServiceType {
+    TCSService_localServiceType = localServiceType;
+}
+
+- (id)init {
+
     self = [super init];
     if (self) {
+
+        if (TCSService_localServiceType == nil) {
+            TCSService_localServiceType = [TCSLocalService class];
+        }
 
         self.dataVersion =
         [[NSUserDefaults standardUserDefaults]
          integerForKey:kTCSServiceDataVersionKey];
         
         self.remoteServiceProviders = [NSMutableDictionary dictionary];
-        self.localService = [TCSLocalService sharedInstance];
+        self.localService = [TCSService_localServiceType sharedInstance];
 
         [[NSNotificationCenter defaultCenter]
          addObserver:self

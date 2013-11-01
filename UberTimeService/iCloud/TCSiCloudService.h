@@ -12,6 +12,11 @@
 
 @property (nonatomic, getter = isEnabled) BOOL enabled;
 
++ (void)setStoreName:(NSString *)storeName;
++ (void)setContainerIdentifier:(NSString *)containerIdentifier;
+
++ (instancetype)sharedInstance;
+
 - (void)fixCloudContent;
 - (void)fixLocalContent;
 
