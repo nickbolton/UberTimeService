@@ -45,13 +45,14 @@ NSString * const kTCSLocalServiceSyncCountKey = @"tcs-local-sync-count";
          selector:@selector(applicationDidEnterBackground:)
          name:UIApplicationDidEnterBackgroundNotification
          object:nil];
-#endif
 
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(applicationWillTerminate:)
          name:UIApplicationWillTerminateNotification
          object:nil];
+#endif
+
     }
     return self;
 }
